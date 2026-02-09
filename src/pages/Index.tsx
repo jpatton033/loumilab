@@ -2,9 +2,8 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/Layout";
 import SectionHeading from "@/components/SectionHeading";
-import VideoHero from "@/components/VideoHero";
-import DiamondLogo from "@/components/DiamondLogo";
-import heroVideo from "@/assets/hero-video.mp4";
+import HeroSlideshow from "@/components/HeroSlideshow";
+import LumilabLogo from "@/components/LumilabLogo";
 import { ArrowRight, Layers, Code, Zap } from "lucide-react";
 
 const services = [
@@ -22,23 +21,22 @@ const stats = [
 const Index = () => {
   return (
     <Layout>
-      {/* Video Hero */}
-      <VideoHero videoSrc={heroVideo}>
+      {/* Hero Slideshow */}
+      <HeroSlideshow>
         <div className="section-container py-32 lg:py-0 min-h-screen flex flex-col justify-center">
           <div className="max-w-4xl mx-auto text-center">
             <div className="animate-slide-up flex justify-center mb-8">
-              <DiamondLogo size="xl" animated />
+              <LumilabLogo size="xl" animated />
             </div>
             <span className="animate-slide-up-delay-1 inline-block text-accent font-display text-sm font-medium uppercase tracking-[0.3em] mb-6">
-              Pristine Collective
+              Lumilab
             </span>
             <h1 className="animate-slide-up-delay-1 text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-semibold leading-[1.05] tracking-tight">
-              Digital experiences,{" "}
-              <span className="text-gradient">flawlessly</span>{" "}
-              designed.
+              Digital experiences that{" "}
+              <span className="text-gradient">shine</span>.
             </h1>
             <p className="animate-slide-up-delay-2 mt-8 text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              We craft websites and SaaS products with precision and purpose. Every pixel polished to perfection.
+              We illuminate the path from idea to innovation. Building websites and SaaS products that light up the digital landscape.
             </p>
             <div className="animate-slide-up-delay-3 mt-12 flex flex-wrap justify-center gap-4">
               <Button variant="accent" size="lg" asChild className="glow-hover">
@@ -52,7 +50,7 @@ const Index = () => {
             </div>
           </div>
         </div>
-      </VideoHero>
+      </HeroSlideshow>
 
       {/* Stats */}
       <section className="border-y border-border bg-secondary/30">
@@ -132,13 +130,13 @@ const Index = () => {
       <section className="section-padding">
         <div className="section-container">
           <div className="glass-card rounded-3xl p-12 lg:p-20 text-center">
-            <DiamondLogo size="lg" className="mx-auto mb-8" />
+            <LumilabLogo size="lg" className="mx-auto mb-8" />
             <h2 className="text-3xl lg:text-5xl font-semibold mb-6">
               Ready to build something{" "}
-              <span className="text-gradient">remarkable</span>?
+              <span className="text-gradient">brilliant</span>?
             </h2>
             <p className="text-muted-foreground text-lg max-w-lg mx-auto mb-10">
-              Let's talk about your next website or SaaS product. We ship fast.
+              Let's illuminate your next project. We ship fast and build to last.
             </p>
             <Button variant="accent" size="lg" asChild className="glow-hover">
               <Link to="/contact">
