@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import Layout from "@/components/Layout";
 import SectionHeading from "@/components/SectionHeading";
 import HeroSlideshow from "@/components/HeroSlideshow";
-import LumilabLogo from "@/components/LumilabLogo";
+import LoumilabLogo from "@/components/LoumilabLogo";
 import { ArrowRight, Layers, Code, Zap } from "lucide-react";
 
 const services = [
@@ -26,10 +26,10 @@ const Index = () => {
         <div className="section-container py-32 lg:py-0 min-h-screen flex flex-col justify-center">
           <div className="max-w-4xl mx-auto text-center">
             <div className="animate-slide-up flex justify-center mb-8">
-              <LumilabLogo size="xl" animated />
+              <LoumilabLogo size="xl" animated />
             </div>
             <span className="animate-slide-up-delay-1 inline-block text-accent font-display text-sm font-medium uppercase tracking-[0.3em] mb-6">
-              Lumilab
+              Loumilab
             </span>
             <h1 className="animate-slide-up-delay-1 text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-semibold leading-[1.05] tracking-tight">
               Digital experiences that{" "}
@@ -130,7 +130,7 @@ const Index = () => {
       <section className="section-padding">
         <div className="section-container">
           <div className="glass-card rounded-3xl p-12 lg:p-20 text-center">
-            <LumilabLogo size="lg" className="mx-auto mb-8" />
+            <LoumilabLogo size="lg" className="mx-auto mb-8" />
             <h2 className="text-3xl lg:text-5xl font-semibold mb-6">
               Ready to build something{" "}
               <span className="text-gradient">brilliant</span>?
