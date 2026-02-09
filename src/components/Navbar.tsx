@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
-import LumilabLogo from "@/components/LumilabLogo";
 
 const navLinks = [
   { label: "Services", to: "/services" },
@@ -19,10 +18,9 @@ const Navbar = () => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/60 backdrop-blur-xl border-b border-border/30">
       <div className="section-container flex items-center justify-between h-16 lg:h-20">
-        <Link to="/" className="flex items-center gap-3">
-          <LumilabLogo size="sm" />
-          <span className="font-display text-lg font-semibold tracking-tight">
-            Lumilab<span className="text-accent">.</span>
+        <Link to="/" className="flex items-center">
+          <span className="font-display text-xl font-bold tracking-tight">
+            LUMILAB<span className="text-accent">.</span>
           </span>
         </Link>
 

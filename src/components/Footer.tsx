@@ -1,15 +1,13 @@
 import { Link } from "react-router-dom";
-import LumilabLogo from "@/components/LumilabLogo";
 
 const Footer = () => (
   <footer className="border-t border-border bg-secondary/50">
     <div className="section-container py-16 lg:py-20">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
         <div className="md:col-span-2">
-          <Link to="/" className="flex items-center gap-3 mb-4">
-            <LumilabLogo size="sm" />
-            <span className="font-display text-xl font-semibold">
-              Lumilab<span className="text-accent">.</span>
+          <Link to="/" className="flex items-center mb-4">
+            <span className="font-display text-2xl font-bold tracking-tight">
+              LUMILAB<span className="text-accent">.</span>
             </span>
           </Link>
           <p className="text-muted-foreground max-w-sm leading-relaxed">
