@@ -20,7 +20,7 @@ const Navbar = () => {
       <div className="section-container flex items-center justify-between h-16 lg:h-20">
         <Link to="/" className="flex items-center">
           <span className="font-display text-xl font-bold tracking-tight">
-            LUMILAB<span className="text-accent">.</span>
+            <span className="text-2xl">L</span>OUMILAB<span className="text-accent">.</span>
           </span>
         </Link>
 
