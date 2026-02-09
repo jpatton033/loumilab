@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import DiamondLogo from "@/components/DiamondLogo";
+import LumilabLogo from "@/components/LumilabLogo";
 
 const Footer = () => (
   <footer className="border-t border-border bg-secondary/50">
@@ -7,13 +7,13 @@ const Footer = () => (
       <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
         <div className="md:col-span-2">
           <Link to="/" className="flex items-center gap-3 mb-4">
-            <DiamondLogo size="sm" />
+            <LumilabLogo size="sm" />
             <span className="font-display text-xl font-semibold">
-              Pristine<span className="text-accent">.</span>
+              Lumilab<span className="text-accent">.</span>
             </span>
           </Link>
           <p className="text-muted-foreground max-w-sm leading-relaxed">
-            A product-driven digital studio crafting flawless websites and SaaS products. Every pixel polished to perfection.
+            A digital innovation studio illuminating the future of web and SaaS development. Where ideas come to light.
           </p>
         </div>
         <div>
@@ -34,8 +34,8 @@ const Footer = () => (
         </div>
       </div>
       <div className="mt-16 pt-8 border-t border-border text-sm text-muted-foreground flex flex-col sm:flex-row justify-between items-center gap-4">
-        <span>© {new Date().getFullYear()} Pristine Collective. All rights reserved.</span>
-        <span className="text-xs">Flawless by Design</span>
+        <span>© {new Date().getFullYear()} Lumilab. All rights reserved.</span>
+        <span className="text-xs">Illuminating Digital Innovation</span>
       </div>
     </div>
   </footer>
