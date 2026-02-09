@@ -98,37 +98,6 @@ const LumilabLogo = ({ size = "md", animated = false, className }: LumilabLogoPr
           r="3"
           fill="hsl(217 91% 95%)"
         />
-        
-        {/* Minimal stem - two parallel lines */}
-        <line
-          x1="28"
-          y1="46"
-          x2="28"
-          y2="54"
-          stroke="url(#outlineGradient)"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
-        <line
-          x1="36"
-          y1="46"
-          x2="36"
-          y2="54"
-          stroke="url(#outlineGradient)"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
-        
-        {/* Bottom connector */}
-        <line
-          x1="28"
-          y1="54"
-          x2="36"
-          y2="54"
-          stroke="url(#outlineGradient)"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
       </svg>
     </div>
   );
