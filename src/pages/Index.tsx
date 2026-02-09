@@ -25,8 +25,8 @@ const Index = () => {
       <HeroSlideshow>
         <div className="section-container py-32 lg:py-0 min-h-screen flex flex-col justify-center">
           <div className="max-w-4xl mx-auto text-center">
-            <span className="animate-slide-up-delay-1 inline-block text-accent font-display text-sm font-medium uppercase tracking-[0.3em] mb-6">
-              LOUMI.
+            <span className="animate-slide-up-delay-1 inline-block text-accent font-display text-base font-bold uppercase tracking-[0.3em] mb-6">
+              LOUMI.AI
             </span>
             <h1 className="animate-slide-up-delay-1 text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-semibold leading-[1.05] tracking-tight">
               Digital experiences that{" "}
