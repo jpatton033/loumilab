@@ -19,8 +19,8 @@ const Navbar = () => {
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/60 backdrop-blur-xl border-b border-border/30">
       <div className="section-container flex items-center justify-between h-16 lg:h-20">
         <Link to="/" className="flex items-center">
-          <span className="font-display text-lg font-bold tracking-tight">
-            <span className="text-xl">L</span>OUMILAB<span className="text-accent">.</span>
+          <span className="font-display text-base font-bold tracking-tight">
+            <span className="text-xl">L</span>OUMILAB<span className="text-accent text-lg">.</span>
           </span>
         </Link>
 

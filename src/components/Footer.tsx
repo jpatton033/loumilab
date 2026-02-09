@@ -6,8 +6,8 @@ const Footer = () => (
       <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
         <div className="md:col-span-2">
           <Link to="/" className="flex items-center mb-4">
-            <span className="font-display text-xl font-bold tracking-tight">
-              <span className="text-2xl">L</span>OUMILAB<span className="text-accent">.</span>
+            <span className="font-display text-lg font-bold tracking-tight">
+              <span className="text-2xl">L</span>OUMILAB<span className="text-accent text-xl">.</span>
             </span>
           </Link>
           <p className="text-muted-foreground max-w-sm leading-relaxed">
