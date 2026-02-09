@@ -27,7 +27,7 @@ const caseStudies = [
 
 const Work = () => (
   <Layout>
-    <section className="section-padding">
+    <section className="section-padding pt-32 lg:pt-40">
       <div className="section-container">
         <SectionHeading
           label="Work"
@@ -38,18 +38,19 @@ const Work = () => (
           {caseStudies.map((study) => (
             <div
               key={study.title}
-              className="group surface-elevated rounded-xl overflow-hidden border border-border/50 hover:border-accent/30 transition-all duration-300"
+              className="group glass-card rounded-2xl overflow-hidden hover:border-accent/30 transition-all duration-500 glow-hover"
             >
-              <div className="h-48 bg-gradient-to-br from-accent/10 via-secondary to-muted flex items-center justify-center">
-                <span className="font-display text-2xl font-bold text-muted-foreground/30">{study.title}</span>
+              <div className="h-56 bg-gradient-to-br from-accent/5 via-secondary to-muted/30 flex items-center justify-center relative overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,hsl(43_55%_59%/0.1),transparent_70%)]" />
+                <span className="font-display text-3xl font-semibold text-muted-foreground/20 relative z-10">{study.title}</span>
               </div>
               <div className="p-8">
-                <span className="text-accent font-display text-xs font-semibold uppercase tracking-widest">{study.category}</span>
-                <h3 className="font-display text-xl font-bold mt-2 mb-3">{study.title}</h3>
+                <span className="text-accent font-display text-xs font-medium uppercase tracking-[0.2em]">{study.category}</span>
+                <h3 className="font-display text-xl font-semibold mt-2 mb-3">{study.title}</h3>
                 <p className="text-muted-foreground leading-relaxed mb-6">{study.desc}</p>
-                <div className="flex flex-wrap gap-4">
+                <div className="flex flex-wrap gap-3">
                   {study.metrics.map((m) => (
-                    <span key={m} className="text-sm font-medium bg-secondary px-3 py-1 rounded-full">{m}</span>
+                    <span key={m} className="text-sm font-medium bg-secondary/80 text-foreground/80 px-4 py-1.5 rounded-full border border-border/50">{m}</span>
                   ))}
                 </div>
               </div>
@@ -57,7 +58,7 @@ const Work = () => (
           ))}
         </div>
         <div className="mt-16 text-center">
-          <Button variant="accent" size="lg" asChild>
+          <Button variant="accent" size="lg" asChild className="glow-hover">
             <Link to="/contact">
               Work With Us <ArrowRight size={18} />
             </Link>

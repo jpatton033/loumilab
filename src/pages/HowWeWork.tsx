@@ -20,7 +20,7 @@ const steps = [
   {
     icon: Hammer,
     num: "03",
-    title: "Build with Lovable",
+    title: "Build & Develop",
     desc: "AI-powered development for speed without compromise. We ship production-ready code in rapid iterations.",
   },
   {
@@ -39,7 +39,7 @@ const steps = [
 
 const HowWeWork = () => (
   <Layout>
-    <section className="section-padding">
+    <section className="section-padding pt-32 lg:pt-40">
       <div className="section-container">
         <SectionHeading
           label="Process"
@@ -48,18 +48,18 @@ const HowWeWork = () => (
         />
         <div className="relative">
           {/* Vertical line */}
-          <div className="absolute left-6 top-0 bottom-0 w-px bg-border hidden lg:block" />
+          <div className="absolute left-[23px] top-8 bottom-8 w-px bg-gradient-to-b from-accent via-border to-transparent hidden lg:block" />
 
-          <div className="space-y-12 lg:space-y-16">
+          <div className="space-y-8 lg:space-y-12">
             {steps.map((step) => (
-              <div key={step.num} className="relative grid lg:grid-cols-[80px_1fr] gap-6 items-start">
-                <div className="relative z-10 w-12 h-12 rounded-full bg-accent text-accent-foreground flex items-center justify-center font-display font-bold text-sm">
+              <div key={step.num} className="relative grid lg:grid-cols-[56px_1fr] gap-6 items-start">
+                <div className="relative z-10 w-12 h-12 rounded-full bg-accent text-accent-foreground flex items-center justify-center font-display font-semibold text-sm shadow-lg">
                   {step.num}
                 </div>
-                <div className="surface-elevated rounded-xl p-8 border border-border/50">
+                <div className="glass-card rounded-2xl p-8 hover:border-accent/30 transition-all duration-500 glow-hover">
                   <div className="flex items-center gap-3 mb-3">
                     <step.icon className="text-accent" size={20} />
-                    <h3 className="font-display text-xl font-bold">{step.title}</h3>
+                    <h3 className="font-display text-xl font-semibold">{step.title}</h3>
                   </div>
                   <p className="text-muted-foreground leading-relaxed max-w-xl">{step.desc}</p>
                 </div>
@@ -68,7 +68,7 @@ const HowWeWork = () => (
           </div>
         </div>
         <div className="mt-16 text-center">
-          <Button variant="accent" size="lg" asChild>
+          <Button variant="accent" size="lg" asChild className="glow-hover">
             <Link to="/contact">
               Start Your Project <ArrowRight size={18} />
             </Link>
