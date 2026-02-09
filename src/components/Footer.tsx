@@ -7,7 +7,7 @@ const Footer = () => (
         <div className="md:col-span-2">
           <Link to="/" className="flex items-center mb-4">
             <span className="font-display text-2xl font-bold tracking-tight">
-              LUMILAB<span className="text-accent">.</span>
+              <span className="text-3xl">L</span>OUMILAB<span className="text-accent">.</span>
             </span>
           </Link>
           <p className="text-muted-foreground max-w-sm leading-relaxed">
@@ -32,7 +32,7 @@ const Footer = () => (
         </div>
       </div>
       <div className="mt-16 pt-8 border-t border-border text-sm text-muted-foreground flex flex-col sm:flex-row justify-between items-center gap-4">
-        <span>© {new Date().getFullYear()} Lumilab. All rights reserved.</span>
+        <span>© {new Date().getFullYear()} Loumilab. All rights reserved.</span>
         <span className="text-xs">Illuminating Digital Innovation</span>
       </div>
     </div>
