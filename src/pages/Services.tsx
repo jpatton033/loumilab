@@ -25,7 +25,7 @@ const services = [
   },
   {
     icon: Zap,
-    title: "Lovable-Powered & AI-Assisted Builds",
+    title: "AI-Assisted Builds",
     desc: "Leverage AI-assisted development for 10x faster delivery without sacrificing quality.",
     features: ["Rapid prototyping", "AI-generated code", "Smart iteration", "Cost-effective"],
   },
@@ -39,31 +39,31 @@ const services = [
 
 const Services = () => (
   <Layout>
-    <section className="section-padding">
+    <section className="section-padding pt-32 lg:pt-40">
       <div className="section-container">
         <SectionHeading
           label="Services"
           title="Everything you need to build and scale"
-          description="From strategy to launch and beyond. We offer end-to-end product development services powered by modern tools."
+          description="From strategy to launch and beyond. We offer end-to-end product development services."
         />
-        <div className="grid gap-8">
-          {services.map((service, i) => (
+        <div className="grid gap-6">
+          {services.map((service) => (
             <div
               key={service.title}
-              className="group surface-elevated rounded-xl p-8 lg:p-10 border border-border/50 hover:border-accent/30 transition-all duration-300 grid md:grid-cols-[1fr_1.5fr] gap-8"
+              className="group glass-card rounded-2xl p-8 lg:p-10 hover:border-accent/30 transition-all duration-500 glow-hover grid md:grid-cols-[1fr_1.5fr] gap-8"
             >
               <div>
-                <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center mb-4 group-hover:bg-accent/20 transition-colors">
+                <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center mb-4 group-hover:bg-accent/20 transition-colors">
                   <service.icon className="text-accent" size={24} />
                 </div>
-                <h3 className="font-display text-xl font-bold mb-3">{service.title}</h3>
+                <h3 className="font-display text-xl font-semibold mb-3">{service.title}</h3>
                 <p className="text-muted-foreground leading-relaxed">{service.desc}</p>
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-4 content-start">
                 {service.features.map((f) => (
-                  <div key={f} className="flex items-center gap-2 text-sm">
+                  <div key={f} className="flex items-center gap-3 text-sm">
                     <div className="w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0" />
-                    <span>{f}</span>
+                    <span className="text-foreground/80">{f}</span>
                   </div>
                 ))}
               </div>
@@ -71,7 +71,7 @@ const Services = () => (
           ))}
         </div>
         <div className="mt-16 text-center">
-          <Button variant="accent" size="lg" asChild>
+          <Button variant="accent" size="lg" asChild className="glow-hover">
             <Link to="/contact">
               Discuss Your Project <ArrowRight size={18} />
             </Link>

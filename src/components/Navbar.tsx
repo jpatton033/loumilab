@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import DiamondLogo from "@/components/DiamondLogo";
 
 const navLinks = [
   { label: "Services", to: "/services" },
@@ -16,10 +17,13 @@ const Navbar = () => {
   const location = useLocation();
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/60 backdrop-blur-xl border-b border-border/30">
       <div className="section-container flex items-center justify-between h-16 lg:h-20">
-        <Link to="/" className="font-display text-xl font-bold tracking-tight">
-          Studio<span className="text-gradient">X</span>
+        <Link to="/" className="flex items-center gap-3">
+          <DiamondLogo size="sm" />
+          <span className="font-display text-lg font-semibold tracking-tight">
+            Pristine<span className="text-accent">.</span>
+          </span>
         </Link>
 
         {/* Desktop */}
@@ -28,8 +32,8 @@ const Navbar = () => {
             <Link
               key={link.to}
               to={link.to}
-              className={`text-sm font-medium transition-colors hover:text-accent ${
-                location.pathname === link.to ? "text-accent" : "text-muted-foreground"
+              className={`text-sm font-medium transition-colors link-underline pb-1 ${
+                location.pathname === link.to ? "text-accent" : "text-muted-foreground hover:text-foreground"
               }`}
             >
               {link.label}
@@ -38,14 +42,14 @@ const Navbar = () => {
         </nav>
 
         <div className="hidden lg:block">
-          <Button variant="accent" size="lg" asChild>
+          <Button variant="accent" size="lg" asChild className="glow-hover">
             <Link to="/contact">Start a Project</Link>
           </Button>
         </div>
 
         {/* Mobile toggle */}
         <button
-          className="lg:hidden p-2"
+          className="lg:hidden p-2 text-foreground"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
         >
@@ -55,8 +59,8 @@ const Navbar = () => {
 
       {/* Mobile menu */}
       {open && (
-        <nav className="lg:hidden bg-background border-b border-border pb-6">
-          <div className="section-container flex flex-col gap-4 pt-4">
+        <nav className="lg:hidden bg-background/95 backdrop-blur-xl border-b border-border">
+          <div className="section-container flex flex-col gap-4 py-6">
             {navLinks.map((link) => (
               <Link
                 key={link.to}
@@ -69,7 +73,7 @@ const Navbar = () => {
                 {link.label}
               </Link>
             ))}
-            <Button variant="accent" size="lg" asChild className="mt-2">
+            <Button variant="accent" size="lg" asChild className="mt-4">
               <Link to="/contact" onClick={() => setOpen(false)}>Start a Project</Link>
             </Button>
           </div>
