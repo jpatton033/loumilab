@@ -1,57 +1,46 @@
 
-# Consistent Font Usage Throughout Website
+# Update Brand Name to LOUMILAB with Styled Typography
 
 ## Overview
-Standardize typography by using a single font family (Space Grotesk) across the entire website to match the bold "LUMILAB" brand identity.
+Update the brand name from "LUMILAB" to "LOUMILAB" with custom typography where the first "L" is displayed in a larger font size than the remaining letters.
 
-## Current State
+## Visual Result
 
-The website currently uses two font families:
-- **Space Grotesk** (`font-display`): Used for headings, brand name, labels, and accent text
-- **Inter** (`font-body`): Used for body text, paragraphs, and form labels
-
-This creates visual inconsistency between different text elements.
-
-## Proposed Change
-
-Unify all text to use **Space Grotesk** as the single font family. This provides:
-- Clean, modern aesthetic matching the "LUMILAB" brand
-- Visual cohesion across all pages
-- Simplified typography system
+```text
+Current:  LUMILAB.
+New:      LOUMILAB.
+          ↑
+          Larger "L"
+```
 
 ## Technical Changes
 
-### 1. src/index.css
-Update the base body styles to use the display font:
+### 1. src/components/Navbar.tsx
+Update the brand text from "LUMILAB" to "LOUMILAB" with the first "L" wrapped in a span with a larger font size:
 
-```text
-Before:
-  body {
-    @apply bg-background text-foreground font-body antialiased;
-  }
-
-After:
-  body {
-    @apply bg-background text-foreground font-display antialiased;
-  }
+```jsx
+<span className="font-display text-xl font-bold tracking-tight">
+  <span className="text-2xl">L</span>OUMILAB<span className="text-accent">.</span>
+</span>
 ```
 
-Optionally adjust the Google Fonts import to only load Space Grotesk (removing Inter) to improve page load performance.
+### 2. src/components/Footer.tsx
+Same treatment for the footer logo (scaled proportionally since footer uses `text-2xl`):
 
-### 2. Files Using font-body or font-medium (Optional Cleanup)
-No changes required - once the body default is set to `font-display`, all text will inherit Space Grotesk unless explicitly overridden.
+```jsx
+<span className="font-display text-2xl font-bold tracking-tight">
+  <span className="text-3xl">L</span>OUMILAB<span className="text-accent">.</span>
+</span>
+```
+
+Also update the copyright text from "Lumilab" to "Loumilab":
+```text
+© 2024 Loumilab. All rights reserved.
+```
+
+## Files Modified
+- `src/components/Navbar.tsx` - Brand text in header
+- `src/components/Footer.tsx` - Brand text and copyright
 
 ## Result
-All text across the website will use Space Grotesk consistently:
-- Navigation links
-- Body paragraphs
-- Form labels and inputs
-- Card descriptions
-- Footer text
-- Headings (already using Space Grotesk)
-- LUMILAB brand text (already using Space Grotesk)
-
-## Visual Impact
-- More cohesive, modern appearance
-- Typography aligns with the bold LUMILAB brand identity
-- Slightly more geometric/technical feel throughout
+The brand will display as "LOUMILAB." with the first "L" visually larger, creating a distinctive typographic identity while maintaining the bold, modern aesthetic.
