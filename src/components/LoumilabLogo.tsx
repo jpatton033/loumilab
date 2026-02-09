@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-interface LumilabLogoProps {
+interface LoumilabLogoProps {
   size?: "sm" | "md" | "lg" | "xl";
   animated?: boolean;
   className?: string;
@@ -13,7 +13,7 @@ const sizeMap = {
   xl: "w-24 h-24",
 };
 
-const LumilabLogo = ({ size = "md", animated = false, className }: LumilabLogoProps) => {
+const LoumilabLogo = ({ size = "md", animated = false, className }: LoumilabLogoProps) => {
   return (
     <div
       className={cn(
@@ -103,4 +103,4 @@ const LumilabLogo = ({ size = "md", animated = false, className }: LumilabLogoPr
   );
 };
 
-export default LumilabLogo;
+export default LoumilabLogo;
