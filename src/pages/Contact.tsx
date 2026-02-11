@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { z } from "zod";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,12 +8,30 @@ import { useToast } from "@/hooks/use-toast";
 import { Send, Mail } from "lucide-react";
 import DiamondLogo from "@/components/DiamondLogo";
 
+const contactSchema = z.object({
+  name: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
+  email: z.string().trim().email("Please enter a valid email").max(255, "Email must be less than 255 characters"),
+  company: z.string().trim().max(200, "Company must be less than 200 characters").optional().or(z.literal("")),
+  message: z.string().trim().min(10, "Message must be at least 10 characters").max(2000, "Message must be less than 2000 characters"),
+});
+
 const Contact = () => {
   const { toast } = useToast();
   const [form, setForm] = useState({ name: "", email: "", company: "", message: "" });
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const result = contactSchema.safeParse(form);
+    if (!result.success) {
+      const fieldErrors: Record<string, string> = {};
+      result.error.errors.forEach((err) => {
+        if (err.path[0]) fieldErrors[err.path[0] as string] = err.message;
+      });
+      setErrors(fieldErrors);
+      return;
+    }
+    setErrors({});
     toast({ title: "Message sent!", description: "We'll get back to you within 24 hours." });
     setForm({ name: "", email: "", company: "", message: "" });
   };
@@ -52,7 +71,9 @@ const Contact = () => {
                     placeholder="Your name"
                     required
                     className="bg-secondary/50 border-border/50 focus:border-accent focus:ring-accent/20"
+                    maxLength={100}
                   />
+                  {errors.name && <p className="text-sm text-destructive mt-1">{errors.name}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-2 text-foreground/80">Email</label>
@@ -63,7 +84,9 @@ const Contact = () => {
                     placeholder="you@company.com"
                     required
                     className="bg-secondary/50 border-border/50 focus:border-accent focus:ring-accent/20"
+                    maxLength={255}
                   />
+                  {errors.email && <p className="text-sm text-destructive mt-1">{errors.email}</p>}
                 </div>
               </div>
               <div>
@@ -73,7 +96,9 @@ const Contact = () => {
                   onChange={(e) => setForm({ ...form, company: e.target.value })}
                   placeholder="Your company (optional)"
                   className="bg-secondary/50 border-border/50 focus:border-accent focus:ring-accent/20"
+                  maxLength={200}
                 />
+                {errors.company && <p className="text-sm text-destructive mt-1">{errors.company}</p>}
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2 text-foreground/80">Tell us about your project</label>
@@ -84,7 +109,9 @@ const Contact = () => {
                   rows={6}
                   required
                   className="bg-secondary/50 border-border/50 focus:border-accent focus:ring-accent/20 resize-none"
+                  maxLength={2000}
                 />
+                {errors.message && <p className="text-sm text-destructive mt-1">{errors.message}</p>}
               </div>
               <Button variant="accent" size="lg" type="submit" className="w-full sm:w-auto glow-hover">
                 Send Message <Send size={16} />
