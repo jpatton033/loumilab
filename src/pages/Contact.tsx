@@ -73,7 +73,7 @@ const Contact = () => {
         <div className="section-container">
           <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
             <div>
-              <DiamondLogo size="lg" className="mb-8" />
+              <DiamondLogo size="lg" variant="silver" className="mb-8" />
               <span className="inline-block text-accent font-display text-sm font-medium uppercase tracking-[0.2em] mb-4">
                 Contact
               </span>
