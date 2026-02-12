@@ -52,28 +52,8 @@ const Admin = () => {
   const [filterStatus, setFilterStatus] = useState<string>("all");
 
   useEffect(() => {
-    checkAuth();
-  }, []);
-
-  const checkAuth = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      navigate("/login");
-      return;
-    }
-
-    const { data: roles } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", user.id);
-
-    if (!roles?.some((r: { role: string }) => r.role === "admin")) {
-      navigate("/login");
-      return;
-    }
-
     fetchSubmissions();
-  };
+  }, []);
 
   const fetchSubmissions = async () => {
     setLoading(true);

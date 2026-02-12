@@ -23,8 +23,21 @@ const Contact = () => {
 
   const [submitting, setSubmitting] = useState(false);
 
+  const [honeypot, setHoneypot] = useState("");
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Honeypot check
+    if (honeypot) return;
+
+    // Rate limiting
+    const lastSub = localStorage.getItem("last_contact_submission");
+    if (lastSub && Date.now() - parseInt(lastSub) < 60000) {
+      toast({ title: "Please wait", description: "You can submit again in a moment.", variant: "destructive" });
+      return;
+    }
+
     const result = contactSchema.safeParse(form);
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
@@ -49,6 +62,7 @@ const Contact = () => {
     } else {
       toast({ title: "Message sent!", description: "We'll get back to you within 24 hours." });
       setForm({ name: "", email: "", company: "", message: "" });
+      localStorage.setItem("last_contact_submission", Date.now().toString());
     }
     setSubmitting(false);
   };
@@ -79,6 +93,17 @@ const Contact = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Honeypot field - hidden from users, catches bots */}
+              <input
+                type="text"
+                name="website"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+                style={{ position: "absolute", left: "-9999px", opacity: 0 }}
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+              />
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-2 text-foreground/80">Name</label>
