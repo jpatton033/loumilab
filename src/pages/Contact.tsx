@@ -56,7 +56,7 @@ const Contact = () => {
               <div className="space-y-4">
                 <div className="flex items-center gap-3 text-muted-foreground">
                   <Mail size={18} className="text-accent" />
-                  <span>hello@pristinecollective.dev</span>
+                  <span>hello@loumilab.com</span>
                 </div>
               </div>
             </div>
