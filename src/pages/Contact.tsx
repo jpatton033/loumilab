@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Send, Mail } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import DiamondLogo from "@/components/DiamondLogo";
 
 const contactSchema = z.object({
@@ -20,7 +21,9 @@ const Contact = () => {
   const [form, setForm] = useState({ name: "", email: "", company: "", message: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = contactSchema.safeParse(form);
     if (!result.success) {
@@ -32,8 +35,22 @@ const Contact = () => {
       return;
     }
     setErrors({});
-    toast({ title: "Message sent!", description: "We'll get back to you within 24 hours." });
-    setForm({ name: "", email: "", company: "", message: "" });
+    setSubmitting(true);
+
+    const { error } = await supabase.from("contact_submissions").insert({
+      name: result.data.name,
+      email: result.data.email,
+      company: result.data.company || null,
+      message: result.data.message,
+    });
+
+    if (error) {
+      toast({ title: "Something went wrong", description: "Please try again or email us directly.", variant: "destructive" });
+    } else {
+      toast({ title: "Message sent!", description: "We'll get back to you within 24 hours." });
+      setForm({ name: "", email: "", company: "", message: "" });
+    }
+    setSubmitting(false);
   };
 
   return (
@@ -113,8 +130,8 @@ const Contact = () => {
                 />
                 {errors.message && <p className="text-sm text-destructive mt-1">{errors.message}</p>}
               </div>
-              <Button variant="accent" size="lg" type="submit" className="w-full sm:w-auto glow-hover">
-                Send Message <Send size={16} />
+              <Button variant="accent" size="lg" type="submit" className="w-full sm:w-auto glow-hover" disabled={submitting}>
+                {submitting ? "Sending..." : "Send Message"} <Send size={16} />
               </Button>
             </form>
           </div>
