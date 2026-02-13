@@ -1,41 +1,24 @@
 
 
-## Fix Maileroo Email Integration (3 Bugs)
+## Strengthen Email Validation on Contact Form
 
-The contact form emails are failing with a **404 error** because the edge function is using an outdated/incorrect Maileroo API format. There are three issues to fix, all in one file.
+### What's Changing
 
-### What's Wrong
+The email field already has basic validation (`type="email"` on the input and Zod's `.email()` check), but these can accept technically valid but practically useless addresses (e.g., `user@localhost`). We'll add a stricter regex to ensure the email has a real domain with a proper extension (e.g., `.com`, `.org`).
 
-The `send-contact-email` function has three incorrect settings:
+### Changes
 
-1. **Wrong API URL** -- currently `https://smtp.maileroo.com/v1/email/send`, should be `https://smtp.maileroo.com/api/v2/emails`
-2. **Wrong authentication header** -- currently `X-Mailing-Key`, should be `X-Api-Key`
-3. **Wrong request body format** -- currently sending `from` and `to` as plain strings, but Maileroo expects structured objects like `{ "address": "hello@loumilab.com", "display_name": "LOUMILAB" }`
+**File: `src/pages/Contact.tsx`** (line 14)
 
-### What Will Change
+Update the Zod email validation to include a `.regex()` refinement that requires:
+- Characters before the `@`
+- A domain name after the `@`
+- A top-level domain of at least 2 characters (e.g., `.com`, `.io`)
 
-Only one file needs updating: `supabase/functions/send-contact-email/index.ts`
+The updated schema line will use `.regex(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/, "Please enter a valid email address")` chained after `.email()` for a two-layer check.
 
-The `sendEmail` function will be updated to:
-- Use the correct endpoint URL
-- Use the correct `X-Api-Key` header
-- Format `from` and `to` as EmailObject structures with `address` and optional `display_name` fields
+### User Experience
 
-### After the Fix
-
-Once deployed, the contact form will:
-- Send a notification email to hello@loumilab.com with submission details
-- Send a confirmation email to the person who submitted the form
-
-### Prerequisites
-
-Make sure your domain (`loumilab.com`) is verified in your Maileroo dashboard so emails can be sent from `hello@loumilab.com`.
-
-### Technical Details
-
-Changes to `supabase/functions/send-contact-email/index.ts`, lines 24-46 (the `sendEmail` function):
-
-- Line 25: URL from `https://smtp.maileroo.com/v1/email/send` to `https://smtp.maileroo.com/api/v2/emails`
-- Line 28: Header from `"X-Mailing-Key"` to `"X-Api-Key"`
-- Lines 31-35: Body restructured from flat `{ from, to, subject, html }` to `{ from: { address: from }, to: { address: to }, subject, html }`
+- If someone types an invalid email like `test@test` or `hello@.com`, they'll see a clear error message: "Please enter a valid email address"
+- Valid emails like `name@company.com` pass through as before
 
