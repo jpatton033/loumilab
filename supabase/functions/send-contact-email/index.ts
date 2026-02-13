@@ -22,15 +22,15 @@ function isRateLimited(ip: string): boolean {
 }
 
 async function sendEmail(apiKey: string, from: string, to: string, subject: string, html: string) {
-  const res = await fetch("https://smtp.maileroo.com/v1/email/send", {
+  const res = await fetch("https://smtp.maileroo.com/api/v2/emails", {
     method: "POST",
     headers: {
-      "X-Mailing-Key": apiKey,
+      "X-Api-Key": apiKey,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from,
-      to,
+      from: { address: from },
+      to: { address: to },
       subject,
       html,
     }),
