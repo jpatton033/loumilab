@@ -63,6 +63,20 @@ const Contact = () => {
       toast({ title: "Message sent!", description: "We'll get back to you within 24 hours." });
       setForm({ name: "", email: "", company: "", message: "" });
       localStorage.setItem("last_contact_submission", Date.now().toString());
+
+      // Send email notifications (best-effort, don't block on failure)
+      try {
+        await supabase.functions.invoke("send-contact-email", {
+          body: {
+            name: result.data.name,
+            email: result.data.email,
+            company: result.data.company || null,
+            message: result.data.message,
+          },
+        });
+      } catch (emailError) {
+        console.error("Email notification failed:", emailError);
+      }
     }
     setSubmitting(false);
   };
