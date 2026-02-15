@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { z } from "zod";
 import Layout from "@/components/Layout";
+import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -83,6 +84,11 @@ const Contact = () => {
 
   return (
     <Layout>
+      <SEOHead
+        title="Contact LOUMILAB — Start Your Project Today"
+        description="Get in touch to discuss your next website, SaaS product, or digital project. Fast quotes, transparent process."
+        path="/contact"
+      />
       <section className="section-padding pt-32 lg:pt-40">
         <div className="section-container">
           <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
