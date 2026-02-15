@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout";
+import SEOHead from "@/components/SEOHead";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
@@ -13,6 +14,11 @@ const values = [
 
 const About = () => (
   <Layout>
+    <SEOHead
+      title="About LOUMILAB — A Senior Product-Driven Digital Studio"
+      description="A small, senior team building pristine digital products. Website design, SaaS development, and product strategy."
+      path="/about"
+    />
     <section className="section-padding pt-32 lg:pt-40">
       <div className="section-container">
         <div className="max-w-3xl mx-auto text-center mb-20">

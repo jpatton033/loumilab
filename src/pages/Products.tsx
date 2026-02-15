@@ -1,5 +1,6 @@
 import Layout from "@/components/Layout";
 import SectionHeading from "@/components/SectionHeading";
+import SEOHead from "@/components/SEOHead";
 import { Badge } from "@/components/ui/badge";
 import { ExternalLink } from "lucide-react";
 
@@ -34,6 +35,11 @@ const statusStyles = {
 
 const Products = () => (
   <Layout>
+    <SEOHead
+      title="Our Products — FormFlow, MetricPulse, ShipKit — LOUMILAB"
+      description="Explore LOUMILAB's product suite: AI form builder, SaaS analytics dashboard, and rapid launch boilerplate."
+      path="/products"
+    />
     <section className="section-padding pt-32 lg:pt-40">
       <div className="section-container">
         <SectionHeading

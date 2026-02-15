@@ -1,5 +1,6 @@
 import Layout from "@/components/Layout";
 import SectionHeading from "@/components/SectionHeading";
+import SEOHead from "@/components/SEOHead";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Globe, Code, Lightbulb, Zap, RefreshCw } from "lucide-react";
@@ -39,6 +40,11 @@ const services = [
 
 const Services = () => (
   <Layout>
+    <SEOHead
+      title="Web Design, SaaS Development & AI-Powered Builds — LOUMILAB"
+      description="Custom website design, SaaS MVP development, product strategy, and AI-assisted builds. Ship fast, scale smart."
+      path="/services"
+    />
     <section className="section-padding pt-32 lg:pt-40">
       <div className="section-container">
         <SectionHeading

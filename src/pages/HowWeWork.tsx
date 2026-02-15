@@ -1,5 +1,6 @@
 import Layout from "@/components/Layout";
 import SectionHeading from "@/components/SectionHeading";
+import SEOHead from "@/components/SEOHead";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Search, PenTool, Hammer, Rocket, TrendingUp } from "lucide-react";
@@ -39,6 +40,11 @@ const steps = [
 
 const HowWeWork = () => (
   <Layout>
+    <SEOHead
+      title="Our Process — From Idea to Launch — LOUMILAB"
+      description="Discovery, design, build, launch, and scale. Learn how LOUMILAB delivers digital products with speed and precision."
+      path="/how-we-work"
+    />
     <section className="section-padding pt-32 lg:pt-40">
       <div className="section-container">
         <SectionHeading

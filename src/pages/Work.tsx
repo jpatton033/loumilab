@@ -1,5 +1,6 @@
 import Layout from "@/components/Layout";
 import SectionHeading from "@/components/SectionHeading";
+import SEOHead from "@/components/SEOHead";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
@@ -27,6 +28,11 @@ const caseStudies = [
 
 const Work = () => (
   <Layout>
+    <SEOHead
+      title="Case Studies & Portfolio — LOUMILAB"
+      description="See how we've helped startups and brands ship faster. Real projects, real results."
+      path="/work"
+    />
     <section className="section-padding pt-32 lg:pt-40">
       <div className="section-container">
         <SectionHeading

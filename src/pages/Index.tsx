@@ -4,6 +4,7 @@ import Layout from "@/components/Layout";
 import SectionHeading from "@/components/SectionHeading";
 import HeroSlideshow from "@/components/HeroSlideshow";
 import LoumilabLogo from "@/components/LoumilabLogo";
+import SEOHead from "@/components/SEOHead";
 import { ArrowRight, Layers, Code, Zap } from "lucide-react";
 
 const services = [
@@ -21,6 +22,11 @@ const stats = [
 const Index = () => {
   return (
     <Layout>
+      <SEOHead
+        title="LOUMILAB — Digital Innovation Studio | Web & SaaS Development"
+        description="We build websites, SaaS products, and digital experiences that shine. AI-powered development for 10x faster delivery."
+        path="/"
+      />
       {/* Hero Slideshow */}
       <HeroSlideshow>
         <div className="section-container py-32 lg:py-0 min-h-screen flex flex-col justify-center">
