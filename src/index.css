@@ -53,8 +53,6 @@
     --gradient-dark: linear-gradient(135deg, hsl(240 6% 4%), hsl(240 10% 12%));
     --shadow-soft: 0 4px 24px -4px hsl(0 0% 0% / 0.4);
     --shadow-accent: 0 8px 32px -8px hsl(217 91% 60% / 0.25);
-    --glass-bg: hsl(240 5% 10% / 0.6);
-    --glass-border: hsl(0 0% 100% / 0.08);
   }
 }
 
@@ -93,9 +91,8 @@
   }
 
   .glass-card {
-    background: var(--glass-bg);
-    backdrop-filter: blur(16px);
-    border: 1px solid var(--glass-border);
+    background-color: hsl(var(--surface-elevated));
+    border: 1px solid hsl(var(--border));
   }
 
   .accent-glow {
