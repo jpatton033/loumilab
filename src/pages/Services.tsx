@@ -3,7 +3,7 @@ import SectionHeading from "@/components/SectionHeading";
 import SEOHead from "@/components/SEOHead";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Globe, Code, Lightbulb, Zap, RefreshCw } from "lucide-react";
+import { ArrowRight, Globe, Code, Lightbulb, Zap, RefreshCw, Shield } from "lucide-react";
 
 const services = [
   {
@@ -36,13 +36,19 @@ const services = [
     desc: "Post-launch optimization, feature development, and scaling support to grow your product.",
     features: ["Performance monitoring", "Feature expansion", "Infrastructure scaling", "Analytics & insights"],
   },
+  {
+    icon: Shield,
+    title: "Information & Cybersecurity",
+    desc: "Protect your digital assets with proactive security assessments, secure architecture design, and ongoing threat monitoring.",
+    features: ["Security audits", "Penetration testing", "Secure architecture", "Compliance & governance"],
+  },
 ];
 
 const Services = () => (
   <Layout>
     <SEOHead
-      title="Web Design, SaaS Development & AI-Powered Builds — LOUMILAB"
-      description="Custom website design, SaaS MVP development, product strategy, and AI-assisted builds. Ship fast, scale smart."
+      title="Web Design, SaaS Development, Cybersecurity & AI-Powered Builds — LOUMILAB"
+      description="Custom website design, SaaS MVP development, information security, cybersecurity consulting, and AI-assisted builds. Ship fast, scale smart, stay secure."
       path="/services"
     />
     <section className="section-padding pt-32 lg:pt-40">

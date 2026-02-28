@@ -5,11 +5,12 @@ import SectionHeading from "@/components/SectionHeading";
 import HeroSlideshow from "@/components/HeroSlideshow";
 import LoumilabLogo from "@/components/LoumilabLogo";
 import SEOHead from "@/components/SEOHead";
-import { ArrowRight, Layers, Code, Zap } from "lucide-react";
+import { ArrowRight, Layers, Code, Zap, Shield } from "lucide-react";
 
 const services = [
   { icon: Layers, title: "Website Design & Development", desc: "Custom, responsive websites that convert visitors into customers." },
   { icon: Code, title: "SaaS & MVP Development", desc: "Rapidly prototype, validate, and ship your product ideas." },
+  { icon: Shield, title: "Information & Cybersecurity", desc: "Proactive security assessments and secure-by-design architecture for your digital products." },
   { icon: Zap, title: "AI-Assisted Builds", desc: "Lovable-powered development for 10x faster delivery." },
 ];
 
@@ -23,8 +24,8 @@ const Index = () => {
   return (
     <Layout>
       <SEOHead
-        title="LOUMILAB — Digital Innovation Studio | Web & SaaS Development"
-        description="We build websites, SaaS products, and digital experiences that shine. AI-powered development for 10x faster delivery."
+        title="LOUMILAB — Digital Innovation & Cybersecurity Studio | Web & SaaS Development"
+        description="We build websites, SaaS products, and secure digital experiences that shine. AI-powered development and cybersecurity expertise for modern businesses."
         path="/"
       />
       {/* Hero Slideshow */}
@@ -72,10 +73,10 @@ const Index = () => {
         <div className="section-container">
           <SectionHeading
             label="What we do"
-            title="Websites, SaaS, and everything in between"
+            title="Websites, SaaS, security, and everything in between"
             description="We combine product strategy, modern design, and AI-powered development to ship fast and scale smart."
           />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {services.map((service) => (
               <div
                 key={service.title}
