@@ -9,7 +9,7 @@
     --background: 240 6% 4%;
     --foreground: 0 0% 96%;
 
-    --card: 240 5% 8%;
+    --card: 240 5% 6%;
     --card-foreground: 0 0% 96%;
 
     --popover: 240 5% 8%;
@@ -46,8 +46,8 @@
     --sidebar-ring: 217 91% 60%;
 
     /* Custom tokens */
-    --surface-elevated: 240 5% 10%;
-    --surface-subtle: 240 4% 8%;
+    --surface-elevated: 240 5% 7%;
+    --surface-subtle: 240 4% 5%;
     --accent-glow: 217 91% 65%;
     --gradient-accent: linear-gradient(135deg, hsl(217 91% 60%), hsl(217 91% 45%));
     --gradient-dark: linear-gradient(135deg, hsl(240 6% 4%), hsl(240 10% 12%));
