@@ -11,7 +11,7 @@ const Footer = () => (
             </span>
           </Link>
           <p className="text-muted-foreground max-w-sm leading-relaxed">
-            A digital innovation studio illuminating the future of web and SaaS development. Where ideas come to light.
+            A digital innovation studio illuminating the future of web, SaaS, and cybersecurity. Where ideas come to light.
           </p>
         </div>
         <div>

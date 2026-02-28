@@ -16,7 +16,7 @@ const About = () => (
   <Layout>
     <SEOHead
       title="About LOUMILAB — A Senior Product-Driven Digital Studio"
-      description="A small, senior team building pristine digital products. Website design, SaaS development, and product strategy."
+      description="A small, senior team building pristine digital products. Website design, SaaS development, cybersecurity, and product strategy."
       path="/about"
     />
     <section className="section-padding pt-32 lg:pt-40">
@@ -33,7 +33,7 @@ const About = () => (
             <span className="text-gradient">pristine</span> products
           </h1>
           <p className="text-lg text-muted-foreground leading-relaxed">
-            We're a product-driven digital studio. We design, develop, and launch websites and SaaS products with precision and purpose. We also build and scale our own products — because the best way to understand product development is to do it ourselves.
+            We're a product-driven digital studio. We design, develop, and launch websites, SaaS products, and cybersecurity solutions with precision and purpose. We also build and scale our own products — because the best way to understand product development is to do it ourselves.
           </p>
         </div>
 
