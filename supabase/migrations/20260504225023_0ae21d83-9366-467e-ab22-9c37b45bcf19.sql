@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "No client access to rate_limits" ON public.rate_limits;
