@@ -1,32 +1,4 @@
-<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="hsl(217,91%,95%)"/>
-      <stop offset="40%" stop-color="hsl(217,91%,70%)"/>
-      <stop offset="100%" stop-color="hsl(217,91%,60%)" stop-opacity="0"/>
-    </radialGradient>
-    <linearGradient id="outlineGradient" x1="32" y1="8" x2="32" y2="52" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="hsl(217,91%,70%)"/>
-      <stop offset="100%" stop-color="hsl(217,91%,50%)"/>
-    </linearGradient>
-    <filter id="softGlow" x="-100%" y="-100%" width="300%" height="300%">
-      <feGaussianBlur stdDeviation="4" result="blur"/>
-      <feMerge>
-        <feMergeNode in="blur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-    <filter id="innerGlow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="2" result="blur"/>
-      <feMerge>
-        <feMergeNode in="blur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-  </defs>
-  <rect width="64" height="64" rx="8" fill="hsl(217,30%,10%)"/>
-  <circle cx="32" cy="28" r="20" fill="hsl(217,91%,60%)" fill-opacity="0.15" filter="url(#softGlow)"/>
-  <circle cx="32" cy="28" r="18" fill="none" stroke="url(#outlineGradient)" stroke-width="2.5" filter="url(#innerGlow)"/>
-  <circle cx="32" cy="28" r="8" fill="url(#coreGlow)" filter="url(#innerGlow)"/>
-  <circle cx="32" cy="28" r="3" fill="hsl(217,91%,95%)"/>
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <rect width="64" height="64" rx="8" fill="#0A0A0B"/>
+  <circle cx="32" cy="32" r="14" fill="hsl(217,91%,60%)"/>
 </svg>
