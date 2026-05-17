@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://loumilab.lovable.app/</loc>
+    <loc>https://loumilab.com/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://loumilab.lovable.app/services</loc>
+    <loc>https://loumilab.com/services</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://loumilab.lovable.app/how-we-work</loc>
+    <loc>https://loumilab.com/how-we-work</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://loumilab.lovable.app/products</loc>
+    <loc>https://loumilab.com/products</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://loumilab.lovable.app/work</loc>
+    <loc>https://loumilab.com/work</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://loumilab.lovable.app/about</loc>
+    <loc>https://loumilab.com/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://loumilab.lovable.app/contact</loc>
+    <loc>https://loumilab.com/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

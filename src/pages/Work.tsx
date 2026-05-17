@@ -26,12 +26,26 @@ const caseStudies = [
   },
 ];
 
+const workJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "LOUMILAB Case Studies",
+  url: "https://loumilab.com/work",
+  hasPart: caseStudies.map((c) => ({
+    "@type": "CreativeWork",
+    name: c.title,
+    about: c.category,
+    description: c.desc,
+  })),
+};
+
 const Work = () => (
   <Layout>
     <SEOHead
       title="Case Studies & Portfolio — LOUMILAB"
       description="See how we've helped startups and brands ship faster. Real projects, real results."
       path="/work"
+      jsonLd={workJsonLd}
     />
     <section className="section-padding pt-32 lg:pt-40">
       <div className="section-container">
