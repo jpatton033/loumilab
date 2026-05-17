@@ -73,6 +73,11 @@ const HeroSlideshow = ({ children, autoPlayInterval = 5000 }: HeroSlideshowProps
               <img
                 src={slide.src}
                 alt={slide.alt}
+                width={1920}
+                height={1080}
+                loading={index === 0 ? "eager" : "lazy"}
+                decoding={index === 0 ? "sync" : "async"}
+                fetchPriority={index === 0 ? "high" : "low"}
                 className={cn(
                   "absolute inset-0 w-full h-full object-cover transition-transform duration-[8000ms] ease-out",
                   selectedIndex === index && "scale-105"
