@@ -33,12 +33,28 @@ const statusStyles = {
   "Coming Soon": "bg-muted text-muted-foreground border-border",
 };
 
+const productsJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  itemListElement: products.map((p, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    item: {
+      "@type": "Product",
+      name: p.name,
+      description: p.desc,
+      brand: { "@type": "Brand", name: "LOUMILAB" },
+    },
+  })),
+};
+
 const Products = () => (
   <Layout>
     <SEOHead
       title="Our Products — FormFlow, MetricPulse, ShipKit — LOUMILAB"
       description="Explore LOUMILAB's product suite: AI form builder, SaaS analytics dashboard, and rapid launch boilerplate."
       path="/products"
+      jsonLd={productsJsonLd}
     />
     <section className="section-padding pt-32 lg:pt-40">
       <div className="section-container">

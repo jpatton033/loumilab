@@ -44,12 +44,28 @@ const services = [
   },
 ];
 
+const servicesJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  itemListElement: services.map((s, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    item: {
+      "@type": "Service",
+      name: s.title,
+      description: s.desc,
+      provider: { "@type": "Organization", name: "LOUMILAB", url: "https://loumilab.com" },
+    },
+  })),
+};
+
 const Services = () => (
   <Layout>
     <SEOHead
-      title="Web Design, SaaS Development, Cybersecurity & AI-Powered Builds — LOUMILAB"
-      description="Custom website design, SaaS MVP development, information security, cybersecurity consulting, and AI-assisted builds. Ship fast, scale smart, stay secure."
+      title="Web Design, SaaS & Cybersecurity Services — LOUMILAB"
+      description="Custom website design, SaaS MVP development, cybersecurity consulting, and AI-assisted builds. Ship fast, scale smart, stay secure."
       path="/services"
+      jsonLd={servicesJsonLd}
     />
     <section className="section-padding pt-32 lg:pt-40">
       <div className="section-container">
