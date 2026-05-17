@@ -1,0 +1,13 @@
+# LOUMILAB
+
+> Product-driven digital studio and cybersecurity consultancy. We design and build websites, SaaS products, and secure digital experiences using AI-powered development.
+
+## Pages
+
+- [Home](/): Studio overview, services, and featured work.
+- [Services](/services): Website design, SaaS/MVP development, product strategy, AI-assisted builds, and information & cybersecurity.
+- [How We Work](/how-we-work): Our process from discovery to launch and iteration.
+- [Products](/products): SaaS products we build in-house (FormFlow, MetricPulse, ShipKit, ContentForge).
+- [Work](/work): Case studies and client outcomes.
+- [About](/about): Studio philosophy, team, and approach.
+- [Contact](/contact): Start a project — hello@loumilab.com.

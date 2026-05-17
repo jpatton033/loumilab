@@ -24,7 +24,7 @@ const Index = () => {
   return (
     <Layout>
       <SEOHead
-        title="LOUMILAB — Digital Innovation & Cybersecurity Studio | Web & SaaS Development"
+        title="LOUMILAB — Digital Innovation & Cybersecurity Studio"
         description="We build websites, SaaS products, and secure digital experiences that shine. AI-powered development and cybersecurity expertise for modern businesses."
         path="/"
       />
