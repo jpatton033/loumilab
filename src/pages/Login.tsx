@@ -45,6 +45,12 @@ const Login = () => {
 
   return (
     <Layout>
+      <SEOHead
+        title="Admin Login — LOUMILAB"
+        description="Sign in to the LOUMILAB admin dashboard."
+        path="/login"
+        noindex
+      />
       <section className="section-padding pt-32 lg:pt-40 min-h-[70vh] flex items-center">
         <div className="section-container w-full max-w-md mx-auto">
           <h1 className="text-3xl font-semibold mb-2 text-center">Admin Login</h1>
