@@ -7,44 +7,21 @@ const corsHeaders = {
 };
 
 const RATE_LIMIT_MAX = 5;
-const RATE_LIMIT_WINDOW_MS = 3600000; // 1 hour
+const RATE_LIMIT_WINDOW_SECONDS = 3600; // 1 hour
 
 async function checkRateLimit(supabaseAdmin: ReturnType<typeof createClient>, key: string): Promise<boolean> {
-  const now = new Date();
-  const windowStart = new Date(now.getTime() - RATE_LIMIT_WINDOW_MS);
+  // Atomic upsert+increment via RPC — prevents TOCTOU race
+  const { data, error } = await supabaseAdmin.rpc('check_and_increment_rate_limit', {
+    _key: key,
+    _max_count: RATE_LIMIT_MAX,
+    _window_seconds: RATE_LIMIT_WINDOW_SECONDS,
+  });
 
-  // Try to upsert the rate limit entry
-  const { data, error } = await supabaseAdmin
-    .from('rate_limits')
-    .select('request_count, window_start')
-    .eq('key', key)
-    .single();
-
-  if (error && error.code !== 'PGRST116') {
+  if (error) {
     console.error('Rate limit check error:', error);
-    return false; // Allow on error to not block legitimate requests
+    return false; // fail-open for legitimate traffic
   }
-
-  if (!data) {
-    // No entry — create one
-    await supabaseAdmin.from('rate_limits').insert({ key, request_count: 1, window_start: now.toISOString() });
-    return false;
-  }
-
-  const entryWindowStart = new Date(data.window_start);
-  if (entryWindowStart < windowStart) {
-    // Window expired — reset
-    await supabaseAdmin.from('rate_limits').update({ request_count: 1, window_start: now.toISOString() }).eq('key', key);
-    return false;
-  }
-
-  if (data.request_count >= RATE_LIMIT_MAX) {
-    return true; // Rate limited
-  }
-
-  // Increment
-  await supabaseAdmin.from('rate_limits').update({ request_count: data.request_count + 1 }).eq('key', key);
-  return false;
+  return data === true; // true => limited
 }
 
 async function sendEmail(apiKey: string, from: string, to: string, subject: string, html: string) {
@@ -71,6 +48,8 @@ async function sendEmail(apiKey: string, from: string, to: string, subject: stri
   return res.json();
 }
 
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -82,12 +61,8 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
     );
 
-    // Persistent rate limiting by IP
     const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
-    const rateLimitKey = `contact_email:${ip}`;
-
-    if (await checkRateLimit(supabaseAdmin, rateLimitKey)) {
-      // Cleanup old entries opportunistically
+    if (await checkRateLimit(supabaseAdmin, `contact_email:${ip}`)) {
       await supabaseAdmin.rpc('cleanup_old_rate_limits').catch(() => {});
       return new Response(
         JSON.stringify({ error: "Too many requests. Please try again later." }),
@@ -96,39 +71,53 @@ serve(async (req) => {
     }
 
     const apiKey = Deno.env.get("MAILEROO_API_KEY");
-    if (!apiKey) {
-      throw new Error("MAILEROO_API_KEY not configured");
-    }
+    if (!apiKey) throw new Error("MAILEROO_API_KEY not configured");
 
-    const { name, email, company, message } = await req.json();
+    const body = await req.json().catch(() => null);
+    const submissionId = body?.submission_id;
 
-    // Validate required fields and types
-    if (!name || typeof name !== 'string' || !email || typeof email !== 'string' || !message || typeof message !== 'string') {
+    if (!submissionId || typeof submissionId !== 'string' || !UUID_RE.test(submissionId)) {
       return new Response(
-        JSON.stringify({ error: "Missing required fields" }),
+        JSON.stringify({ error: "Missing or invalid submission_id" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    // Validate email format and input lengths
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email) || name.length > 200 || email.length > 320 || message.length > 5000) {
+    // Fetch the verified record from the DB — this is the source of truth.
+    // Prevents using this endpoint as an open email relay: attackers cannot
+    // send confirmations to arbitrary addresses without first creating a row
+    // (which is itself rate-limited by the trigger to 3/hour/email).
+    const { data: submission, error: fetchError } = await supabaseAdmin
+      .from('contact_submissions')
+      .select('name, email, company, message, created_at')
+      .eq('id', submissionId)
+      .single();
+
+    if (fetchError || !submission) {
       return new Response(
-        JSON.stringify({ error: "Invalid input" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({ error: "Submission not found" }),
+        { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    // Escape HTML to prevent injection in email templates
+    // Only send for very recent submissions (defense in depth — prevents
+    // replay-style abuse of old submission IDs).
+    const ageMs = Date.now() - new Date(submission.created_at as string).getTime();
+    if (ageMs > 5 * 60 * 1000) {
+      return new Response(
+        JSON.stringify({ error: "Submission expired" }),
+        { status: 410, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     const escapeHtml = (str: string) => str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-    const safeName = escapeHtml(name);
-    const safeEmail = escapeHtml(email);
-    const safeCompany = company ? escapeHtml(String(company)) : "Not provided";
-    const safeMessage = escapeHtml(message);
+    const safeName = escapeHtml(submission.name as string);
+    const safeEmail = escapeHtml(submission.email as string);
+    const safeCompany = submission.company ? escapeHtml(String(submission.company)) : "Not provided";
+    const safeMessage = escapeHtml(submission.message as string);
 
     const fromAddress = "hello@loumilab.com";
 
-    // 1. Notification to LOUMILAB
     const notificationHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <h2 style="color: #1a1a1a; border-bottom: 2px solid #3B82F6; padding-bottom: 10px;">New Contact Form Submission</h2>
@@ -144,7 +133,6 @@ serve(async (req) => {
       </div>
     `;
 
-    // 2. Confirmation to the client
     const confirmationHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <h2 style="color: #1a1a1a;">Thank you, ${safeName}!</h2>
@@ -159,13 +147,11 @@ serve(async (req) => {
 
     const results = await Promise.allSettled([
       sendEmail(apiKey, fromAddress, "hello@loumilab.com", `New inquiry from ${safeName}`, notificationHtml),
-      sendEmail(apiKey, fromAddress, email, "We received your message — LOUMILAB", confirmationHtml),
+      sendEmail(apiKey, fromAddress, submission.email as string, "We received your message — LOUMILAB", confirmationHtml),
     ]);
 
     const errors = results.filter(r => r.status === "rejected");
-    if (errors.length > 0) {
-      console.error("Some emails failed:", errors);
-    }
+    if (errors.length > 0) console.error("Some emails failed:", errors);
 
     return new Response(
       JSON.stringify({ success: true }),
