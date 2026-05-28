@@ -11,7 +11,7 @@ const services = [
   { icon: Layers, title: "Website Design & Development", desc: "Custom, responsive websites that convert visitors into customers." },
   { icon: Code, title: "SaaS & MVP Development", desc: "Rapidly prototype, validate, and ship your product ideas." },
   { icon: Shield, title: "Information & Cybersecurity", desc: "Proactive security assessments and secure-by-design architecture for your digital products." },
-  { icon: Zap, title: "AI-Assisted Builds", desc: "Lovable-powered development for 10x faster delivery." },
+  { icon: Zap, title: "AI-Assisted Builds", desc: "AI-powered development for 10x faster delivery." },
 ];
 
 const stats = [
