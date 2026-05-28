@@ -61,7 +61,12 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
     );
 
-    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+    // Use CF-Connecting-IP (verified by Cloudflare) or the rightmost x-forwarded-for
+    // value (appended by the last trusted proxy). The leftmost value is client-controlled
+    // and can be spoofed to bypass per-IP rate limits.
+    const ip = req.headers.get('cf-connecting-ip')
+      || req.headers.get('x-forwarded-for')?.split(',').at(-1)?.trim()
+      || 'unknown';
     if (await checkRateLimit(supabaseAdmin, `contact_email:${ip}`)) {
       await supabaseAdmin.rpc('cleanup_old_rate_limits').catch(() => {});
       return new Response(
