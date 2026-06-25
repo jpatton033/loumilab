@@ -93,7 +93,7 @@ const testimonials = [
 
 const useCountUp = (target: number, duration = 1400) => {
   const [val, setVal] = useState(0);
-  const ref = useRef<HTMLSpanElement | null>(null);
+  const ref = useRef<HTMLDivElement | null>(null);
   const started = useRef(false);
 
   useEffect(() => {
