@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/Layout";
@@ -6,6 +6,7 @@ import LoumilabLogo from "@/components/LoumilabLogo";
 import SEOHead from "@/components/SEOHead";
 import IntroAnimation from "@/components/IntroAnimation";
 import Reveal from "@/components/Reveal";
+const HeroScene = lazy(() => import("@/components/HeroScene"));
 import {
   ArrowRight,
   Layers,
@@ -200,8 +201,17 @@ const Index = () => {
             }}
           />
 
-          <div className="relative section-container w-full py-24 lg:py-32">
-            <div className="max-w-4xl">
+          {/* 3D scene — right half on lg, soft background on mobile */}
+          <div className="absolute inset-0 lg:left-1/2 opacity-40 lg:opacity-100 pointer-events-none">
+            <Suspense fallback={null}>
+              <HeroScene />
+            </Suspense>
+            {/* Edge fade so text remains legible on overlap */}
+            <div className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-[#050505] to-transparent hidden lg:block" />
+          </div>
+
+          <div className="relative section-container w-full py-24 lg:py-32 grid lg:grid-cols-2 gap-12 items-center">
+            <div className="max-w-2xl">
               <Reveal>
                 <span className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-background/40 backdrop-blur px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-muted-foreground">
                   <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
@@ -209,17 +219,16 @@ const Index = () => {
                 </span>
               </Reveal>
               <Reveal delay={120}>
-                <h1 className="mt-8 text-5xl md:text-7xl lg:text-[5.5rem] font-semibold leading-[1.02] tracking-[-0.03em]">
+                <h1 className="mt-8 text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.02] tracking-[-0.03em]">
                   Building{" "}
                   <span className="text-gradient">Secure Digital</span>{" "}
                   Innovation.
                 </h1>
               </Reveal>
               <Reveal delay={240}>
-                <p className="mt-8 text-lg lg:text-xl text-muted-foreground max-w-2xl leading-relaxed">
-                  We design, develop, and launch secure websites, SaaS platforms,
-                  AI-powered applications, and digital products that help
-                  businesses grow with confidence.
+                <p className="mt-8 text-lg lg:text-xl text-muted-foreground max-w-xl leading-relaxed">
+                  We design secure websites, AI-powered applications, SaaS
+                  platforms, and digital experiences engineered for the future.
                 </p>
               </Reveal>
               <Reveal delay={360}>
@@ -235,12 +244,15 @@ const Index = () => {
                     asChild
                     className="rounded-full px-7 border-border/60 hover:border-accent/50 hover:bg-accent/5"
                   >
-                    <Link to="/work">Explore Our Work</Link>
+                    <Link to="/work">View Our Work</Link>
                   </Button>
                 </div>
               </Reveal>
             </div>
+            {/* Right column placeholder — scene already absolutely positioned */}
+            <div className="hidden lg:block" aria-hidden="true" />
           </div>
+
 
           {/* Scroll cue */}
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-70">
