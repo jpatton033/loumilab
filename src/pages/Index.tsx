@@ -10,7 +10,6 @@ import {
   ArrowRight,
   Layers,
   Code,
-  Zap,
   Shield,
   Cloud,
   Compass,
