@@ -306,15 +306,14 @@ const Index = () => {
               </Reveal>
               <Reveal delay={120}>
                 <h1 className="font-hero mt-8 text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.02] tracking-[-0.04em]">
-                  Building{" "}
-                  <span className="text-gradient">Secure Digital</span>{" "}
-                  Innovations.
+                  Modern Websites.{" "}
+                  <span className="text-gradient">Secure Solutions.</span>{" "}
+                  Built for Growth.
                 </h1>
               </Reveal>
               <Reveal delay={240}>
                 <p className="mt-8 text-lg lg:text-xl text-muted-foreground max-w-xl leading-relaxed">
-                  We design secure websites, AI-powered applications, SaaS
-                  platforms, and digital experiences engineered for the future.
+                  We design and develop premium websites, web applications, and digital experiences that combine exceptional design, modern technology, and security-first engineering — built to scale with your business.
                 </p>
               </Reveal>
               <Reveal delay={360}>
@@ -330,7 +329,7 @@ const Index = () => {
                     asChild
                     className="rounded-full px-7 border-border/60 hover:border-accent/50 hover:bg-accent/5"
                   >
-                    <Link to="/work">View Our Work</Link>
+                    <Link to="/contact">Schedule a Consultation</Link>
                   </Button>
                 </div>
               </Reveal>
