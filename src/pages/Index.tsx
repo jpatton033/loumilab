@@ -219,7 +219,7 @@ const Index = () => {
                 </span>
               </Reveal>
               <Reveal delay={120}>
-                <h1 className="mt-8 text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.02] tracking-[-0.03em]">
+                <h1 className="font-hero mt-8 text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.02] tracking-[-0.04em]">
                   Building{" "}
                   <span className="text-gradient">Secure Digital</span>{" "}
                   Innovations.

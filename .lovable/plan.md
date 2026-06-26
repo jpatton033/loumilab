@@ -1,16 +1,11 @@
 ## Goal
-Remove Lovable build references and rebrand homepage content toward Loumilab / AI.
+Restyle the homepage hero headline "Building Secure Digital Innovations." with a modern Apple-style typeface (Urbanist), while leaving the rest of the site untouched.
 
 ## Changes
+1. **Install font**: `bun add @fontsource/urbanist` (weights 500/600/700).
+2. **Import in `src/main.tsx`**: add `@fontsource/urbanist/500.css`, `/600.css`, `/700.css`.
+3. **Tailwind token**: add `hero: ['Urbanist', 'system-ui', 'sans-serif']` to `fontFamily` in `tailwind.config.ts`.
+4. **Apply in `src/pages/Index.tsx`**: add `font-hero` plus tighter tracking (`tracking-[-0.04em]`) and weight `font-semibold` to the hero `<h1>` only. No other headings change.
 
-### 1. Homepage content (`src/pages/Index.tsx`)
-- Line 14: Change service description from `Lovable-powered development for 10x faster delivery.` to `AI-powered development for 10x faster delivery.`
-
-### 2. Structured data (`index.html`)
-- Line 31: Update JSON-LD `url` from `https://loumilab.lovable.app` to `https://loumilab.com`
-
-### 3. Build tooling (`vite.config.ts`)
-- Remove `lovable-tagger` import and the `componentTagger()` plugin from the Vite config. This removes the dev-only `data-lovable-id` attributes and the Lovable build reference entirely.
-
-## Outcome
-Zero Lovable branding remains in the codebase (content, metadata, or build config).
+## Result
+Hero headline gets a crisp, modern Apple.com-like display treatment. All other typography (section headings, body, nav) stays on Space Grotesk.
