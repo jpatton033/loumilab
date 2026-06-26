@@ -359,55 +359,57 @@ const Index = () => {
         <section className="section-padding relative">
           <div className="section-container">
             <Reveal>
-              <div className="max-w-3xl mb-20">
-                <span className="text-accent text-xs tracking-[0.3em] uppercase">What We Do</span>
-                <h2 className="mt-4 text-4xl lg:text-6xl font-semibold leading-[1.05] tracking-tight">
-                  Premium websites first.
-                  <br />
-                  <span className="text-gradient">Strategic partnership always.</span>
+              <div className="max-w-4xl mb-20">
+                <span className="text-[#3B82F6] text-[11px] tracking-[0.4em] uppercase font-semibold">What We Do</span>
+                <h2 className="font-hero mt-6 text-5xl lg:text-7xl font-extrabold leading-[0.95] tracking-[-0.035em]">
+                  Specialized disciplines.
                 </h2>
-                <p className="mt-6 text-lg text-muted-foreground max-w-2xl">
-                  Website design and development is our core craft. We also advise clients on technology, cybersecurity, AI, and innovation — so every digital decision compounds.
-                </p>
               </div>
             </Reveal>
-            <div className="grid grid-cols-1 lg:grid-cols-6 gap-6">
-              {services.map((s, i) => (
-                <Reveal
-                  key={s.title}
-                  delay={i * 80}
-                  className={i === 0 ? "lg:col-span-6" : "lg:col-span-3"}
-                >
-                  <div className="group relative h-full rounded-3xl border border-border/60 bg-card/40 backdrop-blur-sm p-8 overflow-hidden hover:border-accent/40 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_30px_60px_-30px_hsl(217_91%_60%/0.4)]">
-
-                    <div className="absolute -top-20 -right-20 w-56 h-56 rounded-full bg-accent/0 group-hover:bg-accent/15 blur-3xl transition-all duration-700" />
-                    <div className="relative">
-                      <div className="flex items-center gap-3 mb-6">
-                        <div className="w-14 h-14 rounded-2xl bg-accent/10 border border-accent/20 flex items-center justify-center group-hover:bg-accent/20 group-hover:scale-110 transition-all duration-500">
-                          <s.icon className="text-accent" size={26} />
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+              {services.map((s, i) => {
+                // Bento spans: 0=8, 1=4, 2=4, 3=4, 4=4
+                const spans = ["md:col-span-8", "md:col-span-4", "md:col-span-4", "md:col-span-4", "md:col-span-4"];
+                const isFeatured = i === 0;
+                return (
+                  <Reveal key={s.title} delay={i * 80} className={spans[i] ?? "md:col-span-4"}>
+                    <div className="group relative h-full rounded-[2rem] border border-zinc-900 bg-[#161617] p-10 overflow-hidden hover:border-zinc-700 transition-colors duration-700 flex flex-col">
+                      <div className="flex items-center gap-3 mb-8">
+                        <div className="w-12 h-12 rounded-xl bg-[#3B82F6] flex items-center justify-center">
+                          <s.icon className="text-white" size={22} strokeWidth={1.75} />
                         </div>
                         {s.tag && (
-                          <span className="text-[10px] uppercase tracking-[0.25em] text-accent border border-accent/40 rounded-full px-2.5 py-1">
+                          <span className="text-[10px] uppercase tracking-[0.3em] text-[#3B82F6]">
                             {s.tag}
                           </span>
                         )}
                       </div>
-                      <h3 className="font-display text-xl lg:text-2xl font-semibold mb-3">{s.title}</h3>
-                      <p className="text-muted-foreground leading-relaxed">{s.desc}</p>
-                      <div className="mt-6 flex flex-wrap gap-2">
-                        {s.items.map((it) => (
-                          <span
+                      <h3 className={`font-hero font-bold tracking-[-0.02em] mb-4 ${isFeatured ? "text-4xl lg:text-5xl" : "text-2xl lg:text-3xl"}`}>
+                        {s.title}
+                      </h3>
+                      <p className={`text-zinc-400 leading-relaxed ${isFeatured ? "text-lg max-w-xl" : "text-base"}`}>
+                        {s.desc}
+                      </p>
+                      <ul className="mt-8 space-y-px">
+                        {s.items.slice(0, isFeatured ? 6 : 4).map((it) => (
+                          <li
                             key={it}
-                            className="text-xs text-foreground/80 border border-border/60 rounded-full px-3 py-1.5 bg-background/40"
+                            className="text-sm text-zinc-300 py-2.5 border-t border-zinc-900 first:border-t-0 flex items-center gap-3"
                           >
+                            <span className="w-1 h-1 rounded-full bg-[#3B82F6]" />
                             {it}
-                          </span>
+                          </li>
                         ))}
-                      </div>
+                        {s.items.length > (isFeatured ? 6 : 4) && (
+                          <li className="text-xs text-zinc-600 pt-3 tracking-wide">
+                            + {s.items.length - (isFeatured ? 6 : 4)} more
+                          </li>
+                        )}
+                      </ul>
                     </div>
-                  </div>
-                </Reveal>
-              ))}
+                  </Reveal>
+                );
+              })}
             </div>
           </div>
         </section>
