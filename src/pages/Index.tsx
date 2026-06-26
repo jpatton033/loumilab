@@ -222,7 +222,7 @@ const Index = () => {
                 <h1 className="mt-8 text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.02] tracking-[-0.03em]">
                   Building{" "}
                   <span className="text-gradient">Secure Digital</span>{" "}
-                  Innovation.
+                  Innovations.
                 </h1>
               </Reveal>
               <Reveal delay={240}>
