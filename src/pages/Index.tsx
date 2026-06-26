@@ -248,8 +248,8 @@ const Index = () => {
       <IntroAnimation />
       <Layout>
         <SEOHead
-          title="LOUMILAB — Building Secure Digital Innovation"
-          description="Loumilab designs, develops, and launches secure websites, SaaS platforms, AI-powered applications, and digital products that help businesses grow with confidence."
+          title="LOUMILAB — Modern Websites. Secure Solutions. Built for Growth."
+          description="Loumilab is a premium website design and development studio. We build modern, secure, high-performance websites and provide expert technology, cybersecurity, and AI consulting."
           path="/"
         />
 
