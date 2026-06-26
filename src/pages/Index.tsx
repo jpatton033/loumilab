@@ -275,67 +275,53 @@ const Index = () => {
           ref={heroRef}
           className="relative min-h-[92vh] flex items-center overflow-hidden -mt-16 lg:-mt-20 pt-16 lg:pt-20"
         >
-          {/* Animated gradient backdrop */}
-          <div className="absolute inset-0 bg-[#050505]" />
+          {/* Solid base */}
+          <div className="absolute inset-0 bg-[#0A0A0B]" />
+          {/* Single quiet halo */}
           <div
-            className="absolute inset-0 opacity-80"
+            className="absolute inset-0 opacity-70"
             style={{
               background:
-                "radial-gradient(900px 600px at 70% 30%, hsl(217 91% 35% / 0.35), transparent 60%), radial-gradient(700px 500px at 20% 80%, hsl(217 91% 50% / 0.18), transparent 65%)",
+                "radial-gradient(900px 600px at 70% 35%, hsl(217 91% 30% / 0.22), transparent 65%)",
               transform: "translate3d(var(--mx,0),var(--my,0),0)",
-              transition: "transform 600ms ease-out",
-            }}
-          />
-          {/* Floating glass shapes */}
-          <div className="pointer-events-none absolute inset-0 overflow-hidden">
-            <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-accent/10 blur-3xl animate-drift-slow" />
-            <div
-              className="absolute bottom-0 right-0 w-[40rem] h-[40rem] rounded-full bg-accent/5 blur-3xl animate-drift-slow"
-              style={{ animationDelay: "3s" }}
-            />
-          </div>
-          {/* Grid texture */}
-          <div
-            className="absolute inset-0 opacity-[0.04]"
-            style={{
-              backgroundImage:
-                "linear-gradient(hsl(0 0% 100% / 0.6) 1px, transparent 1px), linear-gradient(90deg, hsl(0 0% 100% / 0.6) 1px, transparent 1px)",
-              backgroundSize: "64px 64px",
+              transition: "transform 800ms cubic-bezier(0.22,1,0.36,1)",
             }}
           />
 
-          {/* 3D scene — right half on lg, soft background on mobile */}
-          <div className="absolute inset-0 lg:left-1/2 opacity-40 lg:opacity-100 pointer-events-none">
+          {/* 3D scene — ambient texture only */}
+          <div className="absolute inset-0 lg:left-1/2 opacity-25 pointer-events-none">
             <Suspense fallback={null}>
               <HeroScene />
             </Suspense>
-            {/* Edge fade so text remains legible on overlap */}
-            <div className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-[#050505] to-transparent hidden lg:block" />
+            <div className="absolute inset-y-0 left-0 w-2/3 bg-gradient-to-r from-[#0A0A0B] via-[#0A0A0B]/80 to-transparent hidden lg:block" />
           </div>
 
-          <div className="relative section-container w-full py-24 lg:py-32 grid lg:grid-cols-2 gap-12 items-center">
-            <div className="max-w-2xl">
+          <div className="relative section-container w-full py-28 lg:py-40">
+            <div className="max-w-5xl">
               <Reveal>
-                <span className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-background/40 backdrop-blur px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-muted-foreground">
-                  <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-                  Loumi.AI · Studio
+                <span
+                  className="inline-flex items-center gap-2 rounded-full border border-[#3B82F6]/30 bg-[#3B82F6]/5 px-4 py-1.5 text-[11px] uppercase tracking-[0.3em] text-[#3B82F6]"
+                  style={{ fontFamily: "Space Grotesk, sans-serif" }}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#3B82F6] animate-pulse" />
+                  Design + Engineering Studio
                 </span>
               </Reveal>
               <Reveal delay={120}>
-                <h1 className="font-hero mt-8 text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.02] tracking-[-0.04em]">
+                <h1 className="font-hero mt-10 font-black leading-[0.9] tracking-[-0.045em]" style={{ fontSize: "clamp(3rem, 9.5vw, 8rem)" }}>
                   Modern Websites.{" "}
-                  <span className="text-gradient">Secure Solutions.</span>{" "}
+                  <span className="text-[#3B82F6]">Secure Solutions.</span>{" "}
                   Built for Growth.
                 </h1>
               </Reveal>
               <Reveal delay={240}>
-                <p className="mt-8 text-lg lg:text-xl text-muted-foreground max-w-xl leading-relaxed">
-                  We design and develop premium websites, web applications, and digital experiences that combine exceptional design, modern technology, and security-first engineering — built to scale with your business.
+                <p className="mt-10 text-xl md:text-2xl text-zinc-400 font-light max-w-2xl leading-relaxed">
+                  Premium websites, web applications, and digital experiences — designed with restraint, engineered for security, built to scale.
                 </p>
               </Reveal>
               <Reveal delay={360}>
-                <div className="mt-12 flex flex-wrap gap-4">
-                  <Button variant="accent" size="lg" asChild className="glow-hover rounded-full px-7">
+                <div className="mt-14 flex flex-wrap items-center gap-4">
+                  <Button asChild size="lg" className="rounded-full px-8 h-12 bg-white text-black hover:bg-zinc-200 font-semibold">
                     <Link to="/contact">
                       Start Your Project <ArrowRight size={18} />
                     </Link>
@@ -344,22 +330,19 @@ const Index = () => {
                     variant="outline"
                     size="lg"
                     asChild
-                    className="rounded-full px-7 border-border/60 hover:border-accent/50 hover:bg-accent/5"
+                    className="rounded-full px-8 h-12 bg-[#161617] border-zinc-800 hover:border-zinc-600 hover:bg-[#161617] text-white font-semibold"
                   >
                     <Link to="/contact">Schedule a Consultation</Link>
                   </Button>
                 </div>
               </Reveal>
             </div>
-            {/* Right column placeholder — scene already absolutely positioned */}
-            <div className="hidden lg:block" aria-hidden="true" />
           </div>
 
-
           {/* Scroll cue */}
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-70">
-            <span className="text-[10px] tracking-[0.3em] uppercase text-muted-foreground">Scroll</span>
-            <div className="w-px h-10 bg-gradient-to-b from-accent to-transparent" />
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
+            <span className="text-[10px] tracking-[0.4em] uppercase text-zinc-500">Scroll</span>
+            <div className="w-px h-10 bg-gradient-to-b from-zinc-600 to-transparent" />
           </div>
         </section>
 
