@@ -415,83 +415,84 @@ const Index = () => {
         </section>
 
         {/* WHY LOUMILAB */}
-        <section className="section-padding bg-secondary/20 border-y border-border/60 relative overflow-hidden">
-          <div
-            className="absolute inset-0 opacity-40 pointer-events-none"
-            style={{
-              background:
-                "radial-gradient(800px 500px at 80% 20%, hsl(217 91% 50% / 0.12), transparent 60%)",
-            }}
-          />
-          <div className="section-container relative">
-            <Reveal>
-              <div className="max-w-3xl mb-20">
-                <span className="text-accent text-xs tracking-[0.3em] uppercase">Why Loumilab</span>
-                <h2 className="mt-4 text-4xl lg:text-6xl font-semibold leading-[1.05] tracking-tight">
-                  Engineered for trust.
-                  <br />
-                  <span className="text-gradient">Designed to last.</span>
-                </h2>
+        <section className="section-padding border-t border-zinc-900">
+          <div className="section-container">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-20">
+              <div className="lg:col-span-5">
+                <div className="lg:sticky lg:top-32">
+                  <Reveal>
+                    <span className="text-[#3B82F6] text-[11px] tracking-[0.4em] uppercase font-semibold">Why Loumilab</span>
+                  </Reveal>
+                  <Reveal delay={120}>
+                    <h2 className="font-hero mt-6 text-5xl lg:text-7xl font-extrabold leading-[0.95] tracking-[-0.035em]">
+                      The standard,<br />redefined.
+                    </h2>
+                  </Reveal>
+                </div>
               </div>
-            </Reveal>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-border/60 rounded-3xl overflow-hidden border border-border/60">
-              {why.map((item, i) => (
-                <Reveal key={item.title} delay={i * 60}>
-                  <div className="h-full p-10 bg-background/80 hover:bg-background transition-colors duration-500 group">
-                    <item.icon className="text-accent mb-6 group-hover:scale-110 transition-transform duration-500" size={28} />
-                    <h3 className="font-display text-lg font-semibold mb-3">{item.title}</h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed">{item.desc}</p>
-                  </div>
-                </Reveal>
-              ))}
+              <div className="lg:col-span-7 space-y-12">
+                {why.map((item, i) => (
+                  <Reveal key={item.title} delay={i * 80}>
+                    <div className="border-t border-zinc-900 pt-10">
+                      <div className="flex items-baseline gap-6 mb-5">
+                        <span className="text-zinc-600 font-mono text-sm tracking-widest">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <h3 className="font-hero text-2xl lg:text-3xl font-bold tracking-[-0.02em]">
+                          {item.title}
+                        </h3>
+                      </div>
+                      <p className="text-zinc-400 text-lg lg:text-xl leading-relaxed font-light pl-[3.25rem]">
+                        {item.desc}
+                      </p>
+                    </div>
+                  </Reveal>
+                ))}
+              </div>
             </div>
           </div>
         </section>
 
         {/* PRODUCTS */}
-        <section className="section-padding">
+        <section className="section-padding border-t border-zinc-900">
           <div className="section-container">
             <Reveal>
-              <div className="max-w-3xl mb-20">
-                <span className="text-accent text-xs tracking-[0.3em] uppercase">Featured Products</span>
-                <h2 className="mt-4 text-4xl lg:text-6xl font-semibold leading-[1.05] tracking-tight">
-                  Software, crafted with{" "}
-                  <span className="text-gradient">intention.</span>
+              <div className="max-w-4xl mb-20">
+                <span className="text-[#3B82F6] text-[11px] tracking-[0.4em] uppercase font-semibold">Featured Work</span>
+                <h2 className="font-hero mt-6 text-5xl lg:text-7xl font-extrabold leading-[0.95] tracking-[-0.035em]">
+                  Software, crafted with intention.
                 </h2>
               </div>
             </Reveal>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               {products.map((p, i) => (
                 <Reveal key={p.name} delay={i * 100}>
-                  <div className="group relative h-[28rem] rounded-3xl overflow-hidden border border-border/60 bg-card">
-                    {/* Animated gradient */}
-                    <div
-                      className={`absolute inset-0 bg-gradient-to-br ${p.gradient} opacity-90`}
-                    />
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.2),transparent_50%)]" />
+                  <div className="group relative h-[28rem] rounded-[2rem] overflow-hidden border border-zinc-900 bg-[#161617]">
+                    {/* Accent stripe */}
+                    <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#3B82F6]/60 to-transparent" />
                     {/* Mock device */}
-                    <div className="absolute top-14 left-1/2 -translate-x-1/2 w-[85%] aspect-[16/10] rounded-xl bg-background/90 backdrop-blur border border-white/20 shadow-2xl group-hover:-translate-y-2 group-hover:scale-[1.02] transition-all duration-700 overflow-hidden">
-                      <div className="h-6 bg-background/95 border-b border-border/60 flex items-center gap-1.5 px-3">
-                        <span className="w-2 h-2 rounded-full bg-destructive/60" />
-                        <span className="w-2 h-2 rounded-full bg-yellow-500/60" />
-                        <span className="w-2 h-2 rounded-full bg-green-500/60" />
+                    <div className="absolute top-16 left-1/2 -translate-x-1/2 w-[85%] aspect-[16/10] rounded-xl bg-[#0A0A0B] border border-zinc-800 shadow-2xl group-hover:-translate-y-1 transition-transform duration-700 overflow-hidden">
+                      <div className="h-6 bg-[#0A0A0B] border-b border-zinc-900 flex items-center gap-1.5 px-3">
+                        <span className="w-2 h-2 rounded-full bg-zinc-700" />
+                        <span className="w-2 h-2 rounded-full bg-zinc-700" />
+                        <span className="w-2 h-2 rounded-full bg-zinc-700" />
                       </div>
                       <div className="p-3 space-y-2">
-                        <div className="h-2 w-1/3 bg-foreground/20 rounded" />
+                        <div className="h-2 w-1/3 bg-zinc-800 rounded" />
                         <div className="grid grid-cols-3 gap-1.5 mt-3">
                           {Array.from({ length: 6 }).map((_, k) => (
-                            <div key={k} className="h-10 rounded bg-accent/20" />
+                            <div key={k} className="h-10 rounded bg-[#3B82F6]/15" />
                           ))}
                         </div>
                       </div>
                     </div>
                     {/* Copy */}
-                    <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-background/95 via-background/60 to-transparent">
-                      <div className="text-xs uppercase tracking-[0.25em] text-accent mb-2">
+                    <div className="absolute bottom-0 left-0 right-0 p-8">
+                      <div className="text-[10px] uppercase tracking-[0.3em] text-[#3B82F6] mb-3">
                         {p.tagline}
                       </div>
-                      <h3 className="font-display text-2xl font-semibold mb-2">{p.name}</h3>
-                      <p className="text-sm text-muted-foreground">{p.desc}</p>
+                      <h3 className="font-hero text-2xl font-bold tracking-[-0.02em] mb-2">{p.name}</h3>
+                      <p className="text-sm text-zinc-400 leading-relaxed">{p.desc}</p>
                     </div>
                   </div>
                 </Reveal>
@@ -501,28 +502,27 @@ const Index = () => {
         </section>
 
         {/* PROCESS TIMELINE */}
-        <section className="section-padding bg-secondary/20 border-y border-border/60">
+        <section className="section-padding border-t border-zinc-900">
           <div className="section-container">
             <Reveal>
-              <div className="max-w-3xl mb-20 text-center mx-auto">
-                <span className="text-accent text-xs tracking-[0.3em] uppercase">Our Process</span>
-                <h2 className="mt-4 text-4xl lg:text-6xl font-semibold leading-[1.05] tracking-tight">
-                  From idea to{" "}
-                  <span className="text-gradient">scale.</span>
+              <div className="max-w-4xl mb-20">
+                <span className="text-[#3B82F6] text-[11px] tracking-[0.4em] uppercase font-semibold">Our Process</span>
+                <h2 className="font-hero mt-6 text-5xl lg:text-7xl font-extrabold leading-[0.95] tracking-[-0.035em]">
+                  From idea to scale.
                 </h2>
               </div>
             </Reveal>
             <div className="relative">
-              <div className="absolute left-0 right-0 top-6 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent hidden md:block" />
+              <div className="absolute left-0 right-0 top-6 h-px bg-zinc-900 hidden md:block" />
               <ol className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-8">
                 {process.map((step, i) => (
                   <Reveal key={step.title} delay={i * 80}>
-                    <li className="flex flex-col items-center text-center">
-                      <span className="relative w-12 h-12 rounded-full bg-background border border-accent/40 flex items-center justify-center font-display font-semibold text-accent shadow-[0_0_24px_-4px_hsl(217_91%_60%/0.5)]">
-                        {i + 1}
+                    <li className="flex flex-col items-start">
+                      <span className="relative w-12 h-12 rounded-full bg-[#0A0A0B] ring-1 ring-zinc-800 flex items-center justify-center font-hero font-extrabold text-white text-sm">
+                        {String(i + 1).padStart(2, "0")}
                       </span>
-                      <span className="mt-4 font-display text-sm font-semibold">{step.title}</span>
-                      <span className="mt-2 text-xs text-muted-foreground leading-relaxed">{step.desc}</span>
+                      <span className="mt-5 font-hero text-base font-bold tracking-[-0.01em]">{step.title}</span>
+                      <span className="mt-2 text-xs text-zinc-500 leading-relaxed">{step.desc}</span>
                     </li>
                   </Reveal>
                 ))}
@@ -532,32 +532,34 @@ const Index = () => {
         </section>
 
         {/* ONGOING SERVICES */}
-        <section className="section-padding">
+        <section className="section-padding border-t border-zinc-900">
           <div className="section-container">
             <Reveal>
-              <div className="max-w-3xl mb-16">
-                <span className="text-accent text-xs tracking-[0.3em] uppercase">Ongoing Partnership</span>
-                <h2 className="mt-4 text-4xl lg:text-6xl font-semibold leading-[1.05] tracking-tight">
-                  A long-term partner,{" "}
-                  <span className="text-gradient">not a one-off vendor.</span>
+              <div className="max-w-4xl mb-16">
+                <span className="text-[#3B82F6] text-[11px] tracking-[0.4em] uppercase font-semibold">Ongoing Partnership</span>
+                <h2 className="font-hero mt-6 text-5xl lg:text-7xl font-extrabold leading-[0.95] tracking-[-0.035em]">
+                  A long-term partner.
                 </h2>
-                <p className="mt-6 text-lg text-muted-foreground max-w-2xl">
-                  Recurring service plans that keep your website secure, fast, optimized, and evolving with your business.
+                <p className="mt-8 text-lg lg:text-xl text-zinc-400 font-light max-w-2xl leading-relaxed">
+                  Recurring service plans that keep your website secure, fast, and evolving with your business.
                 </p>
               </div>
             </Reveal>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
               {ongoing.map((o, i) => (
                 <Reveal key={o.title} delay={i * 40}>
-                  <div className="group h-full rounded-2xl border border-border/60 bg-card/40 p-5 hover:border-accent/40 transition-all duration-500">
-                    <o.icon className="text-accent mb-3 group-hover:scale-110 transition-transform duration-500" size={22} />
-                    <div className="font-display text-sm font-semibold leading-tight">{o.title}</div>
+                  <div className="group h-full rounded-2xl border border-zinc-900 bg-[#161617] p-6 hover:border-zinc-700 transition-colors duration-700">
+                    <div className="flex items-center gap-2 mb-4">
+                      <o.icon className="text-white" size={20} strokeWidth={1.75} />
+                      <span className="w-1 h-1 rounded-full bg-[#3B82F6]" />
+                    </div>
+                    <div className="font-hero text-sm font-bold tracking-[-0.01em] leading-tight">{o.title}</div>
                   </div>
                 </Reveal>
               ))}
             </div>
-            <div className="mt-12">
-              <Button variant="outline" asChild className="rounded-full px-6 border-border/60 hover:border-accent/50 hover:bg-accent/5">
+            <div className="mt-14">
+              <Button variant="outline" asChild className="rounded-full px-6 h-11 bg-[#161617] border-zinc-800 hover:border-zinc-600 hover:bg-[#161617] text-white">
                 <Link to="/contact">
                   <MessageSquare size={16} /> Schedule a Consultation
                 </Link>
@@ -567,27 +569,27 @@ const Index = () => {
         </section>
 
         {/* TESTIMONIALS */}
-        <section className="section-padding">
+        <section className="section-padding border-t border-zinc-900">
           <div className="section-container">
             <Reveal>
-              <div className="max-w-3xl mb-20">
-                <span className="text-accent text-xs tracking-[0.3em] uppercase">Client Success</span>
-                <h2 className="mt-4 text-4xl lg:text-6xl font-semibold leading-[1.05] tracking-tight">
-                  Trusted by teams who{" "}
-                  <span className="text-gradient">ship.</span>
+              <div className="max-w-4xl mb-20">
+                <span className="text-[#3B82F6] text-[11px] tracking-[0.4em] uppercase font-semibold">Client Success</span>
+                <h2 className="font-hero mt-6 text-5xl lg:text-7xl font-extrabold leading-[0.95] tracking-[-0.035em]">
+                  Trusted by teams who ship.
                 </h2>
               </div>
             </Reveal>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {testimonials.map((t, i) => (
                 <Reveal key={t.name} delay={i * 100}>
-                  <figure className="h-full rounded-3xl border border-border/60 bg-card/40 p-8 hover:border-accent/40 transition-all duration-500">
-                    <blockquote className="text-lg leading-relaxed text-foreground/90">
-                      “{t.quote}”
+                  <figure className="h-full rounded-[2rem] border border-zinc-900 bg-[#161617] p-10 hover:border-zinc-700 transition-colors duration-700 flex flex-col">
+                    <blockquote className="text-xl leading-relaxed text-zinc-200 font-light flex-1">
+                      "{t.quote}"
                     </blockquote>
-                    <figcaption className="mt-8 pt-6 border-t border-border/60">
-                      <div className="font-display font-semibold">{t.name}</div>
-                      <div className="text-sm text-muted-foreground">{t.role}</div>
+                    <figcaption className="mt-10">
+                      <span className="block w-8 h-px bg-[#3B82F6] mb-4" />
+                      <div className="font-hero font-bold text-base tracking-[-0.01em]">{t.name}</div>
+                      <div className="text-sm text-zinc-500 mt-1">{t.role}</div>
                     </figcaption>
                   </figure>
                 </Reveal>
@@ -597,40 +599,33 @@ const Index = () => {
         </section>
 
         {/* FINAL CTA */}
-        <section className="section-padding relative overflow-hidden">
-          <div className="absolute inset-0 bg-[#050505]" />
+        <section className="section-padding relative overflow-hidden border-t border-zinc-900">
+          <div className="absolute inset-0 bg-[#0A0A0B]" />
           <div
             className="absolute inset-0"
             style={{
               background:
-                "radial-gradient(800px 500px at 50% 50%, hsl(217 91% 40% / 0.35), transparent 65%)",
+                "radial-gradient(700px 450px at 50% 50%, hsl(217 91% 30% / 0.25), transparent 70%)",
             }}
           />
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-10 left-10 w-72 h-72 rounded-full bg-accent/10 blur-3xl animate-drift-slow" />
-            <div
-              className="absolute bottom-10 right-10 w-96 h-96 rounded-full bg-accent/10 blur-3xl animate-drift-slow"
-              style={{ animationDelay: "4s" }}
-            />
-          </div>
-          <div className="relative section-container text-center">
+          <div className="relative section-container text-center max-w-4xl mx-auto">
             <Reveal>
-              <LoumilabLogo size="lg" className="mx-auto mb-10" />
+              <LoumilabLogo size="lg" className="mx-auto mb-12" />
             </Reveal>
             <Reveal delay={120}>
-              <h2 className="text-5xl lg:text-7xl font-semibold tracking-[-0.03em] leading-[1.05]">
+              <h2 className="font-hero text-5xl lg:text-8xl font-extrabold tracking-[-0.04em] leading-[0.95]">
                 Let's build{" "}
-                <span className="text-gradient">what's next.</span>
+                <span className="text-[#3B82F6]">what's next.</span>
               </h2>
             </Reveal>
             <Reveal delay={240}>
-              <p className="mt-8 text-lg text-muted-foreground max-w-xl mx-auto">
+              <p className="mt-10 text-lg lg:text-xl text-zinc-400 font-light max-w-xl mx-auto leading-relaxed">
                 Tell us about your idea. We'll respond within 24 hours with a clear path forward.
               </p>
             </Reveal>
             <Reveal delay={360}>
-              <div className="mt-12">
-                <Button variant="accent" size="lg" asChild className="glow-hover rounded-full px-8">
+              <div className="mt-14">
+                <Button asChild size="lg" className="rounded-full px-8 h-12 bg-white text-black hover:bg-zinc-200 font-semibold">
                   <Link to="/contact">
                     Start Your Project <ArrowRight size={18} />
                   </Link>
