@@ -53,6 +53,23 @@ const services = [
     ],
   },
   {
+    icon: Code,
+    title: "SaaS Development",
+    desc: "Custom SaaS platforms and web applications — from MVP to scale, engineered for speed and security.",
+    items: [
+      "MVP Development",
+      "Custom SaaS Platforms",
+      "Multi-Tenant Architecture",
+      "Authentication & Billing",
+      "Admin Dashboards",
+      "API Development",
+      "Database Design",
+      "Subscription Workflows",
+      "Integrations & Webhooks",
+      "Scalable Infrastructure",
+    ],
+  },
+  {
     icon: Compass,
     title: "Technology Consulting",
     desc: "Strategic guidance that helps you get the most from your website and digital investments.",
