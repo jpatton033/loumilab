@@ -390,12 +390,13 @@ const Index = () => {
             </Reveal>
             <div className="grid grid-cols-1 lg:grid-cols-6 gap-6">
               {services.map((s, i) => (
-                <Reveal key={s.title} delay={i * 80}>
-                  <div
-                    className={`group relative h-full rounded-3xl border border-border/60 bg-card/40 backdrop-blur-sm p-8 overflow-hidden hover:border-accent/40 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_30px_60px_-30px_hsl(217_91%_60%/0.4)] ${
-                      i === 0 ? "lg:col-span-6" : "lg:col-span-2"
-                    }`}
-                  >
+                <Reveal
+                  key={s.title}
+                  delay={i * 80}
+                  className={i === 0 ? "lg:col-span-6" : "lg:col-span-3"}
+                >
+                  <div className="group relative h-full rounded-3xl border border-border/60 bg-card/40 backdrop-blur-sm p-8 overflow-hidden hover:border-accent/40 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_30px_60px_-30px_hsl(217_91%_60%/0.4)]">
+
                     <div className="absolute -top-20 -right-20 w-56 h-56 rounded-full bg-accent/0 group-hover:bg-accent/15 blur-3xl transition-all duration-700" />
                     <div className="relative">
                       <div className="flex items-center gap-3 mb-6">
