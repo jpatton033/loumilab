@@ -228,15 +228,15 @@ const useCountUp = (target: number, duration = 1400) => {
 const Stat = ({ value, suffix, label }: { value: number; suffix: string; label: string }) => {
   const { ref, val } = useCountUp(value);
   return (
-    <div className="text-center">
+    <div>
       <div
         ref={ref}
-        className="text-4xl lg:text-6xl font-display font-semibold tracking-tight text-gradient"
+        className="font-hero text-4xl lg:text-6xl font-extrabold tracking-[-0.04em] text-white"
       >
         {val}
         {suffix}
       </div>
-      <div className="mt-3 text-xs lg:text-sm text-muted-foreground tracking-[0.2em] uppercase">
+      <div className="mt-3 text-[11px] lg:text-xs text-zinc-500 tracking-[0.3em] uppercase">
         {label}
       </div>
     </div>
