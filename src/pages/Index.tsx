@@ -9,85 +9,171 @@ import Reveal from "@/components/Reveal";
 const HeroScene = lazy(() => import("@/components/HeroScene"));
 import {
   ArrowRight,
-  Layers,
-  Code,
-  Shield,
-  Cloud,
+  Globe,
   Compass,
+  Shield,
+  Sparkles,
   Lock,
+  Code,
   Cpu,
   Rocket,
   Network,
   Handshake,
-  Sparkles,
+  Gauge,
+  MessageSquare,
+  Lightbulb,
+  Wrench,
+  LineChart,
+  BarChart3,
+  RefreshCw,
+  Activity,
+  Search,
 } from "lucide-react";
 
 const services = [
-  { icon: Layers, title: "Website Design", desc: "Custom, responsive sites engineered to convert and scale." },
-  { icon: Code, title: "Custom SaaS", desc: "From MVP to platform — built lean, shipped fast." },
-  { icon: Sparkles, title: "AI Solutions", desc: "Agents, copilots, and AI-native workflows for your product." },
-  { icon: Shield, title: "Cybersecurity", desc: "Secure-by-design architecture, audits, and hardening." },
-  { icon: Cloud, title: "Cloud Solutions", desc: "Scalable infrastructure on modern, resilient platforms." },
-  { icon: Compass, title: "Digital Strategy", desc: "Roadmaps that align product, brand, and growth." },
+  {
+    icon: Globe,
+    title: "Website Design & Development",
+    tag: "Primary",
+    desc: "Beautiful, fast, secure websites and web apps engineered to grow with your business.",
+    items: [
+      "Custom Business Websites",
+      "Corporate Websites",
+      "Landing Pages",
+      "Portfolio Websites",
+      "E-Commerce Websites",
+      "Membership Websites",
+      "Web Applications",
+      "Responsive Design",
+      "Website Redesigns",
+      "Performance Optimization",
+      "SEO Foundations",
+      "Accessibility",
+      "CMS Integration",
+    ],
+  },
+  {
+    icon: Compass,
+    title: "Technology Consulting",
+    desc: "Strategic guidance that helps you get the most from your website and digital investments.",
+    items: [
+      "Technology Strategy",
+      "Digital Transformation",
+      "Website Planning",
+      "Business Process Optimization",
+      "Technical Consulting",
+      "Cloud & Infrastructure Guidance",
+      "Fractional Technical Leadership",
+    ],
+  },
+  {
+    icon: Shield,
+    title: "Cybersecurity Consulting",
+    desc: "Security woven into every project — from architecture to compliance readiness.",
+    items: [
+      "Website Security Reviews",
+      "Security Best Practices",
+      "Vulnerability Assessments",
+      "Security Hardening",
+      "Secure Authentication Guidance",
+      "Risk Assessments",
+      "Incident Response Planning",
+      "Compliance Readiness Guidance",
+    ],
+  },
+  {
+    icon: Sparkles,
+    title: "AI & Innovation",
+    desc: "Leverage AI and emerging technologies to modernize how your business operates.",
+    items: [
+      "AI Integration",
+      "Workflow Automation",
+      "AI-Powered Customer Experiences",
+      "Process Automation",
+      "Emerging Technology Consulting",
+      "Innovation Strategy",
+    ],
+  },
 ];
 
 const why = [
-  { icon: Lock, title: "Secure by Design", desc: "Threat modeling and hardening from day one." },
-  { icon: Code, title: "Modern Development", desc: "TypeScript, edge-native, and component-driven." },
-  { icon: Cpu, title: "AI-Powered Workflows", desc: "Leverage AI to ship 10x faster without compromise." },
+  { icon: Sparkles, title: "Beautiful Modern Design", desc: "Premium visual craftsmanship across every pixel." },
+  { icon: Lock, title: "Security Integrated", desc: "Built secure-by-design — never an afterthought." },
+  { icon: Gauge, title: "Performance First", desc: "Engineered for speed, Core Web Vitals, and scale." },
+  { icon: Cpu, title: "AI-Assisted Workflows", desc: "Modern AI tooling accelerates delivery without compromise." },
   { icon: Network, title: "Scalable Architecture", desc: "Built for tomorrow's load, today's velocity." },
-  { icon: Rocket, title: "Rapid Delivery", desc: "Weeks, not quarters, to your first release." },
-  { icon: Handshake, title: "Long-Term Partnership", desc: "We stay invested past launch — through scale." },
+  { icon: Handshake, title: "Long-Term Partnership", desc: "Transparent communication. Invested past launch." },
 ];
 
 const products = [
   {
-    name: "SentinelOps",
-    tagline: "Cybersecurity command center",
-    desc: "Unified threat intelligence, posture management, and incident response.",
+    name: "Atlas Commerce",
+    tagline: "Premium e-commerce template",
+    desc: "Conversion-optimized storefront with modern checkout, search, and CMS-driven content.",
     gradient: "from-[#1e3a8a] via-[#3b82f6] to-[#06b6d4]",
   },
   {
-    name: "Lumen Studio",
-    tagline: "AI content & design suite",
-    desc: "Compose brand-safe visuals, copy, and motion with a single workspace.",
+    name: "Beacon Studio",
+    tagline: "Corporate marketing site",
+    desc: "Editorial-grade design system for brands that lead with story and clarity.",
     gradient: "from-[#312e81] via-[#7c3aed] to-[#3b82f6]",
   },
   {
-    name: "Forge CMS",
-    tagline: "Headless platform for builders",
-    desc: "Composable, edge-rendered, developer-first. Marketing teams love it too.",
+    name: "Forge Portal",
+    tagline: "Secure client portal",
+    desc: "Auth, dashboards, and self-serve workflows wired into a modern web app foundation.",
     gradient: "from-[#0f172a] via-[#1e293b] to-[#3b82f6]",
   },
 ];
 
-const process = ["Discover", "Design", "Develop", "Secure", "Launch", "Scale"];
+const process = [
+  { title: "Discover", desc: "Learn your business, goals, and audience." },
+  { title: "Plan", desc: "Define strategy, architecture, and UX." },
+  { title: "Design", desc: "Craft a modern, engaging visual identity." },
+  { title: "Build", desc: "Fast, responsive, secure development." },
+  { title: "Secure", desc: "Performance, security, accessibility, reliability." },
+  { title: "Launch", desc: "Deploy with confidence — verified end-to-end." },
+  { title: "Support", desc: "Ongoing maintenance, monitoring, and consulting." },
+];
+
+const ongoing = [
+  { icon: Wrench, title: "Website Maintenance" },
+  { icon: Shield, title: "Security Monitoring" },
+  { icon: RefreshCw, title: "Software Updates" },
+  { icon: Activity, title: "Website Backups" },
+  { icon: Gauge, title: "Performance Monitoring" },
+  { icon: Search, title: "SEO Maintenance" },
+  { icon: BarChart3, title: "Analytics & Reporting" },
+  { icon: Compass, title: "Technology Consulting" },
+  { icon: Lock, title: "Security Consulting" },
+  { icon: Lightbulb, title: "Feature Enhancements" },
+];
 
 const stats = [
-  { value: 50, suffix: "+", label: "Projects shipped" },
-  { value: 10, suffix: "x", label: "Faster delivery" },
+  { value: 50, suffix: "+", label: "Websites shipped" },
+  { value: 100, suffix: "%", label: "Built secure-by-design" },
   { value: 98, suffix: "%", label: "Client satisfaction" },
-  { value: 24, suffix: "/7", label: "Security monitoring" },
+  { value: 24, suffix: "/7", label: "Monitoring available" },
 ];
 
 const testimonials = [
   {
     quote:
-      "Loumilab delivered a secure platform in weeks. The polish, performance, and posture are unmatched.",
+      "Loumilab delivered a stunning, secure website that immediately elevated how our brand is perceived.",
     name: "Alex M.",
-    role: "CTO, FinTech Scale-up",
+    role: "Founder, B2B Services",
   },
   {
     quote:
-      "They think like product engineers and execute like a launch team. Our release shipped on time, fully audited.",
+      "Beyond the build, they've become our go-to advisors for technology, security, and growth decisions.",
     name: "Priya R.",
-    role: "Head of Product, SaaS",
+    role: "Marketing Director, SaaS",
   },
   {
     quote:
-      "Cinematic design, bulletproof code. Loumilab is now our default partner for digital innovation.",
+      "Cinematic design, bulletproof engineering. The best web partner we've worked with — period.",
     name: "Daniel K.",
-    role: "Founder, AI Startup",
+    role: "CEO, Boutique Studio",
   },
 ];
 
