@@ -9,85 +9,171 @@ import Reveal from "@/components/Reveal";
 const HeroScene = lazy(() => import("@/components/HeroScene"));
 import {
   ArrowRight,
-  Layers,
-  Code,
-  Shield,
-  Cloud,
+  Globe,
   Compass,
+  Shield,
+  Sparkles,
   Lock,
+  Code,
   Cpu,
   Rocket,
   Network,
   Handshake,
-  Sparkles,
+  Gauge,
+  MessageSquare,
+  Lightbulb,
+  Wrench,
+  LineChart,
+  BarChart3,
+  RefreshCw,
+  Activity,
+  Search,
 } from "lucide-react";
 
 const services = [
-  { icon: Layers, title: "Website Design", desc: "Custom, responsive sites engineered to convert and scale." },
-  { icon: Code, title: "Custom SaaS", desc: "From MVP to platform — built lean, shipped fast." },
-  { icon: Sparkles, title: "AI Solutions", desc: "Agents, copilots, and AI-native workflows for your product." },
-  { icon: Shield, title: "Cybersecurity", desc: "Secure-by-design architecture, audits, and hardening." },
-  { icon: Cloud, title: "Cloud Solutions", desc: "Scalable infrastructure on modern, resilient platforms." },
-  { icon: Compass, title: "Digital Strategy", desc: "Roadmaps that align product, brand, and growth." },
+  {
+    icon: Globe,
+    title: "Website Design & Development",
+    tag: "Primary",
+    desc: "Beautiful, fast, secure websites and web apps engineered to grow with your business.",
+    items: [
+      "Custom Business Websites",
+      "Corporate Websites",
+      "Landing Pages",
+      "Portfolio Websites",
+      "E-Commerce Websites",
+      "Membership Websites",
+      "Web Applications",
+      "Responsive Design",
+      "Website Redesigns",
+      "Performance Optimization",
+      "SEO Foundations",
+      "Accessibility",
+      "CMS Integration",
+    ],
+  },
+  {
+    icon: Compass,
+    title: "Technology Consulting",
+    desc: "Strategic guidance that helps you get the most from your website and digital investments.",
+    items: [
+      "Technology Strategy",
+      "Digital Transformation",
+      "Website Planning",
+      "Business Process Optimization",
+      "Technical Consulting",
+      "Cloud & Infrastructure Guidance",
+      "Fractional Technical Leadership",
+    ],
+  },
+  {
+    icon: Shield,
+    title: "Cybersecurity Consulting",
+    desc: "Security woven into every project — from architecture to compliance readiness.",
+    items: [
+      "Website Security Reviews",
+      "Security Best Practices",
+      "Vulnerability Assessments",
+      "Security Hardening",
+      "Secure Authentication Guidance",
+      "Risk Assessments",
+      "Incident Response Planning",
+      "Compliance Readiness Guidance",
+    ],
+  },
+  {
+    icon: Sparkles,
+    title: "AI & Innovation",
+    desc: "Leverage AI and emerging technologies to modernize how your business operates.",
+    items: [
+      "AI Integration",
+      "Workflow Automation",
+      "AI-Powered Customer Experiences",
+      "Process Automation",
+      "Emerging Technology Consulting",
+      "Innovation Strategy",
+    ],
+  },
 ];
 
 const why = [
-  { icon: Lock, title: "Secure by Design", desc: "Threat modeling and hardening from day one." },
-  { icon: Code, title: "Modern Development", desc: "TypeScript, edge-native, and component-driven." },
-  { icon: Cpu, title: "AI-Powered Workflows", desc: "Leverage AI to ship 10x faster without compromise." },
+  { icon: Sparkles, title: "Beautiful Modern Design", desc: "Premium visual craftsmanship across every pixel." },
+  { icon: Lock, title: "Security Integrated", desc: "Built secure-by-design — never an afterthought." },
+  { icon: Gauge, title: "Performance First", desc: "Engineered for speed, Core Web Vitals, and scale." },
+  { icon: Cpu, title: "AI-Assisted Workflows", desc: "Modern AI tooling accelerates delivery without compromise." },
   { icon: Network, title: "Scalable Architecture", desc: "Built for tomorrow's load, today's velocity." },
-  { icon: Rocket, title: "Rapid Delivery", desc: "Weeks, not quarters, to your first release." },
-  { icon: Handshake, title: "Long-Term Partnership", desc: "We stay invested past launch — through scale." },
+  { icon: Handshake, title: "Long-Term Partnership", desc: "Transparent communication. Invested past launch." },
 ];
 
 const products = [
   {
-    name: "SentinelOps",
-    tagline: "Cybersecurity command center",
-    desc: "Unified threat intelligence, posture management, and incident response.",
+    name: "Atlas Commerce",
+    tagline: "Premium e-commerce template",
+    desc: "Conversion-optimized storefront with modern checkout, search, and CMS-driven content.",
     gradient: "from-[#1e3a8a] via-[#3b82f6] to-[#06b6d4]",
   },
   {
-    name: "Lumen Studio",
-    tagline: "AI content & design suite",
-    desc: "Compose brand-safe visuals, copy, and motion with a single workspace.",
+    name: "Beacon Studio",
+    tagline: "Corporate marketing site",
+    desc: "Editorial-grade design system for brands that lead with story and clarity.",
     gradient: "from-[#312e81] via-[#7c3aed] to-[#3b82f6]",
   },
   {
-    name: "Forge CMS",
-    tagline: "Headless platform for builders",
-    desc: "Composable, edge-rendered, developer-first. Marketing teams love it too.",
+    name: "Forge Portal",
+    tagline: "Secure client portal",
+    desc: "Auth, dashboards, and self-serve workflows wired into a modern web app foundation.",
     gradient: "from-[#0f172a] via-[#1e293b] to-[#3b82f6]",
   },
 ];
 
-const process = ["Discover", "Design", "Develop", "Secure", "Launch", "Scale"];
+const process = [
+  { title: "Discover", desc: "Learn your business, goals, and audience." },
+  { title: "Plan", desc: "Define strategy, architecture, and UX." },
+  { title: "Design", desc: "Craft a modern, engaging visual identity." },
+  { title: "Build", desc: "Fast, responsive, secure development." },
+  { title: "Secure", desc: "Performance, security, accessibility, reliability." },
+  { title: "Launch", desc: "Deploy with confidence — verified end-to-end." },
+  { title: "Support", desc: "Ongoing maintenance, monitoring, and consulting." },
+];
+
+const ongoing = [
+  { icon: Wrench, title: "Website Maintenance" },
+  { icon: Shield, title: "Security Monitoring" },
+  { icon: RefreshCw, title: "Software Updates" },
+  { icon: Activity, title: "Website Backups" },
+  { icon: Gauge, title: "Performance Monitoring" },
+  { icon: Search, title: "SEO Maintenance" },
+  { icon: BarChart3, title: "Analytics & Reporting" },
+  { icon: Compass, title: "Technology Consulting" },
+  { icon: Lock, title: "Security Consulting" },
+  { icon: Lightbulb, title: "Feature Enhancements" },
+];
 
 const stats = [
-  { value: 50, suffix: "+", label: "Projects shipped" },
-  { value: 10, suffix: "x", label: "Faster delivery" },
+  { value: 50, suffix: "+", label: "Websites shipped" },
+  { value: 100, suffix: "%", label: "Built secure-by-design" },
   { value: 98, suffix: "%", label: "Client satisfaction" },
-  { value: 24, suffix: "/7", label: "Security monitoring" },
+  { value: 24, suffix: "/7", label: "Monitoring available" },
 ];
 
 const testimonials = [
   {
     quote:
-      "Loumilab delivered a secure platform in weeks. The polish, performance, and posture are unmatched.",
+      "Loumilab delivered a stunning, secure website that immediately elevated how our brand is perceived.",
     name: "Alex M.",
-    role: "CTO, FinTech Scale-up",
+    role: "Founder, B2B Services",
   },
   {
     quote:
-      "They think like product engineers and execute like a launch team. Our release shipped on time, fully audited.",
+      "Beyond the build, they've become our go-to advisors for technology, security, and growth decisions.",
     name: "Priya R.",
-    role: "Head of Product, SaaS",
+    role: "Marketing Director, SaaS",
   },
   {
     quote:
-      "Cinematic design, bulletproof code. Loumilab is now our default partner for digital innovation.",
+      "Cinematic design, bulletproof engineering. The best web partner we've worked with — period.",
     name: "Daniel K.",
-    role: "Founder, AI Startup",
+    role: "CEO, Boutique Studio",
   },
 ];
 
@@ -162,8 +248,8 @@ const Index = () => {
       <IntroAnimation />
       <Layout>
         <SEOHead
-          title="LOUMILAB — Building Secure Digital Innovation"
-          description="Loumilab designs, develops, and launches secure websites, SaaS platforms, AI-powered applications, and digital products that help businesses grow with confidence."
+          title="LOUMILAB — Modern Websites. Secure Solutions. Built for Growth."
+          description="Loumilab is a premium website design and development studio. We build modern, secure, high-performance websites and provide expert technology, cybersecurity, and AI consulting."
           path="/"
         />
 
@@ -220,15 +306,14 @@ const Index = () => {
               </Reveal>
               <Reveal delay={120}>
                 <h1 className="font-hero mt-8 text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.02] tracking-[-0.04em]">
-                  Building{" "}
-                  <span className="text-gradient">Secure Digital</span>{" "}
-                  Innovations.
+                  Modern Websites.{" "}
+                  <span className="text-gradient">Secure Solutions.</span>{" "}
+                  Built for Growth.
                 </h1>
               </Reveal>
               <Reveal delay={240}>
                 <p className="mt-8 text-lg lg:text-xl text-muted-foreground max-w-xl leading-relaxed">
-                  We design secure websites, AI-powered applications, SaaS
-                  platforms, and digital experiences engineered for the future.
+                  We design and develop premium websites, web applications, and digital experiences that combine exceptional design, modern technology, and security-first engineering — built to scale with your business.
                 </p>
               </Reveal>
               <Reveal delay={360}>
@@ -244,7 +329,7 @@ const Index = () => {
                     asChild
                     className="rounded-full px-7 border-border/60 hover:border-accent/50 hover:bg-accent/5"
                   >
-                    <Link to="/work">View Our Work</Link>
+                    <Link to="/contact">Schedule a Consultation</Link>
                   </Button>
                 </div>
               </Reveal>
@@ -275,25 +360,49 @@ const Index = () => {
           <div className="section-container">
             <Reveal>
               <div className="max-w-3xl mb-20">
-                <span className="text-accent text-xs tracking-[0.3em] uppercase">Featured Services</span>
+                <span className="text-accent text-xs tracking-[0.3em] uppercase">What We Do</span>
                 <h2 className="mt-4 text-4xl lg:text-6xl font-semibold leading-[1.05] tracking-tight">
-                  Everything you need to build,
+                  Premium websites first.
                   <br />
-                  <span className="text-gradient">secure, and scale.</span>
+                  <span className="text-gradient">Strategic partnership always.</span>
                 </h2>
+                <p className="mt-6 text-lg text-muted-foreground max-w-2xl">
+                  Website design and development is our core craft. We also advise clients on technology, cybersecurity, AI, and innovation — so every digital decision compounds.
+                </p>
               </div>
             </Reveal>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-6 gap-6">
               {services.map((s, i) => (
                 <Reveal key={s.title} delay={i * 80}>
-                  <div className="group relative h-full rounded-3xl border border-border/60 bg-card/40 backdrop-blur-sm p-8 overflow-hidden hover:border-accent/40 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_30px_60px_-30px_hsl(217_91%_60%/0.4)]">
+                  <div
+                    className={`group relative h-full rounded-3xl border border-border/60 bg-card/40 backdrop-blur-sm p-8 overflow-hidden hover:border-accent/40 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_30px_60px_-30px_hsl(217_91%_60%/0.4)] ${
+                      i === 0 ? "lg:col-span-6" : "lg:col-span-2"
+                    }`}
+                  >
                     <div className="absolute -top-20 -right-20 w-56 h-56 rounded-full bg-accent/0 group-hover:bg-accent/15 blur-3xl transition-all duration-700" />
                     <div className="relative">
-                      <div className="w-14 h-14 rounded-2xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-6 group-hover:bg-accent/20 group-hover:scale-110 transition-all duration-500">
-                        <s.icon className="text-accent" size={26} />
+                      <div className="flex items-center gap-3 mb-6">
+                        <div className="w-14 h-14 rounded-2xl bg-accent/10 border border-accent/20 flex items-center justify-center group-hover:bg-accent/20 group-hover:scale-110 transition-all duration-500">
+                          <s.icon className="text-accent" size={26} />
+                        </div>
+                        {s.tag && (
+                          <span className="text-[10px] uppercase tracking-[0.25em] text-accent border border-accent/40 rounded-full px-2.5 py-1">
+                            {s.tag}
+                          </span>
+                        )}
                       </div>
-                      <h3 className="font-display text-xl font-semibold mb-3">{s.title}</h3>
+                      <h3 className="font-display text-xl lg:text-2xl font-semibold mb-3">{s.title}</h3>
                       <p className="text-muted-foreground leading-relaxed">{s.desc}</p>
+                      <div className="mt-6 flex flex-wrap gap-2">
+                        {s.items.map((it) => (
+                          <span
+                            key={it}
+                            className="text-xs text-foreground/80 border border-border/60 rounded-full px-3 py-1.5 bg-background/40"
+                          >
+                            {it}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </Reveal>
@@ -402,18 +511,54 @@ const Index = () => {
             </Reveal>
             <div className="relative">
               <div className="absolute left-0 right-0 top-6 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent hidden md:block" />
-              <ol className="grid grid-cols-2 md:grid-cols-6 gap-8">
+              <ol className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-8">
                 {process.map((step, i) => (
-                  <Reveal key={step} delay={i * 100}>
+                  <Reveal key={step.title} delay={i * 80}>
                     <li className="flex flex-col items-center text-center">
                       <span className="relative w-12 h-12 rounded-full bg-background border border-accent/40 flex items-center justify-center font-display font-semibold text-accent shadow-[0_0_24px_-4px_hsl(217_91%_60%/0.5)]">
                         {i + 1}
                       </span>
-                      <span className="mt-4 font-display text-sm font-semibold">{step}</span>
+                      <span className="mt-4 font-display text-sm font-semibold">{step.title}</span>
+                      <span className="mt-2 text-xs text-muted-foreground leading-relaxed">{step.desc}</span>
                     </li>
                   </Reveal>
                 ))}
               </ol>
+            </div>
+          </div>
+        </section>
+
+        {/* ONGOING SERVICES */}
+        <section className="section-padding">
+          <div className="section-container">
+            <Reveal>
+              <div className="max-w-3xl mb-16">
+                <span className="text-accent text-xs tracking-[0.3em] uppercase">Ongoing Partnership</span>
+                <h2 className="mt-4 text-4xl lg:text-6xl font-semibold leading-[1.05] tracking-tight">
+                  A long-term partner,{" "}
+                  <span className="text-gradient">not a one-off vendor.</span>
+                </h2>
+                <p className="mt-6 text-lg text-muted-foreground max-w-2xl">
+                  Recurring service plans that keep your website secure, fast, optimized, and evolving with your business.
+                </p>
+              </div>
+            </Reveal>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+              {ongoing.map((o, i) => (
+                <Reveal key={o.title} delay={i * 40}>
+                  <div className="group h-full rounded-2xl border border-border/60 bg-card/40 p-5 hover:border-accent/40 transition-all duration-500">
+                    <o.icon className="text-accent mb-3 group-hover:scale-110 transition-transform duration-500" size={22} />
+                    <div className="font-display text-sm font-semibold leading-tight">{o.title}</div>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+            <div className="mt-12">
+              <Button variant="outline" asChild className="rounded-full px-6 border-border/60 hover:border-accent/50 hover:bg-accent/5">
+                <Link to="/contact">
+                  <MessageSquare size={16} /> Schedule a Consultation
+                </Link>
+              </Button>
             </div>
           </div>
         </section>
