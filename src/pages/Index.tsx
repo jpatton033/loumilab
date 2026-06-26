@@ -511,18 +511,54 @@ const Index = () => {
             </Reveal>
             <div className="relative">
               <div className="absolute left-0 right-0 top-6 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent hidden md:block" />
-              <ol className="grid grid-cols-2 md:grid-cols-6 gap-8">
+              <ol className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-8">
                 {process.map((step, i) => (
-                  <Reveal key={step} delay={i * 100}>
+                  <Reveal key={step.title} delay={i * 80}>
                     <li className="flex flex-col items-center text-center">
                       <span className="relative w-12 h-12 rounded-full bg-background border border-accent/40 flex items-center justify-center font-display font-semibold text-accent shadow-[0_0_24px_-4px_hsl(217_91%_60%/0.5)]">
                         {i + 1}
                       </span>
-                      <span className="mt-4 font-display text-sm font-semibold">{step}</span>
+                      <span className="mt-4 font-display text-sm font-semibold">{step.title}</span>
+                      <span className="mt-2 text-xs text-muted-foreground leading-relaxed">{step.desc}</span>
                     </li>
                   </Reveal>
                 ))}
               </ol>
+            </div>
+          </div>
+        </section>
+
+        {/* ONGOING SERVICES */}
+        <section className="section-padding">
+          <div className="section-container">
+            <Reveal>
+              <div className="max-w-3xl mb-16">
+                <span className="text-accent text-xs tracking-[0.3em] uppercase">Ongoing Partnership</span>
+                <h2 className="mt-4 text-4xl lg:text-6xl font-semibold leading-[1.05] tracking-tight">
+                  A long-term partner,{" "}
+                  <span className="text-gradient">not a one-off vendor.</span>
+                </h2>
+                <p className="mt-6 text-lg text-muted-foreground max-w-2xl">
+                  Recurring service plans that keep your website secure, fast, optimized, and evolving with your business.
+                </p>
+              </div>
+            </Reveal>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+              {ongoing.map((o, i) => (
+                <Reveal key={o.title} delay={i * 40}>
+                  <div className="group h-full rounded-2xl border border-border/60 bg-card/40 p-5 hover:border-accent/40 transition-all duration-500">
+                    <o.icon className="text-accent mb-3 group-hover:scale-110 transition-transform duration-500" size={22} />
+                    <div className="font-display text-sm font-semibold leading-tight">{o.title}</div>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+            <div className="mt-12">
+              <Button variant="outline" asChild className="rounded-full px-6 border-border/60 hover:border-accent/50 hover:bg-accent/5">
+                <Link to="/contact">
+                  <MessageSquare size={16} /> Schedule a Consultation
+                </Link>
+              </Button>
             </div>
           </div>
         </section>
