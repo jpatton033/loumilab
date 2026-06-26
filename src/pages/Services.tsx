@@ -14,6 +14,12 @@ const services = [
   },
   {
     icon: Code,
+    title: "SaaS Development",
+    desc: "Custom SaaS platforms and web applications — from MVP to scale, engineered for speed and security.",
+    features: ["MVP development", "Multi-tenant architecture", "Auth & billing", "Admin dashboards"],
+  },
+  {
+    icon: Code,
     title: "SaaS & MVP Development",
     desc: "Rapidly prototype and launch your software product. We help you validate ideas and get to market fast.",
     features: ["Product scoping", "Database & auth", "Payment integration", "User dashboards"],
