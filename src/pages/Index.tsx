@@ -360,25 +360,49 @@ const Index = () => {
           <div className="section-container">
             <Reveal>
               <div className="max-w-3xl mb-20">
-                <span className="text-accent text-xs tracking-[0.3em] uppercase">Featured Services</span>
+                <span className="text-accent text-xs tracking-[0.3em] uppercase">What We Do</span>
                 <h2 className="mt-4 text-4xl lg:text-6xl font-semibold leading-[1.05] tracking-tight">
-                  Everything you need to build,
+                  Premium websites first.
                   <br />
-                  <span className="text-gradient">secure, and scale.</span>
+                  <span className="text-gradient">Strategic partnership always.</span>
                 </h2>
+                <p className="mt-6 text-lg text-muted-foreground max-w-2xl">
+                  Website design and development is our core craft. We also advise clients on technology, cybersecurity, AI, and innovation — so every digital decision compounds.
+                </p>
               </div>
             </Reveal>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-6 gap-6">
               {services.map((s, i) => (
                 <Reveal key={s.title} delay={i * 80}>
-                  <div className="group relative h-full rounded-3xl border border-border/60 bg-card/40 backdrop-blur-sm p-8 overflow-hidden hover:border-accent/40 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_30px_60px_-30px_hsl(217_91%_60%/0.4)]">
+                  <div
+                    className={`group relative h-full rounded-3xl border border-border/60 bg-card/40 backdrop-blur-sm p-8 overflow-hidden hover:border-accent/40 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_30px_60px_-30px_hsl(217_91%_60%/0.4)] ${
+                      i === 0 ? "lg:col-span-6" : "lg:col-span-2"
+                    }`}
+                  >
                     <div className="absolute -top-20 -right-20 w-56 h-56 rounded-full bg-accent/0 group-hover:bg-accent/15 blur-3xl transition-all duration-700" />
                     <div className="relative">
-                      <div className="w-14 h-14 rounded-2xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-6 group-hover:bg-accent/20 group-hover:scale-110 transition-all duration-500">
-                        <s.icon className="text-accent" size={26} />
+                      <div className="flex items-center gap-3 mb-6">
+                        <div className="w-14 h-14 rounded-2xl bg-accent/10 border border-accent/20 flex items-center justify-center group-hover:bg-accent/20 group-hover:scale-110 transition-all duration-500">
+                          <s.icon className="text-accent" size={26} />
+                        </div>
+                        {s.tag && (
+                          <span className="text-[10px] uppercase tracking-[0.25em] text-accent border border-accent/40 rounded-full px-2.5 py-1">
+                            {s.tag}
+                          </span>
+                        )}
                       </div>
-                      <h3 className="font-display text-xl font-semibold mb-3">{s.title}</h3>
+                      <h3 className="font-display text-xl lg:text-2xl font-semibold mb-3">{s.title}</h3>
                       <p className="text-muted-foreground leading-relaxed">{s.desc}</p>
+                      <div className="mt-6 flex flex-wrap gap-2">
+                        {s.items.map((it) => (
+                          <span
+                            key={it}
+                            className="text-xs text-foreground/80 border border-border/60 rounded-full px-3 py-1.5 bg-background/40"
+                          >
+                            {it}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </Reveal>
