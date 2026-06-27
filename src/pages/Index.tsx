@@ -308,7 +308,7 @@ const Index = () => {
                 </span>
               </Reveal>
               <Reveal delay={120}>
-                <h1 className="font-hero mt-10 font-black leading-[0.9] tracking-[-0.045em]" style={{ fontSize: "clamp(3rem, 9.5vw, 8rem)" }}>
+                <h1 className="font-hero mt-10 font-black leading-[0.9] tracking-[-0.045em]" style={{ fontSize: "clamp(2.5rem, 8vw, 6.5rem)" }}>
                   Modern Websites.{" "}
                   <span className="text-[#3B82F6]">Secure Solutions.</span>{" "}
                   Built for Growth.
