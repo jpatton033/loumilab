@@ -51,18 +51,16 @@ const Contact = () => {
     setErrors({});
     setSubmitting(true);
 
-    const { data: inserted, error } = await supabase
+    const { error } = await supabase
       .from("contact_submissions")
       .insert({
         name: result.data.name,
         email: result.data.email,
         company: result.data.company || null,
         message: result.data.message,
-      })
-      .select("id")
-      .single();
+      });
 
-    if (error || !inserted) {
+    if (error) {
       toast({ title: "Something went wrong", description: "Please try again or email us directly.", variant: "destructive" });
     } else {
       toast({ title: "Message sent!", description: "We'll get back to you within 24 hours." });
@@ -72,7 +70,7 @@ const Contact = () => {
       // Send email notifications (best-effort, don't block on failure)
       try {
         await supabase.functions.invoke("send-contact-email", {
-          body: { submission_id: inserted.id },
+          body: { email: result.data.email },
         });
       } catch (emailError) {
         console.error("Email notification failed:", emailError);

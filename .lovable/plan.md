@@ -1,43 +1,56 @@
-## What I verified
+## Root cause
 
-- Submissions ARE saving to the database (latest rows present).
-- The `send-contact-email` edge function is deployed, reachable, and returned `200 success` for a fresh test submission I just ran.
-- No Maileroo error was logged on that send.
+The red toast on "Send Message" is the `"Something went wrong"` branch in `src/pages/Contact.tsx` — it fires when the Supabase `insert(...).select("id").single()` call returns an error or no row.
 
-So the path **form → DB → edge function → Maileroo API** is healthy. The issue is between **Maileroo and the inbox**.
+Checking the database directly:
 
-## Most likely root causes (ranked)
+- The last successful row in `contact_submissions` is from **Feb 24** — nothing from today, even though you just submitted. So the **insert itself is being rejected**, the form isn't even reaching the email step.
+- `contact_submissions` has RLS policies ("Anyone can submit contact form" for INSERT, admin-only for SELECT), but **no table-level `GRANT`s exist for `anon` or `authenticated`** (confirmed via `information_schema.role_table_grants` — empty result).
+- Without `GRANT INSERT`, PostgREST rejects the request before RLS is even evaluated, returning a permission error. RLS policies alone are not enough — this is the exact failure mode called out in the platform's public-schema-grants rule.
 
-1. **`loumilab.com` sender not fully verified in Maileroo** — SPF/DKIM/Return-Path records missing or not propagated. Maileroo's API will return `200` and then silently drop or hard-bounce the message. #1 cause of "API success but nothing arrives".
-2. **`hello@loumilab.com` is not a real, monitored mailbox.** The notification email is sent *to* `hello@loumilab.com`. If that address has no MX/inbox set up (no Google Workspace, iCloud custom domain, Zoho, etc.), nothing ever lands.
-3. **Confirmation email going to the submitter's spam folder** (common when DKIM/SPF isn't aligned).
-4. **Maileroo account issue** — wrong workspace's `MAILEROO_API_KEY`, free-tier quota exhausted, or sender suspended.
+Old rows exist because grants used to be applied by default on older projects; a recent platform/migration change dropped them on this table.
 
-## What I need from you (no code yet)
+Secondary issue: even after granting INSERT, the current client code does `.insert(...).select("id").single()`. The SELECT policy only allows admins to read rows, so the returned row would be filtered out and `inserted` would still be `null`, re-triggering the same red toast.
 
-1. **Maileroo dashboard → Sending Domains**: is `loumilab.com` listed with green checkmarks on SPF + DKIM? Screenshot or paste status.
-2. **Maileroo dashboard → Logs / Email History**: look for the two test sends I just triggered (one to `hello@loumilab.com`, one to `diag-test@example.com`, ~1 minute ago). Tell me the status: `Delivered`, `Bounced`, `Rejected`, `Deferred`, plus any error text.
-3. Confirm `hello@loumilab.com` is a real inbox you can log into (and check its spam folder).
+## Fix
 
-## Fix path based on what you find
+Two coordinated changes:
 
-| Finding | Fix I'll implement |
-|---|---|
-| Domain not verified in Maileroo | Walk you through the SPF/DKIM DNS records to add at your registrar. |
-| `hello@loumilab.com` has no inbox | Change the notification recipient to a working address (e.g. your personal email) — small edit to `send-contact-email`. |
-| Logs show "Rejected — unverified sender" | Same as row 1. |
-| Logs show "Delivered" everywhere | Hunt in spam / recipient-side rules. |
-| Wrong / stale `MAILEROO_API_KEY` | Rotate the secret. |
+### 1. Migration: restore grants
 
-## Optional bigger change — recommended
+```sql
+GRANT INSERT ON public.contact_submissions TO anon, authenticated;
+GRANT ALL    ON public.contact_submissions TO service_role;
+```
 
-Switch from Maileroo to **Lovable's built-in email system**. It:
-- Handles SPF/DKIM automatically via a delegated subdomain
-- Gives a real delivery log + suppression list + retries + dashboard
-- Removes the "200 but nothing arrives" black-box you're hitting now
+No new SELECT policy for anon — admins remain the only readers, which preserves privacy of submissions.
 
-Say "switch to Lovable Emails" and I'll add that migration to the plan.
+### 2. Stop selecting the row back on the client
 
-## Cleanup
+Refactor `src/pages/Contact.tsx` so it does NOT chain `.select("id").single()` after insert (which RLS will always filter to null for anon). Instead:
 
-I inserted one test row (`Diag Test` / `diag-test@example.com`) for diagnostics. I'll delete it once we're done.
+- `insert(...)` only — check `error` only, no row read needed.
+- Drop the `submission_id` lookup pattern in the edge function. Update `send-contact-email` to accept the **most recent submission for the given email within the last 60 seconds** as the source of truth (still server-verified, still not an open relay, still protected by the per-email rate-limit trigger that caps at 3/hour/email).
+- Client calls `supabase.functions.invoke("send-contact-email", { body: { email: result.data.email } })`.
+
+This keeps the existing security model (edge function never trusts client-supplied content; it re-reads the canonical row from the DB) while removing the RLS/grant coupling that's currently breaking the flow.
+
+## Files touched
+
+- `supabase/migrations/<new>.sql` — grants above.
+- `src/pages/Contact.tsx` — remove `.select("id").single()`, pass `email` instead of `submission_id` to the function, keep all validation/honeypot/rate-limit logic.
+- `supabase/functions/send-contact-email/index.ts` — accept `{ email }`, look up newest matching row within the last 60s, return 404 if none, otherwise unchanged (same Maileroo sends, same HTML, same per-IP rate limit).
+
+## Verification
+
+After the change:
+1. Submit the form from the live site → expect green "Message sent!" toast.
+2. Confirm a new row appears in `contact_submissions`.
+3. Confirm Maileroo logs show two sends (notification to `hello@loumilab.com`, confirmation to submitter).
+4. Re-submitting 4× in an hour from the same email should hit the existing trigger-based rate limit (expected behavior, not a regression).
+
+## What I'm NOT doing
+
+- Not touching Maileroo / DNS / Zoho — that path is already verified working (last "delivered" was confirmed green).
+- Not switching to Lovable Emails.
+- Not relaxing the admin-only SELECT policy on submissions.
