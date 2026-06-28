@@ -79,39 +79,33 @@ serve(async (req) => {
     if (!apiKey) throw new Error("MAILEROO_API_KEY not configured");
 
     const body = await req.json().catch(() => null);
-    const submissionId = body?.submission_id;
+    const emailInput = typeof body?.email === 'string' ? body.email.trim().toLowerCase() : null;
 
-    if (!submissionId || typeof submissionId !== 'string' || !UUID_RE.test(submissionId)) {
+    if (!emailInput || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(emailInput) || emailInput.length > 255) {
       return new Response(
-        JSON.stringify({ error: "Missing or invalid submission_id" }),
+        JSON.stringify({ error: "Missing or invalid email" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    // Fetch the verified record from the DB — this is the source of truth.
-    // Prevents using this endpoint as an open email relay: attackers cannot
-    // send confirmations to arbitrary addresses without first creating a row
-    // (which is itself rate-limited by the trigger to 3/hour/email).
+    // Fetch the most recent submission for this email within the last 60s.
+    // The DB row is the source of truth — the client cannot smuggle arbitrary
+    // content into the email. The per-email rate-limit trigger (3/hour/email)
+    // still prevents abuse of this endpoint as a relay.
+    const cutoff = new Date(Date.now() - 60 * 1000).toISOString();
     const { data: submission, error: fetchError } = await supabaseAdmin
       .from('contact_submissions')
       .select('name, email, company, message, created_at')
-      .eq('id', submissionId)
-      .single();
+      .ilike('email', emailInput)
+      .gte('created_at', cutoff)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
 
     if (fetchError || !submission) {
       return new Response(
-        JSON.stringify({ error: "Submission not found" }),
+        JSON.stringify({ error: "Recent submission not found" }),
         { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    // Only send for very recent submissions (defense in depth — prevents
-    // replay-style abuse of old submission IDs).
-    const ageMs = Date.now() - new Date(submission.created_at as string).getTime();
-    if (ageMs > 5 * 60 * 1000) {
-      return new Response(
-        JSON.stringify({ error: "Submission expired" }),
-        { status: 410, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
