@@ -94,11 +94,14 @@ const IntroAnimation = () => {
 
         <div className="flex flex-col items-center gap-3 text-center">
           <span className="opacity-0 animate-intro-tagline-1 text-[11px] md:text-xs tracking-[0.5em] uppercase text-muted-foreground">
-            Designed by
+            Powered by
           </span>
-          <span className="opacity-0 animate-intro-tagline-2 relative font-display text-5xl md:text-7xl font-semibold tracking-[-0.02em]">
+          <span className="opacity-0 animate-intro-tagline-2 relative font-display text-5xl md:text-7xl font-semibold tracking-[-0.02em] inline-flex items-baseline">
+            <span className="bg-clip-text text-transparent bg-[linear-gradient(110deg,#8a8a8a_0%,#ffffff_45%,#8a8a8a_100%)] bg-[length:200%_100%] animate-intro-shimmer text-6xl md:text-8xl">
+              L
+            </span>
             <span className="bg-clip-text text-transparent bg-[linear-gradient(110deg,#8a8a8a_0%,#ffffff_45%,#8a8a8a_100%)] bg-[length:200%_100%] animate-intro-shimmer">
-              Loumilab
+              OUMILAB
             </span>
           </span>
         </div>
