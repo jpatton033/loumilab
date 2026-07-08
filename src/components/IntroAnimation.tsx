@@ -96,8 +96,8 @@ const IntroAnimation = () => {
           <span className="opacity-0 animate-intro-tagline-1 text-[11px] md:text-xs tracking-[0.5em] uppercase text-muted-foreground">
             Powered by
           </span>
-          <span className="opacity-0 animate-intro-tagline-2 relative font-display text-5xl md:text-7xl font-semibold tracking-[-0.02em] inline-flex items-baseline">
-            <span className="bg-clip-text text-transparent bg-[linear-gradient(110deg,#8a8a8a_0%,#ffffff_45%,#8a8a8a_100%)] bg-[length:200%_100%] animate-intro-shimmer text-6xl md:text-8xl">
+          <span className="opacity-0 animate-intro-tagline-2 relative font-display text-4xl md:text-6xl font-semibold tracking-[-0.02em] inline-flex items-baseline">
+            <span className="bg-clip-text text-transparent bg-[linear-gradient(110deg,#8a8a8a_0%,#ffffff_45%,#8a8a8a_100%)] bg-[length:200%_100%] animate-intro-shimmer text-5xl md:text-7xl">
               L
             </span>
             <span className="bg-clip-text text-transparent bg-[linear-gradient(110deg,#8a8a8a_0%,#ffffff_45%,#8a8a8a_100%)] bg-[length:200%_100%] animate-intro-shimmer">
