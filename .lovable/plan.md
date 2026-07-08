@@ -1,10 +1,13 @@
-## Update Intro Load Screen
+## Update Intro Load Screen Logo Size
 
 Edit `src/components/IntroAnimation.tsx` only.
 
 ### Changes
-1. Replace the "Designed by" label with **"POWERED BY"** (already uppercase via `uppercase` class; update the literal string).
-2. Change the wordmark text from `Loumilab` to **`LOUMILAB`** (all uppercase).
-3. Style the leading **`L`** slightly larger than the rest of the wordmark by splitting it into two spans — the first `L` gets an increased font-size (e.g. `text-6xl md:text-8xl`) while the remaining letters keep the current `text-5xl md:text-7xl`. Both share the same shimmer gradient.
+1. Change `<LoumilabLogo size="xl" />` to `<LoumilabLogo size="md" />` so the logo renders at 48px instead of 96px.
+2. Leave the surrounding `gap-8` container spacing unchanged.
+3. Leave all other timing, fade, particles, rule-draw, and wordmark styling untouched.
 
-No other files, tokens, or animations change. Timing, fade, particles, and rule-draw stay identical.
+### Verification
+- Open the preview and trigger the intro screen (clear `sessionStorage` key `loumilab_intro_seen` if needed).
+- Confirm the logo is visibly smaller and balanced with the "POWERED BY / LOUMILAB" wordmark.
+- Confirm no layout shift or broken animation.

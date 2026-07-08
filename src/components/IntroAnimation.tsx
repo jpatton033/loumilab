@@ -78,7 +78,7 @@ const IntroAnimation = () => {
       {/* Content */}
       <div className="relative flex flex-col items-center gap-8 px-6">
         <div className="animate-intro-logo">
-          <LoumilabLogo size="xl" />
+          <LoumilabLogo size="md" />
         </div>
 
         {/* Drawn rule */}
