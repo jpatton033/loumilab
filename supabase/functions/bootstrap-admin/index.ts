@@ -1,0 +1,53 @@
+// One-time bootstrap: creates the Loumilab super admin account and grants the
+// admin role. It refuses to run once any admin already exists, so it cannot be
+// used to mint additional privileged accounts.
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
+
+const ADMIN_EMAIL = "hello@loumilab.com";
+
+const cors = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
+
+const json = (body: unknown, status = 200) =>
+  new Response(JSON.stringify(body), { status, headers: { ...cors, "Content-Type": "application/json" } });
+
+Deno.serve(async (req) => {
+  if (req.method === "OPTIONS") return new Response(null, { headers: cors });
+
+  const admin = createClient(
+    Deno.env.get("SUPABASE_URL")!,
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+    { auth: { persistSession: false } },
+  );
+
+  const { count, error: countError } = await admin
+    .from("user_roles")
+    .select("id", { count: "exact", head: true })
+    .eq("role", "admin");
+  if (countError) return json({ error: countError.message }, 500);
+  if ((count ?? 0) > 0) return json({ status: "already_bootstrapped" });
+
+  // Random throwaway password — the real one is set through the reset flow.
+  const tempPassword = crypto.randomUUID() + crypto.randomUUID().toUpperCase() + "!9";
+
+  const { data: created, error: createError } = await admin.auth.admin.createUser({
+    email: ADMIN_EMAIL,
+    password: tempPassword,
+    email_confirm: true,
+  });
+
+  let userId = created?.user?.id;
+
+  if (createError) {
+    const { data: list } = await admin.auth.admin.listUsers({ page: 1, perPage: 200 });
+    userId = list?.users.find((u) => u.email?.toLowerCase() === ADMIN_EMAIL)?.id;
+    if (!userId) return json({ error: createError.message }, 500);
+  }
+
+  const { error: roleError } = await admin.from("user_roles").insert({ user_id: userId, role: "admin" });
+  if (roleError && !roleError.message.includes("duplicate")) return json({ error: roleError.message }, 500);
+
+  return json({ status: "ok", email: ADMIN_EMAIL, user_id: userId });
+});
