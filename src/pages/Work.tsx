@@ -105,12 +105,22 @@ const Work = () => {
             {visible.map((study, i) => (
               <Reveal key={study.title} delay={i * 70}>
                 <article className="overflow-hidden rounded-3xl border border-border bg-card shadow-[var(--shadow-soft)] glow-hover hover:border-accent/40">
-                  <div className="relative flex h-52 items-center justify-center overflow-hidden bg-surface-subtle lg:h-64">
-                    <div className="absolute inset-0 hero-grid" aria-hidden="true" />
-                    <span className="relative font-display text-2xl font-semibold text-foreground/25 lg:text-4xl">
-                      {study.title}
-                    </span>
+                  <div className="relative h-52 overflow-hidden border-b border-border bg-surface-subtle lg:h-72">
+                    <img
+                      src={study.image}
+                      alt={study.alt}
+                      width={1600}
+                      height={912}
+                      loading={i === 0 ? "eager" : "lazy"}
+                      decoding={i === 0 ? "sync" : "async"}
+                      className="h-full w-full object-cover object-top"
+                    />
+                    <div
+                      className="pointer-events-none absolute inset-0 bg-gradient-to-t from-foreground/10 to-transparent"
+                      aria-hidden="true"
+                    />
                   </div>
+
                   <div className="p-8 lg:p-10">
                     <span className="font-display text-xs font-semibold uppercase tracking-[0.2em] text-accent">
                       {study.category}
