@@ -1,49 +1,26 @@
 import Layout from "@/components/Layout";
-import SectionHeading from "@/components/SectionHeading";
 import SEOHead from "@/components/SEOHead";
-import { Badge } from "@/components/ui/badge";
-import { ExternalLink } from "lucide-react";
-
-const products = [
-  {
-    name: "FormFlow",
-    desc: "AI-powered form builder with smart validation and conditional logic. Create beautiful, conversion-optimized forms in minutes.",
-    status: "Live" as const,
-  },
-  {
-    name: "MetricPulse",
-    desc: "Real-time analytics dashboard for SaaS products. Track MRR, churn, LTV, and user engagement in one unified view.",
-    status: "Beta" as const,
-  },
-  {
-    name: "ShipKit",
-    desc: "SaaS boilerplate with auth, payments, email, and admin dashboard pre-built. Launch your next product in days.",
-    status: "Coming Soon" as const,
-  },
-  {
-    name: "ContentForge",
-    desc: "AI content generation platform for marketing teams. Blog posts, social media, email campaigns — all on-brand.",
-    status: "Coming Soon" as const,
-  },
-];
-
-const statusStyles = {
-  Live: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
-  Beta: "bg-accent/10 text-accent border-accent/30",
-  "Coming Soon": "bg-muted text-muted-foreground border-border",
-};
+import Reveal from "@/components/Reveal";
+import Eyebrow from "@/components/brand/Eyebrow";
+import ProductCard from "@/components/brand/ProductCard";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
+import { productGroups, allProducts } from "@/data/products";
 
 const productsJsonLd = {
   "@context": "https://schema.org",
   "@type": "ItemList",
-  itemListElement: products.map((p, i) => ({
+  name: "The Loumilab Ecosystem",
+  itemListElement: allProducts.map((p, i) => ({
     "@type": "ListItem",
     position: i + 1,
     item: {
       "@type": "Product",
       name: p.name,
-      description: p.desc,
-      brand: { "@type": "Brand", name: "LOUMILAB" },
+      description: p.description,
+      url: p.external ? p.href : `https://loumilab.com${p.href}`,
+      brand: { "@type": "Brand", name: "Loumilab" },
     },
   })),
 };
@@ -51,39 +28,69 @@ const productsJsonLd = {
 const Products = () => (
   <Layout>
     <SEOHead
-      title="Our Products — FormFlow, MetricPulse, ShipKit — LOUMILAB"
-      description="Explore LOUMILAB's product suite: AI form builder, SaaS analytics dashboard, and rapid launch boilerplate."
+      title="The Loumilab Ecosystem — Products & Companies"
+      description="Explore the Loumilab ecosystem: Loumilab Orders, built in house, and Vurtti, a Loumilab compliance technology company."
       path="/products"
       jsonLd={productsJsonLd}
     />
-    <section className="section-padding pt-32 lg:pt-40">
-      <div className="section-container">
-        <SectionHeading
-          label="Labs / Products"
-          title="SaaS products we're building"
-          description="We don't just build for clients — we build our own products too. Real-world expertise that directly benefits every project we take on."
-        />
-        <div className="grid md:grid-cols-2 gap-6">
-          {products.map((product) => (
-            <div
-              key={product.name}
-              className="group glass-card rounded-2xl p-8 hover:border-accent/30 transition-all duration-500 glow-hover flex flex-col"
-            >
-              <div className="flex items-start justify-between mb-4">
-                <h3 className="font-display text-xl font-semibold">{product.name}</h3>
-                <Badge variant="outline" className={statusStyles[product.status]}>
-                  {product.status}
-                </Badge>
-              </div>
-              <p className="text-muted-foreground leading-relaxed flex-1">{product.desc}</p>
-              {product.status === "Live" && (
-                <button className="mt-6 inline-flex items-center gap-2 text-accent text-sm font-medium hover:underline">
-                  Visit product <ExternalLink size={14} />
-                </button>
-              )}
+
+    <section className="relative overflow-hidden pt-32 pb-16 lg:pt-44 lg:pb-20">
+      <div className="pointer-events-none absolute inset-0 hero-wash" aria-hidden="true" />
+      <div className="section-container relative max-w-3xl">
+        <Eyebrow>Ecosystem</Eyebrow>
+        <h1 className="mt-5 text-4xl font-semibold leading-tight lg:text-6xl">
+          Products and companies built by Loumilab.
+        </h1>
+        <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
+          We build technology for clients and we build our own. Each product below is designed, engineered,
+          and secured by the same team.
+        </p>
+      </div>
+    </section>
+
+    <section className="section-padding pt-8">
+      <div className="section-container space-y-16">
+        {productGroups.map((group, gi) => (
+          <div key={group.id}>
+            <Reveal className="max-w-2xl">
+              <h2 className="font-display text-2xl font-semibold lg:text-3xl">{group.label}</h2>
+              <p className="mt-3 text-muted-foreground">{group.blurb}</p>
+            </Reveal>
+            <div className="mt-8 grid gap-6 lg:grid-cols-2">
+              {group.items.map((p, i) => (
+                <Reveal key={p.id} delay={gi * 60 + i * 80}>
+                  <ProductCard product={p} className="h-full" />
+                </Reveal>
+              ))}
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
+
+        <Reveal>
+          <div className="rounded-3xl border border-dashed border-border bg-surface-subtle p-8 lg:p-12">
+            <span className="font-display text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+              What&apos;s next
+            </span>
+            <p className="mt-3 font-display text-xl font-semibold lg:text-2xl">We&apos;re always building.</p>
+            <p className="mt-3 max-w-xl leading-relaxed text-muted-foreground">
+              More Loumilab products and companies are in development. They&apos;ll be listed here as they launch.
+            </p>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+
+    <section className="section-padding border-t border-border bg-surface-subtle">
+      <div className="section-container text-center">
+        <h2 className="text-3xl font-semibold lg:text-4xl">Building a product of your own?</h2>
+        <p className="mx-auto mt-4 max-w-md text-muted-foreground">
+          We&apos;ve done it for ourselves. We can do it with you.
+        </p>
+        <Button size="lg" asChild className="mt-8">
+          <Link to="/contact">
+            Start a Project <ArrowRight size={18} />
+          </Link>
+        </Button>
       </div>
     </section>
   </Layout>

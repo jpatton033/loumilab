@@ -21,6 +21,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://loumilab.com/orders</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
     <loc>https://loumilab.com/work</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

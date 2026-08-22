@@ -8,7 +8,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Send, Mail } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import DiamondLogo from "@/components/DiamondLogo";
 
 const contactSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
@@ -82,32 +81,33 @@ const Contact = () => {
   return (
     <Layout>
       <SEOHead
-        title="Contact LOUMILAB — Start Your Project Today"
-        description="Get in touch to discuss your next website, SaaS product, or digital project. Fast quotes, transparent process."
+        title="Contact Loumilab — Start a Project"
+        description="Tell us about your website, product, automation, or security project. Loumilab replies to every inquiry within 24 hours."
         path="/contact"
       />
-      <section className="section-padding pt-32 lg:pt-40">
-        <div className="section-container">
+      <section className="relative overflow-hidden section-padding pt-32 lg:pt-40">
+        <div className="pointer-events-none absolute inset-0 hero-wash" aria-hidden="true" />
+        <div className="section-container relative">
           <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
             <div>
-              <DiamondLogo size="lg" variant="silver" className="mb-8" />
-              <span className="inline-block text-accent font-display text-sm font-medium uppercase tracking-[0.2em] mb-4">
+              <span className="inline-block font-display text-xs font-semibold uppercase tracking-[0.22em] text-accent mb-4">
                 Contact
               </span>
-              <h1 className="text-4xl lg:text-5xl font-semibold leading-tight mb-6">
-                Let's build something{" "}
-                <span className="text-gradient">extraordinary</span>
+              <h1 className="text-4xl lg:text-6xl font-semibold leading-tight mb-6">
+                Let&apos;s turn the idea into something real.
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed mb-10">
-                Have a project in mind? Tell us about it. We respond to every inquiry within 24 hours.
+                Tell us what you&apos;re building — a website, a product, an automation, or a security question.
+                We respond to every inquiry within 24 hours.
               </p>
               <div className="space-y-4">
                 <div className="flex items-center gap-3 text-muted-foreground">
                   <Mail size={18} className="text-accent" />
-                  <span>hello@loumilab.com</span>
+                  <a href="mailto:hello@loumilab.com" className="hover:text-accent transition-colors">hello@loumilab.com</a>
                 </div>
               </div>
             </div>
+
 
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Honeypot field - hidden from users, catches bots */}
@@ -129,7 +129,7 @@ const Contact = () => {
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                     placeholder="Your name"
                     required
-                    className="bg-secondary/50 border-border/50 focus:border-accent focus:ring-accent/20"
+                    className="bg-background"
                     maxLength={100}
                   />
                   {errors.name && <p className="text-sm text-destructive mt-1">{errors.name}</p>}
@@ -142,7 +142,7 @@ const Contact = () => {
                     onChange={(e) => setForm({ ...form, email: e.target.value })}
                     placeholder="you@company.com"
                     required
-                    className="bg-secondary/50 border-border/50 focus:border-accent focus:ring-accent/20"
+                    className="bg-background"
                     maxLength={255}
                   />
                   {errors.email && <p className="text-sm text-destructive mt-1">{errors.email}</p>}
@@ -154,7 +154,7 @@ const Contact = () => {
                   value={form.company}
                   onChange={(e) => setForm({ ...form, company: e.target.value })}
                   placeholder="Your company (optional)"
-                  className="bg-secondary/50 border-border/50 focus:border-accent focus:ring-accent/20"
+                  className="bg-background"
                   maxLength={200}
                 />
                 {errors.company && <p className="text-sm text-destructive mt-1">{errors.company}</p>}
@@ -167,12 +167,12 @@ const Contact = () => {
                   placeholder="What are you looking to build? Timeline, budget, and any other details..."
                   rows={6}
                   required
-                  className="bg-secondary/50 border-border/50 focus:border-accent focus:ring-accent/20 resize-none"
+                  className="bg-background resize-none"
                   maxLength={2000}
                 />
                 {errors.message && <p className="text-sm text-destructive mt-1">{errors.message}</p>}
               </div>
-              <Button variant="accent" size="lg" type="submit" className="w-full sm:w-auto glow-hover" disabled={submitting}>
+              <Button size="lg" type="submit" className="w-full sm:w-auto" disabled={submitting}>
                 {submitting ? "Sending..." : "Send Message"} <Send size={16} />
               </Button>
             </form>

@@ -46,8 +46,8 @@ const Login = () => {
   return (
     <Layout>
       <SEOHead
-        title="Admin Login — LOUMILAB"
-        description="Sign in to the LOUMILAB admin dashboard."
+        title="Admin Login — Loumilab"
+        description="Sign in to the Loumilab admin dashboard."
         path="/login"
         noindex
       />
@@ -65,7 +65,7 @@ const Login = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="admin@loumilab.com"
                 required
-                className="bg-secondary/50 border-border/50 focus:border-accent focus:ring-accent/20"
+                className="bg-background"
               />
             </div>
             <div>
@@ -76,10 +76,10 @@ const Login = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 required
-                className="bg-secondary/50 border-border/50 focus:border-accent focus:ring-accent/20"
+                className="bg-background"
               />
             </div>
-            <Button variant="accent" size="lg" type="submit" className="w-full glow-hover" disabled={loading}>
+            <Button size="lg" type="submit" className="w-full" disabled={loading}>
               {loading ? "Signing in..." : "Sign In"} <LogIn size={16} />
             </Button>
           </form>
