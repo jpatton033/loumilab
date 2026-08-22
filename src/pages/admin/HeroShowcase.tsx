@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import Layout from "@/components/Layout";
+import AdminShell from "@/components/admin/AdminShell";
 import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -262,7 +262,7 @@ const AdminHeroShowcase = () => {
   };
 
   return (
-    <Layout>
+    <AdminShell title="Hero Showcase" description="Products featured in the homepage showcase.">
       <SEOHead
         title="Loumilab | Technology Studio for Digital Products"
         description="Loumilab designs, builds, launches, and secures digital products and technology businesses. Websites, software, AI automation, and cybersecurity."
@@ -352,7 +352,7 @@ const AdminHeroShowcase = () => {
           </div>
         ) : null}
       </div>
-    </Layout>
+    </AdminShell>
   );
 };
 

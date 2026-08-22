@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import Layout from "@/components/Layout";
+import AdminShell from "@/components/admin/AdminShell";
 import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -167,29 +167,29 @@ const ArticleEditor = () => {
 
   if (isLoading) {
     return (
-      <Layout>
+      <AdminShell title="Article Editor" description="Write and publish Knowledge Center articles.">
         <div className="section-container py-20 text-muted-foreground">Loading article…</div>
-      </Layout>
+      </AdminShell>
     );
   }
 
   if (!article) {
     return (
-      <Layout>
+      <AdminShell title="Article Editor" description="Write and publish Knowledge Center articles.">
         <div className="section-container py-20">
           <p className="text-muted-foreground">Article not found.</p>
           <Button className="mt-6" onClick={() => navigate("/admin/knowledge")}>
             Back to Knowledge Center
           </Button>
         </div>
-      </Layout>
+      </AdminShell>
     );
   }
 
   const sectionSlug = sections.find((s) => s.id === form.section_id)?.slug ?? "";
 
   return (
-    <Layout>
+    <AdminShell title="Article Editor" description="Write and publish Knowledge Center articles.">
       <SEOHead title="Edit article | Loumilab" description="Knowledge Center article editor." path="/admin/knowledge" noindex />
       <section className="section-padding pt-12">
         <div className="section-container">
@@ -413,7 +413,7 @@ const ArticleEditor = () => {
           </div>
         </div>
       </section>
-    </Layout>
+    </AdminShell>
   );
 };
 

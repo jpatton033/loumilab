@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import Layout from "@/components/Layout";
+import AdminShell from "@/components/admin/AdminShell";
 import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -139,7 +139,7 @@ const AdminKnowledgeCenter = () => {
   };
 
   return (
-    <Layout>
+    <AdminShell title="Knowledge Center" description="Articles, sections, and tags for /resources.">
       <SEOHead title="Knowledge Center Admin | Loumilab" description="Manage Knowledge Center content." path="/admin/knowledge" noindex />
       <section className="section-padding pt-12">
         <div className="section-container">
@@ -285,7 +285,7 @@ const AdminKnowledgeCenter = () => {
           </Tabs>
         </div>
       </section>
-    </Layout>
+    </AdminShell>
   );
 };
 
