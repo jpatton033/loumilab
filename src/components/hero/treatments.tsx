@@ -92,8 +92,8 @@ const OrdersDevices = ({ active, reduced }: TreatmentProps) => {
   }, [active, reduced]);
 
   return (
-    <div className="relative pl-6 pt-6 sm:pl-10">
-      <LaptopFrame className="w-[84%]">
+    <div className="relative pb-20">
+      <LaptopFrame className="ml-auto w-[80%]">
         <div className="bg-background p-4">
           <div className="flex items-center justify-between">
             <Bar w="90px" className="h-2.5" />
@@ -127,7 +127,7 @@ const OrdersDevices = ({ active, reduced }: TreatmentProps) => {
         </div>
       </LaptopFrame>
 
-      <Phone className="absolute bottom-0 left-0 z-10 w-[34%] max-w-[170px]">
+      <Phone className="absolute left-0 top-8 z-10 w-[30%] max-w-[165px]">
         <div className="p-3">
           <div className="h-16 rounded-xl" style={{ background: "hsl(var(--hero-accent) / 0.14)" }} />
           <Bar w="70%" className="mt-3 h-2.5" />
@@ -152,12 +152,12 @@ const OrdersDevices = ({ active, reduced }: TreatmentProps) => {
         </div>
       </Phone>
 
-      <div className="pointer-events-none absolute right-0 top-[14%] w-[34%] max-w-[210px] space-y-2">
+      <div className="pointer-events-none absolute bottom-0 left-[6%] right-0 flex flex-wrap gap-2">
         {cues.map((c, i) => (
           <div
             key={c.label}
             className={cn(
-              "flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2 shadow-[var(--shadow-soft)] transition-all duration-700",
+              "flex min-w-[150px] flex-1 items-center gap-2 rounded-xl border border-border bg-card px-3 py-2 shadow-[var(--shadow-soft)] transition-all duration-700",
               step > i ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0"
             )}
             style={{ transitionTimingFunction: "var(--ease-brand)" }}
