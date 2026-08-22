@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronDown, ArrowUpRight, ArrowRight } from "lucide-react";
+import { Menu, X, ChevronDown, ArrowUpRight, ArrowRight, LogIn, LogOut, User } from "lucide-react";
 import { productGroups } from "@/data/products";
 import Wordmark from "@/components/brand/Wordmark";
 
@@ -21,8 +22,10 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [productsOpen, setProductsOpen] = useState(false);
   const [mobileProducts, setMobileProducts] = useState(false);
+  const [user, setUser] = useState<{ id: string; email?: string } | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -52,6 +55,28 @@ const Navbar = () => {
       document.removeEventListener("mousedown", onClick);
     };
   }, [productsOpen]);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user ? { id: data.user.id, email: data.user.email } : null);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_IN" || event === "USER_UPDATED") {
+        setUser(session?.user ? { id: session.user.id, email: session.user.email } : null);
+      } else if (event === "SIGNED_OUT") {
+        setUser(null);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+    navigate("/", { replace: true });
+  };
 
   const handleLogoClick = () => {
     if (location.pathname === "/") {
@@ -173,7 +198,18 @@ const Navbar = () => {
           ))}
         </nav>
 
-        <div className="hidden lg:block">
+        <div className="hidden items-center gap-3 lg:flex">
+          {user ? (
+            <Button variant="ghost" size="sm" onClick={handleSignOut} className="text-muted-foreground hover:text-foreground">
+              <LogOut className="mr-1.5 h-4 w-4" /> Sign out
+            </Button>
+          ) : (
+            <Button variant="ghost" size="sm" asChild className="text-muted-foreground hover:text-foreground">
+              <Link to="/sign-in">
+                <LogIn className="mr-1.5 h-4 w-4" /> Sign in
+              </Link>
+            </Button>
+          )}
           <Button variant="default" size="lg" asChild>
             <Link to="/contact">Start a Project</Link>
           </Button>
@@ -249,6 +285,20 @@ const Navbar = () => {
                 {link.label}
               </Link>
             ))}
+
+            {user ? (
+              <button
+                type="button"
+                onClick={handleSignOut}
+                className="flex items-center gap-2 py-3 text-base font-medium text-muted-foreground"
+              >
+                <LogOut size={18} /> Sign out
+              </button>
+            ) : (
+              <Link to="/sign-in" className="flex items-center gap-2 py-3 text-base font-medium text-accent">
+                <LogIn size={18} /> Sign in
+              </Link>
+            )}
 
             <Button variant="default" size="lg" asChild className="mt-4">
               <Link to="/contact">Start a Project</Link>
