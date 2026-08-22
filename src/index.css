@@ -6,36 +6,38 @@
 
 @layer base {
   :root {
-    --background: 240 6% 4%;
-    --foreground: 0 0% 96%;
+    /* Light brand system — white / off-white / light gray surfaces, charcoal type */
+    --background: 0 0% 100%;
+    --foreground: 240 6% 10%;
 
-    --card: 240 5% 6%;
-    --card-foreground: 0 0% 96%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 6% 10%;
 
-    --popover: 240 5% 8%;
-    --popover-foreground: 0 0% 96%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 6% 10%;
 
-    --primary: 0 0% 96%;
-    --primary-foreground: 240 6% 4%;
+    --primary: 240 6% 10%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 240 4% 11%;
-    --secondary-foreground: 0 0% 96%;
+    --secondary: 240 14% 97%;
+    --secondary-foreground: 240 6% 10%;
 
-    --muted: 240 4% 16%;
-    --muted-foreground: 240 5% 50%;
+    --muted: 240 10% 94%;
+    --muted-foreground: 240 5% 42%;
 
-    --accent: 217 91% 60%;
+    --accent: 217 91% 50%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 72% 48%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 240 4% 16%;
-    --input: 240 4% 16%;
-    --ring: 217 91% 60%;
+    --border: 240 8% 90%;
+    --input: 240 8% 88%;
+    --ring: 217 91% 50%;
 
-    --radius: 0.75rem;
+    --radius: 1rem;
 
+    /* Admin surfaces stay dark */
     --sidebar-background: 240 6% 6%;
     --sidebar-foreground: 0 0% 90%;
     --sidebar-primary: 0 0% 96%;
@@ -46,13 +48,21 @@
     --sidebar-ring: 217 91% 60%;
 
     /* Custom tokens */
-    --surface-elevated: 240 5% 7%;
-    --surface-subtle: 240 4% 5%;
-    --accent-glow: 217 91% 65%;
-    --gradient-accent: linear-gradient(135deg, hsl(217 91% 60%), hsl(217 91% 45%));
-    --gradient-dark: linear-gradient(135deg, hsl(240 6% 4%), hsl(240 10% 12%));
-    --shadow-soft: 0 4px 24px -4px hsl(0 0% 0% / 0.4);
-    --shadow-accent: 0 8px 32px -8px hsl(217 91% 60% / 0.25);
+    --surface-elevated: 0 0% 100%;
+    --surface-subtle: 240 14% 98%;
+    --surface-tint: 240 20% 96%;
+    --accent-glow: 217 91% 62%;
+    --accent-soft: 217 91% 96%;
+
+    --gradient-accent: linear-gradient(135deg, hsl(240 6% 12%), hsl(217 91% 50%));
+    --gradient-surface: linear-gradient(180deg, hsl(0 0% 100%), hsl(240 20% 97%));
+    --gradient-wash: radial-gradient(ellipse 80% 60% at 50% 0%, hsl(217 91% 50% / 0.08), transparent 70%);
+
+    --shadow-soft: 0 1px 2px hsl(240 6% 10% / 0.04), 0 8px 24px -12px hsl(240 6% 10% / 0.10);
+    --shadow-lift: 0 2px 4px hsl(240 6% 10% / 0.04), 0 18px 40px -16px hsl(240 6% 10% / 0.16);
+    --shadow-accent: 0 10px 30px -12px hsl(217 91% 50% / 0.35);
+
+    --ease-brand: cubic-bezier(0.22, 1, 0.36, 1);
   }
 }
 
@@ -67,7 +77,11 @@
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-display font-semibold tracking-tight;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.025em;
+  }
+
+  ::selection {
+    background-color: hsl(var(--accent) / 0.16);
   }
 }
 
@@ -90,9 +104,15 @@
     box-shadow: var(--shadow-soft);
   }
 
+  .surface-subtle {
+    background-color: hsl(var(--surface-subtle));
+  }
+
+  /* Solid, hairline-bordered card — the core brand container */
   .glass-card {
-    background-color: hsl(var(--surface-elevated));
+    background-color: hsl(var(--card));
     border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow-soft);
   }
 
   .accent-glow {
@@ -100,40 +120,49 @@
   }
 
   .glow-hover {
-    @apply transition-all duration-300;
+    transition: box-shadow 0.4s var(--ease-brand), transform 0.4s var(--ease-brand),
+      border-color 0.4s var(--ease-brand);
   }
 
   .glow-hover:hover {
-    box-shadow: 0 0 30px -5px hsl(217 91% 60% / 0.4);
+    box-shadow: var(--shadow-lift);
+    transform: translateY(-2px);
+  }
+
+  .hero-wash {
+    background-image: var(--gradient-wash);
+  }
+
+  .hero-grid {
+    background-image: linear-gradient(to right, hsl(240 6% 10% / 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(240 6% 10% / 0.05) 1px, transparent 1px);
+    background-size: 72px 72px;
+    mask-image: radial-gradient(ellipse 70% 70% at 50% 30%, black, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 30%, black, transparent 75%);
   }
 
   .animate-slide-up {
-    animation: slideUp 0.8s ease-out both;
+    animation: slideUp 0.8s var(--ease-brand) both;
   }
 
   .animate-slide-up-delay-1 {
-    animation: slideUp 0.8s ease-out 0.15s both;
+    animation: slideUp 0.8s var(--ease-brand) 0.1s both;
   }
 
   .animate-slide-up-delay-2 {
-    animation: slideUp 0.8s ease-out 0.3s both;
+    animation: slideUp 0.8s var(--ease-brand) 0.2s both;
   }
 
   .animate-slide-up-delay-3 {
-    animation: slideUp 0.8s ease-out 0.45s both;
+    animation: slideUp 0.8s var(--ease-brand) 0.3s both;
   }
 
   .animate-fade-in {
-    animation: fadeIn 1s ease-out both;
+    animation: fadeIn 0.9s ease-out both;
   }
 
   .video-overlay {
-    background: linear-gradient(
-      180deg,
-      hsl(240 6% 4% / 0.7) 0%,
-      hsl(240 6% 4% / 0.5) 50%,
-      hsl(240 6% 4% / 0.8) 100%
-    );
+    background: linear-gradient(180deg, hsl(0 0% 100% / 0.55) 0%, hsl(0 0% 100% / 0.35) 50%, hsl(0 0% 100% / 0.75) 100%);
   }
 
   .link-underline {
@@ -153,7 +182,7 @@
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(32px);
+    transform: translateY(24px);
   }
   to {
     opacity: 1;
@@ -162,12 +191,8 @@
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes float {
@@ -176,14 +201,20 @@
 }
 
 @keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 20px -5px hsl(217 91% 60% / 0.4);
-  }
-  50% {
-    box-shadow: 0 0 40px -5px hsl(217 91% 60% / 0.6);
-  }
+  0%, 100% { box-shadow: 0 0 20px -8px hsl(217 91% 50% / 0.3); }
+  50% { box-shadow: 0 0 36px -8px hsl(217 91% 50% / 0.45); }
 }
 
 .animate-pulse-glow {
   animation: pulse-glow 3s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }
