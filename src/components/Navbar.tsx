@@ -67,10 +67,9 @@ const Navbar = () => {
     >
       <div className="section-container flex h-16 items-center justify-between lg:h-20">
         <Link to="/" onClick={handleLogoClick} className="flex items-center" aria-label="Loumilab home">
-          <span className="font-display text-lg font-bold tracking-tight">
-            <span className="text-xl">L</span>OUMILAB<span className="ml-0.5 text-xl text-accent">.</span>
-          </span>
+          <Wordmark size="sm" />
         </Link>
+
 
         {/* Desktop */}
         <nav className="hidden items-center gap-8 lg:flex" aria-label="Main">

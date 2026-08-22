@@ -71,14 +71,11 @@ const Index = () => (
       <div className="pointer-events-none absolute inset-0 hero-grid" aria-hidden="true" />
       <div className="section-container relative">
         <div className="mx-auto max-w-4xl text-center">
-          <span className="animate-fade-in inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-xs font-medium text-muted-foreground">
-            <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-            Technology studio · Products · Security
-          </span>
-          <h1 className="animate-slide-up-delay-1 mt-8 font-hero font-semibold leading-[0.95] tracking-[-0.04em]"
+          <h1 className="animate-slide-up-delay-1 font-hero font-semibold leading-[0.95] tracking-[-0.04em]"
               style={{ fontSize: "clamp(2.75rem, 8vw, 6rem)" }}>
             We Build What&apos;s Next.
           </h1>
+
           <p className="animate-slide-up-delay-2 mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-muted-foreground lg:text-xl">
             Loumilab designs, builds, launches, and secures digital products and technology businesses.
           </p>
