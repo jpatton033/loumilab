@@ -1,13 +1,18 @@
-# LOUMILAB
+# Loumilab
 
-> Product-driven digital studio and cybersecurity consultancy. We design and build websites, SaaS products, and secure digital experiences using AI-powered development.
+> Technology studio that designs, builds, launches, and secures digital products and technology businesses. Websites, software and SaaS, automation and applied AI, plus cybersecurity consulting.
 
 ## Pages
 
-- [Home](/): Studio overview, services, and featured work.
-- [Services](/services): Website design, SaaS/MVP development, product strategy, AI-assisted builds, and information & cybersecurity.
-- [How We Work](/how-we-work): Our process from discovery to launch and iteration.
-- [Products](/products): SaaS products we build in-house (FormFlow, MetricPulse, ShipKit, ContentForge).
-- [Work](/work): Case studies and client outcomes.
-- [About](/about): Studio philosophy, team, and approach.
+- [Home](/): Studio overview, capabilities, and the Loumilab product ecosystem.
+- [Services](/services): Design, Build, Innovate, Secure — website and product design, web/SaaS development, automation and AI, cybersecurity consulting.
+- [How We Work](/how-we-work): Six-step process from discovery to iteration.
+- [Products](/products): The Loumilab ecosystem — products built in house and Loumilab companies.
+- [Loumilab Orders](/orders): Order management platform. Sell anywhere, take orders in one place. Built by Loumilab.
+- [Work](/work): Selected case studies and outcomes.
+- [About](/about): Positioning as both technology partner and product builder.
 - [Contact](/contact): Start a project — hello@loumilab.com.
+
+## Companies
+
+- Vurtti (https://www.vurttidocs.com): Compliance technology company, part of Loumilab.
