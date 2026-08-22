@@ -9,6 +9,7 @@
 - [How We Work](/how-we-work): Six-step process from discovery to iteration.
 - [Products](/products): The Loumilab ecosystem — products built in house and Loumilab companies.
 - [Loumilab Orders](/orders): Order management platform. Sell anywhere, take orders in one place. Built by Loumilab.
+- [Knowledge Center](/resources): Guides and playbooks on business growth, commerce, technology and AI, web, security, plus templates and tools.
 - [Work](/work): Selected case studies and outcomes.
 - [About](/about): Positioning as both technology partner and product builder.
 - [Contact](/contact): Start a project — hello@loumilab.com.
