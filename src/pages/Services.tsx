@@ -71,7 +71,7 @@ const servicesJsonLd = {
 const Services = () => (
   <Layout>
     <SEOHead
-      title="Services — Design, Build, Innovate, Secure — Loumilab"
+      title="Services — Design, Build, Innovate, Secure — Loumilab | Technology Studio for Digital Products"
       description="Website and product design, SaaS and web development, automation and AI, plus cybersecurity consulting — delivered by one senior team."
       path="/services"
       jsonLd={servicesJsonLd}

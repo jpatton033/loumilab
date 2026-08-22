@@ -4,7 +4,7 @@ const NotFound = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted">
       <SEOHead
-        title="Page Not Found — LOUMILAB"
+        title="Page Not Found — Loumilab | Technology Studio for Digital Products"
         description="The page you are looking for does not exist."
         path="/404"
         noindex

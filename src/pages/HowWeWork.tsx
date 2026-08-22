@@ -48,7 +48,7 @@ const steps = [
 const HowWeWork = () => (
   <Layout>
     <SEOHead
-      title="How We Work — From Idea to Launch — Loumilab"
+      title="How We Work — From Idea to Launch — Loumilab | Technology Studio for Digital Products"
       description="Discovery, design, build, secure, launch, and scale. How Loumilab delivers digital products with speed and precision."
       path="/how-we-work"
     />
