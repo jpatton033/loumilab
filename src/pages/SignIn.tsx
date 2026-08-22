@@ -13,7 +13,8 @@ const SignIn = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [searchParams] = useSearchParams();
-  const defaultTab = searchParams.get("mode") === "signup" ? "signup" : "signin";
+  const modeParam = searchParams.get("mode");
+  const defaultTab = modeParam === "signup" ? "signup" : modeParam === "forgot" ? "forgot" : "signin";
 
   const [tab, setTab] = useState(defaultTab);
   const [email, setEmail] = useState("");
