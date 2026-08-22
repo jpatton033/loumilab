@@ -162,7 +162,7 @@ const SignIn = () => {
       <SEOHead title="Sign In — Loumilab" description="Sign in to your Loumilab account." path="/sign-in" noindex />
       <section className="section-padding flex min-h-[70vh] items-center pt-32 lg:pt-40">
         <div className="section-container mx-auto w-full max-w-md">
-          <h1 className="mb-2 text-center text-3xl font-semibold">Loumilab account</h1>
+          <h1 className="mb-2 text-center text-3xl font-semibold">Loumilab Account</h1>
           <p className="mb-8 text-center text-muted-foreground">
             Manage your Orders dashboards and preferences.
           </p>
