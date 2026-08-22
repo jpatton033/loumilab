@@ -117,37 +117,94 @@ serve(async (req) => {
 
     const fromAddress = "hello@loumilab.com";
 
-    const notificationHtml = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-        <h2 style="color: #1a1a1a; border-bottom: 2px solid #3B82F6; padding-bottom: 10px;">New Contact Form Submission</h2>
-        <table style="width: 100%; border-collapse: collapse; margin-top: 16px;">
-          <tr><td style="padding: 8px 0; font-weight: bold; color: #555;">Name:</td><td style="padding: 8px 0;">${safeName}</td></tr>
-          <tr><td style="padding: 8px 0; font-weight: bold; color: #555;">Email:</td><td style="padding: 8px 0;"><a href="mailto:${safeEmail}">${safeEmail}</a></td></tr>
-          <tr><td style="padding: 8px 0; font-weight: bold; color: #555;">Company:</td><td style="padding: 8px 0;">${safeCompany}</td></tr>
+    // --- Shared email design tokens (Loumilab light system) ---
+    const t = {
+      charcoal: "#18181b",
+      text: "#1c1c20",
+      muted: "#63636e",
+      accent: "#0d7ff2",
+      border: "#e6e7eb",
+      soft: "#f6f7f9",
+      bg: "#ffffff",
+      font: "Arial, Helvetica, sans-serif",
+    };
+
+    const renderShell = ({ preview, heading, body }: { preview: string; heading: string; body: string }) => `
+      <!DOCTYPE html>
+      <html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /></head>
+      <body style="margin:0;padding:40px 0;background-color:${t.bg};font-family:${t.font};">
+        <div style="display:none;font-size:1px;color:${t.bg};line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;">${escapeHtml(preview)}</div>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+          <tr><td align="center">
+            <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="width:100%;max-width:560px;border-collapse:separate;background-color:${t.bg};border:1px solid ${t.border};border-radius:14px;overflow:hidden;">
+              <tr><td style="background-color:${t.charcoal};padding:28px 32px;text-align:center;">
+                <p style="margin:0;color:#ffffff;font-size:18px;font-weight:700;letter-spacing:0.24em;font-family:${t.font};">LOUMILAB<span style="color:${t.accent};">.</span></p>
+                <p style="margin:8px 0 0;color:rgba(255,255,255,0.6);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;">Design. Build. Innovate. Secure.</p>
+              </td></tr>
+              <tr><td style="padding:36px 32px;">
+                <h1 style="margin:0 0 18px;font-size:22px;font-weight:600;color:${t.text};">${heading}</h1>
+                ${body}
+              </td></tr>
+              <tr><td style="padding:20px 32px;background-color:${t.soft};border-top:1px solid ${t.border};text-align:center;">
+                <p style="margin:0;font-size:11px;color:${t.muted};letter-spacing:0.04em;">&copy; Loumilab &middot; <a href="https://loumilab.com" style="color:${t.muted};text-decoration:none;">loumilab.com</a></p>
+              </td></tr>
+            </table>
+          </td></tr>
         </table>
-        <div style="margin-top: 20px; padding: 16px; background: #f9fafb; border-radius: 8px;">
-          <h3 style="margin: 0 0 8px; color: #333;">Message:</h3>
-          <p style="margin: 0; white-space: pre-wrap; color: #444;">${safeMessage}</p>
-        </div>
-      </div>
+      </body></html>
     `;
 
-    const confirmationHtml = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-        <h2 style="color: #1a1a1a;">Thank you, ${safeName}!</h2>
-        <p style="color: #555; line-height: 1.6;">We've received your message and will get back to you within 24 hours.</p>
-        <div style="margin-top: 20px; padding: 16px; background: #f9fafb; border-radius: 8px;">
-          <h3 style="margin: 0 0 8px; color: #333;">Your message:</h3>
-          <p style="margin: 0; white-space: pre-wrap; color: #444;">${safeMessage}</p>
-        </div>
-        <p style="margin-top: 24px; color: #555;">Best regards,<br><strong>LOUMILAB Team</strong></p>
-      </div>
-    `;
+    const p = `margin:0 0 20px;font-size:15px;line-height:1.6;color:${t.muted};`;
+    const button = (href: string, label: string) =>
+      `<a href="${href}" style="display:inline-block;background-color:${t.charcoal};color:#ffffff;padding:12px 24px;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;">${label}</a>`;
+    const detailRow = (label: string, value: string) => `
+      <tr>
+        <td style="padding:8px 0;font-size:13px;color:${t.muted};width:96px;">${label}</td>
+        <td style="padding:8px 0;font-size:14px;color:${t.text};">${value}</td>
+      </tr>`;
+    const messagePanel = (body: string) => `
+      <div style="margin:0 0 24px;padding:18px 20px;background-color:${t.soft};border:1px solid ${t.border};border-radius:12px;">
+        <p style="margin:0 0 8px;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:${t.muted};">Message</p>
+        <p style="margin:0;font-size:15px;line-height:1.65;color:${t.text};white-space:pre-wrap;">${body}</p>
+      </div>`;
+    const hr = `<hr style="border:none;border-top:1px solid ${t.border};margin:28px 0 0;" />`;
+
+    const notificationHtml = renderShell({
+      preview: `New project inquiry from ${submission.name}`,
+      heading: "New project inquiry",
+      body: `
+        <p style="${p}">A new message came in through the Loumilab contact form.</p>
+        <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;margin:0 0 24px;">
+          ${detailRow("Name", safeName)}
+          ${detailRow("Email", `<a href="mailto:${safeEmail}" style="color:${t.accent};text-decoration:none;">${safeEmail}</a>`)}
+          ${detailRow("Company", safeCompany)}
+        </table>
+        ${messagePanel(safeMessage)}
+        ${button(`mailto:${safeEmail}`, `Reply to ${safeName}`)}
+      `,
+    });
+
+    const confirmationHtml = renderShell({
+      preview: "We received your message — Loumilab will reply within 24 hours",
+      heading: `Thanks, ${safeName}`,
+      body: `
+        <p style="${p}">Your message reached the Loumilab team. We read every inquiry and will get back to you within 24 hours.</p>
+        ${messagePanel(safeMessage)}
+        ${button("https://loumilab.com", "Visit Loumilab")}
+        ${hr}
+        <p style="margin:20px 0 0;font-size:13px;line-height:1.6;color:${t.muted};">
+          Need to add something? Just reply to this email or write to
+          <a href="mailto:hello@loumilab.com" style="color:${t.accent};text-decoration:none;">hello@loumilab.com</a>.
+        </p>
+        <p style="margin:16px 0 0;font-size:13px;line-height:1.6;color:${t.text};">Best regards,<br /><strong>The Loumilab Team</strong></p>
+      `,
+    });
 
     const results = await Promise.allSettled([
       sendEmail(apiKey, fromAddress, "hello@loumilab.com", `New inquiry from ${safeName}`, notificationHtml),
-      sendEmail(apiKey, fromAddress, submission.email as string, "We received your message — LOUMILAB", confirmationHtml),
+      sendEmail(apiKey, fromAddress, submission.email as string, "We received your message — Loumilab", confirmationHtml),
     ]);
+
 
     const errors = results.filter(r => r.status === "rejected");
     if (errors.length > 0) console.error("Some emails failed:", errors);
