@@ -64,7 +64,7 @@ const SEOHead = ({ title, description, path = "/", noindex = false, jsonLd }: SE
     }
 
     return () => {
-      document.title = "LOUMILAB";
+      document.title = "Loumilab";
       document.getElementById(scriptId)?.remove();
       const r = document.querySelector('meta[name="robots"]');
       if (r) r.remove();
