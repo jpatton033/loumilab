@@ -178,6 +178,7 @@ const Contact = () => {
                 {submitting ? "Sending..." : "Send Message"} <Send size={16} />
               </Button>
             </form>
+            </Reveal>
           </div>
         </div>
       </section>
