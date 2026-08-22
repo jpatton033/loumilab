@@ -51,7 +51,7 @@ const Work = () => {
   return (
     <Layout>
       <SEOHead
-        title="Selected Work — Case Studies — Loumilab"
+        title="Selected Work — Case Studies — Loumilab | Technology Studio for Digital Products"
         description="Websites, software, and digital products built by Loumilab. Real projects and the outcomes they delivered."
         path="/work"
         jsonLd={workJsonLd}

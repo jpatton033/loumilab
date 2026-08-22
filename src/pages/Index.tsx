@@ -49,7 +49,7 @@ const homeJsonLd = {
   url: "https://loumilab.com",
   email: "hello@loumilab.com",
   description:
-    "Loumilab is a technology studio that designs, builds, launches, and secures digital products and technology businesses.",
+    "Loumilab designs, builds, launches, and secures digital products and technology businesses. Websites, software, AI automation, and cybersecurity.",
   subOrganization: [
     { "@type": "Organization", name: "Vurtti", url: "https://www.vurttidocs.com" },
   ],
@@ -59,7 +59,7 @@ const homeJsonLd = {
 const Index = () => (
   <Layout>
     <SEOHead
-      title="Loumilab — Technology Studio for Digital Products"
+      title="Loumilab | Technology Studio for Digital Products"
       description="Loumilab designs, builds, launches, and secures digital products and technology businesses. Websites, software, AI automation, and cybersecurity."
       path="/"
       jsonLd={homeJsonLd}
