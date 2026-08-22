@@ -6,6 +6,8 @@ import bloom from "@/assets/work/bloom.jpg";
 import careconnect from "@/assets/work/careconnect.jpg";
 
 interface TreatmentProps {
+  /** Built-in mockup key from the product record. */
+  treatmentKey: string;
   /** Slide is currently on screen. */
   active: boolean;
   /** User prefers reduced motion — no looping or staged animation. */
