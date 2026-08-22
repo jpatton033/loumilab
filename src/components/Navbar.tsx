@@ -3,6 +3,8 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X, ChevronDown, ArrowUpRight, ArrowRight } from "lucide-react";
 import { productGroups } from "@/data/products";
+import Wordmark from "@/components/brand/Wordmark";
+
 
 const navLinks = [
   { label: "Services", to: "/services" },
