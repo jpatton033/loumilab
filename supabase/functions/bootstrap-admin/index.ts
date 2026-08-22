@@ -13,8 +13,13 @@ const cors = {
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { ...cors, "Content-Type": "application/json" } });
 
-Deno.serve(async (req) => {
+const handler = async (req: Request) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: cors });
+
+  console.log("bootstrap-admin invoked", {
+    hasUrl: Boolean(Deno.env.get("SUPABASE_URL")),
+    hasServiceKey: Boolean(Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")),
+  });
 
   const admin = createClient(
     Deno.env.get("SUPABASE_URL")!,
@@ -50,4 +55,13 @@ Deno.serve(async (req) => {
   if (roleError && !roleError.message.includes("duplicate")) return json({ error: roleError.message }, 500);
 
   return json({ status: "ok", email: ADMIN_EMAIL, user_id: userId });
+};
+
+Deno.serve(async (req) => {
+  try {
+    return await handler(req);
+  } catch (e) {
+    console.error("bootstrap-admin failed", e);
+    return json({ error: e instanceof Error ? e.message : String(e) }, 500);
+  }
 });
