@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronDown, ArrowUpRight, ArrowRight } from "lucide-react";
+import { Menu, X, ChevronDown, ArrowUpRight, ArrowRight, LogIn, LogOut, User } from "lucide-react";
 import { productGroups } from "@/data/products";
 import Wordmark from "@/components/brand/Wordmark";
 
