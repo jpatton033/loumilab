@@ -13,6 +13,11 @@ import OrdersDashboard from "./pages/orders/Dashboard";
 import OrdersStorefront from "./pages/orders/Storefront";
 
 import Insights from "./pages/Insights";
+import Resources from "./pages/resources/Index";
+import ResourcesSection from "./pages/resources/Section";
+import ResourceArticle from "./pages/resources/Article";
+import AdminKnowledgeCenter from "./pages/admin/KnowledgeCenter";
+import AdminArticleEditor from "./pages/admin/ArticleEditor";
 
 import Work from "./pages/Work";
 import About from "./pages/About";
