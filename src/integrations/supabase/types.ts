@@ -50,6 +50,90 @@ export type Database = {
         }
         Relationships: []
       }
+      hero_products: {
+        Row: {
+          accent_hsl: string
+          attribution: string | null
+          category: string | null
+          created_at: string
+          cta_primary_href: string | null
+          cta_primary_label: string | null
+          cta_secondary_href: string | null
+          cta_secondary_label: string | null
+          description: string
+          desktop_image_url: string | null
+          display_order: number
+          eyebrow: string
+          headline: string
+          id: string
+          is_active: boolean
+          is_featured: boolean
+          layout: string
+          logo_text: string | null
+          media_video_url: string | null
+          mobile_image_url: string | null
+          name: string
+          nav_label: string
+          slug: string
+          treatment: string
+          updated_at: string
+        }
+        Insert: {
+          accent_hsl?: string
+          attribution?: string | null
+          category?: string | null
+          created_at?: string
+          cta_primary_href?: string | null
+          cta_primary_label?: string | null
+          cta_secondary_href?: string | null
+          cta_secondary_label?: string | null
+          description?: string
+          desktop_image_url?: string | null
+          display_order?: number
+          eyebrow: string
+          headline: string
+          id?: string
+          is_active?: boolean
+          is_featured?: boolean
+          layout?: string
+          logo_text?: string | null
+          media_video_url?: string | null
+          mobile_image_url?: string | null
+          name: string
+          nav_label: string
+          slug: string
+          treatment?: string
+          updated_at?: string
+        }
+        Update: {
+          accent_hsl?: string
+          attribution?: string | null
+          category?: string | null
+          created_at?: string
+          cta_primary_href?: string | null
+          cta_primary_label?: string | null
+          cta_secondary_href?: string | null
+          cta_secondary_label?: string | null
+          description?: string
+          desktop_image_url?: string | null
+          display_order?: number
+          eyebrow?: string
+          headline?: string
+          id?: string
+          is_active?: boolean
+          is_featured?: boolean
+          layout?: string
+          logo_text?: string | null
+          media_video_url?: string | null
+          mobile_image_url?: string | null
+          name?: string
+          nav_label?: string
+          slug?: string
+          treatment?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       kc_article_tags: {
         Row: {
           article_id: string

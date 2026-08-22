@@ -116,6 +116,9 @@ const Admin = () => {
             </div>
             <div className="flex items-center gap-3">
               <Button variant="outline" size="sm" asChild>
+                <Link to="/admin/hero">Hero Showcase</Link>
+              </Button>
+              <Button variant="outline" size="sm" asChild>
                 <Link to="/admin/knowledge">Knowledge Center</Link>
               </Button>
               <Button variant="outline" size="sm" onClick={fetchSubmissions}>
