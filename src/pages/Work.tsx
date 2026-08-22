@@ -7,6 +7,9 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import fintrackImg from "@/assets/work/fintrack.jpg";
+import bloomImg from "@/assets/work/bloom.jpg";
+import careconnectImg from "@/assets/work/careconnect.jpg";
 
 const caseStudies = [
   {
@@ -14,20 +17,27 @@ const caseStudies = [
     category: "Software",
     desc: "A real-time financial analytics platform built for a Series A fintech startup. Shipped MVP in 3 weeks.",
     metrics: ["40% faster onboarding", "12k MAU in month 1", "3-week delivery"],
+    image: fintrackImg,
+    alt: "FinTrack analytics dashboard interface with portfolio charts and summary metric cards",
   },
   {
     title: "Bloom E-Commerce",
     category: "Websites",
     desc: "A modern DTC storefront for a sustainable beauty brand. Conversion-optimized design with headless CMS.",
     metrics: ["2.4x conversion lift", "< 1s load time", "Mobile-first"],
+    image: bloomImg,
+    alt: "Bloom skincare storefront shown on desktop and mobile with a product grid",
   },
   {
     title: "CareConnect Portal",
     category: "Digital Products",
     desc: "Patient management platform for a healthtech company. Secure, HIPAA-aware, and beautifully designed.",
     metrics: ["60% time savings", "99.9% uptime", "HIPAA-aligned"],
+    image: careconnectImg,
+    alt: "CareConnect patient portal with appointment schedule and patient record panel",
   },
 ];
+
 
 const categories = ["All", ...Array.from(new Set(caseStudies.map((c) => c.category)))];
 
