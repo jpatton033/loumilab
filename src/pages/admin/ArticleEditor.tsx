@@ -168,7 +168,7 @@ const ArticleEditor = () => {
   if (isLoading) {
     return (
       <AdminShell title="Article Editor" description="Write and publish Knowledge Center articles.">
-        <div className="section-container py-20 text-muted-foreground">Loading article…</div>
+        <div className="py-10 text-muted-foreground">Loading article…</div>
       </AdminShell>
     );
   }
@@ -176,7 +176,7 @@ const ArticleEditor = () => {
   if (!article) {
     return (
       <AdminShell title="Article Editor" description="Write and publish Knowledge Center articles.">
-        <div className="section-container py-20">
+        <div className="py-10">
           <p className="text-muted-foreground">Article not found.</p>
           <Button className="mt-6" onClick={() => navigate("/admin/knowledge")}>
             Back to Knowledge Center
@@ -191,14 +191,12 @@ const ArticleEditor = () => {
   return (
     <AdminShell title="Article Editor" description="Write and publish Knowledge Center articles.">
       <SEOHead title="Edit article | Loumilab" description="Knowledge Center article editor." path="/admin/knowledge" noindex />
-      <section className="section-padding pt-12">
-        <div className="section-container">
-          <Link to="/admin/knowledge" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-accent">
-            <ArrowLeft size={15} /> Knowledge Center
-          </Link>
-
-          <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
-            <h1 className="text-2xl font-semibold">Edit article</h1>
+      <section>
+        <div>
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <Link to="/admin/knowledge" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-accent">
+              <ArrowLeft size={15} /> Knowledge Center
+            </Link>
             <div className="flex flex-wrap items-center gap-2">
               {sectionSlug && (
                 <Button variant="ghost" asChild>
