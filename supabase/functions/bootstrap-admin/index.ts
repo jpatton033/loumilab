@@ -31,6 +31,7 @@ const handler = async (req: Request) => {
     .from("user_roles")
     .select("id", { count: "exact", head: true })
     .eq("role", "admin");
+  console.log("role count", { count, countError: countError?.message });
   if (countError) return json({ error: countError.message }, 500);
   if ((count ?? 0) > 0) return json({ status: "already_bootstrapped" });
 
@@ -43,6 +44,7 @@ const handler = async (req: Request) => {
     email_confirm: true,
   });
 
+  console.log("createUser", { id: created?.user?.id, err: createError?.message });
   let userId = created?.user?.id;
 
   if (createError) {
@@ -54,6 +56,7 @@ const handler = async (req: Request) => {
   const { error: roleError } = await admin.from("user_roles").insert({ user_id: userId, role: "admin" });
   if (roleError && !roleError.message.includes("duplicate")) return json({ error: roleError.message }, 500);
 
+  console.log("role insert done", userId);
   return json({ status: "ok", email: ADMIN_EMAIL, user_id: userId });
 };
 
