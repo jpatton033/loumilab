@@ -7,6 +7,9 @@ import Index from "./pages/Index";
 import Services from "./pages/Services";
 import HowWeWork from "./pages/HowWeWork";
 import Products from "./pages/Products";
+import Orders from "./pages/Orders";
+import Insights from "./pages/Insights";
+
 import Work from "./pages/Work";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
