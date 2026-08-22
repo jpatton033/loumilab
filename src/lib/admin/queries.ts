@@ -24,7 +24,6 @@ export const useAdminCounts = () =>
     queryKey: ["admin", "counts"],
     staleTime: 60 * 1000,
     queryFn: async (): Promise<AdminCounts> => {
-      const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
       const [inquiriesTotal, inquiriesNew, articlesPublished, articlesDraft, subscribers, heroActive] =
         await Promise.all([
           count("contact_submissions"),
@@ -47,9 +46,7 @@ export const useAdminCounts = () =>
         subscribers,
         heroActive,
         articleViews,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        ...({} as Record<string, never>),
-      } as AdminCounts & { weekAgo?: string };
+      };
     },
   });
 
