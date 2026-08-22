@@ -46,8 +46,8 @@ const Login = () => {
   return (
     <Layout>
       <SEOHead
-        title="Admin Login — LOUMILAB"
-        description="Sign in to the LOUMILAB admin dashboard."
+        title="Admin Login — Loumilab"
+        description="Sign in to the Loumilab admin dashboard."
         path="/login"
         noindex
       />
