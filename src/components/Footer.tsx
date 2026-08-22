@@ -1,17 +1,18 @@
 import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
 import { productGroups } from "@/data/products";
+import Wordmark from "@/components/brand/Wordmark";
+
 
 const Footer = () => (
   <footer className="border-t border-border bg-surface-subtle">
     <div className="section-container py-16 lg:py-20">
       <div className="grid grid-cols-1 gap-12 md:grid-cols-4">
         <div>
-          <Link to="/" className="mb-4 flex items-center">
-            <span className="font-display text-xl font-bold tracking-tight">
-              <span className="text-2xl">L</span>OUMILAB<span className="ml-0.5 text-2xl text-accent">.</span>
-            </span>
+          <Link to="/" className="mb-4 flex items-center" aria-label="Loumilab home">
+            <Wordmark size="md" />
           </Link>
+
           <p className="max-w-xs leading-relaxed text-muted-foreground">
             A technology studio that designs, builds, launches, and secures digital products.
           </p>
