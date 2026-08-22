@@ -8,6 +8,10 @@ import Services from "./pages/Services";
 import HowWeWork from "./pages/HowWeWork";
 import Products from "./pages/Products";
 import Orders from "./pages/Orders";
+import OrdersGetStarted from "./pages/orders/GetStarted";
+import OrdersDashboard from "./pages/orders/Dashboard";
+import OrdersStorefront from "./pages/orders/Storefront";
+
 import Insights from "./pages/Insights";
 
 import Work from "./pages/Work";
@@ -35,6 +39,10 @@ const App = () => (
           <Route path="/how-we-work" element={<HowWeWork />} />
           <Route path="/products" element={<Products />} />
           <Route path="/orders" element={<Orders />} />
+          <Route path="/orders/get-started" element={<OrdersGetStarted />} />
+          <Route path="/orders/dashboard" element={<OrdersDashboard />} />
+          <Route path="/orders/store/:slug" element={<OrdersStorefront />} />
+
           <Route path="/insights" element={<Insights />} />
 
           <Route path="/work" element={<Work />} />
