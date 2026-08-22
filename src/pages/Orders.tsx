@@ -146,12 +146,13 @@ const Orders = () => {
               </p>
             </div>
 
-            <div className="relative">
-              <PhoneFrame label="Sunday Kitchen storefront preview">
+            <div className="flex flex-col items-center gap-8 lg:flex-row lg:items-center lg:justify-end lg:gap-6">
+              <PhoneFrame label="Sunday Kitchen storefront preview" className="lg:mx-0 lg:max-w-[290px]">
                 <StorefrontScreen store={demoStorefront} />
               </PhoneFrame>
-              <OrderNotifications className="mx-auto mt-6 w-full max-w-sm lg:absolute lg:-right-4 lg:top-8 lg:mt-0 lg:w-64" />
+              <OrderNotifications className="w-full max-w-sm lg:w-56 lg:max-w-none lg:shrink-0" />
             </div>
+
           </div>
         </div>
       </section>
@@ -175,7 +176,7 @@ const Orders = () => {
             <Instagram size={18} />
             <span className="text-sm">One link. Every channel.</span>
           </div>
-          <FlowDiagram steps={socialFlow} className="mt-6" orientation="stacked" />
+          <FlowDiagram steps={socialFlow} className="mt-6" />
         </div>
       </section>
 
