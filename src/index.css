@@ -71,9 +71,19 @@
     @apply border-border;
   }
 
+  html {
+    /* Smooth for in-page anchors; route changes use an instant programmatic jump. */
+    scroll-behavior: smooth;
+    /* Keeps anchored sections clear of the fixed header. */
+    scroll-padding-top: 6rem;
+  }
+
   body {
     @apply bg-background text-foreground font-display antialiased;
+    overscroll-behavior-y: none;
+    -webkit-tap-highlight-color: transparent;
   }
+
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-display font-semibold tracking-tight;
@@ -210,6 +220,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   *,
   *::before,
   *::after {

@@ -190,7 +190,10 @@ const Navbar = () => {
 
       {/* Mobile menu */}
       {open && (
-        <nav className="border-b border-border bg-background lg:hidden" aria-label="Mobile">
+        <nav
+          className="max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain border-b border-border bg-background lg:hidden [-webkit-overflow-scrolling:touch]"
+          aria-label="Mobile"
+        >
           <div className="section-container flex flex-col gap-1 py-6">
             <Link to="/services" className="py-3 text-base font-medium">
               Services

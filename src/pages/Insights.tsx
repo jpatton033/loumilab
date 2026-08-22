@@ -1,6 +1,7 @@
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import Eyebrow from "@/components/brand/Eyebrow";
+import Reveal from "@/components/Reveal";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
@@ -22,7 +23,7 @@ const Insights = () => (
     />
     <section className="section-padding pt-32 lg:pt-40">
       <div className="section-container">
-        <div className="max-w-2xl">
+        <Reveal className="max-w-2xl">
           <Eyebrow>Insights</Eyebrow>
           <h1 className="mt-5 text-4xl font-semibold leading-tight lg:text-6xl">
             Thinking, in progress.
@@ -31,18 +32,18 @@ const Insights = () => (
             We&apos;re putting together writing on how we design, build, and secure technology — plus notes
             from building our own products. First pieces are on the way.
           </p>
-        </div>
+        </Reveal>
 
         <div className="mt-16 grid gap-6 md:grid-cols-2">
-          {topics.map((t) => (
-            <div key={t.title} className="rounded-3xl border border-border bg-card p-8 shadow-[var(--shadow-soft)]">
+          {topics.map((t, i) => (
+            <Reveal key={t.title} delay={i * 70} className="rounded-3xl border border-border bg-card p-8 shadow-[var(--shadow-soft)]">
               <h2 className="font-display text-lg font-semibold">{t.title}</h2>
               <p className="mt-3 leading-relaxed text-muted-foreground">{t.desc}</p>
-            </div>
+            </Reveal>
           ))}
         </div>
 
-        <div className="mt-16 rounded-3xl border border-border bg-surface-subtle p-10 text-center lg:p-14">
+        <Reveal className="mt-16 rounded-3xl border border-border bg-surface-subtle p-10 text-center lg:p-14">
           <h2 className="text-2xl font-semibold lg:text-3xl">Want to talk before we publish?</h2>
           <p className="mx-auto mt-4 max-w-md text-muted-foreground">
             We&apos;re happy to get into the details of your project directly.
@@ -52,7 +53,7 @@ const Insights = () => (
               Get in Touch <ArrowRight size={18} />
             </Link>
           </Button>
-        </div>
+        </Reveal>
       </div>
     </section>
   </Layout>

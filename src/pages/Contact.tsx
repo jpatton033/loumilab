@@ -2,6 +2,7 @@ import { useState } from "react";
 import { z } from "zod";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
+import Reveal from "@/components/Reveal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -89,7 +90,7 @@ const Contact = () => {
         <div className="pointer-events-none absolute inset-0 hero-wash" aria-hidden="true" />
         <div className="section-container relative">
           <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
-            <div>
+            <Reveal>
               <span className="inline-block font-display text-xs font-semibold uppercase tracking-[0.22em] text-accent mb-4">
                 Contact
               </span>
@@ -106,9 +107,10 @@ const Contact = () => {
                   <a href="mailto:hello@loumilab.com" className="hover:text-accent transition-colors">hello@loumilab.com</a>
                 </div>
               </div>
-            </div>
+            </Reveal>
 
 
+            <Reveal delay={90}>
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Honeypot field - hidden from users, catches bots */}
               <input
@@ -176,6 +178,7 @@ const Contact = () => {
                 {submitting ? "Sending..." : "Send Message"} <Send size={16} />
               </Button>
             </form>
+            </Reveal>
           </div>
         </div>
       </section>
