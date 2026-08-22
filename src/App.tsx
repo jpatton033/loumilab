@@ -13,6 +13,11 @@ import OrdersDashboard from "./pages/orders/Dashboard";
 import OrdersStorefront from "./pages/orders/Storefront";
 
 import Insights from "./pages/Insights";
+import Resources from "./pages/resources/Index";
+import ResourcesSection from "./pages/resources/Section";
+import ResourceArticle from "./pages/resources/Article";
+import AdminKnowledgeCenter from "./pages/admin/KnowledgeCenter";
+import AdminArticleEditor from "./pages/admin/ArticleEditor";
 
 import Work from "./pages/Work";
 import About from "./pages/About";
@@ -44,12 +49,18 @@ const App = () => (
           <Route path="/orders/store/:slug" element={<OrdersStorefront />} />
 
           <Route path="/insights" element={<Insights />} />
+          <Route path="/resources" element={<Resources />} />
+          <Route path="/resources/:section" element={<ResourcesSection />} />
+          <Route path="/resources/:section/:slug" element={<ResourceArticle />} />
+
 
           <Route path="/work" element={<Work />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+          <Route path="/admin/knowledge" element={<ProtectedRoute><AdminKnowledgeCenter /></ProtectedRoute>} />
+          <Route path="/admin/knowledge/:id" element={<ProtectedRoute><AdminArticleEditor /></ProtectedRoute>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <BackToTop />

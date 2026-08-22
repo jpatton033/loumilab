@@ -61,7 +61,7 @@ const Footer = () => (
           </h4>
           <nav className="flex flex-col gap-3">
             <Link to="/about" className="w-fit text-sm text-foreground/70 transition-colors hover:text-accent">About</Link>
-            <Link to="/insights" className="w-fit text-sm text-foreground/70 transition-colors hover:text-accent">Insights</Link>
+            <Link to="/resources" className="w-fit text-sm text-foreground/70 transition-colors hover:text-accent">Knowledge Center</Link>
             <Link to="/contact" className="w-fit text-sm text-foreground/70 transition-colors hover:text-accent">Contact</Link>
             <a href="mailto:hello@loumilab.com" className="w-fit text-sm text-foreground/70 transition-colors hover:text-accent">
               hello@loumilab.com

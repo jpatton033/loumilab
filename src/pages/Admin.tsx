@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
@@ -115,6 +115,9 @@ const Admin = () => {
               <p className="text-muted-foreground mt-1">Manage contact form submissions</p>
             </div>
             <div className="flex items-center gap-3">
+              <Button variant="outline" size="sm" asChild>
+                <Link to="/admin/knowledge">Knowledge Center</Link>
+              </Button>
               <Button variant="outline" size="sm" onClick={fetchSubmissions}>
                 <RefreshCw size={14} /> Refresh
               </Button>
@@ -122,6 +125,7 @@ const Admin = () => {
                 <LogOut size={14} /> Sign Out
               </Button>
             </div>
+
           </div>
 
           {/* Stats */}

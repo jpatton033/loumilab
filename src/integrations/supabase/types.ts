@@ -50,6 +50,258 @@ export type Database = {
         }
         Relationships: []
       }
+      kc_article_tags: {
+        Row: {
+          article_id: string
+          tag_id: string
+        }
+        Insert: {
+          article_id: string
+          tag_id: string
+        }
+        Update: {
+          article_id?: string
+          tag_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kc_article_tags_article_id_fkey"
+            columns: ["article_id"]
+            isOneToOne: false
+            referencedRelation: "kc_articles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kc_article_tags_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "kc_tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kc_article_views: {
+        Row: {
+          article_id: string
+          created_at: string
+          id: string
+          viewer_hash: string | null
+        }
+        Insert: {
+          article_id: string
+          created_at?: string
+          id?: string
+          viewer_hash?: string | null
+        }
+        Update: {
+          article_id?: string
+          created_at?: string
+          id?: string
+          viewer_hash?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kc_article_views_article_id_fkey"
+            columns: ["article_id"]
+            isOneToOne: false
+            referencedRelation: "kc_articles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kc_articles: {
+        Row: {
+          author: string | null
+          body: string
+          created_at: string
+          document_url: string | null
+          hero_image_url: string | null
+          id: string
+          is_featured: boolean
+          published_at: string | null
+          read_minutes: number
+          related_link_href: string | null
+          related_link_label: string | null
+          section_id: string
+          seo_description: string | null
+          seo_title: string | null
+          slug: string
+          status: Database["public"]["Enums"]["kc_article_status"]
+          summary: string | null
+          title: string
+          updated_at: string
+          view_count: number
+        }
+        Insert: {
+          author?: string | null
+          body?: string
+          created_at?: string
+          document_url?: string | null
+          hero_image_url?: string | null
+          id?: string
+          is_featured?: boolean
+          published_at?: string | null
+          read_minutes?: number
+          related_link_href?: string | null
+          related_link_label?: string | null
+          section_id: string
+          seo_description?: string | null
+          seo_title?: string | null
+          slug: string
+          status?: Database["public"]["Enums"]["kc_article_status"]
+          summary?: string | null
+          title: string
+          updated_at?: string
+          view_count?: number
+        }
+        Update: {
+          author?: string | null
+          body?: string
+          created_at?: string
+          document_url?: string | null
+          hero_image_url?: string | null
+          id?: string
+          is_featured?: boolean
+          published_at?: string | null
+          read_minutes?: number
+          related_link_href?: string | null
+          related_link_label?: string | null
+          section_id?: string
+          seo_description?: string | null
+          seo_title?: string | null
+          slug?: string
+          status?: Database["public"]["Enums"]["kc_article_status"]
+          summary?: string | null
+          title?: string
+          updated_at?: string
+          view_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kc_articles_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "kc_sections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kc_attachments: {
+        Row: {
+          article_id: string
+          created_at: string
+          file_type: string | null
+          file_url: string
+          id: string
+          label: string
+          sort_order: number
+        }
+        Insert: {
+          article_id: string
+          created_at?: string
+          file_type?: string | null
+          file_url: string
+          id?: string
+          label: string
+          sort_order?: number
+        }
+        Update: {
+          article_id?: string
+          created_at?: string
+          file_type?: string | null
+          file_url?: string
+          id?: string
+          label?: string
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kc_attachments_article_id_fkey"
+            columns: ["article_id"]
+            isOneToOne: false
+            referencedRelation: "kc_articles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kc_sections: {
+        Row: {
+          created_at: string
+          description: string | null
+          icon: string | null
+          id: string
+          is_visible: boolean
+          slug: string
+          sort_order: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_visible?: boolean
+          slug: string
+          sort_order?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_visible?: boolean
+          slug?: string
+          sort_order?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      kc_tags: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          slug: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
+      newsletter_subscribers: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          source: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          source?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          source?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -133,9 +385,25 @@ export type Database = {
         }
         Returns: boolean
       }
+      kc_increment_view: {
+        Args: { _slug: string; _viewer_hash: string }
+        Returns: undefined
+      }
+      kc_section_counts: {
+        Args: never
+        Returns: {
+          published_count: number
+          section_slug: string
+        }[]
+      }
+      newsletter_subscribe: {
+        Args: { _email: string; _source: string }
+        Returns: boolean
+      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
+      kc_article_status: "draft" | "published" | "archived"
       submission_status: "new" | "read" | "responded" | "archived"
     }
     CompositeTypes: {
@@ -265,6 +533,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user"],
+      kc_article_status: ["draft", "published", "archived"],
       submission_status: ["new", "read", "responded", "archived"],
     },
   },
