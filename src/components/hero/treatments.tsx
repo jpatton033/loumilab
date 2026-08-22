@@ -92,8 +92,8 @@ const OrdersDevices = ({ active, reduced }: TreatmentProps) => {
   }, [active, reduced]);
 
   return (
-    <div className="relative">
-      <LaptopFrame className="ml-auto w-[86%]">
+    <div className="relative pl-6 pt-6 sm:pl-10">
+      <LaptopFrame className="w-[84%]">
         <div className="bg-background p-4">
           <div className="flex items-center justify-between">
             <Bar w="90px" className="h-2.5" />
@@ -127,7 +127,7 @@ const OrdersDevices = ({ active, reduced }: TreatmentProps) => {
         </div>
       </LaptopFrame>
 
-      <Phone className="absolute -bottom-6 left-0 w-[42%] max-w-[190px]">
+      <Phone className="absolute bottom-0 left-0 z-10 w-[34%] max-w-[170px]">
         <div className="p-3">
           <div className="h-16 rounded-xl" style={{ background: "hsl(var(--hero-accent) / 0.14)" }} />
           <Bar w="70%" className="mt-3 h-2.5" />
@@ -152,7 +152,7 @@ const OrdersDevices = ({ active, reduced }: TreatmentProps) => {
         </div>
       </Phone>
 
-      <div className="pointer-events-none absolute -top-3 right-0 w-[62%] max-w-[240px] space-y-2 sm:-right-4">
+      <div className="pointer-events-none absolute right-0 top-[14%] w-[34%] max-w-[210px] space-y-2">
         {cues.map((c, i) => (
           <div
             key={c.label}
