@@ -306,9 +306,9 @@ const BrowserStack = ({ active, reduced, priority }: TreatmentProps) => {
 
 const AppPanels = ({ active, reduced }: TreatmentProps) => {
   const panels = [
-    { title: "Analytics", w: "w-[56%]", pos: "left-0 top-0", delay: 0 },
-    { title: "Workflow", w: "w-[50%]", pos: "right-0 top-[26%]", delay: 140 },
-    { title: "Access control", w: "w-[52%]", pos: "left-[12%] bottom-0", delay: 280 },
+    { title: "Analytics", pos: "sm:absolute sm:w-[56%] sm:left-0 sm:top-0", delay: 0 },
+    { title: "Workflow", pos: "sm:absolute sm:w-[50%] sm:right-0 sm:top-[26%]", delay: 140 },
+    { title: "Access control", pos: "sm:absolute sm:w-[52%] sm:left-[12%] sm:bottom-0", delay: 280 },
   ];
 
   return (
@@ -317,9 +317,8 @@ const AppPanels = ({ active, reduced }: TreatmentProps) => {
         <div
           key={p.title}
           className={cn(
-            "rounded-2xl border border-border bg-card p-4 shadow-[var(--shadow-lift)] transition-all duration-1000 sm:absolute",
-            `sm:${p.w}`,
-            p.pos.split(" ").map((c) => `sm:${c}`).join(" "),
+            "rounded-2xl border border-border bg-card p-4 shadow-[var(--shadow-lift)] transition-all duration-1000",
+            p.pos,
             active || reduced ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
           )}
           style={{ transitionDelay: `${reduced ? 0 : p.delay}ms`, transitionTimingFunction: "var(--ease-brand)" }}
