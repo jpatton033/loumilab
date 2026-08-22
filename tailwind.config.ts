@@ -44,7 +44,14 @@ export default {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
           glow: "hsl(var(--accent-glow))",
+          soft: "hsl(var(--accent-soft))",
         },
+        surface: {
+          DEFAULT: "hsl(var(--surface-elevated))",
+          subtle: "hsl(var(--surface-subtle))",
+          tint: "hsl(var(--surface-tint))",
+        },
+
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
