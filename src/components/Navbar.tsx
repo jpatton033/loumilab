@@ -8,11 +8,13 @@ import Wordmark from "@/components/brand/Wordmark";
 
 const navLinks = [
   { label: "Services", to: "/services" },
+  { label: "Orders", to: "/orders" },
   { label: "Work", to: "/work" },
   { label: "About", to: "/about" },
   { label: "Insights", to: "/insights" },
   { label: "Contact", to: "/contact" },
 ];
+
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
