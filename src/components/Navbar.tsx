@@ -198,7 +198,18 @@ const Navbar = () => {
           ))}
         </nav>
 
-        <div className="hidden lg:block">
+        <div className="hidden items-center gap-3 lg:flex">
+          {user ? (
+            <Button variant="ghost" size="sm" onClick={handleSignOut} className="text-muted-foreground hover:text-foreground">
+              <LogOut className="mr-1.5 h-4 w-4" /> Sign out
+            </Button>
+          ) : (
+            <Button variant="ghost" size="sm" asChild className="text-muted-foreground hover:text-foreground">
+              <Link to="/sign-in">
+                <LogIn className="mr-1.5 h-4 w-4" /> Sign in
+              </Link>
+            </Button>
+          )}
           <Button variant="default" size="lg" asChild>
             <Link to="/contact">Start a Project</Link>
           </Button>
