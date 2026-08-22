@@ -286,6 +286,20 @@ const Navbar = () => {
               </Link>
             ))}
 
+            {user ? (
+              <button
+                type="button"
+                onClick={handleSignOut}
+                className="flex items-center gap-2 py-3 text-base font-medium text-muted-foreground"
+              >
+                <LogOut size={18} /> Sign out
+              </button>
+            ) : (
+              <Link to="/sign-in" className="flex items-center gap-2 py-3 text-base font-medium text-accent">
+                <LogIn size={18} /> Sign in
+              </Link>
+            )}
+
             <Button variant="default" size="lg" asChild className="mt-4">
               <Link to="/contact">Start a Project</Link>
             </Button>
