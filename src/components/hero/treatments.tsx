@@ -266,7 +266,7 @@ const BrowserStack = ({ active, reduced, priority }: TreatmentProps) => {
   }, [active, reduced]);
 
   return (
-    <div className="relative mx-auto aspect-[4/3] w-full max-w-xl">
+    <div className="relative mx-auto aspect-[4/3] w-full max-w-xl pr-6">
       {sites.map((s, i) => {
         const depth = (i - front + sites.length) % sites.length;
         return (
@@ -275,7 +275,7 @@ const BrowserStack = ({ active, reduced, priority }: TreatmentProps) => {
             className="absolute inset-x-0 top-0 transition-all duration-[1200ms]"
             style={{
               transitionTimingFunction: "var(--ease-brand)",
-              transform: `translate3d(${depth * 7}%, ${depth * 9}%, 0) scale(${1 - depth * 0.08})`,
+              transform: `translate3d(${depth * 5}%, ${depth * 7}%, 0) scale(${1 - depth * 0.07})`,
               zIndex: sites.length - depth,
               opacity: depth === 0 ? 1 : 0.55 - depth * 0.12,
               filter: depth === 0 ? "none" : `blur(${depth}px)`,
@@ -303,13 +303,13 @@ const BrowserStack = ({ active, reduced, priority }: TreatmentProps) => {
 
 const AppPanels = ({ active, reduced }: TreatmentProps) => {
   const panels = [
-    { title: "Analytics", w: "w-[62%]", pos: "left-0 top-0", delay: 0 },
-    { title: "Workflow", w: "w-[54%]", pos: "right-0 top-[18%]", delay: 140 },
-    { title: "Access control", w: "w-[58%]", pos: "left-[10%] bottom-0", delay: 280 },
+    { title: "Analytics", w: "w-[56%]", pos: "left-0 top-0", delay: 0 },
+    { title: "Workflow", w: "w-[50%]", pos: "right-0 top-[26%]", delay: 140 },
+    { title: "Access control", w: "w-[52%]", pos: "left-[12%] bottom-0", delay: 280 },
   ];
 
   return (
-    <div className="relative mx-auto aspect-[5/4] w-full max-w-xl">
+    <div className="relative mx-auto aspect-[16/10] w-full max-w-xl">
       {panels.map((p) => (
         <div
           key={p.title}
