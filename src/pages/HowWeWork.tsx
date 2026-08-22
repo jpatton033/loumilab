@@ -1,85 +1,101 @@
 import Layout from "@/components/Layout";
-import SectionHeading from "@/components/SectionHeading";
 import SEOHead from "@/components/SEOHead";
+import Reveal from "@/components/Reveal";
+import Eyebrow from "@/components/brand/Eyebrow";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Search, PenTool, Hammer, Rocket, TrendingUp } from "lucide-react";
+import { ArrowRight, Search, PenTool, Hammer, ShieldCheck, Rocket, TrendingUp } from "lucide-react";
 
 const steps = [
   {
     icon: Search,
     num: "01",
     title: "Discovery & Strategy",
-    desc: "We dig into your goals, audience, and competitive landscape to define the product vision, scope, and success metrics.",
+    desc: "We dig into your goals, audience, and constraints to define the product vision, scope, and what success actually looks like.",
   },
   {
     icon: PenTool,
     num: "02",
-    title: "UX/UI & Prototyping",
-    desc: "Wireframes, user flows, and high-fidelity designs crafted collaboratively. You see and approve before we build.",
+    title: "Design & Prototyping",
+    desc: "Wireframes, flows, and high-fidelity design created collaboratively. You see and approve the direction before we build.",
   },
   {
     icon: Hammer,
     num: "03",
-    title: "Build & Develop",
-    desc: "AI-powered development for speed without compromise. We ship production-ready code in rapid iterations.",
+    title: "Build",
+    desc: "Production-ready engineering in short iterations, using modern tooling and automation where it genuinely speeds delivery.",
+  },
+  {
+    icon: ShieldCheck,
+    num: "04",
+    title: "Secure & Review",
+    desc: "Authentication, permissions, and data handling reviewed before launch — not bolted on after something goes wrong.",
   },
   {
     icon: Rocket,
-    num: "04",
-    title: "Launch Fast",
-    desc: "QA, performance optimization, and deployment. We launch lean so you can start learning from real users immediately.",
+    num: "05",
+    title: "Launch",
+    desc: "QA, performance tuning, and deployment. We launch lean so you can start learning from real users immediately.",
   },
   {
     icon: TrendingUp,
-    num: "05",
-    title: "Iterate, Scale & Optimize",
-    desc: "Data-driven iterations, feature expansion, and infrastructure scaling based on real user feedback and analytics.",
+    num: "06",
+    title: "Iterate & Scale",
+    desc: "Data-driven improvements, feature expansion, and infrastructure work as usage grows.",
   },
 ];
 
 const HowWeWork = () => (
   <Layout>
     <SEOHead
-      title="Our Process — From Idea to Launch — LOUMILAB"
-      description="Discovery, design, build, launch, and scale. Learn how LOUMILAB delivers digital products with speed and precision."
+      title="How We Work — From Idea to Launch — Loumilab"
+      description="Discovery, design, build, secure, launch, and scale. How Loumilab delivers digital products with speed and precision."
       path="/how-we-work"
     />
-    <section className="section-padding pt-32 lg:pt-40">
-      <div className="section-container">
-        <SectionHeading
-          label="Process"
-          title="How we bring products to life"
-          description="Transparent, collaborative, and fast. Our product-focused process gets you from idea to launch in weeks."
-        />
-        <div className="relative">
-          {/* Vertical line */}
-          <div className="absolute left-[23px] top-8 bottom-8 w-px bg-gradient-to-b from-accent via-border to-transparent hidden lg:block" />
 
-          <div className="space-y-8 lg:space-y-12">
-            {steps.map((step) => (
-              <div key={step.num} className="relative grid lg:grid-cols-[56px_1fr] gap-6 items-start">
-                <div className="relative z-10 w-12 h-12 rounded-full bg-accent text-accent-foreground flex items-center justify-center font-display font-semibold text-sm shadow-lg">
-                  {step.num}
-                </div>
-                <div className="glass-card rounded-2xl p-8 hover:border-accent/30 transition-all duration-500 glow-hover">
-                  <div className="flex items-center gap-3 mb-3">
-                    <step.icon className="text-accent" size={20} />
-                    <h3 className="font-display text-xl font-semibold">{step.title}</h3>
+    <section className="relative overflow-hidden pt-32 pb-12 lg:pt-44 lg:pb-16">
+      <div className="pointer-events-none absolute inset-0 hero-wash" aria-hidden="true" />
+      <div className="section-container relative max-w-3xl">
+        <Eyebrow>Process</Eyebrow>
+        <h1 className="mt-5 text-4xl font-semibold leading-tight lg:text-6xl">
+          How we bring products to life.
+        </h1>
+        <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
+          Transparent, collaborative, and fast. A process built to get from idea to something real in weeks,
+          then keep improving it.
+        </p>
+      </div>
+    </section>
+
+    <section className="section-padding pt-8">
+      <div className="section-container">
+        <div className="grid gap-6 md:grid-cols-2">
+          {steps.map((step, i) => (
+            <Reveal key={step.num} delay={i * 70}>
+              <div className="h-full rounded-3xl border border-border bg-card p-8 shadow-[var(--shadow-soft)] glow-hover hover:border-accent/40">
+                <div className="flex items-center justify-between">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-accent-soft text-accent">
+                    <step.icon size={20} strokeWidth={1.75} />
                   </div>
-                  <p className="text-muted-foreground leading-relaxed max-w-xl">{step.desc}</p>
+                  <span className="font-display text-sm font-semibold text-muted-foreground">{step.num}</span>
                 </div>
+                <h2 className="mt-6 font-display text-xl font-semibold">{step.title}</h2>
+                <p className="mt-3 leading-relaxed text-muted-foreground">{step.desc}</p>
               </div>
-            ))}
-          </div>
+            </Reveal>
+          ))}
         </div>
-        <div className="mt-16 text-center">
-          <Button variant="accent" size="lg" asChild className="glow-hover">
-            <Link to="/contact">
-              Start Your Project <ArrowRight size={18} />
-            </Link>
-          </Button>
-        </div>
+      </div>
+    </section>
+
+    <section className="section-padding border-t border-border bg-surface-subtle">
+      <div className="section-container text-center">
+        <h2 className="text-3xl font-semibold lg:text-4xl">Ready to start at step one?</h2>
+        <Button size="lg" asChild className="mt-8">
+          <Link to="/contact">
+            Start Your Project <ArrowRight size={18} />
+          </Link>
+        </Button>
       </div>
     </section>
   </Layout>
