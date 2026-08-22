@@ -7,6 +7,9 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import fintrackImg from "@/assets/work/fintrack.jpg";
+import bloomImg from "@/assets/work/bloom.jpg";
+import careconnectImg from "@/assets/work/careconnect.jpg";
 
 const caseStudies = [
   {
@@ -14,20 +17,27 @@ const caseStudies = [
     category: "Software",
     desc: "A real-time financial analytics platform built for a Series A fintech startup. Shipped MVP in 3 weeks.",
     metrics: ["40% faster onboarding", "12k MAU in month 1", "3-week delivery"],
+    image: fintrackImg,
+    alt: "FinTrack analytics dashboard interface with portfolio charts and summary metric cards",
   },
   {
     title: "Bloom E-Commerce",
     category: "Websites",
     desc: "A modern DTC storefront for a sustainable beauty brand. Conversion-optimized design with headless CMS.",
     metrics: ["2.4x conversion lift", "< 1s load time", "Mobile-first"],
+    image: bloomImg,
+    alt: "Bloom skincare storefront shown on desktop and mobile with a product grid",
   },
   {
     title: "CareConnect Portal",
     category: "Digital Products",
     desc: "Patient management platform for a healthtech company. Secure, HIPAA-aware, and beautifully designed.",
     metrics: ["60% time savings", "99.9% uptime", "HIPAA-aligned"],
+    image: careconnectImg,
+    alt: "CareConnect patient portal with appointment schedule and patient record panel",
   },
 ];
+
 
 const categories = ["All", ...Array.from(new Set(caseStudies.map((c) => c.category)))];
 
@@ -95,12 +105,22 @@ const Work = () => {
             {visible.map((study, i) => (
               <Reveal key={study.title} delay={i * 70}>
                 <article className="overflow-hidden rounded-3xl border border-border bg-card shadow-[var(--shadow-soft)] glow-hover hover:border-accent/40">
-                  <div className="relative flex h-52 items-center justify-center overflow-hidden bg-surface-subtle lg:h-64">
-                    <div className="absolute inset-0 hero-grid" aria-hidden="true" />
-                    <span className="relative font-display text-2xl font-semibold text-foreground/25 lg:text-4xl">
-                      {study.title}
-                    </span>
+                  <div className="relative h-52 overflow-hidden border-b border-border bg-surface-subtle lg:h-72">
+                    <img
+                      src={study.image}
+                      alt={study.alt}
+                      width={1600}
+                      height={912}
+                      loading={i === 0 ? "eager" : "lazy"}
+                      decoding={i === 0 ? "sync" : "async"}
+                      className="h-full w-full object-cover object-top"
+                    />
+                    <div
+                      className="pointer-events-none absolute inset-0 bg-gradient-to-t from-foreground/10 to-transparent"
+                      aria-hidden="true"
+                    />
                   </div>
+
                   <div className="p-8 lg:p-10">
                     <span className="font-display text-xs font-semibold uppercase tracking-[0.2em] text-accent">
                       {study.category}
