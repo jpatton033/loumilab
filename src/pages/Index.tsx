@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import Reveal from "@/components/Reveal";
+import ProductShowcaseHero from "@/components/hero/ProductShowcaseHero";
 import Eyebrow from "@/components/brand/Eyebrow";
 import CapabilityCard from "@/components/brand/CapabilityCard";
 import ProductCard from "@/components/brand/ProductCard";
@@ -65,33 +66,7 @@ const Index = () => (
       jsonLd={homeJsonLd}
     />
 
-    {/* Hero */}
-    <section className="relative overflow-hidden pt-32 pb-24 lg:pt-44 lg:pb-32">
-      <div className="pointer-events-none absolute inset-0 hero-wash" aria-hidden="true" />
-      <div className="pointer-events-none absolute inset-0 hero-grid" aria-hidden="true" />
-      <div className="section-container relative">
-        <div className="mx-auto max-w-4xl text-center">
-          <h1 className="animate-slide-up-delay-1 font-hero font-semibold leading-[0.95] tracking-[-0.04em]"
-              style={{ fontSize: "clamp(2.75rem, 8vw, 6rem)" }}>
-            We Build What&apos;s Next.
-          </h1>
-
-          <p className="animate-slide-up-delay-2 mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-muted-foreground lg:text-xl">
-            Loumilab designs, builds, launches, and secures digital products and technology businesses.
-          </p>
-          <div className="animate-slide-up-delay-3 mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Button size="lg" asChild>
-              <Link to="/services">
-                Explore Loumilab <ArrowRight size={18} />
-              </Link>
-            </Button>
-            <Button size="lg" variant="outline" asChild>
-              <Link to="/contact">Start a Project</Link>
-            </Button>
-          </div>
-        </div>
-      </div>
-    </section>
+    <ProductShowcaseHero />
 
     {/* Brand statement */}
     <section className="section-padding border-t border-border">

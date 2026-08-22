@@ -18,6 +18,7 @@ import ResourcesSection from "./pages/resources/Section";
 import ResourceArticle from "./pages/resources/Article";
 import AdminKnowledgeCenter from "./pages/admin/KnowledgeCenter";
 import AdminArticleEditor from "./pages/admin/ArticleEditor";
+import AdminHeroShowcase from "./pages/admin/HeroShowcase";
 
 import Work from "./pages/Work";
 import About from "./pages/About";
@@ -59,6 +60,7 @@ const App = () => (
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+          <Route path="/admin/hero" element={<ProtectedRoute><AdminHeroShowcase /></ProtectedRoute>} />
           <Route path="/admin/knowledge" element={<ProtectedRoute><AdminKnowledgeCenter /></ProtectedRoute>} />
           <Route path="/admin/knowledge/:id" element={<ProtectedRoute><AdminArticleEditor /></ProtectedRoute>} />
           <Route path="*" element={<NotFound />} />
