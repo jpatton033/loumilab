@@ -19,6 +19,10 @@ import ResourceArticle from "./pages/resources/Article";
 import AdminKnowledgeCenter from "./pages/admin/KnowledgeCenter";
 import AdminArticleEditor from "./pages/admin/ArticleEditor";
 import AdminHeroShowcase from "./pages/admin/HeroShowcase";
+import AdminOverview from "./pages/admin/Overview";
+import AdminInquiries from "./pages/admin/Inquiries";
+import AdminNewsletter from "./pages/admin/Newsletter";
+import AdminOrdersPanel from "./pages/admin/Orders";
 
 import Work from "./pages/Work";
 import About from "./pages/About";
@@ -60,6 +64,10 @@ const App = () => (
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+          <Route path="/admin/overview" element={<ProtectedRoute><AdminOverview /></ProtectedRoute>} />
+          <Route path="/admin/inquiries" element={<ProtectedRoute><AdminInquiries /></ProtectedRoute>} />
+          <Route path="/admin/newsletter" element={<ProtectedRoute><AdminNewsletter /></ProtectedRoute>} />
+          <Route path="/admin/orders" element={<ProtectedRoute><AdminOrdersPanel /></ProtectedRoute>} />
           <Route path="/admin/hero" element={<ProtectedRoute><AdminHeroShowcase /></ProtectedRoute>} />
           <Route path="/admin/knowledge" element={<ProtectedRoute><AdminKnowledgeCenter /></ProtectedRoute>} />
           <Route path="/admin/knowledge/:id" element={<ProtectedRoute><AdminArticleEditor /></ProtectedRoute>} />

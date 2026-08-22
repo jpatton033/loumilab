@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import Layout from "@/components/Layout";
+import AdminShell from "@/components/admin/AdminShell";
 import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,7 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAdminArticles, useAdminSections, useTags } from "@/lib/kc/queries";
 import { slugify, type KcStatus } from "@/lib/kc/types";
-import { ArrowLeft, Eye, EyeOff, Plus, Trash2, Pencil } from "lucide-react";
+import { Eye, EyeOff, Plus, Trash2, Pencil } from "lucide-react";
 
 const statusVariant: Record<KcStatus, "default" | "secondary" | "outline"> = {
   published: "default",
@@ -139,25 +139,17 @@ const AdminKnowledgeCenter = () => {
   };
 
   return (
-    <Layout>
+    <AdminShell title="Knowledge Center" description="Articles, sections, and tags for /resources.">
       <SEOHead title="Knowledge Center Admin | Loumilab" description="Manage Knowledge Center content." path="/admin/knowledge" noindex />
-      <section className="section-padding pt-12">
-        <div className="section-container">
-          <Link to="/admin" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-accent">
-            <ArrowLeft size={15} /> Admin
-          </Link>
-
-          <div className="mt-6 flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <h1 className="text-3xl font-semibold">Knowledge Center</h1>
-              <p className="mt-2 text-muted-foreground">Manage articles, sections, and tags for /resources.</p>
-            </div>
+      <section>
+        <div>
+          <div className="flex flex-wrap items-center justify-end gap-3">
             <Button onClick={createArticle}>
               <Plus size={16} /> New article
             </Button>
           </div>
 
-          <Tabs defaultValue="articles" className="mt-10">
+          <Tabs defaultValue="articles" className="mt-6">
             <TabsList>
               <TabsTrigger value="articles">Articles</TabsTrigger>
               <TabsTrigger value="sections">Sections</TabsTrigger>
@@ -285,7 +277,7 @@ const AdminKnowledgeCenter = () => {
           </Tabs>
         </div>
       </section>
-    </Layout>
+    </AdminShell>
   );
 };
 

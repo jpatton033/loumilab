@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import Layout from "@/components/Layout";
+import AdminShell from "@/components/admin/AdminShell";
 import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAdminHeroProducts, uploadHeroMedia, heroSlugify, type HeroProduct } from "@/lib/hero/queries";
-import { ArrowLeft, ArrowDown, ArrowUp, Eye, EyeOff, Plus, Star, Trash2, Upload } from "lucide-react";
+import { ArrowDown, ArrowUp, Eye, EyeOff, Plus, Star, Trash2, Upload } from "lucide-react";
 
 const treatments = [
   { value: "orders-devices", label: "Phone + dashboard (commerce)" },
@@ -262,31 +262,24 @@ const AdminHeroShowcase = () => {
   };
 
   return (
-    <Layout>
+    <AdminShell title="Hero Showcase" description="Products featured in the homepage showcase.">
       <SEOHead
         title="Loumilab | Technology Studio for Digital Products"
         description="Loumilab designs, builds, launches, and secures digital products and technology businesses. Websites, software, AI automation, and cybersecurity."
         path="/admin/hero"
         noindex
       />
-      <div className="section-container py-16">
-        <Link to="/admin" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
-          <ArrowLeft size={15} /> Back to dashboard
-        </Link>
-
-        <div className="mt-6 flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-semibold lg:text-4xl">Hero Showcase</h1>
-            <p className="mt-2 text-muted-foreground">
-              Products shown in the homepage hero. Active + featured products appear publicly, in this order.
-            </p>
-          </div>
+      <div>
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <p className="max-w-xl text-sm text-muted-foreground">
+            Active + featured products appear publicly on the homepage hero, in this order.
+          </p>
           <Button onClick={createProduct}>
             <Plus size={16} /> Add product
           </Button>
         </div>
 
-        <div className="mt-10 space-y-3">
+        <div className="mt-6 space-y-3">
           {isLoading ? <p className="text-muted-foreground">Loading…</p> : null}
           {products.map((p, i) => (
             <div
@@ -352,7 +345,7 @@ const AdminHeroShowcase = () => {
           </div>
         ) : null}
       </div>
-    </Layout>
+    </AdminShell>
   );
 };
 

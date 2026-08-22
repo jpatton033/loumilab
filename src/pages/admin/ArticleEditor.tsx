@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import Layout from "@/components/Layout";
+import AdminShell from "@/components/admin/AdminShell";
 import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -167,38 +167,36 @@ const ArticleEditor = () => {
 
   if (isLoading) {
     return (
-      <Layout>
-        <div className="section-container py-20 text-muted-foreground">Loading article…</div>
-      </Layout>
+      <AdminShell title="Article Editor" description="Write and publish Knowledge Center articles.">
+        <div className="py-10 text-muted-foreground">Loading article…</div>
+      </AdminShell>
     );
   }
 
   if (!article) {
     return (
-      <Layout>
-        <div className="section-container py-20">
+      <AdminShell title="Article Editor" description="Write and publish Knowledge Center articles.">
+        <div className="py-10">
           <p className="text-muted-foreground">Article not found.</p>
           <Button className="mt-6" onClick={() => navigate("/admin/knowledge")}>
             Back to Knowledge Center
           </Button>
         </div>
-      </Layout>
+      </AdminShell>
     );
   }
 
   const sectionSlug = sections.find((s) => s.id === form.section_id)?.slug ?? "";
 
   return (
-    <Layout>
+    <AdminShell title="Article Editor" description="Write and publish Knowledge Center articles.">
       <SEOHead title="Edit article | Loumilab" description="Knowledge Center article editor." path="/admin/knowledge" noindex />
-      <section className="section-padding pt-12">
-        <div className="section-container">
-          <Link to="/admin/knowledge" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-accent">
-            <ArrowLeft size={15} /> Knowledge Center
-          </Link>
-
-          <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
-            <h1 className="text-2xl font-semibold">Edit article</h1>
+      <section>
+        <div>
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <Link to="/admin/knowledge" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-accent">
+              <ArrowLeft size={15} /> Knowledge Center
+            </Link>
             <div className="flex flex-wrap items-center gap-2">
               {sectionSlug && (
                 <Button variant="ghost" asChild>
@@ -413,7 +411,7 @@ const ArticleEditor = () => {
           </div>
         </div>
       </section>
-    </Layout>
+    </AdminShell>
   );
 };
 
