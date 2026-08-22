@@ -86,28 +86,29 @@ const Contact = () => {
         description="Get in touch to discuss your next website, SaaS product, or digital project. Fast quotes, transparent process."
         path="/contact"
       />
-      <section className="section-padding pt-32 lg:pt-40">
-        <div className="section-container">
+      <section className="relative overflow-hidden section-padding pt-32 lg:pt-40">
+        <div className="pointer-events-none absolute inset-0 hero-wash" aria-hidden="true" />
+        <div className="section-container relative">
           <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
             <div>
-              <DiamondLogo size="lg" variant="silver" className="mb-8" />
-              <span className="inline-block text-accent font-display text-sm font-medium uppercase tracking-[0.2em] mb-4">
+              <span className="inline-block font-display text-xs font-semibold uppercase tracking-[0.22em] text-accent mb-4">
                 Contact
               </span>
-              <h1 className="text-4xl lg:text-5xl font-semibold leading-tight mb-6">
-                Let's build something{" "}
-                <span className="text-gradient">extraordinary</span>
+              <h1 className="text-4xl lg:text-6xl font-semibold leading-tight mb-6">
+                Let&apos;s turn the idea into something real.
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed mb-10">
-                Have a project in mind? Tell us about it. We respond to every inquiry within 24 hours.
+                Tell us what you&apos;re building — a website, a product, an automation, or a security question.
+                We respond to every inquiry within 24 hours.
               </p>
               <div className="space-y-4">
                 <div className="flex items-center gap-3 text-muted-foreground">
                   <Mail size={18} className="text-accent" />
-                  <span>hello@loumilab.com</span>
+                  <a href="mailto:hello@loumilab.com" className="hover:text-accent transition-colors">hello@loumilab.com</a>
                 </div>
               </div>
             </div>
+
 
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Honeypot field - hidden from users, catches bots */}
