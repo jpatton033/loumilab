@@ -92,8 +92,8 @@ const OrdersDevices = ({ active, reduced }: TreatmentProps) => {
   }, [active, reduced]);
 
   return (
-    <div className="relative pb-20">
-      <LaptopFrame className="ml-auto w-[80%]">
+    <div className="relative sm:pb-20">
+      <LaptopFrame className="hidden w-[80%] sm:ml-auto sm:block">
         <div className="bg-background p-4">
           <div className="flex items-center justify-between">
             <Bar w="90px" className="h-2.5" />
@@ -127,7 +127,7 @@ const OrdersDevices = ({ active, reduced }: TreatmentProps) => {
         </div>
       </LaptopFrame>
 
-      <Phone className="absolute left-0 top-8 z-10 w-[30%] max-w-[165px]">
+      <Phone className="mx-auto max-w-[215px] sm:absolute sm:left-0 sm:top-8 sm:z-10 sm:mx-0 sm:w-[30%] sm:max-w-[165px]">
         <div className="p-3">
           <div className="h-16 rounded-xl" style={{ background: "hsl(var(--hero-accent) / 0.14)" }} />
           <Bar w="70%" className="mt-3 h-2.5" />
@@ -152,7 +152,7 @@ const OrdersDevices = ({ active, reduced }: TreatmentProps) => {
         </div>
       </Phone>
 
-      <div className="pointer-events-none absolute bottom-0 left-[6%] right-0 flex flex-wrap gap-2">
+      <div className="pointer-events-none hidden gap-2 sm:absolute sm:bottom-0 sm:left-[6%] sm:right-0 sm:flex sm:flex-wrap">
         {cues.map((c, i) => (
           <div
             key={c.label}
@@ -272,7 +272,10 @@ const BrowserStack = ({ active, reduced, priority }: TreatmentProps) => {
         return (
           <div
             key={s.label}
-            className="absolute inset-x-0 top-0 transition-all duration-[1200ms]"
+            className={cn(
+              "absolute inset-x-0 top-0 transition-all duration-[1200ms]",
+              depth === 0 ? "" : "hidden sm:block"
+            )}
             style={{
               transitionTimingFunction: "var(--ease-brand)",
               transform: `translate3d(${depth * 5}%, ${depth * 7}%, 0) scale(${1 - depth * 0.07})`,
@@ -309,14 +312,14 @@ const AppPanels = ({ active, reduced }: TreatmentProps) => {
   ];
 
   return (
-    <div className="relative mx-auto aspect-[16/10] w-full max-w-xl">
+    <div className="relative mx-auto w-full max-w-xl space-y-3 sm:aspect-[16/10] sm:space-y-0">
       {panels.map((p) => (
         <div
           key={p.title}
           className={cn(
-            "absolute rounded-2xl border border-border bg-card p-4 shadow-[var(--shadow-lift)] transition-all duration-1000",
-            p.w,
-            p.pos,
+            "rounded-2xl border border-border bg-card p-4 shadow-[var(--shadow-lift)] transition-all duration-1000 sm:absolute",
+            `sm:${p.w}`,
+            p.pos.split(" ").map((c) => `sm:${c}`).join(" "),
             active || reduced ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
           )}
           style={{ transitionDelay: `${reduced ? 0 : p.delay}ms`, transitionTimingFunction: "var(--ease-brand)" }}
