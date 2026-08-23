@@ -476,8 +476,8 @@ export type Database = {
       kc_section_counts: {
         Args: never
         Returns: {
-          published_count: number
-          section_slug: string
+          count: number
+          slug: string
         }[]
       }
       newsletter_subscribe: {
