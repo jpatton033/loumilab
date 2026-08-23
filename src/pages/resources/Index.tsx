@@ -111,37 +111,41 @@ const ResourcesIndex = () => {
             <Eyebrow>Browse by topic</Eyebrow>
           </Reveal>
           {sectionsLoading ? (
-            <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {[0, 1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="h-40 animate-pulse rounded-3xl border border-border bg-secondary" />
+                <div key={i} className="h-32 animate-pulse rounded-3xl border border-border bg-secondary" />
               ))}
             </div>
           ) : (
-            <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {sections.map((s, i) => (
                 <Reveal key={s.id} delay={i * 60}>
                   <Link
                     to={`/resources/${s.slug}`}
-                    className="group flex h-full flex-col rounded-3xl border border-border bg-card p-8 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-[var(--shadow-lift)]"
+                    className="group flex h-full flex-col rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-[var(--shadow-lift)]"
                   >
-                    <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-soft text-accent transition-colors group-hover:bg-accent group-hover:text-accent-foreground">
-                      <SectionIcon name={s.icon} size={22} />
-                    </span>
-                    <h3 className="mt-6 font-display text-xl font-semibold transition-colors group-hover:text-accent">
-                      {s.title}
-                    </h3>
+                    <div className="flex items-center gap-3">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent transition-colors group-hover:bg-accent group-hover:text-accent-foreground">
+                        <SectionIcon name={s.icon} size={18} />
+                      </span>
+                      <div className="min-w-0">
+                        <div className="font-display text-sm font-semibold transition-colors group-hover:text-accent">
+                          {s.title}
+                        </div>
+                        <div className="mt-0.5 text-xs text-muted-foreground">
+                          {counts[s.slug] ?? 0} published
+                        </div>
+                      </div>
+                    </div>
                     {s.description && (
-                      <p className="mt-3 flex-1 leading-relaxed text-muted-foreground">{s.description}</p>
+                      <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{s.description}</p>
                     )}
-                    <span className="mt-6 inline-flex items-center gap-2 text-sm text-muted-foreground">
-                      {counts[s.slug] ?? 0} article{(counts[s.slug] ?? 0) === 1 ? "" : "s"}
-                      <ArrowRight size={15} className="text-accent transition-transform group-hover:translate-x-1" />
-                    </span>
                   </Link>
                 </Reveal>
               ))}
             </div>
           )}
+
         </div>
       </section>
 
