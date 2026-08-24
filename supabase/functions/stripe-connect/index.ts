@@ -1,7 +1,14 @@
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { z } from "npm:zod@3";
 import { admin, requireUser } from "../_shared/auth.ts";
-import { resolvePayoutStatus, stripe } from "../_shared/stripe.ts";
+import {
+  resolvePayoutStatus,
+  resolveReturnBase,
+  stripe,
+  stripeConfigured,
+  stripeLivemode,
+  stripeMode,
+} from "../_shared/stripe.ts";
 
 const BodySchema = z.object({
   action: z.enum(["start", "status", "dashboard_link"]),
@@ -28,6 +35,8 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
   try {
+    if (!stripeConfigured) return json({ error: "Payments are not configured yet." }, 503);
+
     const user = await requireUser(req);
     if (!user) return json({ error: "Unauthorized" }, 401);
 
@@ -95,11 +104,22 @@ Deno.serve(async (req) => {
     }
 
     const origin = req.headers.get("origin") ?? "";
-    const base = returnUrl && returnUrl.startsWith(origin) && origin ? returnUrl : `${origin}/orders/dashboard`;
+    const base = resolveReturnBase(returnUrl, origin);
+
+    // Never mix modes: a stored account from the other mode cannot be used with this key.
+    if (link.livemode !== stripeLivemode) {
+      return json(
+        {
+          error: `This payments account was created in ${link.livemode ? "live" : "test"} mode but the platform is running in ${stripeMode} mode. Contact support to reset payments setup.`,
+          mode: stripeMode,
+        },
+        409,
+      );
+    }
 
     if (action === "dashboard_link") {
       const loginLink = await stripe.accounts.createLoginLink(link.stripe_account_id);
-      return json({ url: loginLink.url });
+      return json({ url: loginLink.url, mode: stripeMode });
     }
 
     // Always refresh from Stripe so status is authoritative.
@@ -121,7 +141,7 @@ Deno.serve(async (req) => {
       .single();
 
     if (action === "status") {
-      return json({ merchant, account: synced ?? link });
+      return json({ merchant, account: synced ?? link, mode: stripeMode });
     }
 
     const accountLink = await stripe.accountLinks.create({
@@ -132,7 +152,7 @@ Deno.serve(async (req) => {
       collection_options: { fields: "eventually_due" },
     });
 
-    return json({ merchant, account: synced ?? link, url: accountLink.url });
+    return json({ merchant, account: synced ?? link, url: accountLink.url, mode: stripeMode });
   } catch (err) {
     console.error("stripe-connect error", err);
     const message = err instanceof Error ? err.message : "Unexpected error";

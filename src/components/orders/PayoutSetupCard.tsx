@@ -22,6 +22,7 @@ const PayoutSetupCard = () => {
   const [signedIn, setSignedIn] = useState(false);
   const [merchant, setMerchant] = useState<MerchantRecord | null>(null);
   const [account, setAccount] = useState<ConnectedAccount | null>(null);
+  const [mode, setMode] = useState<"live" | "test" | null>(null);
   const [form, setForm] = useState({ business_name: "", contact_email: "", phone: "" });
 
   useEffect(() => {
@@ -40,6 +41,7 @@ const PayoutSetupCard = () => {
       if (!active) return;
       if (res.merchant) setMerchant(res.merchant);
       if (res.account) setAccount(res.account);
+      if (res.mode) setMode(res.mode);
       setLoading(false);
     })();
     return () => {
@@ -57,6 +59,7 @@ const PayoutSetupCard = () => {
     }
     if (res.merchant) setMerchant(res.merchant);
     if (res.account) setAccount(res.account);
+    if (res.mode) setMode(res.mode);
     if (res.url) window.location.href = res.url;
   };
 
@@ -182,6 +185,11 @@ const PayoutSetupCard = () => {
           </Button>
         ) : null}
         <p className="text-xs text-muted-foreground">Payments securely powered by Stripe.</p>
+        {mode === "test" ? (
+          <Badge variant="outline" className="text-[10px] uppercase tracking-[0.14em]">
+            Test mode
+          </Badge>
+        ) : null}
       </div>
     </div>
   );

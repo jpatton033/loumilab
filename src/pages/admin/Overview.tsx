@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import AdminShell from "@/components/admin/AdminShell";
+import PaymentsStatusPanel from "@/components/admin/PaymentsStatusPanel";
 import SEOHead from "@/components/SEOHead";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -72,6 +73,10 @@ const AdminOverview = () => {
         <Metric label="Newsletter" value={isLoading ? "—" : counts!.subscribers} hint="Subscribers" />
         <Metric label="Hero slides" value={isLoading ? "—" : counts!.heroActive} hint="Active on homepage" />
         <Metric label="Orders" value="Preview" hint="Mock data — not live yet" />
+      </div>
+
+      <div className="mt-6">
+        <PaymentsStatusPanel />
       </div>
 
       <div className="mt-6 grid gap-4 lg:grid-cols-2">
