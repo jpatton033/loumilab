@@ -6,6 +6,7 @@ import SEOHead from "@/components/SEOHead";
 import Eyebrow from "@/components/brand/Eyebrow";
 import { Button } from "@/components/ui/button";
 import MetricCard from "@/components/orders/MetricCard";
+import PayoutSetupCard from "@/components/orders/PayoutSetupCard";
 import OrderQueue from "@/components/orders/OrderQueue";
 import { dashboardMetrics, demoOrders, nextStatus, ORDER_STATUSES, type MerchantOrder, type OrderStatus } from "@/data/orders/dashboard";
 import { demoStorefront, formatMoney } from "@/data/orders/storefronts";
@@ -74,6 +75,10 @@ const Dashboard = () => {
                 </Link>
               </Button>
             </div>
+          </div>
+
+          <div className="mt-8">
+            <PayoutSetupCard />
           </div>
 
           <p className="mt-6 rounded-2xl border border-border bg-secondary p-4 text-sm text-muted-foreground">
