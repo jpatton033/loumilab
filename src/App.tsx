@@ -23,6 +23,11 @@ import AdminOverview from "./pages/admin/Overview";
 import AdminInquiries from "./pages/admin/Inquiries";
 import AdminNewsletter from "./pages/admin/Newsletter";
 import AdminOrdersPanel from "./pages/admin/Orders";
+import AdminPlans from "./pages/admin/Plans";
+import AdminCustomProjects from "./pages/admin/CustomProjects";
+import AdminAuditLog from "./pages/admin/AuditLog";
+import OrdersCustomProject from "./pages/orders/CustomProject";
+
 
 import Work from "./pages/Work";
 import About from "./pages/About";
