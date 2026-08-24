@@ -1,7 +1,7 @@
 import { admin } from "../_shared/auth.ts";
 import { resolvePayoutStatus, stripe } from "../_shared/stripe.ts";
 
-const WEBHOOK_SECRET = Deno.env.get("STRIPE_CONNECT_WEBHOOK_SECRET") ?? "";
+const WEBHOOK_SECRET = Deno.env.get("STRIPE_WEBHOOK_SECRET") ?? "";
 
 Deno.serve(async (req) => {
   if (req.method !== "POST") return new Response("Method not allowed", { status: 405 });
