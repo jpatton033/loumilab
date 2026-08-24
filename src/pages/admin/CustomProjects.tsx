@@ -31,6 +31,8 @@ const STATUSES = [
   "completed",
   "declined",
 ] as const;
+type LeadStatus = (typeof STATUSES)[number];
+
 
 
 interface Lead {
