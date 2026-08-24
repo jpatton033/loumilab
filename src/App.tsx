@@ -60,6 +60,8 @@ const App = () => (
           <Route path="/orders/get-started" element={<OrdersGetStarted />} />
           <Route path="/orders/dashboard" element={<OrdersDashboard />} />
           <Route path="/orders/store/:slug" element={<OrdersStorefront />} />
+          <Route path="/orders/custom" element={<OrdersCustomProject />} />
+
 
           <Route path="/insights" element={<Insights />} />
           <Route path="/resources" element={<Resources />} />
