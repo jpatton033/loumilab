@@ -1,5 +1,5 @@
 import { admin } from "../_shared/auth.ts";
-import { resolvePayoutStatus, stripe } from "../_shared/stripe.ts";
+import { resolvePayoutStatus, stripe, stripeLivemode, stripeMode } from "../_shared/stripe.ts";
 
 const WEBHOOK_SECRET = Deno.env.get("STRIPE_WEBHOOK_SECRET") ?? "";
 
@@ -44,6 +44,16 @@ Deno.serve(async (req) => {
           ? (event.data.object as { id: string }).id
           : ((event as { account?: string }).account ?? "");
 
+      if (event.livemode !== stripeLivemode) {
+        const msg = `Ignored ${event.livemode ? "live" : "test"} event while platform runs in ${stripeMode} mode`;
+        console.error(msg);
+        await admin
+          .from("stripe_webhook_events")
+          .update({ error: msg, processed_at: new Date().toISOString() })
+          .eq("stripe_event_id", event.id);
+        return new Response("ok (mode mismatch ignored)", { status: 200 });
+      }
+
       if (accountId) {
         const account = await stripe.accounts.retrieve(accountId);
         await admin
@@ -57,7 +67,8 @@ Deno.serve(async (req) => {
             requirements_disabled_reason: account.requirements?.disabled_reason ?? null,
             last_synced_at: new Date().toISOString(),
           })
-          .eq("stripe_account_id", accountId);
+          .eq("stripe_account_id", accountId)
+          .eq("livemode", stripeLivemode);
       }
     }
 
