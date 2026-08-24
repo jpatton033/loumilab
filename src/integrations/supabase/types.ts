@@ -512,6 +512,104 @@ export type Database = {
         }
         Relationships: []
       }
+      merchant_stripe_accounts: {
+        Row: {
+          charges_enabled: boolean
+          created_at: string
+          details_submitted: boolean
+          id: string
+          last_synced_at: string | null
+          livemode: boolean
+          merchant_id: string
+          payout_status: Database["public"]["Enums"]["payout_status"]
+          payouts_enabled: boolean
+          requirements_disabled_reason: string | null
+          requirements_due: Json
+          stripe_account_id: string
+          updated_at: string
+        }
+        Insert: {
+          charges_enabled?: boolean
+          created_at?: string
+          details_submitted?: boolean
+          id?: string
+          last_synced_at?: string | null
+          livemode?: boolean
+          merchant_id: string
+          payout_status?: Database["public"]["Enums"]["payout_status"]
+          payouts_enabled?: boolean
+          requirements_disabled_reason?: string | null
+          requirements_due?: Json
+          stripe_account_id: string
+          updated_at?: string
+        }
+        Update: {
+          charges_enabled?: boolean
+          created_at?: string
+          details_submitted?: boolean
+          id?: string
+          last_synced_at?: string | null
+          livemode?: boolean
+          merchant_id?: string
+          payout_status?: Database["public"]["Enums"]["payout_status"]
+          payouts_enabled?: boolean
+          requirements_disabled_reason?: string | null
+          requirements_due?: Json
+          stripe_account_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "merchant_stripe_accounts_merchant_id_fkey"
+            columns: ["merchant_id"]
+            isOneToOne: false
+            referencedRelation: "merchants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      merchants: {
+        Row: {
+          accepting_orders: boolean
+          business_name: string
+          business_type: string | null
+          contact_email: string
+          country: string
+          created_at: string
+          id: string
+          owner_id: string
+          phone: string | null
+          plan_slug: string
+          updated_at: string
+        }
+        Insert: {
+          accepting_orders?: boolean
+          business_name: string
+          business_type?: string | null
+          contact_email: string
+          country?: string
+          created_at?: string
+          id?: string
+          owner_id: string
+          phone?: string | null
+          plan_slug?: string
+          updated_at?: string
+        }
+        Update: {
+          accepting_orders?: boolean
+          business_name?: string
+          business_type?: string | null
+          contact_email?: string
+          country?: string
+          created_at?: string
+          id?: string
+          owner_id?: string
+          phone?: string | null
+          plan_slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       newsletter_subscribers: {
         Row: {
           created_at: string
@@ -715,6 +813,42 @@ export type Database = {
         }
         Relationships: []
       }
+      stripe_webhook_events: {
+        Row: {
+          account_id: string | null
+          created_at: string
+          error: string | null
+          id: string
+          livemode: boolean
+          payload: Json | null
+          processed_at: string | null
+          stripe_event_id: string
+          type: string
+        }
+        Insert: {
+          account_id?: string | null
+          created_at?: string
+          error?: string | null
+          id?: string
+          livemode?: boolean
+          payload?: Json | null
+          processed_at?: string | null
+          stripe_event_id: string
+          type: string
+        }
+        Update: {
+          account_id?: string | null
+          created_at?: string
+          error?: string | null
+          id?: string
+          livemode?: boolean
+          payload?: Json | null
+          processed_at?: string | null
+          stripe_event_id?: string
+          type?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -796,6 +930,13 @@ export type Database = {
         | "completed"
         | "declined"
       kc_article_status: "draft" | "published" | "archived"
+      payout_status:
+        | "not_started"
+        | "onboarding"
+        | "pending_verification"
+        | "restricted"
+        | "payout_enabled"
+        | "disabled"
       submission_status: "new" | "read" | "responded" | "archived"
     }
     CompositeTypes: {
@@ -943,6 +1084,14 @@ export const Constants = {
         "declined",
       ],
       kc_article_status: ["draft", "published", "archived"],
+      payout_status: [
+        "not_started",
+        "onboarding",
+        "pending_verification",
+        "restricted",
+        "payout_enabled",
+        "disabled",
+      ],
       submission_status: ["new", "read", "responded", "archived"],
     },
   },
