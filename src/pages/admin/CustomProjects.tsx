@@ -21,8 +21,17 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Download, Search } from "lucide-react";
 import { toast } from "sonner";
 
-const STATUSES = ["new", "reviewing", "contacted", "scoping", "quoted", "won", "lost", "archived"] as const;
-type LeadStatus = (typeof STATUSES)[number];
+const STATUSES = [
+  "new",
+  "contacted",
+  "discovery",
+  "proposal",
+  "approved",
+  "in_development",
+  "completed",
+  "declined",
+] as const;
+
 
 interface Lead {
   id: string;
