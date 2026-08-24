@@ -3,8 +3,11 @@ import {
   Inbox,
   LayoutDashboard,
   Mail,
+  ScrollText,
   ShoppingBag,
   Sparkles,
+  Tags,
+  Wrench,
   type LucideIcon,
 } from "lucide-react";
 import type { AdminCounts } from "@/lib/admin/queries";
@@ -52,7 +55,16 @@ export const adminNav: AdminNavGroup[] = [
     ],
   },
   {
-    label: "Products",
-    items: [{ title: "Orders", url: "/admin/orders", icon: ShoppingBag, tag: "Preview" }],
+    label: "Orders",
+    items: [
+      { title: "Overview", url: "/admin/orders", icon: ShoppingBag, tag: "Preview" },
+      { title: "Plans & Fees", url: "/admin/plans", icon: Tags },
+      { title: "Custom Projects", url: "/admin/custom-projects", icon: Wrench },
+    ],
+  },
+  {
+    label: "Governance",
+    items: [{ title: "Audit Log", url: "/admin/audit-log", icon: ScrollText }],
   },
 ];
+
