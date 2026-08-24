@@ -23,6 +23,11 @@ import AdminOverview from "./pages/admin/Overview";
 import AdminInquiries from "./pages/admin/Inquiries";
 import AdminNewsletter from "./pages/admin/Newsletter";
 import AdminOrdersPanel from "./pages/admin/Orders";
+import AdminPlans from "./pages/admin/Plans";
+import AdminCustomProjects from "./pages/admin/CustomProjects";
+import AdminAuditLog from "./pages/admin/AuditLog";
+import OrdersCustomProject from "./pages/orders/CustomProject";
+
 
 import Work from "./pages/Work";
 import About from "./pages/About";
@@ -55,6 +60,8 @@ const App = () => (
           <Route path="/orders/get-started" element={<OrdersGetStarted />} />
           <Route path="/orders/dashboard" element={<OrdersDashboard />} />
           <Route path="/orders/store/:slug" element={<OrdersStorefront />} />
+          <Route path="/orders/custom" element={<OrdersCustomProject />} />
+
 
           <Route path="/insights" element={<Insights />} />
           <Route path="/resources" element={<Resources />} />
@@ -74,6 +81,10 @@ const App = () => (
           <Route path="/admin/inquiries" element={<ProtectedRoute><AdminInquiries /></ProtectedRoute>} />
           <Route path="/admin/newsletter" element={<ProtectedRoute><AdminNewsletter /></ProtectedRoute>} />
           <Route path="/admin/orders" element={<ProtectedRoute><AdminOrdersPanel /></ProtectedRoute>} />
+          <Route path="/admin/plans" element={<ProtectedRoute><AdminPlans /></ProtectedRoute>} />
+          <Route path="/admin/custom-projects" element={<ProtectedRoute><AdminCustomProjects /></ProtectedRoute>} />
+          <Route path="/admin/audit-log" element={<ProtectedRoute><AdminAuditLog /></ProtectedRoute>} />
+
           <Route path="/admin/hero" element={<ProtectedRoute><AdminHeroShowcase /></ProtectedRoute>} />
           <Route path="/admin/knowledge" element={<ProtectedRoute><AdminKnowledgeCenter /></ProtectedRoute>} />
           <Route path="/admin/knowledge/:id" element={<ProtectedRoute><AdminArticleEditor /></ProtectedRoute>} />

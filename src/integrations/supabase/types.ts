@@ -14,6 +14,72 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["admin_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["admin_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["admin_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      audit_logs: {
+        Row: {
+          action: string
+          actor_email: string | null
+          actor_id: string | null
+          actor_role: string | null
+          created_at: string
+          id: string
+          metadata: Json | null
+          new_value: Json | null
+          old_value: Json | null
+          reason: string | null
+          target_id: string | null
+          target_type: string | null
+        }
+        Insert: {
+          action: string
+          actor_email?: string | null
+          actor_id?: string | null
+          actor_role?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          new_value?: Json | null
+          old_value?: Json | null
+          reason?: string | null
+          target_id?: string | null
+          target_type?: string | null
+        }
+        Update: {
+          action?: string
+          actor_email?: string | null
+          actor_id?: string | null
+          actor_role?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          new_value?: Json | null
+          old_value?: Json | null
+          reason?: string | null
+          target_id?: string | null
+          target_type?: string | null
+        }
+        Relationships: []
+      }
       contact_submissions: {
         Row: {
           budget: string | null
@@ -46,6 +112,87 @@ export type Database = {
           message?: string
           name?: string
           status?: Database["public"]["Enums"]["submission_status"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      custom_project_leads: {
+        Row: {
+          additional_notes: string | null
+          attachment_paths: string[]
+          budget_range: string | null
+          build_goal: string
+          business_name: string
+          business_type: string | null
+          contact_name: string
+          created_at: string
+          desired_features: string | null
+          email: string
+          existing_software: string | null
+          existing_website: string | null
+          id: string
+          integrations_required: string | null
+          internal_notes: string | null
+          launch_timeframe: string | null
+          location_count: string | null
+          monthly_order_volume: string | null
+          orders_account_email: string | null
+          phone: string | null
+          project_description: string
+          status: Database["public"]["Enums"]["custom_lead_status"]
+          storefront_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          additional_notes?: string | null
+          attachment_paths?: string[]
+          budget_range?: string | null
+          build_goal: string
+          business_name: string
+          business_type?: string | null
+          contact_name: string
+          created_at?: string
+          desired_features?: string | null
+          email: string
+          existing_software?: string | null
+          existing_website?: string | null
+          id?: string
+          integrations_required?: string | null
+          internal_notes?: string | null
+          launch_timeframe?: string | null
+          location_count?: string | null
+          monthly_order_volume?: string | null
+          orders_account_email?: string | null
+          phone?: string | null
+          project_description: string
+          status?: Database["public"]["Enums"]["custom_lead_status"]
+          storefront_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          additional_notes?: string | null
+          attachment_paths?: string[]
+          budget_range?: string | null
+          build_goal?: string
+          business_name?: string
+          business_type?: string | null
+          contact_name?: string
+          created_at?: string
+          desired_features?: string | null
+          email?: string
+          existing_software?: string | null
+          existing_website?: string | null
+          id?: string
+          integrations_required?: string | null
+          internal_notes?: string | null
+          launch_timeframe?: string | null
+          location_count?: string | null
+          monthly_order_volume?: string | null
+          orders_account_email?: string | null
+          phone?: string | null
+          project_description?: string
+          status?: Database["public"]["Enums"]["custom_lead_status"]
+          storefront_url?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -386,6 +533,143 @@ export type Database = {
         }
         Relationships: []
       }
+      orders_plan_fee_changes: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          effective_from: string
+          id: string
+          new_fee_bps: number
+          old_fee_bps: number | null
+          plan_id: string
+          reason: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          effective_from?: string
+          id?: string
+          new_fee_bps: number
+          old_fee_bps?: number | null
+          plan_id: string
+          reason?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          effective_from?: string
+          id?: string
+          new_fee_bps?: number
+          old_fee_bps?: number | null
+          plan_id?: string
+          reason?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_plan_fee_changes_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "orders_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders_plans: {
+        Row: {
+          annual_billing_active: boolean
+          annual_note: string | null
+          annual_price_cents: number | null
+          badge: string | null
+          created_at: string
+          cta_href: string | null
+          cta_label: string
+          cta_secondary_href: string | null
+          cta_secondary_label: string | null
+          description: string
+          display_order: number
+          effective_from: string
+          entitlements: Json
+          features: string[]
+          fee_label: string | null
+          id: string
+          is_active: boolean
+          is_public: boolean
+          monthly_price_cents: number | null
+          name: string
+          platform_fee_bps: number | null
+          positioning: string
+          price_label: string | null
+          requires_subscription: boolean
+          slug: string
+          stripe_price_annual_id: string | null
+          stripe_price_monthly_id: string | null
+          stripe_product_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          annual_billing_active?: boolean
+          annual_note?: string | null
+          annual_price_cents?: number | null
+          badge?: string | null
+          created_at?: string
+          cta_href?: string | null
+          cta_label?: string
+          cta_secondary_href?: string | null
+          cta_secondary_label?: string | null
+          description?: string
+          display_order?: number
+          effective_from?: string
+          entitlements?: Json
+          features?: string[]
+          fee_label?: string | null
+          id?: string
+          is_active?: boolean
+          is_public?: boolean
+          monthly_price_cents?: number | null
+          name: string
+          platform_fee_bps?: number | null
+          positioning?: string
+          price_label?: string | null
+          requires_subscription?: boolean
+          slug: string
+          stripe_price_annual_id?: string | null
+          stripe_price_monthly_id?: string | null
+          stripe_product_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          annual_billing_active?: boolean
+          annual_note?: string | null
+          annual_price_cents?: number | null
+          badge?: string | null
+          created_at?: string
+          cta_href?: string | null
+          cta_label?: string
+          cta_secondary_href?: string | null
+          cta_secondary_label?: string | null
+          description?: string
+          display_order?: number
+          effective_from?: string
+          entitlements?: Json
+          features?: string[]
+          fee_label?: string | null
+          id?: string
+          is_active?: boolean
+          is_public?: boolean
+          monthly_price_cents?: number | null
+          name?: string
+          platform_fee_bps?: number | null
+          positioning?: string
+          price_label?: string | null
+          requires_subscription?: boolean
+          slug?: string
+          stripe_price_annual_id?: string | null
+          stripe_price_monthly_id?: string | null
+          stripe_product_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -462,6 +746,13 @@ export type Database = {
         Returns: boolean
       }
       cleanup_old_rate_limits: { Args: never; Returns: undefined }
+      has_admin_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["admin_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -469,6 +760,8 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_finance_admin: { Args: { _user_id: string }; Returns: boolean }
+      is_staff: { Args: { _user_id: string }; Returns: boolean }
       kc_increment_view: {
         Args: { _slug: string; _viewer_hash: string }
         Returns: undefined
@@ -486,7 +779,22 @@ export type Database = {
       }
     }
     Enums: {
+      admin_role:
+        | "super_admin"
+        | "finance_admin"
+        | "merchant_support"
+        | "operations"
+        | "analyst"
       app_role: "admin" | "moderator" | "user"
+      custom_lead_status:
+        | "new"
+        | "contacted"
+        | "discovery"
+        | "proposal"
+        | "approved"
+        | "in_development"
+        | "completed"
+        | "declined"
       kc_article_status: "draft" | "published" | "archived"
       submission_status: "new" | "read" | "responded" | "archived"
     }
@@ -616,7 +924,24 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      admin_role: [
+        "super_admin",
+        "finance_admin",
+        "merchant_support",
+        "operations",
+        "analyst",
+      ],
       app_role: ["admin", "moderator", "user"],
+      custom_lead_status: [
+        "new",
+        "contacted",
+        "discovery",
+        "proposal",
+        "approved",
+        "in_development",
+        "completed",
+        "declined",
+      ],
       kc_article_status: ["draft", "published", "archived"],
       submission_status: ["new", "read", "responded", "archived"],
     },
