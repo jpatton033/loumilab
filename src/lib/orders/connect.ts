@@ -31,6 +31,7 @@ export type ConnectedAccount = {
 };
 
 export type ConnectResponse = {
+  mode?: "live" | "test";
   merchant?: MerchantRecord;
   account?: ConnectedAccount;
   url?: string;
@@ -71,7 +72,12 @@ export async function callConnect(
   const { data, error } = await supabase.functions.invoke<ConnectResponse>("stripe-connect", {
     body: { action, returnUrl: `${window.location.origin}/orders/dashboard`, ...body },
   });
-  if (error) return { error: error.message };
+  if (error) {
+    return {
+      error:
+        "We couldn't reach the payments service. Please try again in a moment — if it keeps failing, contact support.",
+    };
+  }
   return data ?? {};
 }
 
