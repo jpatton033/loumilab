@@ -20,6 +20,10 @@ export type EntitlementKey =
   | "orders.scheduling"
   | "orders.windows"
   | "orders.advanced_controls"
+  | "quotes.enabled"
+  | "deposits.enabled"
+  | "invoicing.enabled"
+  | "recurring.enabled"
   | "discounts.enabled"
   | "promo_codes.enabled"
   | "analytics.level"
@@ -30,6 +34,7 @@ export type EntitlementKey =
   | "staff.roles"
   | "exports.enabled"
   | "customer_insights.enabled"
+  | "custom_workflows.enabled"
   | "priority_support.enabled"
   | "custom";
 
@@ -46,6 +51,10 @@ export const BASE_ENTITLEMENTS: Entitlements = {
   "orders.scheduling": false,
   "orders.windows": false,
   "orders.advanced_controls": false,
+  "quotes.enabled": false,
+  "deposits.enabled": false,
+  "invoicing.enabled": false,
+  "recurring.enabled": false,
   "discounts.enabled": false,
   "promo_codes.enabled": false,
   "analytics.level": "basic",
@@ -55,8 +64,46 @@ export const BASE_ENTITLEMENTS: Entitlements = {
   "staff.max_users": 1,
   "exports.enabled": false,
   "customer_insights.enabled": false,
+  "custom_workflows.enabled": false,
   "priority_support.enabled": false,
 };
+
+/** Plain-language label for each capability, used in upgrade prompts. */
+export const ENTITLEMENT_LABELS: Partial<Record<EntitlementKey, string>> = {
+  "orders.scheduling": "Scheduling and appointments",
+  "orders.windows": "Service windows",
+  "orders.advanced_controls": "Advanced order controls",
+  "quotes.enabled": "Quotes and estimates",
+  "deposits.enabled": "Deposits",
+  "invoicing.enabled": "Invoicing",
+  "recurring.enabled": "Recurring services",
+  "discounts.enabled": "Discounts",
+  "promo_codes.enabled": "Promo codes",
+  "exports.enabled": "CSV exports",
+  "customer_insights.enabled": "Customer insights",
+  "custom_workflows.enabled": "Custom workflow stages",
+  "branding.remove_loumilab": "Remove Loumilab branding",
+  "priority_support.enabled": "Priority support",
+};
+
+/** Lowest paid tier that unlocks a capability, for upgrade copy. */
+export const ENTITLEMENT_TIER: Partial<Record<EntitlementKey, string>> = {
+  "orders.scheduling": "Business",
+  "orders.windows": "Business",
+  "quotes.enabled": "Business",
+  "deposits.enabled": "Business",
+  "invoicing.enabled": "Business",
+  "discounts.enabled": "Business",
+  "promo_codes.enabled": "Business",
+  "exports.enabled": "Business",
+  "customer_insights.enabled": "Business",
+  "orders.advanced_controls": "Premium",
+  "recurring.enabled": "Premium",
+  "custom_workflows.enabled": "Premium",
+  "branding.remove_loumilab": "Premium",
+  "priority_support.enabled": "Premium",
+};
+
 
 /** Merge a plan's stored entitlements over the baseline. */
 export const resolveEntitlements = (plan?: Pick<OrdersPlan, "entitlements"> | null): Entitlements => ({
