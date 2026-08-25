@@ -7,6 +7,8 @@ import Eyebrow from "@/components/brand/Eyebrow";
 import { Button } from "@/components/ui/button";
 import MetricCard from "@/components/orders/MetricCard";
 import PayoutSetupCard from "@/components/orders/PayoutSetupCard";
+import PaymentsPanel from "@/components/orders/PaymentsPanel";
+import StorePanel from "@/components/orders/StorePanel";
 import OrderQueue from "@/components/orders/OrderQueue";
 import EstimatesPanel from "@/components/orders/EstimatesPanel";
 import LockedFeature from "@/components/orders/LockedFeature";
@@ -257,15 +259,12 @@ const Dashboard = () => {
 
             {/* Catalog */}
             {(activeModule === "menu" || activeModule === "products" || activeModule === "services") && (
-              <div className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-soft)] sm:p-8">
-                <p className="font-display font-semibold">{terms.catalog}</p>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Add, price and organise every {terms.catalogItem.toLowerCase()} customers can request.
-                </p>
-                <Button asChild className="mt-5 rounded-full">
-                  <Link to="/orders/get-started">Manage {terms.catalog.toLowerCase()}</Link>
-                </Button>
-              </div>
+              <StorePanel
+                merchantId={merchant?.id}
+                businessName={merchant?.business_name}
+                catalogLabel={terms.catalog}
+                itemLabel={terms.catalogItem}
+              />
             )}
 
             {/* Estimates */}
@@ -323,12 +322,7 @@ const Dashboard = () => {
             )}
 
             {activeModule === "payments" && (
-              <div className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-soft)] sm:p-8">
-                <p className="font-display font-semibold">Payments</p>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Payouts, transaction history and fee breakdowns. Payments securely powered by Stripe.
-                </p>
-              </div>
+              <PaymentsPanel merchantId={merchant?.id} planSlug={merchant?.plan_slug} />
             )}
 
             {activeModule === "analytics" && (
