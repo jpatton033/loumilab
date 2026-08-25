@@ -25,6 +25,7 @@ import AdminNewsletter from "./pages/admin/Newsletter";
 import AdminOrdersPanel from "./pages/admin/Orders";
 import AdminPlans from "./pages/admin/Plans";
 import AdminCustomProjects from "./pages/admin/CustomProjects";
+import AdminIndustries from "./pages/admin/Industries";
 import AdminAuditLog from "./pages/admin/AuditLog";
 import AdminDailyBrief from "./pages/admin/reports/DailyBrief";
 import AdminDailyBriefSettings from "./pages/admin/settings/DailyBriefSettings";
