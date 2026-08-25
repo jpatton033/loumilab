@@ -219,8 +219,9 @@ const Navbar = () => {
         <button
           className="p-2 text-foreground lg:hidden"
           onClick={() => setOpen(!open)}
-          aria-label="Toggle menu"
+          aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
+          aria-controls="mobile-nav"
         >
           {open ? <X size={24} /> : <Menu size={24} />}
         </button>
@@ -230,6 +231,7 @@ const Navbar = () => {
       {open && (
         <nav
           className="max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain border-b border-border bg-background lg:hidden [-webkit-overflow-scrolling:touch]"
+          id="mobile-nav"
           aria-label="Mobile"
         >
           <div className="section-container flex flex-col gap-1 py-6">
