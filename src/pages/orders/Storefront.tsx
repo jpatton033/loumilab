@@ -21,6 +21,11 @@ const Storefront = () => {
   const { slug } = useParams<{ slug: string }>();
   const store = getStorefront(slug);
   const cart = useCart();
+  const { industry, terms, workflow } = useIndustryExperience(store?.industrySlug);
+  /** Service businesses lead with a request → estimate flow, not a cart. */
+  const requestLed = !!industry && !industry.is_food && /request|inquiry/i.test(workflow[0] ?? "");
+
+
 
   if (!store) {
     return (
