@@ -73,7 +73,7 @@ const Storefront = () => {
           </div>
 
           <h2 className="mt-12 font-display text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-            Menu
+            {terms.catalog}
           </h2>
 
           <div className="mt-5 grid gap-5 sm:grid-cols-2">
@@ -83,9 +83,17 @@ const Storefront = () => {
                 product={p}
                 quantity={cart.lines.find((l) => l.product.id === p.id)?.quantity ?? 0}
                 onAdd={cart.add}
+                priceIsStarting={requestLed}
+                actionLabel={requestLed ? "Request" : undefined}
               />
             ))}
           </div>
+
+          {requestLed && (
+            <div className="mt-12">
+              <ServiceRequestForm terms={terms} />
+            </div>
+          )}
 
           <p className="mt-10 text-sm text-muted-foreground">
             {store.pickupInfo} · {store.hours}
@@ -93,7 +101,10 @@ const Storefront = () => {
         </div>
       </section>
 
-      <CartBar count={cart.count} subtotalCents={cart.subtotalCents} ctaLabel="Place order" onCheckout={checkout} />
+      {!requestLed && (
+        <CartBar count={cart.count} subtotalCents={cart.subtotalCents} ctaLabel="Place order" onCheckout={checkout} />
+      )}
+
     </Layout>
   );
 };
