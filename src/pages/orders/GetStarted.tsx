@@ -189,7 +189,10 @@ const GetStarted = () => {
 
           <div className="mt-10 grid gap-10 lg:grid-cols-[1.15fr_0.85fr]">
             {/* Form */}
-            <div className="rounded-3xl border border-border bg-card p-7 shadow-[var(--shadow-soft)] lg:p-9">
+            <div
+              ref={stepCardRef}
+              className="rounded-3xl border border-border bg-card p-7 shadow-[var(--shadow-soft)] lg:p-9"
+            >
               <h2 className="font-display text-xl font-semibold">
                 Step {step + 1} — {stepTitles[step]}
               </h2>
