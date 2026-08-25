@@ -20,13 +20,6 @@ const t = {
   font: "'Helvetica Neue', Helvetica, Arial, sans-serif",
 };
 
-const SEVERITY_DOT: Record<Severity, string> = {
-  critical: "🔴",
-  important: "🟠",
-  review: "🟡",
-  normal: "🟢",
-};
-
 const SEVERITY_COLOR: Record<Severity, string> = {
   critical: t.critical,
   important: t.important,
@@ -34,12 +27,32 @@ const SEVERITY_COLOR: Record<Severity, string> = {
   normal: t.ok,
 };
 
-const HEALTH_DOT: Record<HealthLine["state"], string> = {
-  operational: "🟢",
-  degraded: "🟡",
-  issue: "🔴",
-  not_monitored: "⚪",
+const HEALTH_COLOR: Record<HealthLine["state"], string> = {
+  operational: t.ok,
+  degraded: t.important,
+  issue: t.critical,
+  not_monitored: "#b3b3bb",
 };
+
+/** Coloured status dot. Uses a styled glyph, not an emoji, so it renders
+ * identically in Outlook, Gmail and Apple Mail. */
+const dot = (color: string) =>
+  `<span style="color:${color};font-size:15px;line-height:1;">&#9679;</span>`;
+
+const SEVERITY_DOT: Record<Severity, string> = {
+  critical: dot(t.critical),
+  important: dot(t.important),
+  review: dot(t.review),
+  normal: dot(t.ok),
+};
+
+const HEALTH_DOT: Record<HealthLine["state"], string> = {
+  operational: dot(HEALTH_COLOR.operational),
+  degraded: dot(HEALTH_COLOR.degraded),
+  issue: dot(HEALTH_COLOR.issue),
+  not_monitored: dot(HEALTH_COLOR.not_monitored),
+};
+
 
 const DIRECTION: Record<ChangeLine["direction"], string> = {
   up: "↑",
