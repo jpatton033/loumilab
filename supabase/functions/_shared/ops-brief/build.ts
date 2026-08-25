@@ -175,7 +175,12 @@ function buildExecutive(sections: Section[], actions: ActionItem[], changes: Cha
       : "no new inbound opportunities were received",
   );
   if (views !== null) {
-    parts.push(views > 0 ? `the Knowledge Center recorded ${formatInt(views)} article views` : "the Knowledge Center saw no reads");
+    parts.push(
+      views > 0
+        ? `the Knowledge Center recorded ${formatInt(views)} article view${views === 1 ? "" : "s"}`
+        : "the Knowledge Center saw no reads",
+    );
+
   }
 
   const criticals = actions.filter((a) => a.severity === "critical").length;
