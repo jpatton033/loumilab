@@ -29,6 +29,7 @@ import OrderQueue from "@/components/orders/OrderQueue";
 import OrderStatusBadge from "@/components/orders/OrderStatusBadge";
 import FlowDiagram from "@/components/orders/FlowDiagram";
 import PricingTable from "@/components/orders/PricingTable";
+import IndustryStrip from "@/components/orders/IndustryStrip";
 import { useCart } from "@/hooks/use-cart";
 import { demoStorefront } from "@/data/orders/storefronts";
 import { dashboardMetrics, demoOrders, ORDER_STATUSES } from "@/data/orders/dashboard";
