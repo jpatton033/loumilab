@@ -63,8 +63,14 @@ Deno.serve(async (req) => {
     const { data: userData, error: userError } = await admin.auth.getUser(token);
     if (userError || !userData?.user) return json({ error: "Unauthorized" }, 401);
 
-    const { data: staff } = await admin.rpc("is_staff", { _user_id: userData.user.id });
-    if (staff !== true) return json({ error: "Forbidden" }, 403);
+    // Staff check reads the role tables directly with the service role, so it
+    // does not depend on client-facing function grants.
+    const [{ data: appRole }, { data: adminRole }] = await Promise.all([
+      admin.from("user_roles").select("role").eq("user_id", userData.user.id).eq("role", "admin").maybeSingle(),
+      admin.from("admin_roles").select("role").eq("user_id", userData.user.id).limit(1).maybeSingle(),
+    ]);
+    if (!appRole && !adminRole) return json({ error: "Forbidden" }, 403);
+
     actor = requestedMode === "preview" ? "preview" : "manual";
   }
 
