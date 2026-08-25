@@ -1,5 +1,7 @@
 import { admin } from "../_shared/auth.ts";
 import { resolvePayoutStatus, stripe, stripeLivemode, stripeMode } from "../_shared/stripe.ts";
+import { handleCheckoutCompleted, handleSubscriptionChange } from "./handlers.ts";
+
 
 const WEBHOOK_SECRET = Deno.env.get("STRIPE_WEBHOOK_SECRET") ?? "";
 
