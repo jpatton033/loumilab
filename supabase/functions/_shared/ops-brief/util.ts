@@ -42,12 +42,12 @@ export const metric = (
 };
 
 /** A section whose underlying capability does not exist yet. */
-export const unavailableSection = (
-  key: string,
-  title: string,
-  note: string,
-  module: Section["key"] extends never ? never : string = "",
-): Section => ({ key, title, status: "unavailable", note });
+export const unavailableSection = (key: string, title: string, note: string): Section => ({
+  key,
+  title,
+  status: "unavailable",
+  note,
+});
 
 export const notMonitoredSection = (key: string, title: string, note: string): Section => ({
   key,
