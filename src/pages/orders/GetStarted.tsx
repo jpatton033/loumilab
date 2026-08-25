@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import Layout from "@/components/Layout";
@@ -11,22 +11,21 @@ import { Textarea } from "@/components/ui/textarea";
 import PhoneFrame from "@/components/orders/PhoneFrame";
 import StorefrontHeader from "@/components/orders/StorefrontHeader";
 import { formatMoney } from "@/data/orders/storefronts";
-import { pricingPlans } from "@/data/orders/pricing";
+import { usePublicPlans, planPriceLabel, planPeriodLabel, formatFeeBps } from "@/lib/orders/plans";
+import {
+  useIndustries,
+  groupIndustries,
+  findIndustry,
+  resolveTerms,
+  resolveWorkflow,
+  PURCHASE_MODELS,
+} from "@/lib/orders/industries";
 import { toast } from "sonner";
 
 interface DraftItem {
   name: string;
   price: string;
 }
-
-const stepTitles = [
-  "Business information",
-  "Store details",
-  "Add your products",
-  "Pickup & availability",
-  "Choose your plan",
-  "Review & publish",
-];
 
 const slugify = (value: string) =>
   value
@@ -38,6 +37,8 @@ const slugify = (value: string) =>
 
 const GetStarted = () => {
   const [step, setStep] = useState(0);
+  const [industrySlug, setIndustrySlug] = useState("food-catering");
+  const [purchaseModels, setPurchaseModels] = useState<string[]>(["products"]);
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [location, setLocation] = useState("");
@@ -45,8 +46,38 @@ const GetStarted = () => {
   const [items, setItems] = useState<DraftItem[]>([{ name: "", price: "" }]);
   const [hours, setHours] = useState("Fri–Sun · 4–9 PM");
   const [pickupInfo, setPickupInfo] = useState("Pickup only");
-  const [plan, setPlan] = useState(pricingPlans[1].id);
+  const [planSlug, setPlanSlug] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
+
+  const { data: industries } = useIndustries();
+  const { data: plans } = usePublicPlans();
+
+  const industry = findIndustry(industries, industrySlug);
+  const terms = resolveTerms(industry);
+  const workflow = resolveWorkflow(industry);
+  const groups = useMemo(() => groupIndustries(industries ?? []), [industries]);
+
+  // Default the purchase models to whatever the chosen industry usually does.
+  useEffect(() => {
+    if (industry?.default_purchase_models?.length) {
+      setPurchaseModels(industry.default_purchase_models);
+    }
+  }, [industry?.slug]);
+
+  useEffect(() => {
+    if (!planSlug && plans?.length) setPlanSlug(plans[1]?.slug ?? plans[0].slug);
+  }, [plans, planSlug]);
+
+  const stepTitles = [
+    "Your industry",
+    "How customers buy",
+    "Business information",
+    "Store details",
+    `Add your ${terms.catalog.toLowerCase()}`,
+    `${terms.schedule} & availability`,
+    "Choose your plan",
+    "Review & publish",
+  ];
 
   const slug = useMemo(() => slugify(name) || "your-store", [name]);
   const monogram = useMemo(
@@ -61,22 +92,29 @@ const GetStarted = () => {
   );
 
   const canContinue =
-    (step === 0 && name.trim().length > 1) ||
-    (step === 1 && description.trim().length > 4) ||
-    step > 1;
+    (step === 0 && !!industrySlug) ||
+    (step === 1 && purchaseModels.length > 0) ||
+    (step === 2 && name.trim().length > 1) ||
+    (step === 3 && description.trim().length > 4) ||
+    step > 3;
 
   const updateItem = (i: number, patch: Partial<DraftItem>) =>
     setItems((prev) => prev.map((item, idx) => (idx === i ? { ...item, ...patch } : item)));
 
+  const toggleModel = (id: string) =>
+    setPurchaseModels((prev) => (prev.includes(id) ? prev.filter((m) => m !== id) : [...prev, id]));
+
   const previewStore = {
     name: name || "Your Store",
     location: location || "Your city",
-    description: description || "Tell customers what you make and why they'll love it.",
+    description: description || `Tell customers what you offer and why they'll come back.`,
     monogram,
     acceptingOrders: true,
     hours,
     pickupInfo,
   };
+
+  const selectedPlan = plans?.find((p) => p.slug === planSlug) ?? null;
 
   const publish = () => {
     setSubmitted(true);
@@ -89,7 +127,7 @@ const GetStarted = () => {
     <Layout>
       <SEOHead
         title="Get Started with Loumilab Orders — Create Your Storefront"
-        description="Set up your Loumilab Orders storefront in a few steps: business details, products, pickup settings, and your plan."
+        description="Set up your Loumilab Orders storefront in a few steps: your industry, business details, catalog, scheduling, and your plan."
         path="/orders/get-started"
       />
 
@@ -108,7 +146,7 @@ const GetStarted = () => {
               Let&apos;s build your storefront.
             </h1>
             <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
-              Six short steps. You can change anything later.
+              A few short steps, shaped around your kind of business. You can change anything later.
             </p>
           </div>
 
@@ -142,18 +180,82 @@ const GetStarted = () => {
 
               <div className="mt-7 space-y-5">
                 {step === 0 && (
+                  <div className="space-y-6">
+                    <p className="text-sm text-muted-foreground">
+                      Pick what you do. Loumilab Orders adjusts the wording, the workflow and the tools you see.
+                    </p>
+                    {groups.map((group) => (
+                      <div key={group.label}>
+                        <p className="font-display text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                          {group.label}
+                        </p>
+                        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                          {group.items.map((option) => (
+                            <button
+                              key={option.slug}
+                              type="button"
+                              onClick={() => setIndustrySlug(option.slug)}
+                              className={`rounded-2xl border p-4 text-left transition-colors ${
+                                industrySlug === option.slug
+                                  ? "border-accent bg-accent/5"
+                                  : "border-border hover:border-foreground/20"
+                              }`}
+                            >
+                              <span className="font-display text-sm font-semibold">{option.name}</span>
+                              {option.description && (
+                                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                                  {option.description}
+                                </p>
+                              )}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {step === 1 && (
+                  <>
+                    <p className="text-sm text-muted-foreground">
+                      Choose everything that applies — many businesses do more than one.
+                    </p>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      {PURCHASE_MODELS.map((model) => (
+                        <button
+                          key={model.id}
+                          type="button"
+                          onClick={() => toggleModel(model.id)}
+                          className={`rounded-2xl border p-4 text-left transition-colors ${
+                            purchaseModels.includes(model.id)
+                              ? "border-accent bg-accent/5"
+                              : "border-border hover:border-foreground/20"
+                          }`}
+                        >
+                          <span className="font-display text-sm font-semibold">{model.label}</span>
+                          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{model.description}</p>
+                        </button>
+                      ))}
+                    </div>
+                    <div className="rounded-2xl border border-border bg-secondary p-4 text-sm text-muted-foreground">
+                      Your workflow: {workflow.join(" → ")}
+                    </div>
+                  </>
+                )}
+
+                {step === 2 && (
                   <>
                     <div className="space-y-2">
                       <Label htmlFor="biz-name">Business name</Label>
                       <Input id="biz-name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Sunday Kitchen" />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="biz-category">What do you sell?</Label>
+                      <Label htmlFor="biz-category">What do you offer?</Label>
                       <Input
                         id="biz-category"
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
-                        placeholder="Home-cooked meals, baked goods, catering…"
+                        placeholder={industry?.is_food ? "Home-cooked meals, baked goods, catering…" : "Repairs, installs, service calls…"}
                       />
                     </div>
                     <div className="space-y-2">
@@ -163,7 +265,7 @@ const GetStarted = () => {
                   </>
                 )}
 
-                {step === 1 && (
+                {step === 3 && (
                   <>
                     <div className="space-y-2">
                       <Label htmlFor="biz-desc">Store description</Label>
@@ -172,7 +274,11 @@ const GetStarted = () => {
                         rows={4}
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                        placeholder="Weekend comfort food, made from scratch and ready for pickup."
+                        placeholder={
+                          industry?.is_food
+                            ? "Weekend comfort food, made from scratch and ready for pickup."
+                            : "Licensed, insured and same-week availability across the metro."
+                        }
                       />
                     </div>
                     <div className="rounded-2xl border border-border bg-secondary p-4 text-sm">
@@ -182,17 +288,19 @@ const GetStarted = () => {
                   </>
                 )}
 
-                {step === 2 && (
+                {step === 4 && (
                   <>
                     {items.map((item, i) => (
                       <div key={i} className="grid gap-3 sm:grid-cols-[1.5fr_0.7fr]">
                         <div className="space-y-2">
-                          <Label htmlFor={`item-${i}`}>Item {i + 1}</Label>
+                          <Label htmlFor={`item-${i}`}>
+                            {terms.catalogItem} {i + 1}
+                          </Label>
                           <Input
                             id={`item-${i}`}
                             value={item.name}
                             onChange={(e) => updateItem(i, { name: e.target.value })}
-                            placeholder="Chicken Alfredo"
+                            placeholder={industry?.is_food ? "Chicken Alfredo" : "Outlet installation"}
                           />
                         </div>
                         <div className="space-y-2">
@@ -207,65 +315,78 @@ const GetStarted = () => {
                         </div>
                       </div>
                     ))}
+                    {!industry?.is_food && (
+                      <p className="text-xs text-muted-foreground">
+                        Not sure on price? Leave it blank and quote each job individually.
+                      </p>
+                    )}
                     <Button
                       type="button"
                       variant="outline"
                       className="rounded-full"
                       onClick={() => setItems((prev) => [...prev, { name: "", price: "" }])}
                     >
-                      Add another item
+                      Add another {terms.catalogItem.toLowerCase()}
                     </Button>
                   </>
                 )}
 
-                {step === 3 && (
+                {step === 5 && (
                   <>
                     <div className="space-y-2">
-                      <Label htmlFor="hours">Ordering hours</Label>
+                      <Label htmlFor="hours">{industry?.is_food ? "Ordering hours" : "Working hours"}</Label>
                       <Input id="hours" value={hours} onChange={(e) => setHours(e.target.value)} />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="pickup">Pickup instructions</Label>
+                      <Label htmlFor="pickup">{terms.location} details</Label>
                       <Input id="pickup" value={pickupInfo} onChange={(e) => setPickupInfo(e.target.value)} />
                     </div>
                   </>
                 )}
 
-                {step === 4 && (
+                {step === 6 && (
                   <div className="grid gap-3">
-                    {pricingPlans.map((p) => (
+                    {(plans ?? []).map((p) => (
                       <button
-                        key={p.id}
+                        key={p.slug}
                         type="button"
-                        onClick={() => setPlan(p.id)}
+                        onClick={() => setPlanSlug(p.slug)}
                         className={`rounded-2xl border p-5 text-left transition-colors ${
-                          plan === p.id ? "border-accent bg-accent/5" : "border-border hover:border-foreground/20"
+                          planSlug === p.slug ? "border-accent bg-accent/5" : "border-border hover:border-foreground/20"
                         }`}
                       >
                         <div className="flex items-baseline justify-between gap-4">
                           <span className="font-display font-semibold">{p.name}</span>
                           <span className="font-display font-semibold">
-                            {p.price} <span className="text-sm font-normal text-muted-foreground">{p.period}</span>
+                            {planPriceLabel(p, false)}{" "}
+                            <span className="text-sm font-normal text-muted-foreground">
+                              {planPeriodLabel(p, false)}
+                            </span>
                           </span>
                         </div>
                         <p className="mt-2 text-sm text-muted-foreground">{p.description}</p>
+                        <p className="mt-1 text-xs text-muted-foreground">
+                          {p.platform_fee_bps == null
+                            ? "Custom platform fee"
+                            : `+ ${formatFeeBps(p.platform_fee_bps)} Loumilab platform fee`}
+                        </p>
                       </button>
                     ))}
                   </div>
                 )}
 
-                {step === 5 && (
+                {step === 7 && (
                   <div className="space-y-4 text-sm">
                     <div className="rounded-2xl border border-border p-5">
                       <p className="font-display font-semibold">{name || "Your Store"}</p>
                       <p className="mt-1 text-muted-foreground">
-                        {category || "Category not set"} · {location || "City not set"}
+                        {industry?.name ?? "Industry not set"} · {location || "City not set"}
                       </p>
                       <p className="mt-3 text-muted-foreground">{previewStore.description}</p>
                     </div>
                     <div className="rounded-2xl border border-border p-5">
                       <p className="font-display font-semibold">
-                        {items.filter((i) => i.name).length || 0} item
+                        {items.filter((i) => i.name).length || 0} {terms.catalogItem.toLowerCase()}
                         {items.filter((i) => i.name).length === 1 ? "" : "s"}
                       </p>
                       <ul className="mt-2 space-y-1 text-muted-foreground">
@@ -276,16 +397,15 @@ const GetStarted = () => {
                               {i.name} — {formatMoney(Math.round((Number(i.price) || 0) * 100))}
                             </li>
                           ))}
-                        {items.filter((i) => i.name).length === 0 && <li>No items added yet.</li>}
+                        {items.filter((i) => i.name).length === 0 && <li>Nothing added yet.</li>}
                       </ul>
                     </div>
                     <div className="rounded-2xl border border-border p-5">
-                      <p className="font-display font-semibold">
-                        {pricingPlans.find((p) => p.id === plan)?.name} plan
-                      </p>
+                      <p className="font-display font-semibold">{selectedPlan?.name ?? "No"} plan</p>
                       <p className="mt-1 text-muted-foreground">
                         {hours} · {pickupInfo}
                       </p>
+                      <p className="mt-1 text-muted-foreground">{workflow.join(" → ")}</p>
                     </div>
 
                     {submitted && (
@@ -346,7 +466,7 @@ const GetStarted = () => {
                       ))}
                     {items.filter((i) => i.name).length === 0 && (
                       <div className="rounded-2xl border border-dashed border-border p-5 text-center text-xs text-muted-foreground">
-                        Your items will appear here.
+                        Your {terms.catalog.toLowerCase()} will appear here.
                       </div>
                     )}
                   </div>
