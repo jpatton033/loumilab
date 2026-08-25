@@ -7,6 +7,8 @@ import Eyebrow from "@/components/brand/Eyebrow";
 import { Button } from "@/components/ui/button";
 import MetricCard from "@/components/orders/MetricCard";
 import PayoutSetupCard from "@/components/orders/PayoutSetupCard";
+import PaymentsPanel from "@/components/orders/PaymentsPanel";
+import StorePanel from "@/components/orders/StorePanel";
 import OrderQueue from "@/components/orders/OrderQueue";
 import EstimatesPanel from "@/components/orders/EstimatesPanel";
 import LockedFeature from "@/components/orders/LockedFeature";
