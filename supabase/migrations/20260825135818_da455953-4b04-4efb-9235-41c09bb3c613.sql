@@ -1,0 +1,1 @@
+REVOKE ALL ON FUNCTION public.enforce_job_request_rate_limit() FROM PUBLIC, anon, authenticated;

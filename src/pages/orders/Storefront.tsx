@@ -6,9 +6,12 @@ import { Button } from "@/components/ui/button";
 import StorefrontHeader from "@/components/orders/StorefrontHeader";
 import StoreProductCard from "@/components/orders/StoreProductCard";
 import CartBar from "@/components/orders/CartBar";
+import ServiceRequestForm from "@/components/orders/ServiceRequestForm";
 import { useCart } from "@/hooks/use-cart";
 import { getStorefront } from "@/data/orders/storefronts";
+import { useIndustryExperience } from "@/lib/orders/industries";
 import { toast } from "sonner";
+
 
 /**
  * Reusable merchant storefront template. Every merchant renders through this
@@ -18,6 +21,11 @@ const Storefront = () => {
   const { slug } = useParams<{ slug: string }>();
   const store = getStorefront(slug);
   const cart = useCart();
+  const { industry, terms, workflow } = useIndustryExperience(store?.industrySlug);
+  /** Service businesses lead with a request → estimate flow, not a cart. */
+  const requestLed = !!industry && !industry.is_food && /request|inquiry/i.test(workflow[0] ?? "");
+
+
 
   if (!store) {
     return (
@@ -65,7 +73,7 @@ const Storefront = () => {
           </div>
 
           <h2 className="mt-12 font-display text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-            Menu
+            {terms.catalog}
           </h2>
 
           <div className="mt-5 grid gap-5 sm:grid-cols-2">
@@ -75,9 +83,17 @@ const Storefront = () => {
                 product={p}
                 quantity={cart.lines.find((l) => l.product.id === p.id)?.quantity ?? 0}
                 onAdd={cart.add}
+                priceIsStarting={requestLed}
+                actionLabel={requestLed ? "Request" : undefined}
               />
             ))}
           </div>
+
+          {requestLed && (
+            <div className="mt-12">
+              <ServiceRequestForm terms={terms} />
+            </div>
+          )}
 
           <p className="mt-10 text-sm text-muted-foreground">
             {store.pickupInfo} · {store.hours}
@@ -85,7 +101,10 @@ const Storefront = () => {
         </div>
       </section>
 
-      <CartBar count={cart.count} subtotalCents={cart.subtotalCents} ctaLabel="Place order" onCheckout={checkout} />
+      {!requestLed && (
+        <CartBar count={cart.count} subtotalCents={cart.subtotalCents} ctaLabel="Place order" onCheckout={checkout} />
+      )}
+
     </Layout>
   );
 };

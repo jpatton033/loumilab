@@ -8,10 +8,22 @@ interface Props {
   quantity?: number;
   onAdd: (product: StoreProduct) => void;
   className?: string;
+  /** Service catalogs quote per job — show the price as a starting point. */
+  priceIsStarting?: boolean;
+  /** Overrides the default "Add" action label. */
+  actionLabel?: string;
 }
 
-const StoreProductCard = ({ product, quantity = 0, onAdd, className }: Props) => {
+const StoreProductCard = ({
+  product,
+  quantity = 0,
+  onAdd,
+  className,
+  priceIsStarting = false,
+  actionLabel,
+}: Props) => {
   const unavailable = product.availability !== "available";
+
 
   return (
     <article
@@ -45,22 +57,30 @@ const StoreProductCard = ({ product, quantity = 0, onAdd, className }: Props) =>
         <div className="min-w-0">
           <h3 className="font-display font-semibold">{product.name}</h3>
           <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{product.description}</p>
-          <p className="mt-3 font-display font-semibold">{formatMoney(product.priceCents)}</p>
+          <p className="mt-3 font-display font-semibold">
+            {priceIsStarting && <span className="text-sm font-normal text-muted-foreground">From </span>}
+            {formatMoney(product.priceCents)}
+          </p>
         </div>
         <Button
           size="sm"
           variant={quantity > 0 ? "secondary" : "default"}
           disabled={unavailable}
           onClick={() => onAdd(product)}
-          aria-label={`Add ${product.name} to cart`}
+          aria-label={`${actionLabel ?? "Add"} ${product.name}`}
           className="mt-0.5 h-11 min-w-[76px] shrink-0 rounded-full px-4"
         >
-          {quantity > 0 ? `${quantity} added` : (
+          {quantity > 0 && !actionLabel ? (
+            `${quantity} added`
+          ) : actionLabel ? (
+            actionLabel
+          ) : (
             <>
               <Plus size={15} /> Add
             </>
           )}
         </Button>
+
       </div>
     </article>
   );

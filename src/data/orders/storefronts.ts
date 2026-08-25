@@ -27,6 +27,8 @@ export interface Storefront {
   acceptingOrders: boolean;
   hours: string;
   pickupInfo: string;
+  /** Drives terminology, modules and workflow — see `orders_industries`. */
+  industrySlug: string;
   products: StoreProduct[];
 }
 
@@ -41,6 +43,7 @@ export const storefronts: Storefront[] = [
     acceptingOrders: true,
     hours: "Fri – Sun · 12:00 PM – 8:00 PM",
     pickupInfo: "Pickup only · Address shared after checkout",
+    industrySlug: "food-catering",
     products: [
       {
         id: "p_alfredo",
@@ -68,6 +71,41 @@ export const storefronts: Storefront[] = [
       },
     ],
   },
+  {
+    id: "store_bright_current",
+    slug: "bright-current-electric",
+    name: "Bright Current Electric",
+    location: "Atlanta, GA",
+    description: "Licensed residential electricians. Request service, get an estimate, book a visit.",
+    monogram: "BC",
+    acceptingOrders: true,
+    hours: "Mon – Sat · 7:00 AM – 6:00 PM",
+    pickupInfo: "On-site service across metro Atlanta",
+    industrySlug: "electrician",
+    products: [
+      {
+        id: "s_diagnostic",
+        name: "Diagnostic Visit",
+        description: "On-site troubleshooting and written findings",
+        priceCents: 9900,
+        availability: "available",
+      },
+      {
+        id: "s_panel",
+        name: "Panel Upgrade",
+        description: "200-amp panel replacement, permit included",
+        priceCents: 185000,
+        availability: "available",
+      },
+      {
+        id: "s_fixture",
+        name: "Fixture & Outlet Installation",
+        description: "Lighting, ceiling fans, outlets and switches",
+        priceCents: 14500,
+        availability: "available",
+      },
+    ],
+  },
 ];
 
 export const getStorefront = (slug?: string) => storefronts.find((s) => s.slug === slug);
@@ -76,3 +114,4 @@ export const demoStorefront = storefronts[0];
 
 export const formatMoney = (cents: number) =>
   (cents / 100).toLocaleString("en-US", { style: "currency", currency: "USD" });
+
