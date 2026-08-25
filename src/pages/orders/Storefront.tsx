@@ -1,4 +1,5 @@
-import { Link, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
@@ -6,26 +7,66 @@ import { Button } from "@/components/ui/button";
 import StorefrontHeader from "@/components/orders/StorefrontHeader";
 import StoreProductCard from "@/components/orders/StoreProductCard";
 import CartBar from "@/components/orders/CartBar";
+import CheckoutSheet from "@/components/orders/CheckoutSheet";
 import ServiceRequestForm from "@/components/orders/ServiceRequestForm";
 import { useCart } from "@/hooks/use-cart";
 import { getStorefront } from "@/data/orders/storefronts";
+import { usePublicStorefront, toStoreProduct } from "@/lib/orders/storefront";
 import { useIndustryExperience } from "@/lib/orders/industries";
 import { toast } from "sonner";
 
-
 /**
- * Reusable merchant storefront template. Every merchant renders through this
- * one component — only the storefront record changes.
+ * Reusable merchant storefront template. Live storefronts render from the
+ * database; the seeded demo slugs still fall back to local sample data so the
+ * marketing preview keeps working.
  */
 const Storefront = () => {
   const { slug } = useParams<{ slug: string }>();
-  const store = getStorefront(slug);
+  const [params] = useSearchParams();
+  const { data: live, isLoading } = usePublicStorefront(slug);
+  const demo = getStorefront(slug);
   const cart = useCart();
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+
+  const isLive = !!live && live.store.is_published;
+
+  const store = isLive
+    ? {
+        name: live.store.name,
+        slug: live.store.slug,
+        location: live.store.location ?? "",
+        description: live.store.description ?? "",
+        monogram: live.store.monogram ?? live.store.name.slice(0, 2).toUpperCase(),
+        acceptingOrders: live.acceptingOrders,
+        hours: live.store.hours ?? "",
+        pickupInfo: live.store.pickup_info ?? (live.store.delivery_enabled ? "Delivery available" : "Pickup"),
+        industrySlug: live.industrySlug,
+        products: live.products.map(toStoreProduct),
+      }
+    : demo;
+
   const { industry, terms, workflow } = useIndustryExperience(store?.industrySlug);
   /** Service businesses lead with a request → estimate flow, not a cart. */
   const requestLed = !!industry && !industry.is_food && /request|inquiry/i.test(workflow[0] ?? "");
 
+  useEffect(() => {
+    if (params.get("checkout") === "cancelled") {
+      toast.info("Checkout cancelled", { description: "Your cart is still here whenever you're ready." });
+    }
+  }, [params]);
 
+  if (isLoading && !demo) {
+    return (
+      <Layout>
+        <SEOHead title="Loading store — Loumilab Orders" description="Loading storefront." path="/orders" noindex />
+        <section className="section-padding pt-32 text-center">
+          <div className="section-container">
+            <p className="text-muted-foreground">Loading store…</p>
+          </div>
+        </section>
+      </Layout>
+    );
+  }
 
   if (!store) {
     return (
@@ -45,6 +86,14 @@ const Storefront = () => {
   }
 
   const checkout = () => {
+    if (isLive) {
+      if (!live.acceptingOrders) {
+        toast.error("Not accepting orders", { description: "This store has paused new orders." });
+        return;
+      }
+      setCheckoutOpen(true);
+      return;
+    }
     toast.success("Order placed (demo)", {
       description: `${cart.count} item${cart.count > 1 ? "s" : ""} · this storefront is a preview, no payment was taken.`,
     });
@@ -76,22 +125,28 @@ const Storefront = () => {
             {terms.catalog}
           </h2>
 
-          <div className="mt-5 grid gap-5 sm:grid-cols-2">
-            {store.products.map((p) => (
-              <StoreProductCard
-                key={p.id}
-                product={p}
-                quantity={cart.lines.find((l) => l.product.id === p.id)?.quantity ?? 0}
-                onAdd={cart.add}
-                priceIsStarting={requestLed}
-                actionLabel={requestLed ? "Request" : undefined}
-              />
-            ))}
-          </div>
+          {store.products.length === 0 ? (
+            <p className="mt-5 rounded-3xl border border-border bg-card p-6 text-sm text-muted-foreground">
+              This store hasn't published anything yet.
+            </p>
+          ) : (
+            <div className="mt-5 grid gap-5 sm:grid-cols-2">
+              {store.products.map((p) => (
+                <StoreProductCard
+                  key={p.id}
+                  product={p}
+                  quantity={cart.lines.find((l) => l.product.id === p.id)?.quantity ?? 0}
+                  onAdd={cart.add}
+                  priceIsStarting={requestLed}
+                  actionLabel={requestLed ? "Request" : undefined}
+                />
+              ))}
+            </div>
+          )}
 
           {requestLed && (
             <div className="mt-12">
-              <ServiceRequestForm terms={terms} />
+              <ServiceRequestForm terms={terms} merchantId={isLive ? live.store.merchant_id : undefined} />
             </div>
           )}
 
@@ -105,6 +160,15 @@ const Storefront = () => {
         <CartBar count={cart.count} subtotalCents={cart.subtotalCents} ctaLabel="Place order" onCheckout={checkout} />
       )}
 
+      {isLive && (
+        <CheckoutSheet
+          open={checkoutOpen}
+          onOpenChange={setCheckoutOpen}
+          store={live.store}
+          lines={cart.lines}
+          subtotalCents={cart.subtotalCents}
+        />
+      )}
     </Layout>
   );
 };
