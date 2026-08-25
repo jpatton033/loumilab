@@ -631,6 +631,251 @@ export type Database = {
         }
         Relationships: []
       }
+      ops_alerts: {
+        Row: {
+          affected_system: string | null
+          category: string
+          created_at: string
+          detail: string | null
+          detected_at: string
+          id: string
+          link_path: string | null
+          notified_at: string | null
+          payload: Json
+          recommended_action: string | null
+          resolved_at: string | null
+          severity: Database["public"]["Enums"]["ops_alert_severity"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          affected_system?: string | null
+          category: string
+          created_at?: string
+          detail?: string | null
+          detected_at?: string
+          id?: string
+          link_path?: string | null
+          notified_at?: string | null
+          payload?: Json
+          recommended_action?: string | null
+          resolved_at?: string | null
+          severity?: Database["public"]["Enums"]["ops_alert_severity"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          affected_system?: string | null
+          category?: string
+          created_at?: string
+          detail?: string | null
+          detected_at?: string
+          id?: string
+          link_path?: string | null
+          notified_at?: string | null
+          payload?: Json
+          recommended_action?: string | null
+          resolved_at?: string | null
+          severity?: Database["public"]["Enums"]["ops_alert_severity"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ops_brief_deliveries: {
+        Row: {
+          attempts: number
+          created_at: string
+          error: string | null
+          id: string
+          queued_at: string | null
+          recipient: string
+          report_id: string
+          sent_at: string | null
+          status: Database["public"]["Enums"]["ops_delivery_status"]
+          updated_at: string
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          error?: string | null
+          id?: string
+          queued_at?: string | null
+          recipient: string
+          report_id: string
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["ops_delivery_status"]
+          updated_at?: string
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          error?: string | null
+          id?: string
+          queued_at?: string | null
+          recipient?: string
+          report_id?: string
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["ops_delivery_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ops_brief_deliveries_report_id_fkey"
+            columns: ["report_id"]
+            isOneToOne: false
+            referencedRelation: "ops_brief_reports"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ops_brief_reports: {
+        Row: {
+          action_count: number
+          created_at: string
+          critical_count: number
+          generated_by: string
+          html: string | null
+          id: string
+          important_count: number
+          is_test: boolean
+          recipients: string[]
+          report_date: string
+          snapshot: Json
+          subject: string
+          summary: string | null
+          window_end: string
+          window_label: string
+          window_start: string
+        }
+        Insert: {
+          action_count?: number
+          created_at?: string
+          critical_count?: number
+          generated_by?: string
+          html?: string | null
+          id?: string
+          important_count?: number
+          is_test?: boolean
+          recipients?: string[]
+          report_date: string
+          snapshot?: Json
+          subject: string
+          summary?: string | null
+          window_end: string
+          window_label?: string
+          window_start: string
+        }
+        Update: {
+          action_count?: number
+          created_at?: string
+          critical_count?: number
+          generated_by?: string
+          html?: string | null
+          id?: string
+          important_count?: number
+          is_test?: boolean
+          recipients?: string[]
+          report_date?: string
+          snapshot?: Json
+          subject?: string
+          summary?: string | null
+          window_end?: string
+          window_label?: string
+          window_start?: string
+        }
+        Relationships: []
+      }
+      ops_brief_settings: {
+        Row: {
+          created_at: string
+          custom_window_hours: number
+          delivery_hour: number
+          delivery_minute: number
+          enabled: boolean
+          id: string
+          immediate_alerts: Json
+          modules: Json
+          recipients: string[]
+          reporting_window: string
+          sections: Json
+          singleton: boolean
+          thresholds: Json
+          timezone: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          custom_window_hours?: number
+          delivery_hour?: number
+          delivery_minute?: number
+          enabled?: boolean
+          id?: string
+          immediate_alerts?: Json
+          modules?: Json
+          recipients?: string[]
+          reporting_window?: string
+          sections?: Json
+          singleton?: boolean
+          thresholds?: Json
+          timezone?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          custom_window_hours?: number
+          delivery_hour?: number
+          delivery_minute?: number
+          enabled?: boolean
+          id?: string
+          immediate_alerts?: Json
+          modules?: Json
+          recipients?: string[]
+          reporting_window?: string
+          sections?: Json
+          singleton?: boolean
+          thresholds?: Json
+          timezone?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ops_job_runs: {
+        Row: {
+          created_at: string
+          error: string | null
+          finished_at: string | null
+          id: string
+          job: string
+          lease_until: string | null
+          metadata: Json
+          started_at: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          job: string
+          lease_until?: string | null
+          metadata?: Json
+          started_at?: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          job?: string
+          lease_until?: string | null
+          metadata?: Json
+          started_at?: string
+          status?: string
+        }
+        Relationships: []
+      }
       orders_plan_fee_changes: {
         Row: {
           created_at: string
@@ -911,6 +1156,10 @@ export type Database = {
         Args: { _email: string; _source: string }
         Returns: boolean
       }
+      ops_acquire_job_lease: {
+        Args: { _job: string; _lease_seconds?: number }
+        Returns: string
+      }
     }
     Enums: {
       admin_role:
@@ -930,6 +1179,13 @@ export type Database = {
         | "completed"
         | "declined"
       kc_article_status: "draft" | "published" | "archived"
+      ops_alert_severity: "critical" | "important" | "review" | "normal"
+      ops_delivery_status:
+        | "generated"
+        | "queued"
+        | "sent"
+        | "failed"
+        | "retrying"
       payout_status:
         | "not_started"
         | "onboarding"
@@ -1084,6 +1340,14 @@ export const Constants = {
         "declined",
       ],
       kc_article_status: ["draft", "published", "archived"],
+      ops_alert_severity: ["critical", "important", "review", "normal"],
+      ops_delivery_status: [
+        "generated",
+        "queued",
+        "sent",
+        "failed",
+        "retrying",
+      ],
       payout_status: [
         "not_started",
         "onboarding",
