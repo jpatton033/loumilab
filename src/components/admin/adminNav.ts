@@ -1,10 +1,12 @@
 import {
   BookOpen,
+  FileClock,
   Inbox,
   LayoutDashboard,
   Mail,
   ScrollText,
   ShoppingBag,
+  SlidersHorizontal,
   Sparkles,
   Tags,
   Wrench,
@@ -60,6 +62,13 @@ export const adminNav: AdminNavGroup[] = [
       { title: "Overview", url: "/admin/orders", icon: ShoppingBag, tag: "Preview" },
       { title: "Plans & Fees", url: "/admin/plans", icon: Tags },
       { title: "Custom Projects", url: "/admin/custom-projects", icon: Wrench },
+    ],
+  },
+  {
+    label: "Operations",
+    items: [
+      { title: "Daily Brief", url: "/admin/reports/daily-brief", icon: FileClock },
+      { title: "Brief Settings", url: "/admin/settings/daily-brief", icon: SlidersHorizontal },
     ],
   },
   {
