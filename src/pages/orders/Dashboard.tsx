@@ -257,15 +257,12 @@ const Dashboard = () => {
 
             {/* Catalog */}
             {(activeModule === "menu" || activeModule === "products" || activeModule === "services") && (
-              <div className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-soft)] sm:p-8">
-                <p className="font-display font-semibold">{terms.catalog}</p>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Add, price and organise every {terms.catalogItem.toLowerCase()} customers can request.
-                </p>
-                <Button asChild className="mt-5 rounded-full">
-                  <Link to="/orders/get-started">Manage {terms.catalog.toLowerCase()}</Link>
-                </Button>
-              </div>
+              <StorePanel
+                merchantId={merchant?.id}
+                businessName={merchant?.business_name}
+                catalogLabel={terms.catalog}
+                itemLabel={terms.catalogItem}
+              />
             )}
 
             {/* Estimates */}
