@@ -8,6 +8,7 @@ import {
   ShoppingBag,
   SlidersHorizontal,
   Sparkles,
+  Store,
   Tags,
   Wrench,
   type LucideIcon,
@@ -61,6 +62,7 @@ export const adminNav: AdminNavGroup[] = [
     items: [
       { title: "Overview", url: "/admin/orders", icon: ShoppingBag, tag: "Preview" },
       { title: "Plans & Fees", url: "/admin/plans", icon: Tags },
+      { title: "Industries", url: "/admin/industries", icon: Store },
       { title: "Custom Projects", url: "/admin/custom-projects", icon: Wrench },
     ],
   },
