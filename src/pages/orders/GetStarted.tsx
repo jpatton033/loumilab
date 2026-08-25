@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import Layout from "@/components/Layout";
@@ -116,6 +116,22 @@ const GetStarted = () => {
 
   const selectedPlan = plans?.find((p) => p.slug === planSlug) ?? null;
 
+  const stepCardRef = useRef<HTMLDivElement>(null);
+  const didMountRef = useRef(false);
+
+  useEffect(() => {
+    if (!didMountRef.current) {
+      didMountRef.current = true;
+      return;
+    }
+    const el = stepCardRef.current;
+    if (!el) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const headerOffset = window.innerWidth >= 1024 ? 104 : 88;
+    const top = el.getBoundingClientRect().top + window.scrollY - headerOffset;
+    window.scrollTo({ top: Math.max(0, top), behavior: reduce ? "auto" : "smooth" });
+  }, [step]);
+
   const publish = () => {
     setSubmitted(true);
     toast.success("Store draft saved", {
@@ -173,7 +189,10 @@ const GetStarted = () => {
 
           <div className="mt-10 grid gap-10 lg:grid-cols-[1.15fr_0.85fr]">
             {/* Form */}
-            <div className="rounded-3xl border border-border bg-card p-7 shadow-[var(--shadow-soft)] lg:p-9">
+            <div
+              ref={stepCardRef}
+              className="rounded-3xl border border-border bg-card p-7 shadow-[var(--shadow-soft)] lg:p-9"
+            >
               <h2 className="font-display text-xl font-semibold">
                 Step {step + 1} — {stepTitles[step]}
               </h2>
