@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import Layout from "@/components/Layout";
@@ -115,6 +115,22 @@ const GetStarted = () => {
   };
 
   const selectedPlan = plans?.find((p) => p.slug === planSlug) ?? null;
+
+  const stepCardRef = useRef<HTMLDivElement>(null);
+  const didMountRef = useRef(false);
+
+  useEffect(() => {
+    if (!didMountRef.current) {
+      didMountRef.current = true;
+      return;
+    }
+    const el = stepCardRef.current;
+    if (!el) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const headerOffset = window.innerWidth >= 1024 ? 104 : 88;
+    const top = el.getBoundingClientRect().top + window.scrollY - headerOffset;
+    window.scrollTo({ top: Math.max(0, top), behavior: reduce ? "auto" : "smooth" });
+  }, [step]);
 
   const publish = () => {
     setSubmitted(true);
