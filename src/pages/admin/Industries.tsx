@@ -87,9 +87,9 @@ const AdminIndustries = () => {
     }
     await logAudit({
       action: industry.is_active ? "industry.deactivated" : "industry.activated",
-      target_type: "orders_industry",
-      target_id: industry.id,
-      new_value: { is_active: !industry.is_active },
+      targetType: "orders_industry",
+      targetId: industry.id,
+      newValue: { is_active: !industry.is_active },
     });
     refresh();
     toast.success(industry.is_active ? "Industry hidden" : "Industry live");
@@ -129,10 +129,10 @@ const AdminIndustries = () => {
 
       await logAudit({
         action: "industry.updated",
-        target_type: "orders_industry",
-        target_id: editing.id,
-        old_value: { name: editing.name, modules: editing.modules, terminology: editing.terminology },
-        new_value: payload,
+        targetType: "orders_industry",
+        targetId: editing.id,
+        oldValue: { name: editing.name, modules: editing.modules, terminology: editing.terminology },
+        newValue: payload,
       });
 
       refresh();

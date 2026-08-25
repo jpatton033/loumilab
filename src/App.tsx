@@ -25,6 +25,7 @@ import AdminNewsletter from "./pages/admin/Newsletter";
 import AdminOrdersPanel from "./pages/admin/Orders";
 import AdminPlans from "./pages/admin/Plans";
 import AdminCustomProjects from "./pages/admin/CustomProjects";
+import AdminIndustries from "./pages/admin/Industries";
 import AdminAuditLog from "./pages/admin/AuditLog";
 import AdminDailyBrief from "./pages/admin/reports/DailyBrief";
 import AdminDailyBriefSettings from "./pages/admin/settings/DailyBriefSettings";
@@ -84,6 +85,7 @@ const App = () => (
           <Route path="/admin/newsletter" element={<ProtectedRoute><AdminNewsletter /></ProtectedRoute>} />
           <Route path="/admin/orders" element={<ProtectedRoute><AdminOrdersPanel /></ProtectedRoute>} />
           <Route path="/admin/plans" element={<ProtectedRoute><AdminPlans /></ProtectedRoute>} />
+          <Route path="/admin/industries" element={<ProtectedRoute><AdminIndustries /></ProtectedRoute>} />
           <Route path="/admin/custom-projects" element={<ProtectedRoute><AdminCustomProjects /></ProtectedRoute>} />
           <Route path="/admin/audit-log" element={<ProtectedRoute><AdminAuditLog /></ProtectedRoute>} />
           <Route path="/admin/reports/daily-brief" element={<ProtectedRoute><AdminDailyBrief /></ProtectedRoute>} />
