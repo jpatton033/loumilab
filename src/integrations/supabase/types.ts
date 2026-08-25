@@ -1053,6 +1053,65 @@ export type Database = {
           },
         ]
       }
+      merchant_subscriptions: {
+        Row: {
+          cancel_at_period_end: boolean
+          created_at: string
+          current_period_end: string | null
+          id: string
+          interval: string
+          livemode: boolean
+          merchant_id: string
+          plan_slug: string
+          platform_fee_bps: number | null
+          status: string
+          stripe_checkout_session_id: string | null
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          cancel_at_period_end?: boolean
+          created_at?: string
+          current_period_end?: string | null
+          id?: string
+          interval?: string
+          livemode?: boolean
+          merchant_id: string
+          plan_slug: string
+          platform_fee_bps?: number | null
+          status?: string
+          stripe_checkout_session_id?: string | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          cancel_at_period_end?: boolean
+          created_at?: string
+          current_period_end?: string | null
+          id?: string
+          interval?: string
+          livemode?: boolean
+          merchant_id?: string
+          plan_slug?: string
+          platform_fee_bps?: number | null
+          status?: string
+          stripe_checkout_session_id?: string | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "merchant_subscriptions_merchant_id_fkey"
+            columns: ["merchant_id"]
+            isOneToOne: false
+            referencedRelation: "merchants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       merchants: {
         Row: {
           accepting_orders: boolean
@@ -1829,7 +1888,9 @@ export type Database = {
         Returns: boolean
       }
       cleanup_old_rate_limits: { Args: never; Returns: undefined }
+      get_invoice_by_token: { Args: { _token: string }; Returns: Json }
       get_order_by_token: { Args: { _token: string }; Returns: Json }
+      get_quote_by_token: { Args: { _token: string }; Returns: Json }
       has_admin_role: {
         Args: {
           _role: Database["public"]["Enums"]["admin_role"]
@@ -1864,6 +1925,10 @@ export type Database = {
       ops_acquire_job_lease: {
         Args: { _job: string; _lease_seconds?: number }
         Returns: string
+      }
+      respond_to_quote: {
+        Args: { _approve: boolean; _token: string }
+        Returns: Json
       }
     }
     Enums: {
