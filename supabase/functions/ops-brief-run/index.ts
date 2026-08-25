@@ -74,8 +74,11 @@ Deno.serve(async (req) => {
     actor = requestedMode === "preview" ? "preview" : "manual";
   }
 
-  // Only cron may claim the scheduled slot; a signed-in admin gets a test send.
-  const mode: Mode = isCron ? "scheduled" : requestedMode === "preview" ? "preview" : "test";
+  // Only the scheduler may claim the scheduled slot; a signed-in admin gets a
+  // test send. Either caller may request a dry-run preview, which never sends.
+  const mode: Mode =
+    requestedMode === "preview" ? "preview" : isCron ? "scheduled" : "test";
+
 
   // ---- Settings
   const { data: settingsRow, error: settingsError } = await admin
