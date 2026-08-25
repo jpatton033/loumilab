@@ -512,6 +512,348 @@ export type Database = {
         }
         Relationships: []
       }
+      merchant_customers: {
+        Row: {
+          address: string | null
+          created_at: string
+          email: string | null
+          id: string
+          merchant_id: string
+          name: string
+          notes: string | null
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          merchant_id: string
+          name: string
+          notes?: string | null
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          merchant_id?: string
+          name?: string
+          notes?: string | null
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "merchant_customers_merchant_id_fkey"
+            columns: ["merchant_id"]
+            isOneToOne: false
+            referencedRelation: "merchants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      merchant_invoices: {
+        Row: {
+          amount_cents: number
+          created_at: string
+          due_at: string | null
+          id: string
+          job_id: string | null
+          kind: string
+          merchant_id: string
+          paid_at: string | null
+          platform_fee_cents: number | null
+          public_token: string
+          quote_id: string | null
+          status: Database["public"]["Enums"]["invoice_status"]
+          stripe_checkout_session_id: string | null
+          stripe_payment_intent_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount_cents?: number
+          created_at?: string
+          due_at?: string | null
+          id?: string
+          job_id?: string | null
+          kind?: string
+          merchant_id: string
+          paid_at?: string | null
+          platform_fee_cents?: number | null
+          public_token?: string
+          quote_id?: string | null
+          status?: Database["public"]["Enums"]["invoice_status"]
+          stripe_checkout_session_id?: string | null
+          stripe_payment_intent_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount_cents?: number
+          created_at?: string
+          due_at?: string | null
+          id?: string
+          job_id?: string | null
+          kind?: string
+          merchant_id?: string
+          paid_at?: string | null
+          platform_fee_cents?: number | null
+          public_token?: string
+          quote_id?: string | null
+          status?: Database["public"]["Enums"]["invoice_status"]
+          stripe_checkout_session_id?: string | null
+          stripe_payment_intent_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "merchant_invoices_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "merchant_jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "merchant_invoices_merchant_id_fkey"
+            columns: ["merchant_id"]
+            isOneToOne: false
+            referencedRelation: "merchants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "merchant_invoices_quote_id_fkey"
+            columns: ["quote_id"]
+            isOneToOne: false
+            referencedRelation: "merchant_quotes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      merchant_jobs: {
+        Row: {
+          attachment_paths: string[]
+          created_at: string
+          customer_email: string | null
+          customer_id: string | null
+          customer_name: string
+          customer_notes: string | null
+          customer_phone: string | null
+          id: string
+          internal_notes: string | null
+          merchant_id: string
+          problem_description: string | null
+          reference: string | null
+          scheduled_for: string | null
+          scheduled_window: string | null
+          service_address: string | null
+          service_id: string | null
+          status: Database["public"]["Enums"]["job_status"]
+          title: string
+          total_cents: number | null
+          updated_at: string
+        }
+        Insert: {
+          attachment_paths?: string[]
+          created_at?: string
+          customer_email?: string | null
+          customer_id?: string | null
+          customer_name: string
+          customer_notes?: string | null
+          customer_phone?: string | null
+          id?: string
+          internal_notes?: string | null
+          merchant_id: string
+          problem_description?: string | null
+          reference?: string | null
+          scheduled_for?: string | null
+          scheduled_window?: string | null
+          service_address?: string | null
+          service_id?: string | null
+          status?: Database["public"]["Enums"]["job_status"]
+          title: string
+          total_cents?: number | null
+          updated_at?: string
+        }
+        Update: {
+          attachment_paths?: string[]
+          created_at?: string
+          customer_email?: string | null
+          customer_id?: string | null
+          customer_name?: string
+          customer_notes?: string | null
+          customer_phone?: string | null
+          id?: string
+          internal_notes?: string | null
+          merchant_id?: string
+          problem_description?: string | null
+          reference?: string | null
+          scheduled_for?: string | null
+          scheduled_window?: string | null
+          service_address?: string | null
+          service_id?: string | null
+          status?: Database["public"]["Enums"]["job_status"]
+          title?: string
+          total_cents?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "merchant_jobs_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "merchant_customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "merchant_jobs_merchant_id_fkey"
+            columns: ["merchant_id"]
+            isOneToOne: false
+            referencedRelation: "merchants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "merchant_jobs_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "merchant_services"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      merchant_quotes: {
+        Row: {
+          approved_at: string | null
+          created_at: string
+          declined_at: string | null
+          deposit_cents: number
+          expires_at: string | null
+          id: string
+          job_id: string | null
+          line_items: Json
+          merchant_id: string
+          message: string | null
+          public_token: string
+          sent_at: string | null
+          status: Database["public"]["Enums"]["quote_status"]
+          subtotal_cents: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          approved_at?: string | null
+          created_at?: string
+          declined_at?: string | null
+          deposit_cents?: number
+          expires_at?: string | null
+          id?: string
+          job_id?: string | null
+          line_items?: Json
+          merchant_id: string
+          message?: string | null
+          public_token?: string
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["quote_status"]
+          subtotal_cents?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          approved_at?: string | null
+          created_at?: string
+          declined_at?: string | null
+          deposit_cents?: number
+          expires_at?: string | null
+          id?: string
+          job_id?: string | null
+          line_items?: Json
+          merchant_id?: string
+          message?: string | null
+          public_token?: string
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["quote_status"]
+          subtotal_cents?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "merchant_quotes_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "merchant_jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "merchant_quotes_merchant_id_fkey"
+            columns: ["merchant_id"]
+            isOneToOne: false
+            referencedRelation: "merchants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      merchant_services: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          display_order: number
+          id: string
+          image_url: string | null
+          is_active: boolean
+          kind: string
+          merchant_id: string
+          name: string
+          price_cents: number | null
+          price_is_starting: boolean
+          unit: string | null
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          kind?: string
+          merchant_id: string
+          name: string
+          price_cents?: number | null
+          price_is_starting?: boolean
+          unit?: string | null
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          kind?: string
+          merchant_id?: string
+          name?: string
+          price_cents?: number | null
+          price_is_starting?: boolean
+          unit?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "merchant_services_merchant_id_fkey"
+            columns: ["merchant_id"]
+            isOneToOne: false
+            referencedRelation: "merchants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       merchant_stripe_accounts: {
         Row: {
           charges_enabled: boolean
@@ -577,9 +919,11 @@ export type Database = {
           country: string
           created_at: string
           id: string
+          industry_slug: string
           owner_id: string
           phone: string | null
           plan_slug: string
+          purchase_models: string[]
           updated_at: string
         }
         Insert: {
@@ -590,9 +934,11 @@ export type Database = {
           country?: string
           created_at?: string
           id?: string
+          industry_slug?: string
           owner_id: string
           phone?: string | null
           plan_slug?: string
+          purchase_models?: string[]
           updated_at?: string
         }
         Update: {
@@ -603,9 +949,11 @@ export type Database = {
           country?: string
           created_at?: string
           id?: string
+          industry_slug?: string
           owner_id?: string
           phone?: string | null
           plan_slug?: string
+          purchase_models?: string[]
           updated_at?: string
         }
         Relationships: []
@@ -873,6 +1221,60 @@ export type Database = {
           metadata?: Json
           started_at?: string
           status?: string
+        }
+        Relationships: []
+      }
+      orders_industries: {
+        Row: {
+          created_at: string
+          default_purchase_models: string[]
+          description: string | null
+          display_order: number
+          group_label: string
+          icon: string
+          id: string
+          is_active: boolean
+          is_food: boolean
+          modules: Json
+          name: string
+          slug: string
+          terminology: Json
+          updated_at: string
+          workflow: Json
+        }
+        Insert: {
+          created_at?: string
+          default_purchase_models?: string[]
+          description?: string | null
+          display_order?: number
+          group_label?: string
+          icon?: string
+          id?: string
+          is_active?: boolean
+          is_food?: boolean
+          modules?: Json
+          name: string
+          slug: string
+          terminology?: Json
+          updated_at?: string
+          workflow?: Json
+        }
+        Update: {
+          created_at?: string
+          default_purchase_models?: string[]
+          description?: string | null
+          display_order?: number
+          group_label?: string
+          icon?: string
+          id?: string
+          is_active?: boolean
+          is_food?: boolean
+          modules?: Json
+          name?: string
+          slug?: string
+          terminology?: Json
+          updated_at?: string
+          workflow?: Json
         }
         Relationships: []
       }
@@ -1178,6 +1580,17 @@ export type Database = {
         | "in_development"
         | "completed"
         | "declined"
+      invoice_status: "draft" | "sent" | "paid" | "void"
+      job_status:
+        | "request"
+        | "estimate"
+        | "approved"
+        | "deposit"
+        | "scheduled"
+        | "in_progress"
+        | "invoiced"
+        | "completed"
+        | "cancelled"
       kc_article_status: "draft" | "published" | "archived"
       ops_alert_severity: "critical" | "important" | "review" | "normal"
       ops_delivery_status:
@@ -1193,6 +1606,7 @@ export type Database = {
         | "restricted"
         | "payout_enabled"
         | "disabled"
+      quote_status: "draft" | "sent" | "approved" | "declined" | "expired"
       submission_status: "new" | "read" | "responded" | "archived"
     }
     CompositeTypes: {
@@ -1339,6 +1753,18 @@ export const Constants = {
         "completed",
         "declined",
       ],
+      invoice_status: ["draft", "sent", "paid", "void"],
+      job_status: [
+        "request",
+        "estimate",
+        "approved",
+        "deposit",
+        "scheduled",
+        "in_progress",
+        "invoiced",
+        "completed",
+        "cancelled",
+      ],
       kc_article_status: ["draft", "published", "archived"],
       ops_alert_severity: ["critical", "important", "review", "normal"],
       ops_delivery_status: [
@@ -1356,6 +1782,7 @@ export const Constants = {
         "payout_enabled",
         "disabled",
       ],
+      quote_status: ["draft", "sent", "approved", "declined", "expired"],
       submission_status: ["new", "read", "responded", "archived"],
     },
   },
