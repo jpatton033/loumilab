@@ -323,6 +323,10 @@ const Orders = () => {
           <Reveal className="max-w-2xl">
             <Eyebrow>Who it&apos;s for</Eyebrow>
             <h2 className="mt-5 text-4xl font-semibold leading-tight lg:text-5xl">Built for social sellers.</h2>
+            <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
+              Food is where Loumilab Orders started and where it shines. Service businesses — electricians, cleaners,
+              landscapers, beauty pros, photographers — get the same storefront tuned to quotes, visits and appointments.
+            </p>
           </Reveal>
 
           <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -347,8 +351,11 @@ const Orders = () => {
               </Reveal>
             ))}
           </div>
+
+          <IndustryStrip />
         </div>
       </section>
+
 
       {/* Features */}
       <section className="section-padding surface-subtle border-y border-border">
