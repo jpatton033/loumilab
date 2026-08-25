@@ -723,6 +723,72 @@ export type Database = {
           },
         ]
       }
+      merchant_products: {
+        Row: {
+          availability: string
+          category: string | null
+          created_at: string
+          description: string | null
+          display_order: number
+          id: string
+          image_url: string | null
+          is_active: boolean
+          merchant_id: string
+          name: string
+          price_cents: number
+          storefront_id: string
+          tax_code: string
+          updated_at: string
+        }
+        Insert: {
+          availability?: string
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          merchant_id: string
+          name: string
+          price_cents?: number
+          storefront_id: string
+          tax_code?: string
+          updated_at?: string
+        }
+        Update: {
+          availability?: string
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          merchant_id?: string
+          name?: string
+          price_cents?: number
+          storefront_id?: string
+          tax_code?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "merchant_products_merchant_id_fkey"
+            columns: ["merchant_id"]
+            isOneToOne: false
+            referencedRelation: "merchants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "merchant_products_storefront_id_fkey"
+            columns: ["storefront_id"]
+            isOneToOne: false
+            referencedRelation: "merchant_storefronts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       merchant_quotes: {
         Row: {
           approved_at: string | null
@@ -854,6 +920,83 @@ export type Database = {
           },
         ]
       }
+      merchant_storefronts: {
+        Row: {
+          created_at: string
+          currency: string
+          delivery_enabled: boolean
+          delivery_fee_cents: number
+          delivery_minimum_cents: number
+          delivery_radius_miles: number | null
+          description: string | null
+          hero_image_url: string | null
+          hours: string | null
+          id: string
+          is_published: boolean
+          location: string | null
+          logo_url: string | null
+          merchant_id: string
+          monogram: string | null
+          name: string
+          pickup_enabled: boolean
+          pickup_info: string | null
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          currency?: string
+          delivery_enabled?: boolean
+          delivery_fee_cents?: number
+          delivery_minimum_cents?: number
+          delivery_radius_miles?: number | null
+          description?: string | null
+          hero_image_url?: string | null
+          hours?: string | null
+          id?: string
+          is_published?: boolean
+          location?: string | null
+          logo_url?: string | null
+          merchant_id: string
+          monogram?: string | null
+          name: string
+          pickup_enabled?: boolean
+          pickup_info?: string | null
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          currency?: string
+          delivery_enabled?: boolean
+          delivery_fee_cents?: number
+          delivery_minimum_cents?: number
+          delivery_radius_miles?: number | null
+          description?: string | null
+          hero_image_url?: string | null
+          hours?: string | null
+          id?: string
+          is_published?: boolean
+          location?: string | null
+          logo_url?: string | null
+          merchant_id?: string
+          monogram?: string | null
+          name?: string
+          pickup_enabled?: boolean
+          pickup_info?: string | null
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "merchant_storefronts_merchant_id_fkey"
+            columns: ["merchant_id"]
+            isOneToOne: false
+            referencedRelation: "merchants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       merchant_stripe_accounts: {
         Row: {
           charges_enabled: boolean
@@ -903,6 +1046,65 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "merchant_stripe_accounts_merchant_id_fkey"
+            columns: ["merchant_id"]
+            isOneToOne: false
+            referencedRelation: "merchants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      merchant_subscriptions: {
+        Row: {
+          cancel_at_period_end: boolean
+          created_at: string
+          current_period_end: string | null
+          id: string
+          interval: string
+          livemode: boolean
+          merchant_id: string
+          plan_slug: string
+          platform_fee_bps: number | null
+          status: string
+          stripe_checkout_session_id: string | null
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          cancel_at_period_end?: boolean
+          created_at?: string
+          current_period_end?: string | null
+          id?: string
+          interval?: string
+          livemode?: boolean
+          merchant_id: string
+          plan_slug: string
+          platform_fee_bps?: number | null
+          status?: string
+          stripe_checkout_session_id?: string | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          cancel_at_period_end?: boolean
+          created_at?: string
+          current_period_end?: string | null
+          id?: string
+          interval?: string
+          livemode?: boolean
+          merchant_id?: string
+          plan_slug?: string
+          platform_fee_bps?: number | null
+          status?: string
+          stripe_checkout_session_id?: string | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "merchant_subscriptions_merchant_id_fkey"
             columns: ["merchant_id"]
             isOneToOne: false
             referencedRelation: "merchants"
@@ -1224,6 +1426,165 @@ export type Database = {
         }
         Relationships: []
       }
+      order_items: {
+        Row: {
+          created_at: string
+          id: string
+          line_total_cents: number
+          name: string
+          order_id: string
+          product_id: string | null
+          quantity: number
+          unit_price_cents: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          line_total_cents: number
+          name: string
+          order_id: string
+          product_id?: string | null
+          quantity: number
+          unit_price_cents: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          line_total_cents?: number
+          name?: string
+          order_id?: string
+          product_id?: string | null
+          quantity?: number
+          unit_price_cents?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "merchant_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          created_at: string
+          currency: string
+          customer_email: string
+          customer_name: string
+          customer_notes: string | null
+          customer_phone: string | null
+          customer_user_id: string | null
+          delivery_address: string | null
+          delivery_fee_cents: number
+          failure_reason: string | null
+          fulfilment: Database["public"]["Enums"]["fulfilment_type"]
+          id: string
+          livemode: boolean
+          merchant_id: string
+          paid_at: string | null
+          platform_fee_bps: number
+          platform_fee_cents: number
+          public_token: string
+          reference: string | null
+          status: Database["public"]["Enums"]["order_status"]
+          storefront_id: string
+          stripe_account_id: string | null
+          stripe_checkout_session_id: string | null
+          stripe_payment_intent_id: string | null
+          subtotal_cents: number
+          tax_cents: number
+          tip_cents: number
+          total_cents: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          currency?: string
+          customer_email: string
+          customer_name: string
+          customer_notes?: string | null
+          customer_phone?: string | null
+          customer_user_id?: string | null
+          delivery_address?: string | null
+          delivery_fee_cents?: number
+          failure_reason?: string | null
+          fulfilment?: Database["public"]["Enums"]["fulfilment_type"]
+          id?: string
+          livemode?: boolean
+          merchant_id: string
+          paid_at?: string | null
+          platform_fee_bps?: number
+          platform_fee_cents?: number
+          public_token?: string
+          reference?: string | null
+          status?: Database["public"]["Enums"]["order_status"]
+          storefront_id: string
+          stripe_account_id?: string | null
+          stripe_checkout_session_id?: string | null
+          stripe_payment_intent_id?: string | null
+          subtotal_cents?: number
+          tax_cents?: number
+          tip_cents?: number
+          total_cents?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          currency?: string
+          customer_email?: string
+          customer_name?: string
+          customer_notes?: string | null
+          customer_phone?: string | null
+          customer_user_id?: string | null
+          delivery_address?: string | null
+          delivery_fee_cents?: number
+          failure_reason?: string | null
+          fulfilment?: Database["public"]["Enums"]["fulfilment_type"]
+          id?: string
+          livemode?: boolean
+          merchant_id?: string
+          paid_at?: string | null
+          platform_fee_bps?: number
+          platform_fee_cents?: number
+          public_token?: string
+          reference?: string | null
+          status?: Database["public"]["Enums"]["order_status"]
+          storefront_id?: string
+          stripe_account_id?: string | null
+          stripe_checkout_session_id?: string | null
+          stripe_payment_intent_id?: string | null
+          subtotal_cents?: number
+          tax_cents?: number
+          tip_cents?: number
+          total_cents?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_merchant_id_fkey"
+            columns: ["merchant_id"]
+            isOneToOne: false
+            referencedRelation: "merchants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_storefront_id_fkey"
+            columns: ["storefront_id"]
+            isOneToOne: false
+            referencedRelation: "merchant_storefronts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       orders_industries: {
         Row: {
           created_at: string
@@ -1527,6 +1888,9 @@ export type Database = {
         Returns: boolean
       }
       cleanup_old_rate_limits: { Args: never; Returns: undefined }
+      get_invoice_by_token: { Args: { _token: string }; Returns: Json }
+      get_order_by_token: { Args: { _token: string }; Returns: Json }
+      get_quote_by_token: { Args: { _token: string }; Returns: Json }
       has_admin_role: {
         Args: {
           _role: Database["public"]["Enums"]["admin_role"]
@@ -1562,6 +1926,10 @@ export type Database = {
         Args: { _job: string; _lease_seconds?: number }
         Returns: string
       }
+      respond_to_quote: {
+        Args: { _approve: boolean; _token: string }
+        Returns: Json
+      }
     }
     Enums: {
       admin_role:
@@ -1580,6 +1948,7 @@ export type Database = {
         | "in_development"
         | "completed"
         | "declined"
+      fulfilment_type: "pickup" | "delivery"
       invoice_status: "draft" | "sent" | "paid" | "void"
       job_status:
         | "request"
@@ -1599,6 +1968,16 @@ export type Database = {
         | "sent"
         | "failed"
         | "retrying"
+      order_status:
+        | "pending"
+        | "paid"
+        | "failed"
+        | "cancelled"
+        | "preparing"
+        | "ready"
+        | "out_for_delivery"
+        | "completed"
+        | "refunded"
       payout_status:
         | "not_started"
         | "onboarding"
@@ -1753,6 +2132,7 @@ export const Constants = {
         "completed",
         "declined",
       ],
+      fulfilment_type: ["pickup", "delivery"],
       invoice_status: ["draft", "sent", "paid", "void"],
       job_status: [
         "request",
@@ -1773,6 +2153,17 @@ export const Constants = {
         "sent",
         "failed",
         "retrying",
+      ],
+      order_status: [
+        "pending",
+        "paid",
+        "failed",
+        "cancelled",
+        "preparing",
+        "ready",
+        "out_for_delivery",
+        "completed",
+        "refunded",
       ],
       payout_status: [
         "not_started",

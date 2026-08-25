@@ -1,5 +1,7 @@
 import { admin } from "../_shared/auth.ts";
 import { resolvePayoutStatus, stripe, stripeLivemode, stripeMode } from "../_shared/stripe.ts";
+import { handleCheckoutCompleted, handleSubscriptionChange } from "./handlers.ts";
+
 
 const WEBHOOK_SECRET = Deno.env.get("STRIPE_WEBHOOK_SECRET") ?? "";
 
@@ -69,7 +71,21 @@ Deno.serve(async (req) => {
           })
           .eq("stripe_account_id", accountId)
           .eq("livemode", stripeLivemode);
-      }
+    }
+
+    if (event.type === "checkout.session.completed") {
+      await handleCheckoutCompleted(event.data.object as Record<string, unknown>);
+    }
+
+    if (
+      event.type === "customer.subscription.created" ||
+      event.type === "customer.subscription.updated" ||
+      event.type === "customer.subscription.deleted"
+    ) {
+      await handleSubscriptionChange(event.data.object as Record<string, unknown>, event.type);
+    }
+
+
     }
 
     await admin
