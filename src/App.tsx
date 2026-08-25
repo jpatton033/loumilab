@@ -26,6 +26,8 @@ import AdminOrdersPanel from "./pages/admin/Orders";
 import AdminPlans from "./pages/admin/Plans";
 import AdminCustomProjects from "./pages/admin/CustomProjects";
 import AdminAuditLog from "./pages/admin/AuditLog";
+import AdminDailyBrief from "./pages/admin/reports/DailyBrief";
+import AdminDailyBriefSettings from "./pages/admin/settings/DailyBriefSettings";
 import OrdersCustomProject from "./pages/orders/CustomProject";
 
 
@@ -84,6 +86,8 @@ const App = () => (
           <Route path="/admin/plans" element={<ProtectedRoute><AdminPlans /></ProtectedRoute>} />
           <Route path="/admin/custom-projects" element={<ProtectedRoute><AdminCustomProjects /></ProtectedRoute>} />
           <Route path="/admin/audit-log" element={<ProtectedRoute><AdminAuditLog /></ProtectedRoute>} />
+          <Route path="/admin/reports/daily-brief" element={<ProtectedRoute><AdminDailyBrief /></ProtectedRoute>} />
+          <Route path="/admin/settings/daily-brief" element={<ProtectedRoute><AdminDailyBriefSettings /></ProtectedRoute>} />
 
           <Route path="/admin/hero" element={<ProtectedRoute><AdminHeroShowcase /></ProtectedRoute>} />
           <Route path="/admin/knowledge" element={<ProtectedRoute><AdminKnowledgeCenter /></ProtectedRoute>} />
