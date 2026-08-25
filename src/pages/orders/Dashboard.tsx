@@ -323,12 +323,7 @@ const Dashboard = () => {
             )}
 
             {activeModule === "payments" && (
-              <div className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-soft)] sm:p-8">
-                <p className="font-display font-semibold">Payments</p>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Payouts, transaction history and fee breakdowns. Payments securely powered by Stripe.
-                </p>
-              </div>
+              <PaymentsPanel merchantId={merchant?.id} planSlug={merchant?.plan_slug} />
             )}
 
             {activeModule === "analytics" && (
