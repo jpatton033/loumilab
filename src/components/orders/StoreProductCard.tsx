@@ -8,10 +8,22 @@ interface Props {
   quantity?: number;
   onAdd: (product: StoreProduct) => void;
   className?: string;
+  /** Service catalogs quote per job — show the price as a starting point. */
+  priceIsStarting?: boolean;
+  /** Overrides the default "Add" action label. */
+  actionLabel?: string;
 }
 
-const StoreProductCard = ({ product, quantity = 0, onAdd, className }: Props) => {
+const StoreProductCard = ({
+  product,
+  quantity = 0,
+  onAdd,
+  className,
+  priceIsStarting = false,
+  actionLabel,
+}: Props) => {
   const unavailable = product.availability !== "available";
+
 
   return (
     <article
