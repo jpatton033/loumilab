@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link } from "react-router-dom";
-import { ArrowLeft, ArrowRight, Check } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { ArrowLeft, ArrowRight, Check, Loader2 } from "lucide-react";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import Eyebrow from "@/components/brand/Eyebrow";
@@ -12,6 +12,8 @@ import PhoneFrame from "@/components/orders/PhoneFrame";
 import StorefrontHeader from "@/components/orders/StorefrontHeader";
 import { formatMoney } from "@/data/orders/storefronts";
 import { usePublicPlans, planPriceLabel, planPeriodLabel, formatFeeBps } from "@/lib/orders/plans";
+import { useCompleteOnboarding } from "@/lib/orders/store-admin";
+import { supabase } from "@/integrations/supabase/client";
 import {
   useIndustries,
   groupIndustries,
@@ -21,6 +23,9 @@ import {
   PURCHASE_MODELS,
 } from "@/lib/orders/industries";
 import { toast } from "sonner";
+
+const DRAFT_KEY = "loumilab-orders-onboarding-draft";
+
 
 interface DraftItem {
   name: string;
