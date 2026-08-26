@@ -523,10 +523,32 @@ const GetStarted = () => {
                       <p className="mt-1 text-muted-foreground">{workflow.join(" → ")}</p>
                     </div>
 
-                    {submitted && (
-                      <p className="rounded-2xl border border-accent/20 bg-accent/10 p-5 text-accent">
-                        Draft saved. Orders is in development — Loumilab will reach out to activate your storefront.
-                      </p>
+                    {publishedSlug && (
+                      <div className="rounded-2xl border border-accent/20 bg-accent/10 p-5">
+                        <p className="font-display font-semibold text-accent">
+                          Your store is created — one step left.
+                        </p>
+                        <p className="mt-2 text-muted-foreground">
+                          Finish payments setup and your storefront goes live automatically, ready to take
+                          {" "}
+                          {terms.transactions.toLowerCase()} and get paid.
+                        </p>
+                        <div className="mt-4 rounded-xl border border-border bg-card p-4">
+                          <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Your store link</p>
+                          <p className="mt-1 font-display font-semibold">loumilab.com/orders/store/{publishedSlug}</p>
+                          <span className="mt-2 inline-block rounded-full border border-border px-3 py-1 text-xs font-semibold text-muted-foreground">
+                            Draft — not visible yet
+                          </span>
+                        </div>
+                        <div className="mt-4 flex flex-wrap gap-3">
+                          <Button asChild className="rounded-full">
+                            <Link to="/orders/dashboard">Finish payments setup</Link>
+                          </Button>
+                          <Button asChild variant="outline" className="rounded-full">
+                            <Link to="/orders/dashboard">Open dashboard</Link>
+                          </Button>
+                        </div>
+                      </div>
                     )}
                   </div>
                 )}
@@ -552,11 +574,31 @@ const GetStarted = () => {
                   >
                     Continue <ArrowRight size={16} />
                   </Button>
+                ) : publishedSlug ? (
+                  <Button asChild className="rounded-full">
+                    <Link to="/orders/dashboard">
+                      Go to dashboard <ArrowRight size={16} />
+                    </Link>
+                  </Button>
                 ) : (
-                  <Button type="button" className="rounded-full" onClick={publish}>
-                    Publish store <ArrowRight size={16} />
+                  <Button
+                    type="button"
+                    className="rounded-full"
+                    onClick={publish}
+                    disabled={completeOnboarding.isPending || name.trim().length < 2}
+                  >
+                    {completeOnboarding.isPending ? (
+                      <>
+                        <Loader2 size={16} className="animate-spin" /> Creating your store…
+                      </>
+                    ) : (
+                      <>
+                        Publish store <ArrowRight size={16} />
+                      </>
+                    )}
                   </Button>
                 )}
+
               </div>
             </div>
 
