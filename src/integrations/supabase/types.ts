@@ -197,6 +197,21 @@ export type Database = {
         }
         Relationships: []
       }
+      custom_project_upload_slots: {
+        Row: {
+          created_at: string
+          folder: string
+        }
+        Insert: {
+          created_at?: string
+          folder?: string
+        }
+        Update: {
+          created_at?: string
+          folder?: string
+        }
+        Relationships: []
+      }
       hero_products: {
         Row: {
           accent_hsl: string
@@ -1888,6 +1903,7 @@ export type Database = {
         Returns: boolean
       }
       cleanup_old_rate_limits: { Args: never; Returns: undefined }
+      create_custom_project_upload_slot: { Args: never; Returns: string }
       get_invoice_by_token: { Args: { _token: string }; Returns: Json }
       get_order_by_token: { Args: { _token: string }; Returns: Json }
       get_quote_by_token: { Args: { _token: string }; Returns: Json }
@@ -1907,6 +1923,10 @@ export type Database = {
       }
       is_finance_admin: { Args: { _user_id: string }; Returns: boolean }
       is_staff: { Args: { _user_id: string }; Returns: boolean }
+      is_valid_custom_project_upload_path: {
+        Args: { object_name: string }
+        Returns: boolean
+      }
       kc_increment_view: {
         Args: { _slug: string; _viewer_hash: string }
         Returns: undefined
