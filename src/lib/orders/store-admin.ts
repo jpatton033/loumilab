@@ -314,7 +314,7 @@ export const useCompleteOnboarding = () => {
         }
       }
 
-      return { merchantId: merchantId as string, storefrontId: storefrontId as string, slug };
+      return { merchantId: merchantId as string, storefrontId: storefrontId as string, slug: resolvedSlug };
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["orders"] });
