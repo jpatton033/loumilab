@@ -172,12 +172,68 @@ const GetStarted = () => {
     window.scrollTo({ top: Math.max(0, top), behavior: reduce ? "auto" : "smooth" });
   }, [step]);
 
-  const publish = () => {
-    setSubmitted(true);
-    toast.success("Store draft saved", {
-      description: "Publishing goes live when Orders launches. We'll be in touch to activate your store.",
-    });
+  const snapshot = (): OnboardingDraft => ({
+    step,
+    industrySlug,
+    purchaseModels,
+    name,
+    category,
+    location,
+    description,
+    items,
+    hours,
+    pickupInfo,
+    planSlug,
+  });
+
+  const publish = async () => {
+    const { data: auth } = await supabase.auth.getUser();
+
+    if (!auth.user) {
+      try {
+        sessionStorage.setItem(DRAFT_KEY, JSON.stringify(snapshot()));
+      } catch {
+        // Storage unavailable — the merchant will need to re-enter their answers.
+      }
+      toast.info("Sign in to finish", {
+        description: "Create your Loumilab account and we'll bring you right back to publish.",
+      });
+      navigate(`/sign-in?mode=signup&next=${encodeURIComponent("/orders/get-started")}`);
+      return;
+    }
+
+    try {
+      const result = await completeOnboarding.mutateAsync({
+        businessName: name,
+        slug,
+        industrySlug,
+        purchaseModels,
+        planSlug,
+        category,
+        location,
+        description,
+        hours,
+        pickupInfo,
+        items,
+      });
+
+      try {
+        sessionStorage.removeItem(DRAFT_KEY);
+      } catch {
+        // Ignore storage errors.
+      }
+
+      setPublishedSlug(result.slug);
+      toast.success("Your store is created", {
+        description: "Finish payments setup and your storefront goes live automatically.",
+      });
+    } catch (error) {
+      toast.error("Couldn't create your store", {
+        description: error instanceof Error ? error.message : "Please try again in a moment.",
+      });
+    }
   };
+
 
   return (
     <Layout>
