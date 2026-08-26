@@ -41,6 +41,11 @@ const SignIn = () => {
   }, []);
 
   const routeByRole = async (userId: string) => {
+    if (nextPath) {
+      navigate(nextPath, { replace: true });
+      return;
+    }
+
     const { data: roles } = await supabase
       .from("user_roles")
       .select("role")
@@ -52,6 +57,7 @@ const SignIn = () => {
       navigate("/orders/dashboard", { replace: true });
     }
   };
+
 
   const validatePassword = (value: string) => {
     if (value.length < 10) {
