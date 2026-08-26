@@ -98,7 +98,9 @@ const CustomProject = () => {
 
       if (files.length > 0) {
         // Uploads must land inside a server-issued, short-lived slot folder.
-        const { data: folder, error: slotError } = await supabase.rpc("create_custom_project_upload_slot");
+        const { data: folder, error: slotError } = await (
+          supabase.rpc as unknown as (fn: string) => Promise<{ data: string | null; error: Error | null }>
+        )("create_custom_project_upload_slot");
         if (slotError || !folder) throw slotError ?? new Error("Could not prepare file upload.");
 
         for (const file of files.slice(0, MAX_FILES)) {
