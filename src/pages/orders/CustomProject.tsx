@@ -94,15 +94,22 @@ const CustomProject = () => {
 
     setSubmitting(true);
     try {
-      const folder = crypto.randomUUID();
       const attachment_paths: string[] = [];
 
-      for (const file of files) {
-        const safeName = file.name.replace(/[^\w.\-]+/g, "_").slice(-80);
-        const path = `${folder}/${safeName}`;
-        const { error } = await supabase.storage.from("custom-project-files").upload(path, file, { upsert: false });
-        if (error) throw error;
-        attachment_paths.push(path);
+      if (files.length > 0) {
+        // Uploads must land inside a server-issued, short-lived slot folder.
+        const { data: folder, error: slotError } = await (
+          supabase.rpc as unknown as (fn: string) => Promise<{ data: string | null; error: Error | null }>
+        )("create_custom_project_upload_slot");
+        if (slotError || !folder) throw slotError ?? new Error("Could not prepare file upload.");
+
+        for (const file of files.slice(0, MAX_FILES)) {
+          const safeName = file.name.replace(/[^\w.\-]+/g, "_").slice(-80);
+          const path = `${folder}/${safeName}`;
+          const { error } = await supabase.storage.from("custom-project-files").upload(path, file, { upsert: false });
+          if (error) throw error;
+          attachment_paths.push(path);
+        }
       }
 
       const { data, error } = await supabase
