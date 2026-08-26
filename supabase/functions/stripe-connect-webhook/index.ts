@@ -71,6 +71,7 @@ Deno.serve(async (req) => {
           })
           .eq("stripe_account_id", accountId)
           .eq("livemode", stripeLivemode);
+      }
     }
 
     if (event.type === "checkout.session.completed") {
@@ -83,9 +84,6 @@ Deno.serve(async (req) => {
       event.type === "customer.subscription.deleted"
     ) {
       await handleSubscriptionChange(event.data.object as Record<string, unknown>, event.type);
-    }
-
-
     }
 
     await admin
