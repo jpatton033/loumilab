@@ -40,22 +40,52 @@ const slugify = (value: string) =>
     .replace(/\s+/g, "-")
     .slice(0, 40);
 
+interface OnboardingDraft {
+  step: number;
+  industrySlug: string;
+  purchaseModels: string[];
+  name: string;
+  category: string;
+  location: string;
+  description: string;
+  items: DraftItem[];
+  hours: string;
+  pickupInfo: string;
+  planSlug: string | null;
+}
+
+const readDraft = (): OnboardingDraft | null => {
+  try {
+    const raw = sessionStorage.getItem(DRAFT_KEY);
+    return raw ? (JSON.parse(raw) as OnboardingDraft) : null;
+  } catch {
+    return null;
+  }
+};
+
 const GetStarted = () => {
-  const [step, setStep] = useState(0);
-  const [industrySlug, setIndustrySlug] = useState("food-catering");
-  const [purchaseModels, setPurchaseModels] = useState<string[]>(["products"]);
-  const [name, setName] = useState("");
-  const [category, setCategory] = useState("");
-  const [location, setLocation] = useState("");
-  const [description, setDescription] = useState("");
-  const [items, setItems] = useState<DraftItem[]>([{ name: "", price: "" }]);
-  const [hours, setHours] = useState("Fri–Sun · 4–9 PM");
-  const [pickupInfo, setPickupInfo] = useState("Pickup only");
-  const [planSlug, setPlanSlug] = useState<string | null>(null);
-  const [submitted, setSubmitted] = useState(false);
+  const navigate = useNavigate();
+  const restored = useRef<OnboardingDraft | null>(readDraft());
+  const saved = restored.current;
+
+  const [step, setStep] = useState(saved?.step ?? 0);
+  const [industrySlug, setIndustrySlug] = useState(saved?.industrySlug ?? "food-catering");
+  const [purchaseModels, setPurchaseModels] = useState<string[]>(saved?.purchaseModels ?? ["products"]);
+  const [name, setName] = useState(saved?.name ?? "");
+  const [category, setCategory] = useState(saved?.category ?? "");
+  const [location, setLocation] = useState(saved?.location ?? "");
+  const [description, setDescription] = useState(saved?.description ?? "");
+  const [items, setItems] = useState<DraftItem[]>(saved?.items ?? [{ name: "", price: "" }]);
+  const [hours, setHours] = useState(saved?.hours ?? "Fri–Sun · 4–9 PM");
+  const [pickupInfo, setPickupInfo] = useState(saved?.pickupInfo ?? "Pickup only");
+  const [planSlug, setPlanSlug] = useState<string | null>(saved?.planSlug ?? null);
+  const [publishedSlug, setPublishedSlug] = useState<string | null>(null);
+  /** True until the industry-default effect has run once, so a restored draft wins. */
+  const keepRestoredModels = useRef(!!saved);
 
   const { data: industries } = useIndustries();
   const { data: plans } = usePublicPlans();
+  const completeOnboarding = useCompleteOnboarding();
 
   const industry = findIndustry(industries, industrySlug);
   const terms = resolveTerms(industry);
@@ -64,6 +94,10 @@ const GetStarted = () => {
 
   // Default the purchase models to whatever the chosen industry usually does.
   useEffect(() => {
+    if (keepRestoredModels.current) {
+      keepRestoredModels.current = false;
+      return;
+    }
     if (industry?.default_purchase_models?.length) {
       setPurchaseModels(industry.default_purchase_models);
     }
@@ -72,6 +106,7 @@ const GetStarted = () => {
   useEffect(() => {
     if (!planSlug && plans?.length) setPlanSlug(plans[1]?.slug ?? plans[0].slug);
   }, [plans, planSlug]);
+
 
   const stepTitles = [
     "Your industry",
