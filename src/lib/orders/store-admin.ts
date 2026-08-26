@@ -257,6 +257,7 @@ export const useCompleteOnboarding = () => {
         pickup_info: input.pickupInfo?.trim() || null,
       };
 
+      let resolvedSlug = slug;
       let storefrontId = existingStore?.id as string | undefined;
       if (storefrontId) {
         const { error } = await supabase
@@ -265,14 +266,24 @@ export const useCompleteOnboarding = () => {
           .eq("id", storefrontId);
         if (error) throw error;
       } else {
-        const { data, error } = await supabase
-          .from("merchant_storefronts")
-          .insert({ ...storePayload, merchant_id: merchantId, is_published: false })
-          .select("id")
-          .single();
-        if (error) throw error;
-        storefrontId = data.id as string;
+        // Other merchants' draft stores aren't readable, so a slug clash can only
+        // surface as a unique-violation on insert. Retry with a numeric suffix.
+        for (let attempt = 0; attempt < 6 && !storefrontId; attempt++) {
+          const candidate = attempt === 0 ? slug : `${slug}-${attempt + 1}`.slice(0, 48);
+          const { data, error } = await supabase
+            .from("merchant_storefronts")
+            .insert({ ...storePayload, slug: candidate, merchant_id: merchantId, is_published: false })
+            .select("id")
+            .single();
+          if (error) {
+            if (error.code === "23505" && attempt < 5) continue;
+            throw error;
+          }
+          storefrontId = data.id as string;
+          resolvedSlug = candidate;
+        }
       }
+
 
       // 3. Catalog items.
       const items = input.items
