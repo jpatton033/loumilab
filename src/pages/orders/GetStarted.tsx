@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link } from "react-router-dom";
-import { ArrowLeft, ArrowRight, Check } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { ArrowLeft, ArrowRight, Check, Loader2 } from "lucide-react";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import Eyebrow from "@/components/brand/Eyebrow";
@@ -12,6 +12,8 @@ import PhoneFrame from "@/components/orders/PhoneFrame";
 import StorefrontHeader from "@/components/orders/StorefrontHeader";
 import { formatMoney } from "@/data/orders/storefronts";
 import { usePublicPlans, planPriceLabel, planPeriodLabel, formatFeeBps } from "@/lib/orders/plans";
+import { useCompleteOnboarding } from "@/lib/orders/store-admin";
+import { supabase } from "@/integrations/supabase/client";
 import {
   useIndustries,
   groupIndustries,
@@ -21,6 +23,9 @@ import {
   PURCHASE_MODELS,
 } from "@/lib/orders/industries";
 import { toast } from "sonner";
+
+const DRAFT_KEY = "loumilab-orders-onboarding-draft";
+
 
 interface DraftItem {
   name: string;
@@ -35,22 +40,52 @@ const slugify = (value: string) =>
     .replace(/\s+/g, "-")
     .slice(0, 40);
 
+interface OnboardingDraft {
+  step: number;
+  industrySlug: string;
+  purchaseModels: string[];
+  name: string;
+  category: string;
+  location: string;
+  description: string;
+  items: DraftItem[];
+  hours: string;
+  pickupInfo: string;
+  planSlug: string | null;
+}
+
+const readDraft = (): OnboardingDraft | null => {
+  try {
+    const raw = sessionStorage.getItem(DRAFT_KEY);
+    return raw ? (JSON.parse(raw) as OnboardingDraft) : null;
+  } catch {
+    return null;
+  }
+};
+
 const GetStarted = () => {
-  const [step, setStep] = useState(0);
-  const [industrySlug, setIndustrySlug] = useState("food-catering");
-  const [purchaseModels, setPurchaseModels] = useState<string[]>(["products"]);
-  const [name, setName] = useState("");
-  const [category, setCategory] = useState("");
-  const [location, setLocation] = useState("");
-  const [description, setDescription] = useState("");
-  const [items, setItems] = useState<DraftItem[]>([{ name: "", price: "" }]);
-  const [hours, setHours] = useState("Fri–Sun · 4–9 PM");
-  const [pickupInfo, setPickupInfo] = useState("Pickup only");
-  const [planSlug, setPlanSlug] = useState<string | null>(null);
-  const [submitted, setSubmitted] = useState(false);
+  const navigate = useNavigate();
+  const restored = useRef<OnboardingDraft | null>(readDraft());
+  const saved = restored.current;
+
+  const [step, setStep] = useState(saved?.step ?? 0);
+  const [industrySlug, setIndustrySlug] = useState(saved?.industrySlug ?? "food-catering");
+  const [purchaseModels, setPurchaseModels] = useState<string[]>(saved?.purchaseModels ?? ["products"]);
+  const [name, setName] = useState(saved?.name ?? "");
+  const [category, setCategory] = useState(saved?.category ?? "");
+  const [location, setLocation] = useState(saved?.location ?? "");
+  const [description, setDescription] = useState(saved?.description ?? "");
+  const [items, setItems] = useState<DraftItem[]>(saved?.items ?? [{ name: "", price: "" }]);
+  const [hours, setHours] = useState(saved?.hours ?? "Fri–Sun · 4–9 PM");
+  const [pickupInfo, setPickupInfo] = useState(saved?.pickupInfo ?? "Pickup only");
+  const [planSlug, setPlanSlug] = useState<string | null>(saved?.planSlug ?? null);
+  const [publishedSlug, setPublishedSlug] = useState<string | null>(null);
+  /** True until the industry-default effect has run once, so a restored draft wins. */
+  const keepRestoredModels = useRef(!!saved);
 
   const { data: industries } = useIndustries();
   const { data: plans } = usePublicPlans();
+  const completeOnboarding = useCompleteOnboarding();
 
   const industry = findIndustry(industries, industrySlug);
   const terms = resolveTerms(industry);
@@ -59,6 +94,10 @@ const GetStarted = () => {
 
   // Default the purchase models to whatever the chosen industry usually does.
   useEffect(() => {
+    if (keepRestoredModels.current) {
+      keepRestoredModels.current = false;
+      return;
+    }
     if (industry?.default_purchase_models?.length) {
       setPurchaseModels(industry.default_purchase_models);
     }
@@ -67,6 +106,7 @@ const GetStarted = () => {
   useEffect(() => {
     if (!planSlug && plans?.length) setPlanSlug(plans[1]?.slug ?? plans[0].slug);
   }, [plans, planSlug]);
+
 
   const stepTitles = [
     "Your industry",
@@ -132,12 +172,68 @@ const GetStarted = () => {
     window.scrollTo({ top: Math.max(0, top), behavior: reduce ? "auto" : "smooth" });
   }, [step]);
 
-  const publish = () => {
-    setSubmitted(true);
-    toast.success("Store draft saved", {
-      description: "Publishing goes live when Orders launches. We'll be in touch to activate your store.",
-    });
+  const snapshot = (): OnboardingDraft => ({
+    step,
+    industrySlug,
+    purchaseModels,
+    name,
+    category,
+    location,
+    description,
+    items,
+    hours,
+    pickupInfo,
+    planSlug,
+  });
+
+  const publish = async () => {
+    const { data: auth } = await supabase.auth.getUser();
+
+    if (!auth.user) {
+      try {
+        sessionStorage.setItem(DRAFT_KEY, JSON.stringify(snapshot()));
+      } catch {
+        // Storage unavailable — the merchant will need to re-enter their answers.
+      }
+      toast.info("Sign in to finish", {
+        description: "Create your Loumilab account and we'll bring you right back to publish.",
+      });
+      navigate(`/sign-in?mode=signup&next=${encodeURIComponent("/orders/get-started")}`);
+      return;
+    }
+
+    try {
+      const result = await completeOnboarding.mutateAsync({
+        businessName: name,
+        slug,
+        industrySlug,
+        purchaseModels,
+        planSlug,
+        category,
+        location,
+        description,
+        hours,
+        pickupInfo,
+        items,
+      });
+
+      try {
+        sessionStorage.removeItem(DRAFT_KEY);
+      } catch {
+        // Ignore storage errors.
+      }
+
+      setPublishedSlug(result.slug);
+      toast.success("Your store is created", {
+        description: "Finish payments setup and your storefront goes live automatically.",
+      });
+    } catch (error) {
+      toast.error("Couldn't create your store", {
+        description: error instanceof Error ? error.message : "Please try again in a moment.",
+      });
+    }
   };
+
 
   return (
     <Layout>
@@ -427,10 +523,32 @@ const GetStarted = () => {
                       <p className="mt-1 text-muted-foreground">{workflow.join(" → ")}</p>
                     </div>
 
-                    {submitted && (
-                      <p className="rounded-2xl border border-accent/20 bg-accent/10 p-5 text-accent">
-                        Draft saved. Orders is in development — Loumilab will reach out to activate your storefront.
-                      </p>
+                    {publishedSlug && (
+                      <div className="rounded-2xl border border-accent/20 bg-accent/10 p-5">
+                        <p className="font-display font-semibold text-accent">
+                          Your store is created — one step left.
+                        </p>
+                        <p className="mt-2 text-muted-foreground">
+                          Finish payments setup and your storefront goes live automatically, ready to take
+                          {" "}
+                          {terms.transactions.toLowerCase()} and get paid.
+                        </p>
+                        <div className="mt-4 rounded-xl border border-border bg-card p-4">
+                          <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Your store link</p>
+                          <p className="mt-1 font-display font-semibold">loumilab.com/orders/store/{publishedSlug}</p>
+                          <span className="mt-2 inline-block rounded-full border border-border px-3 py-1 text-xs font-semibold text-muted-foreground">
+                            Draft — not visible yet
+                          </span>
+                        </div>
+                        <div className="mt-4 flex flex-wrap gap-3">
+                          <Button asChild className="rounded-full">
+                            <Link to="/orders/dashboard">Finish payments setup</Link>
+                          </Button>
+                          <Button asChild variant="outline" className="rounded-full">
+                            <Link to="/orders/dashboard">Open dashboard</Link>
+                          </Button>
+                        </div>
+                      </div>
                     )}
                   </div>
                 )}
@@ -456,11 +574,31 @@ const GetStarted = () => {
                   >
                     Continue <ArrowRight size={16} />
                   </Button>
+                ) : publishedSlug ? (
+                  <Button asChild className="rounded-full">
+                    <Link to="/orders/dashboard">
+                      Go to dashboard <ArrowRight size={16} />
+                    </Link>
+                  </Button>
                 ) : (
-                  <Button type="button" className="rounded-full" onClick={publish}>
-                    Publish store <ArrowRight size={16} />
+                  <Button
+                    type="button"
+                    className="rounded-full"
+                    onClick={publish}
+                    disabled={completeOnboarding.isPending || name.trim().length < 2}
+                  >
+                    {completeOnboarding.isPending ? (
+                      <>
+                        <Loader2 size={16} className="animate-spin" /> Creating your store…
+                      </>
+                    ) : (
+                      <>
+                        Publish store <ArrowRight size={16} />
+                      </>
+                    )}
                   </Button>
                 )}
+
               </div>
             </div>
 

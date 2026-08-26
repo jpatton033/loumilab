@@ -14,7 +14,10 @@ const SignIn = () => {
   const { toast } = useToast();
   const [searchParams] = useSearchParams();
   const modeParam = searchParams.get("mode");
+  const nextParam = searchParams.get("next");
+  const nextPath = nextParam && nextParam.startsWith("/") ? nextParam : null;
   const defaultTab = modeParam === "signup" ? "signup" : modeParam === "forgot" ? "forgot" : "signin";
+
 
   const [tab, setTab] = useState(defaultTab);
   const [email, setEmail] = useState("");
@@ -38,6 +41,11 @@ const SignIn = () => {
   }, []);
 
   const routeByRole = async (userId: string) => {
+    if (nextPath) {
+      navigate(nextPath, { replace: true });
+      return;
+    }
+
     const { data: roles } = await supabase
       .from("user_roles")
       .select("role")
@@ -49,6 +57,7 @@ const SignIn = () => {
       navigate("/orders/dashboard", { replace: true });
     }
   };
+
 
   const validatePassword = (value: string) => {
     if (value.length < 10) {
@@ -111,7 +120,7 @@ const SignIn = () => {
     setLoading(true);
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: window.location.origin },
+      options: { redirectTo: `${window.location.origin}${nextPath ?? ""}` },
     });
     setLoading(false);
     if (error) {
