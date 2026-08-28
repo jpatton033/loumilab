@@ -279,19 +279,28 @@ export const useSaveStoreSetup = () => {
       if (storeReadError) throw storeReadError;
 
       const slug = await uniqueSlug(input.slug, existingStore?.id as string | undefined);
-      const storePayload = {
+      // Blank wizard fields must never wipe details the merchant already saved,
+      // so empty values are simply left out of the update.
+      const optional = <T,>(value: T | null | undefined, empty: boolean) =>
+        empty ? {} : ({ value } as { value: T });
+      const text = (key: string, value?: string | null) =>
+        value?.trim() ? { [key]: value.trim() } : {};
+
+      const storePayload: Record<string, unknown> = {
         name: input.businessName.trim(),
-        location: input.location?.trim() || null,
-        description: input.description?.trim() || null,
         monogram: monogramFor(input.businessName),
-        logo_url: input.logoUrl ?? null,
-        hours: input.hours?.trim() || null,
-        pickup_info: input.pickupInfo?.trim() || null,
-        pickup_enabled: input.pickupEnabled ?? true,
-        delivery_enabled: input.deliveryEnabled ?? false,
-        delivery_fee_cents: toCents(input.deliveryFee),
-        delivery_minimum_cents: toCents(input.deliveryMinimum),
+        ...text("location", input.location),
+        ...text("description", input.description),
+        ...text("hours", input.hours),
+        ...text("pickup_info", input.pickupInfo),
+        ...(input.logoUrl ? { logo_url: input.logoUrl } : {}),
+        ...(input.pickupEnabled === undefined ? {} : { pickup_enabled: input.pickupEnabled }),
+        ...(input.deliveryEnabled === undefined ? {} : { delivery_enabled: input.deliveryEnabled }),
+        ...(input.deliveryFee?.trim() ? { delivery_fee_cents: toCents(input.deliveryFee) } : {}),
+        ...(input.deliveryMinimum?.trim() ? { delivery_minimum_cents: toCents(input.deliveryMinimum) } : {}),
       };
+      void optional;
+
 
       let resolvedSlug = existingStore?.slug as string | undefined;
       let storefrontId = existingStore?.id as string | undefined;
