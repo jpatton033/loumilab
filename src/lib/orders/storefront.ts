@@ -27,6 +27,7 @@ export interface LiveStorefront {
   delivery_minimum_cents: number;
   currency: string;
   is_published: boolean;
+  status: "setup" | "ready" | "published" | "paused" | "restricted";
 }
 
 export interface LiveProduct {
@@ -42,7 +43,8 @@ export interface LiveProduct {
 }
 
 const STORE_COLUMNS =
-  "id, merchant_id, slug, name, location, description, monogram, logo_url, hours, pickup_enabled, pickup_info, delivery_enabled, delivery_fee_cents, delivery_minimum_cents, currency, is_published";
+  "id, merchant_id, slug, name, location, description, monogram, logo_url, hours, pickup_enabled, pickup_info, delivery_enabled, delivery_fee_cents, delivery_minimum_cents, currency, is_published, status";
+
 
 const PRODUCT_COLUMNS =
   "id, name, description, price_cents, image_url, category, availability, is_active, display_order";

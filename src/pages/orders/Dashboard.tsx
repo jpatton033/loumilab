@@ -34,6 +34,9 @@ import {
 import { useMyMerchant, useJobs, useAdvanceJob, nextJobStatus, JOB_STATUS_LABELS } from "@/lib/orders/commerce";
 import { usePublicPlans } from "@/lib/orders/plans";
 import { resolveEntitlements, isEnabled, type EntitlementKey } from "@/lib/orders/entitlements";
+import SetupChecklist from "@/components/orders/SetupChecklist";
+import { useMerchantSetup } from "@/lib/orders/setup";
+
 
 type Filter = "All" | OrderStatus;
 const filters: Filter[] = ["All", ...ORDER_STATUSES];
@@ -50,6 +53,7 @@ const Dashboard = () => {
   const { data: industries } = useIndustries();
   const { data: plans } = usePublicPlans();
 
+
   const industrySlug = merchant?.industry_slug ?? previewIndustry;
   const industry = findIndustry(industries, industrySlug);
   const terms = resolveTerms(industry);
@@ -61,6 +65,8 @@ const Dashboard = () => {
 
   const { data: jobs } = useJobs(merchant?.id);
   const advanceJob = useAdvanceJob(merchant?.id);
+  const { data: setup } = useMerchantSetup(terms.catalog);
+
 
   useEffect(() => {
     if (!modules.includes(activeModule)) setActiveModule(modules[0]);
@@ -120,24 +126,41 @@ const Dashboard = () => {
             </div>
 
             <div className="flex flex-wrap items-center gap-3">
-              <Button
-                variant={accepting ? "secondary" : "default"}
-                className="rounded-full"
-                onClick={() => setAccepting((v) => !v)}
-              >
-                {accepting ? `Pause new ${transactionsLabel.toLowerCase()}` : `Resume ${transactionsLabel.toLowerCase()}`}
-              </Button>
+              {!merchant && (
+                <Button
+                  variant={accepting ? "secondary" : "default"}
+                  className="rounded-full"
+                  onClick={() => setAccepting((v) => !v)}
+                >
+                  {accepting ? `Pause new ${transactionsLabel.toLowerCase()}` : `Resume ${transactionsLabel.toLowerCase()}`}
+                </Button>
+              )}
               <Button variant="outline" asChild className="rounded-full">
-                <Link to={`/orders/store/${demoStorefront.slug}`}>
-                  View storefront <ExternalLink size={15} />
+                <Link to={`/orders/store/${setup?.slug ?? demoStorefront.slug}`}>
+                  {setup?.isPublic ? "View storefront" : "Preview storefront"} <ExternalLink size={15} />
                 </Link>
               </Button>
             </div>
           </div>
 
-          <div className="mt-8">
+          <div className="mt-8 space-y-6">
+            {setup && (
+              <SetupChecklist
+                snapshot={setup}
+                catalogLabel={terms.catalog}
+                onJump={(id) => {
+                  if (id === "catalog" || id === "business" || id === "branding" || id === "fulfilment") {
+                    setActiveModule(
+                      modules.find((m) => m === "menu" || m === "products" || m === "services") ?? modules[0],
+                    );
+                  }
+                  if (id === "payments") setActiveModule("payments");
+                }}
+              />
+            )}
             <PayoutSetupCard />
           </div>
+
 
           {!merchant && (
             <div className="mt-6 rounded-2xl border border-border bg-secondary p-4 text-sm text-muted-foreground">

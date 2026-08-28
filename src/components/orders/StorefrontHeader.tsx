@@ -3,7 +3,10 @@ import type { Storefront } from "@/data/orders/storefronts";
 import { cn } from "@/lib/utils";
 
 interface Props {
-  store: Pick<Storefront, "name" | "location" | "description" | "monogram" | "acceptingOrders" | "hours" | "pickupInfo">;
+  store: Pick<Storefront, "name" | "location" | "description" | "monogram" | "acceptingOrders" | "hours" | "pickupInfo"> & {
+    /** Merchant-uploaded logo; falls back to the monogram tile. */
+    logoUrl?: string | null;
+  };
   compact?: boolean;
   className?: string;
 }
@@ -12,15 +15,26 @@ interface Props {
 const StorefrontHeader = ({ store, compact = false, className }: Props) => (
   <div className={cn("flex flex-col gap-4", className)}>
     <div className="flex items-center gap-4">
-      <div
-        className={cn(
-          "flex shrink-0 items-center justify-center rounded-2xl bg-foreground font-display font-semibold text-background",
-          compact ? "h-11 w-11 text-sm" : "h-14 w-14 text-base"
-        )}
-        aria-hidden="true"
-      >
-        {store.monogram}
-      </div>
+      {store.logoUrl ? (
+        <img
+          src={store.logoUrl}
+          alt={`${store.name} logo`}
+          className={cn(
+            "shrink-0 rounded-2xl border border-border object-cover",
+            compact ? "h-11 w-11" : "h-14 w-14",
+          )}
+        />
+      ) : (
+        <div
+          className={cn(
+            "flex shrink-0 items-center justify-center rounded-2xl bg-foreground font-display font-semibold text-background",
+            compact ? "h-11 w-11 text-sm" : "h-14 w-14 text-base"
+          )}
+          aria-hidden="true"
+        >
+          {store.monogram}
+        </div>
+      )}
       <div className="min-w-0">
         <h1 className={cn("truncate font-display font-semibold", compact ? "text-base" : "text-2xl")}>
           {store.name}
@@ -30,6 +44,7 @@ const StorefrontHeader = ({ store, compact = false, className }: Props) => (
         </p>
       </div>
     </div>
+
 
     <div className="flex flex-wrap items-center gap-2">
       <span
