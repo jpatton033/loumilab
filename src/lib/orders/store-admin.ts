@@ -279,19 +279,26 @@ export const useSaveStoreSetup = () => {
       if (storeReadError) throw storeReadError;
 
       const slug = await uniqueSlug(input.slug, existingStore?.id as string | undefined);
+      // Blank wizard fields must never wipe details the merchant already saved,
+      // so empty values are simply left out of the update.
+      const trimmed = (value?: string | null) => (value?.trim() ? value.trim() : undefined);
+
       const storePayload = {
         name: input.businessName.trim(),
-        location: input.location?.trim() || null,
-        description: input.description?.trim() || null,
         monogram: monogramFor(input.businessName),
-        logo_url: input.logoUrl ?? null,
-        hours: input.hours?.trim() || null,
-        pickup_info: input.pickupInfo?.trim() || null,
-        pickup_enabled: input.pickupEnabled ?? true,
-        delivery_enabled: input.deliveryEnabled ?? false,
-        delivery_fee_cents: toCents(input.deliveryFee),
-        delivery_minimum_cents: toCents(input.deliveryMinimum),
+        location: trimmed(input.location),
+        description: trimmed(input.description),
+        hours: trimmed(input.hours),
+        pickup_info: trimmed(input.pickupInfo),
+        logo_url: input.logoUrl || undefined,
+        pickup_enabled: input.pickupEnabled,
+        delivery_enabled: input.deliveryEnabled,
+        delivery_fee_cents: input.deliveryFee?.trim() ? toCents(input.deliveryFee) : undefined,
+        delivery_minimum_cents: input.deliveryMinimum?.trim() ? toCents(input.deliveryMinimum) : undefined,
       };
+
+      
+
 
       let resolvedSlug = existingStore?.slug as string | undefined;
       let storefrontId = existingStore?.id as string | undefined;
@@ -382,3 +389,86 @@ export const useSaveStoreSetup = () => {
   });
 };
 
+
+/* ------------------------------ wizard prefill ---------------------------- */
+
+export interface OnboardingPrefill {
+  industrySlug: string;
+  purchaseModels: string[];
+  planSlug: string | null;
+  businessName: string;
+  category: string;
+  location: string;
+  description: string;
+  logoUrl: string | null;
+  hours: string;
+  pickupInfo: string;
+  pickupEnabled: boolean;
+  deliveryEnabled: boolean;
+  deliveryFee: string;
+  items: OnboardingItem[];
+}
+
+/**
+ * Everything the merchant already saved, shaped for the onboarding wizard so
+ * re-entering the flow shows their real store instead of an empty form.
+ */
+export const useOnboardingPrefill = () =>
+  useQuery({
+    queryKey: ["orders", "onboarding-prefill"],
+    staleTime: 60_000,
+    queryFn: async (): Promise<OnboardingPrefill | null> => {
+      const { data: auth } = await supabase.auth.getUser();
+      if (!auth.user) return null;
+
+      const { data: merchant } = await supabase
+        .from("merchants")
+        .select("id, business_name, business_type, industry_slug, purchase_models, plan_slug")
+        .eq("owner_id", auth.user.id)
+        .maybeSingle();
+      if (!merchant) return null;
+
+      const { data: store } = await supabase
+        .from("merchant_storefronts")
+        .select(
+          "id, name, location, description, logo_url, hours, pickup_info, pickup_enabled, delivery_enabled, delivery_fee_cents",
+        )
+        .eq("merchant_id", merchant.id)
+        .order("created_at")
+        .limit(1)
+        .maybeSingle();
+
+      let items: OnboardingItem[] = [];
+      if (store?.id) {
+        const { data: products } = await supabase
+          .from("merchant_products")
+          .select("name, description, price_cents, image_url")
+          .eq("storefront_id", store.id)
+          .order("display_order")
+          .limit(12);
+        items = (products ?? []).map((p) => ({
+          name: p.name as string,
+          price: (((p.price_cents as number) ?? 0) / 100).toFixed(2),
+          description: (p.description as string | null) ?? undefined,
+          imageUrl: (p.image_url as string | null) ?? null,
+        }));
+      }
+
+      return {
+        industrySlug: (merchant.industry_slug as string) ?? "food-catering",
+        purchaseModels: ((merchant.purchase_models as string[]) ?? []).filter(Boolean),
+        planSlug: (merchant.plan_slug as string) ?? null,
+        businessName: (store?.name as string) ?? (merchant.business_name as string) ?? "",
+        category: (merchant.business_type as string) ?? "",
+        location: (store?.location as string) ?? "",
+        description: (store?.description as string) ?? "",
+        logoUrl: (store?.logo_url as string | null) ?? null,
+        hours: (store?.hours as string) ?? "",
+        pickupInfo: (store?.pickup_info as string) ?? "",
+        pickupEnabled: store?.pickup_enabled ?? true,
+        deliveryEnabled: store?.delivery_enabled ?? false,
+        deliveryFee: store?.delivery_fee_cents ? (((store.delivery_fee_cents as number) / 100).toFixed(2)) : "",
+        items,
+      };
+    },
+  });
