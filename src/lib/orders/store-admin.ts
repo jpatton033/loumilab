@@ -336,7 +336,16 @@ export const useSaveStoreSetup = () => {
           (existingProducts ?? []).map((p) => [(p.name as string).toLowerCase(), p.id as string]),
         );
 
-        const inserts: Record<string, unknown>[] = [];
+        const inserts: {
+          name: string;
+          description: string | null;
+          price_cents: number;
+          image_url: string | null;
+          display_order: number;
+          merchant_id: string;
+          storefront_id: string;
+        }[] = [];
+
         for (const item of items) {
           const payload = {
             name: item.name.trim(),
