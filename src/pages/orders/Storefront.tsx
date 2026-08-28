@@ -28,7 +28,11 @@ const Storefront = () => {
   const cart = useCart();
   const [checkoutOpen, setCheckoutOpen] = useState(false);
 
-  const isLive = !!live && live.store.is_published;
+  /** A live row exists whenever the visitor can read the store (public, paused, or owner preview). */
+  const isLive = !!live;
+  const status = live?.store.status ?? "setup";
+  const isPublic = status === "published";
+  const isPaused = status === "paused";
 
   const store = isLive
     ? {
@@ -37,13 +41,15 @@ const Storefront = () => {
         location: live.store.location ?? "",
         description: live.store.description ?? "",
         monogram: live.store.monogram ?? live.store.name.slice(0, 2).toUpperCase(),
-        acceptingOrders: live.acceptingOrders,
+        logoUrl: live.store.logo_url,
+        acceptingOrders: isPublic && live.acceptingOrders,
         hours: live.store.hours ?? "",
         pickupInfo: live.store.pickup_info ?? (live.store.delivery_enabled ? "Delivery available" : "Pickup"),
         industrySlug: live.industrySlug,
         products: live.products.map(toStoreProduct),
       }
     : demo;
+
 
   const { industry, terms, workflow } = useIndustryExperience(store?.industrySlug);
   /** Service businesses lead with a request → estimate flow, not a cart. */
@@ -87,6 +93,10 @@ const Storefront = () => {
 
   const checkout = () => {
     if (isLive) {
+      if (!isPublic) {
+        toast.info("Preview mode", { description: "Publish your store from the dashboard to take real orders." });
+        return;
+      }
       if (!live.acceptingOrders) {
         toast.error("Not accepting orders", { description: "This store has paused new orders." });
         return;
@@ -99,6 +109,7 @@ const Storefront = () => {
     });
     cart.clear();
   };
+
 
   return (
     <Layout>
@@ -117,7 +128,21 @@ const Storefront = () => {
             <ArrowLeft size={15} /> Powered by Loumilab Orders
           </Link>
 
+          {isLive && !isPublic && (
+            <div className="mt-6 rounded-2xl border border-border bg-secondary p-4 text-sm">
+              <p className="font-display font-semibold">
+                {isPaused ? "This store is temporarily unavailable" : "Preview — not published yet"}
+              </p>
+              <p className="mt-1 text-muted-foreground">
+                {isPaused
+                  ? "The business has paused new orders. Please check back soon."
+                  : "Only you can see this page. Publish from your dashboard when you're ready to take orders."}
+              </p>
+            </div>
+          )}
+
           <div className="mt-8">
+
             <StorefrontHeader store={store} />
           </div>
 
@@ -160,7 +185,7 @@ const Storefront = () => {
         <CartBar count={cart.count} subtotalCents={cart.subtotalCents} ctaLabel="Place order" onCheckout={checkout} />
       )}
 
-      {isLive && (
+      {isLive && isPublic && (
         <CheckoutSheet
           open={checkoutOpen}
           onOpenChange={setCheckoutOpen}

@@ -60,7 +60,7 @@ export const useCreateStorefront = (merchantId?: string) => {
       if (error) throw error;
       return data;
     },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["orders", "my-storefront", merchantId] }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["orders"] }),
   });
 };
 
@@ -71,15 +71,18 @@ export const useUpdateStorefront = (merchantId?: string) => {
       const { error } = await supabase.from("merchant_storefronts").update(patch).eq("id", id);
       if (error) throw error;
     },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["orders", "my-storefront", merchantId] }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["orders"] }),
+
   });
 };
 
 export interface ProductInput {
   name: string;
   description?: string;
+  /** Zero means "priced per job" — service industries quote individually. */
   price_cents: number;
   category?: string;
+  image_url?: string | null;
   availability?: "available" | "sold_out" | "unavailable";
 }
 
@@ -99,9 +102,13 @@ export const useSaveProduct = (merchantId?: string, storefrontId?: string) => {
       });
       if (error) throw error;
     },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["orders", "my-products", storefrontId] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["orders", "my-products", storefrontId] });
+      qc.invalidateQueries({ queryKey: ["orders", "setup"] });
+    },
   });
 };
+
 
 export const useDeleteProduct = (storefrontId?: string) => {
   const qc = useQueryClient();
@@ -149,6 +156,13 @@ export const useMerchantOrders = (merchantId?: string) =>
 
 /* ---------------------------- onboarding wizard --------------------------- */
 
+export interface OnboardingItem {
+  name: string;
+  price: string;
+  description?: string;
+  imageUrl?: string | null;
+}
+
 export interface OnboardingInput {
   businessName: string;
   slug: string;
@@ -160,13 +174,20 @@ export interface OnboardingInput {
   description?: string;
   hours?: string;
   pickupInfo?: string;
-  items: { name: string; price: string }[];
+  logoUrl?: string | null;
+  pickupEnabled?: boolean;
+  deliveryEnabled?: boolean;
+  deliveryFee?: string;
+  deliveryMinimum?: string;
+  items: OnboardingItem[];
 }
 
 export interface OnboardingResult {
   merchantId: string;
   storefrontId: string;
   slug: string;
+  /** True when this call registered the merchant account for the first time. */
+  registered: boolean;
 }
 
 const monogramFor = (name: string) =>
@@ -176,6 +197,8 @@ const monogramFor = (name: string) =>
     .slice(0, 2)
     .map((w) => w[0]?.toUpperCase())
     .join("") || "LO";
+
+const toCents = (value?: string) => Math.max(0, Math.round((Number(value) || 0) * 100));
 
 /** Finds a storefront slug that isn't taken yet, ignoring the merchant's own store. */
 const uniqueSlug = async (base: string, ownStorefrontId?: string) => {
@@ -193,17 +216,19 @@ const uniqueSlug = async (base: string, ownStorefrontId?: string) => {
 };
 
 /**
- * Creates (or updates) the real merchant account, storefront and catalog from the
- * onboarding wizard. The storefront is saved as a draft — it is published
- * automatically once Stripe payouts are enabled for the merchant.
+ * Saves onboarding progress: the merchant account, the storefront and the
+ * catalog. Safe to call repeatedly — records are created once and then updated.
+ *
+ * The storefront stays private (status `setup`/`ready`) until the merchant
+ * chooses to publish it; the database enforces the same rule.
  */
-export const useCompleteOnboarding = () => {
+export const useSaveStoreSetup = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (input: OnboardingInput): Promise<OnboardingResult> => {
       const { data: auth } = await supabase.auth.getUser();
       const user = auth.user;
-      if (!user) throw new Error("Please sign in to publish your store.");
+      if (!user) throw new Error("Please sign in to save your store.");
 
       // 1. Merchant account (one per owner).
       const { data: existingMerchant, error: merchantReadError } = await supabase
@@ -223,6 +248,7 @@ export const useCompleteOnboarding = () => {
       };
 
       let merchantId = existingMerchant?.id as string | undefined;
+      let registered = false;
       if (merchantId) {
         const { error } = await supabase.from("merchants").update(merchantPayload).eq("id", merchantId);
         if (error) throw error;
@@ -234,9 +260,15 @@ export const useCompleteOnboarding = () => {
           .single();
         if (error) throw error;
         merchantId = data.id as string;
+        registered = true;
       }
 
-      // 2. Storefront (draft until payouts are enabled).
+      // Welcome email — best effort, never blocks onboarding.
+      if (registered) {
+        supabase.functions.invoke("orders-merchant-welcome").catch(() => undefined);
+      }
+
+      // 2. Storefront — private until the merchant publishes it.
       const { data: existingStore, error: storeReadError } = await supabase
         .from("merchant_storefronts")
         .select("id, slug")
@@ -249,15 +281,19 @@ export const useCompleteOnboarding = () => {
       const slug = await uniqueSlug(input.slug, existingStore?.id as string | undefined);
       const storePayload = {
         name: input.businessName.trim(),
-        slug,
         location: input.location?.trim() || null,
         description: input.description?.trim() || null,
         monogram: monogramFor(input.businessName),
+        logo_url: input.logoUrl ?? null,
         hours: input.hours?.trim() || null,
         pickup_info: input.pickupInfo?.trim() || null,
+        pickup_enabled: input.pickupEnabled ?? true,
+        delivery_enabled: input.deliveryEnabled ?? false,
+        delivery_fee_cents: toCents(input.deliveryFee),
+        delivery_minimum_cents: toCents(input.deliveryMinimum),
       };
 
-      let resolvedSlug = slug;
+      let resolvedSlug = existingStore?.slug as string | undefined;
       let storefrontId = existingStore?.id as string | undefined;
       if (storefrontId) {
         const { error } = await supabase
@@ -266,13 +302,13 @@ export const useCompleteOnboarding = () => {
           .eq("id", storefrontId);
         if (error) throw error;
       } else {
-        // Other merchants' draft stores aren't readable, so a slug clash can only
-        // surface as a unique-violation on insert. Retry with a numeric suffix.
+        // Other merchants' private stores aren't readable, so a slug clash can only
+        // surface as a unique violation on insert. Retry with a numeric suffix.
         for (let attempt = 0; attempt < 6 && !storefrontId; attempt++) {
           const candidate = attempt === 0 ? slug : `${slug}-${attempt + 1}`.slice(0, 48);
           const { data, error } = await supabase
             .from("merchant_storefronts")
-            .insert({ ...storePayload, slug: candidate, merchant_id: merchantId, is_published: false })
+            .insert({ ...storePayload, slug: candidate, merchant_id: merchantId, status: "setup" })
             .select("id")
             .single();
           if (error) {
@@ -284,40 +320,56 @@ export const useCompleteOnboarding = () => {
         }
       }
 
-
-      // 3. Catalog items.
+      // 3. Catalog items — created once, then kept in step with the wizard.
       const items = input.items
         .map((item, index) => ({ ...item, index }))
         .filter((item) => item.name.trim().length > 0);
 
-      if (items.length) {
+      if (items.length && storefrontId) {
         const { data: existingProducts, error: productReadError } = await supabase
           .from("merchant_products")
-          .select("name")
+          .select("id, name")
           .eq("storefront_id", storefrontId);
         if (productReadError) throw productReadError;
 
-        const taken = new Set((existingProducts ?? []).map((p) => (p.name as string).toLowerCase()));
-        const rows = items
-          .filter((item) => !taken.has(item.name.trim().toLowerCase()))
-          .map((item) => ({
-            merchant_id: merchantId as string,
-            storefront_id: storefrontId as string,
-            name: item.name.trim(),
-            price_cents: Math.max(0, Math.round((Number(item.price) || 0) * 100)),
-            display_order: item.index,
-          }));
+        const byName = new Map(
+          (existingProducts ?? []).map((p) => [(p.name as string).toLowerCase(), p.id as string]),
+        );
 
-        if (rows.length) {
-          const { error } = await supabase.from("merchant_products").insert(rows);
+        const inserts: Record<string, unknown>[] = [];
+        for (const item of items) {
+          const payload = {
+            name: item.name.trim(),
+            description: item.description?.trim() || null,
+            price_cents: toCents(item.price),
+            image_url: item.imageUrl ?? null,
+            display_order: item.index,
+          };
+          const existingId = byName.get(payload.name.toLowerCase());
+          if (existingId) {
+            const { error } = await supabase.from("merchant_products").update(payload).eq("id", existingId);
+            if (error) throw error;
+          } else {
+            inserts.push({ ...payload, merchant_id: merchantId, storefront_id: storefrontId });
+          }
+        }
+
+        if (inserts.length) {
+          const { error } = await supabase.from("merchant_products").insert(inserts);
           if (error) throw error;
         }
       }
 
-      return { merchantId: merchantId as string, storefrontId: storefrontId as string, slug: resolvedSlug };
+      return {
+        merchantId: merchantId as string,
+        storefrontId: storefrontId as string,
+        slug: (resolvedSlug ?? slug) as string,
+        registered,
+      };
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["orders"] });
     },
   });
 };
+

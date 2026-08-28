@@ -956,6 +956,7 @@ export type Database = {
           pickup_enabled: boolean
           pickup_info: string | null
           slug: string
+          status: Database["public"]["Enums"]["storefront_status"]
           updated_at: string
         }
         Insert: {
@@ -978,6 +979,7 @@ export type Database = {
           pickup_enabled?: boolean
           pickup_info?: string | null
           slug: string
+          status?: Database["public"]["Enums"]["storefront_status"]
           updated_at?: string
         }
         Update: {
@@ -1000,6 +1002,7 @@ export type Database = {
           pickup_enabled?: boolean
           pickup_info?: string | null
           slug?: string
+          status?: Database["public"]["Enums"]["storefront_status"]
           updated_at?: string
         }
         Relationships: [
@@ -1122,6 +1125,29 @@ export type Database = {
             foreignKeyName: "merchant_subscriptions_merchant_id_fkey"
             columns: ["merchant_id"]
             isOneToOne: false
+            referencedRelation: "merchants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      merchant_welcome_emails: {
+        Row: {
+          merchant_id: string
+          sent_at: string
+        }
+        Insert: {
+          merchant_id: string
+          sent_at?: string
+        }
+        Update: {
+          merchant_id?: string
+          sent_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "merchant_welcome_emails_merchant_id_fkey"
+            columns: ["merchant_id"]
+            isOneToOne: true
             referencedRelation: "merchants"
             referencedColumns: ["id"]
           },
@@ -1946,9 +1972,17 @@ export type Database = {
         Args: { _job: string; _lease_seconds?: number }
         Returns: string
       }
+      owns_merchant_media_path: {
+        Args: { object_name: string }
+        Returns: boolean
+      }
       respond_to_quote: {
         Args: { _approve: boolean; _token: string }
         Returns: Json
+      }
+      storefront_can_publish: {
+        Args: { _storefront_id: string }
+        Returns: boolean
       }
     }
     Enums: {
@@ -2006,6 +2040,12 @@ export type Database = {
         | "payout_enabled"
         | "disabled"
       quote_status: "draft" | "sent" | "approved" | "declined" | "expired"
+      storefront_status:
+        | "setup"
+        | "ready"
+        | "published"
+        | "paused"
+        | "restricted"
       submission_status: "new" | "read" | "responded" | "archived"
     }
     CompositeTypes: {
@@ -2194,6 +2234,13 @@ export const Constants = {
         "disabled",
       ],
       quote_status: ["draft", "sent", "approved", "declined", "expired"],
+      storefront_status: [
+        "setup",
+        "ready",
+        "published",
+        "paused",
+        "restricted",
+      ],
       submission_status: ["new", "read", "responded", "archived"],
     },
   },

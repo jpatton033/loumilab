@@ -1,18 +1,22 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, ArrowRight, Check, Loader2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, ExternalLink, Loader2, ShieldCheck } from "lucide-react";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import Eyebrow from "@/components/brand/Eyebrow";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import PhoneFrame from "@/components/orders/PhoneFrame";
 import StorefrontHeader from "@/components/orders/StorefrontHeader";
+import ImageUpload from "@/components/orders/ImageUpload";
+import StoreStatusBadge from "@/components/orders/StoreStatusBadge";
 import { formatMoney } from "@/data/orders/storefronts";
 import { usePublicPlans, planPriceLabel, planPeriodLabel, formatFeeBps } from "@/lib/orders/plans";
-import { useCompleteOnboarding } from "@/lib/orders/store-admin";
+import { useSaveStoreSetup, type OnboardingItem } from "@/lib/orders/store-admin";
+import { useMerchantSetup, useSetStorefrontStatus } from "@/lib/orders/setup";
 import { supabase } from "@/integrations/supabase/client";
 import {
   useIndustries,
@@ -25,12 +29,6 @@ import {
 import { toast } from "sonner";
 
 const DRAFT_KEY = "loumilab-orders-onboarding-draft";
-
-
-interface DraftItem {
-  name: string;
-  price: string;
-}
 
 const slugify = (value: string) =>
   value
@@ -48,9 +46,13 @@ interface OnboardingDraft {
   category: string;
   location: string;
   description: string;
-  items: DraftItem[];
+  logoUrl: string | null;
+  items: OnboardingItem[];
   hours: string;
   pickupInfo: string;
+  pickupEnabled: boolean;
+  deliveryEnabled: boolean;
+  deliveryFee: string;
   planSlug: string | null;
 }
 
@@ -69,28 +71,55 @@ const GetStarted = () => {
   const saved = restored.current;
 
   const [step, setStep] = useState(saved?.step ?? 0);
+  const [email, setEmail] = useState<string | null>(null);
+  const [authChecked, setAuthChecked] = useState(false);
   const [industrySlug, setIndustrySlug] = useState(saved?.industrySlug ?? "food-catering");
   const [purchaseModels, setPurchaseModels] = useState<string[]>(saved?.purchaseModels ?? ["products"]);
   const [name, setName] = useState(saved?.name ?? "");
   const [category, setCategory] = useState(saved?.category ?? "");
   const [location, setLocation] = useState(saved?.location ?? "");
   const [description, setDescription] = useState(saved?.description ?? "");
-  const [items, setItems] = useState<DraftItem[]>(saved?.items ?? [{ name: "", price: "" }]);
+  const [logoUrl, setLogoUrl] = useState<string | null>(saved?.logoUrl ?? null);
+  const [items, setItems] = useState<OnboardingItem[]>(saved?.items ?? [{ name: "", price: "" }]);
   const [hours, setHours] = useState(saved?.hours ?? "Fri–Sun · 4–9 PM");
   const [pickupInfo, setPickupInfo] = useState(saved?.pickupInfo ?? "Pickup only");
+  const [pickupEnabled, setPickupEnabled] = useState(saved?.pickupEnabled ?? true);
+  const [deliveryEnabled, setDeliveryEnabled] = useState(saved?.deliveryEnabled ?? false);
+  const [deliveryFee, setDeliveryFee] = useState(saved?.deliveryFee ?? "");
   const [planSlug, setPlanSlug] = useState<string | null>(saved?.planSlug ?? null);
-  const [publishedSlug, setPublishedSlug] = useState<string | null>(null);
   /** True until the industry-default effect has run once, so a restored draft wins. */
   const keepRestoredModels = useRef(!!saved);
 
   const { data: industries } = useIndustries();
   const { data: plans } = usePublicPlans();
-  const completeOnboarding = useCompleteOnboarding();
+  const saveSetup = useSaveStoreSetup();
+  const setStatus = useSetStorefrontStatus();
 
   const industry = findIndustry(industries, industrySlug);
   const terms = resolveTerms(industry);
   const workflow = resolveWorkflow(industry);
   const groups = useMemo(() => groupIndustries(industries ?? []), [industries]);
+  const { data: setup } = useMerchantSetup(terms.catalog);
+
+  const signedIn = !!email;
+  const merchantId = setup?.merchantId ?? undefined;
+
+  // Session — the wizard saves progress the moment a merchant is signed in.
+  useEffect(() => {
+    let active = true;
+    supabase.auth.getUser().then(({ data }) => {
+      if (!active) return;
+      setEmail(data.user?.email ?? null);
+      setAuthChecked(true);
+    });
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+      setEmail(session?.user.email ?? null);
+    });
+    return () => {
+      active = false;
+      sub.subscription.unsubscribe();
+    };
+  }, []);
 
   // Default the purchase models to whatever the chosen industry usually does.
   useEffect(() => {
@@ -107,17 +136,19 @@ const GetStarted = () => {
     if (!planSlug && plans?.length) setPlanSlug(plans[1]?.slug ?? plans[0].slug);
   }, [plans, planSlug]);
 
-
   const stepTitles = [
+    "Merchant account",
     "Your industry",
     "How customers buy",
     "Business information",
-    "Store details",
+    "Store details & branding",
     `Add your ${terms.catalog.toLowerCase()}`,
-    `${terms.schedule} & availability`,
+    industry?.is_food ? "Fulfilment & hours" : "Availability",
+    "Payments & payouts",
     "Choose your plan",
-    "Review & publish",
+    "Preview & publish",
   ];
+  const lastStep = stepTitles.length - 1;
 
   const slug = useMemo(() => slugify(name) || "your-store", [name]);
   const monogram = useMemo(
@@ -132,13 +163,17 @@ const GetStarted = () => {
   );
 
   const canContinue =
-    (step === 0 && !!industrySlug) ||
-    (step === 1 && purchaseModels.length > 0) ||
-    (step === 2 && name.trim().length > 1) ||
-    (step === 3 && description.trim().length > 4) ||
-    step > 3;
+    (step === 0 && signedIn) ||
+    (step === 1 && !!industrySlug) ||
+    (step === 2 && purchaseModels.length > 0) ||
+    (step === 3 && name.trim().length > 1) ||
+    (step === 4 && description.trim().length > 4) ||
+    (step === 6 && (pickupEnabled || deliveryEnabled)) ||
+    step === 5 ||
+    step === 7 ||
+    step === 8;
 
-  const updateItem = (i: number, patch: Partial<DraftItem>) =>
+  const updateItem = (i: number, patch: Partial<OnboardingItem>) =>
     setItems((prev) => prev.map((item, idx) => (idx === i ? { ...item, ...patch } : item)));
 
   const toggleModel = (id: string) =>
@@ -149,12 +184,14 @@ const GetStarted = () => {
     location: location || "Your city",
     description: description || `Tell customers what you offer and why they'll come back.`,
     monogram,
-    acceptingOrders: true,
+    logoUrl,
+    acceptingOrders: setup?.isPublic ?? false,
     hours,
     pickupInfo,
   };
 
   const selectedPlan = plans?.find((p) => p.slug === planSlug) ?? null;
+  const namedItems = items.filter((i) => i.name.trim());
 
   const stepCardRef = useRef<HTMLDivElement>(null);
   const didMountRef = useRef(false);
@@ -180,66 +217,103 @@ const GetStarted = () => {
     category,
     location,
     description,
+    logoUrl,
     items,
     hours,
     pickupInfo,
+    pickupEnabled,
+    deliveryEnabled,
+    deliveryFee,
     planSlug,
   });
 
-  const publish = async () => {
-    const { data: auth } = await supabase.auth.getUser();
+  // Answers survive a sign-in round trip and an accidental refresh.
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(DRAFT_KEY, JSON.stringify(snapshot()));
+    } catch {
+      // Storage unavailable — progress still saves to the merchant record.
+    }
+  });
 
-    if (!auth.user) {
-      try {
-        sessionStorage.setItem(DRAFT_KEY, JSON.stringify(snapshot()));
-      } catch {
-        // Storage unavailable — the merchant will need to re-enter their answers.
+  const setupPayload = () => ({
+    businessName: name,
+    slug,
+    industrySlug,
+    purchaseModels,
+    planSlug,
+    category,
+    location,
+    description,
+    hours,
+    pickupInfo,
+    logoUrl,
+    pickupEnabled,
+    deliveryEnabled,
+    deliveryFee,
+    items,
+  });
+
+  /** Persists whatever is filled in so far. Silent unless it fails. */
+  const persist = async (silent = true) => {
+    if (!signedIn || name.trim().length < 2) return false;
+    try {
+      await saveSetup.mutateAsync(setupPayload());
+      return true;
+    } catch (error) {
+      if (!silent) {
+        toast.error("Couldn't save your store", {
+          description: error instanceof Error ? error.message : "Please try again in a moment.",
+        });
       }
-      toast.info("Sign in to finish", {
-        description: "Create your Loumilab account and we'll bring you right back to publish.",
-      });
-      navigate(`/sign-in?mode=signup&next=${encodeURIComponent("/orders/get-started")}`);
+      return false;
+    }
+  };
+
+  const goToSignIn = (mode: "signup" | "signin") =>
+    navigate(`/sign-in?${mode === "signup" ? "mode=signup&" : ""}next=${encodeURIComponent("/orders/get-started")}`);
+
+  const advance = async () => {
+    if (step >= 3) void persist();
+    setStep((s) => Math.min(lastStep, s + 1));
+  };
+
+  const publish = async () => {
+    const ok = await persist(false);
+    if (!ok) return;
+
+    if (!setup?.storefrontId) {
+      toast.success("Store saved", { description: "Finish the remaining steps in your dashboard to go live." });
       return;
     }
-
-    try {
-      const result = await completeOnboarding.mutateAsync({
-        businessName: name,
-        slug,
-        industrySlug,
-        purchaseModels,
-        planSlug,
-        category,
-        location,
-        description,
-        hours,
-        pickupInfo,
-        items,
+    if (!setup.canPublish) {
+      toast.info("Almost there", {
+        description: "Finish payments setup and the required steps, then publish from your dashboard.",
       });
-
+      return;
+    }
+    try {
+      await setStatus.mutateAsync({ id: setup.storefrontId, status: "published" });
       try {
         sessionStorage.removeItem(DRAFT_KEY);
       } catch {
         // Ignore storage errors.
       }
-
-      setPublishedSlug(result.slug);
-      toast.success("Your store is created", {
-        description: "Finish payments setup and your storefront goes live automatically.",
-      });
+      toast.success("Your store is live", { description: "Share your link and start taking orders." });
     } catch (error) {
-      toast.error("Couldn't create your store", {
+      toast.error("Couldn't publish your store", {
         description: error instanceof Error ? error.message : "Please try again in a moment.",
       });
     }
   };
 
+  const busy = saveSetup.isPending || setStatus.isPending;
 
   return (
     <Layout>
       <SEOHead
         title="Get Started with Loumilab Orders — Create Your Storefront"
-        description="Set up your Loumilab Orders storefront in a few steps: your industry, business details, catalog, scheduling, and your plan."
+        description="Set up your Loumilab Orders storefront in a few steps: your account, industry, business details, catalog, payments, and publishing."
         path="/orders/get-started"
       />
 
@@ -258,7 +332,8 @@ const GetStarted = () => {
               Let&apos;s build your storefront.
             </h1>
             <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
-              A few short steps, shaped around your kind of business. You can change anything later.
+              A few short steps, shaped around your kind of business. Everything saves as you go, and your store
+              stays private until you publish it.
             </p>
           </div>
 
@@ -289,12 +364,52 @@ const GetStarted = () => {
               ref={stepCardRef}
               className="rounded-3xl border border-border bg-card p-7 shadow-[var(--shadow-soft)] lg:p-9"
             >
-              <h2 className="font-display text-xl font-semibold">
-                Step {step + 1} — {stepTitles[step]}
-              </h2>
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <h2 className="font-display text-xl font-semibold">
+                  Step {step + 1} of {stepTitles.length} — {stepTitles[step]}
+                </h2>
+                {setup?.merchantId && <StoreStatusBadge status={setup.status} />}
+              </div>
 
               <div className="mt-7 space-y-5">
                 {step === 0 && (
+                  <div className="space-y-5">
+                    <p className="text-sm text-muted-foreground">
+                      Your Loumilab account keeps your store, catalog and payouts together — and saves your
+                      progress from here on.
+                    </p>
+                    {!authChecked ? (
+                      <p className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Loader2 size={15} className="animate-spin" /> Checking your account…
+                      </p>
+                    ) : signedIn ? (
+                      <div className="rounded-2xl border border-accent/20 bg-accent/5 p-5">
+                        <p className="flex items-center gap-2 font-display text-sm font-semibold text-accent">
+                          <Check size={15} /> Signed in as {email}
+                        </p>
+                        <p className="mt-2 text-sm text-muted-foreground">
+                          We'll send a short welcome email once your merchant account is created.
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="flex flex-wrap gap-3">
+                        <Button type="button" className="rounded-full" onClick={() => goToSignIn("signup")}>
+                          Create your account <ArrowRight size={16} />
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="rounded-full"
+                          onClick={() => goToSignIn("signin")}
+                        >
+                          I already have one
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {step === 1 && (
                   <div className="space-y-6">
                     <p className="text-sm text-muted-foreground">
                       Pick what you do. Loumilab Orders adjusts the wording, the workflow and the tools you see.
@@ -330,7 +445,7 @@ const GetStarted = () => {
                   </div>
                 )}
 
-                {step === 1 && (
+                {step === 2 && (
                   <>
                     <p className="text-sm text-muted-foreground">
                       Choose everything that applies — many businesses do more than one.
@@ -358,7 +473,7 @@ const GetStarted = () => {
                   </>
                 )}
 
-                {step === 2 && (
+                {step === 3 && (
                   <>
                     <div className="space-y-2">
                       <Label htmlFor="biz-name">Business name</Label>
@@ -380,7 +495,7 @@ const GetStarted = () => {
                   </>
                 )}
 
-                {step === 3 && (
+                {step === 4 && (
                   <>
                     <div className="space-y-2">
                       <Label htmlFor="biz-desc">Store description</Label>
@@ -396,43 +511,67 @@ const GetStarted = () => {
                         }
                       />
                     </div>
+                    <ImageUpload
+                      merchantId={merchantId}
+                      kind="logo"
+                      label="Store logo"
+                      hint={
+                        merchantId
+                          ? "Optional. Shown on your storefront and order updates."
+                          : "Available as soon as your business name is saved — you can add it here or later."
+                      }
+                      value={logoUrl}
+                      onChange={setLogoUrl}
+                    />
                     <div className="rounded-2xl border border-border bg-secondary p-4 text-sm">
                       <p className="text-muted-foreground">Your store link will be</p>
-                      <p className="mt-1 font-display font-semibold">loumilab.com/orders/store/{slug}</p>
+                      <p className="mt-1 font-display font-semibold">
+                        loumilab.com/orders/store/{setup?.slug ?? slug}
+                      </p>
                     </div>
                   </>
                 )}
 
-                {step === 4 && (
+                {step === 5 && (
                   <>
                     {items.map((item, i) => (
-                      <div key={i} className="grid gap-3 sm:grid-cols-[1.5fr_0.7fr]">
-                        <div className="space-y-2">
-                          <Label htmlFor={`item-${i}`}>
-                            {terms.catalogItem} {i + 1}
-                          </Label>
-                          <Input
-                            id={`item-${i}`}
-                            value={item.name}
-                            onChange={(e) => updateItem(i, { name: e.target.value })}
-                            placeholder={industry?.is_food ? "Chicken Alfredo" : "Outlet installation"}
-                          />
+                      <div key={i} className="space-y-3 rounded-2xl border border-border p-4">
+                        <div className="grid gap-3 sm:grid-cols-[1.5fr_0.7fr]">
+                          <div className="space-y-2">
+                            <Label htmlFor={`item-${i}`}>
+                              {terms.catalogItem} {i + 1}
+                            </Label>
+                            <Input
+                              id={`item-${i}`}
+                              value={item.name}
+                              onChange={(e) => updateItem(i, { name: e.target.value })}
+                              placeholder={industry?.is_food ? "Chicken Alfredo" : "Outlet installation"}
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor={`price-${i}`}>Price{industry?.is_food ? "" : " (optional)"}</Label>
+                            <Input
+                              id={`price-${i}`}
+                              inputMode="decimal"
+                              value={item.price}
+                              onChange={(e) => updateItem(i, { price: e.target.value })}
+                              placeholder={industry?.is_food ? "16.00" : "Quote"}
+                            />
+                          </div>
                         </div>
-                        <div className="space-y-2">
-                          <Label htmlFor={`price-${i}`}>Price</Label>
-                          <Input
-                            id={`price-${i}`}
-                            inputMode="decimal"
-                            value={item.price}
-                            onChange={(e) => updateItem(i, { price: e.target.value })}
-                            placeholder="16.00"
-                          />
-                        </div>
+                        <ImageUpload
+                          merchantId={merchantId}
+                          kind="item"
+                          shape="wide"
+                          label={`${terms.catalogItem} image`}
+                          value={item.imageUrl ?? null}
+                          onChange={(url) => updateItem(i, { imageUrl: url })}
+                        />
                       </div>
                     ))}
                     {!industry?.is_food && (
                       <p className="text-xs text-muted-foreground">
-                        Not sure on price? Leave it blank and quote each job individually.
+                        Not sure on price? Leave it blank and quote each {terms.transaction.toLowerCase()} individually.
                       </p>
                     )}
                     <Button
@@ -446,7 +585,7 @@ const GetStarted = () => {
                   </>
                 )}
 
-                {step === 5 && (
+                {step === 6 && (
                   <>
                     <div className="space-y-2">
                       <Label htmlFor="hours">{industry?.is_food ? "Ordering hours" : "Working hours"}</Label>
@@ -456,10 +595,74 @@ const GetStarted = () => {
                       <Label htmlFor="pickup">{terms.location} details</Label>
                       <Input id="pickup" value={pickupInfo} onChange={(e) => setPickupInfo(e.target.value)} />
                     </div>
+                    <div className="space-y-4 rounded-2xl border border-border p-4">
+                      <div className="flex items-center justify-between gap-4">
+                        <div>
+                          <p className="text-sm font-semibold">
+                            {industry?.is_food ? "Pickup" : "On-site or in-store"}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            Customers come to you at the details above.
+                          </p>
+                        </div>
+                        <Switch checked={pickupEnabled} onCheckedChange={setPickupEnabled} />
+                      </div>
+                      <div className="flex items-center justify-between gap-4">
+                        <div>
+                          <p className="text-sm font-semibold">
+                            {industry?.is_food ? "Delivery" : "We travel to the customer"}
+                          </p>
+                          <p className="text-xs text-muted-foreground">Add a flat fee if you charge for travel.</p>
+                        </div>
+                        <Switch checked={deliveryEnabled} onCheckedChange={setDeliveryEnabled} />
+                      </div>
+                      {deliveryEnabled && (
+                        <div className="space-y-2">
+                          <Label htmlFor="delivery-fee">Fee</Label>
+                          <Input
+                            id="delivery-fee"
+                            inputMode="decimal"
+                            value={deliveryFee}
+                            onChange={(e) => setDeliveryFee(e.target.value)}
+                            placeholder="5.00"
+                            className="sm:w-32"
+                          />
+                        </div>
+                      )}
+                    </div>
                   </>
                 )}
 
-                {step === 6 && (
+                {step === 7 && (
+                  <div className="space-y-5">
+                    <div className="flex items-start gap-2 rounded-2xl border border-border bg-secondary p-4 text-sm text-muted-foreground">
+                      <ShieldCheck size={16} className="mt-0.5 shrink-0 text-accent" />
+                      <span>
+                        Payments and payouts are handled securely by Stripe. Loumilab Orders never stores your bank
+                        details — you enter them once with Stripe and payouts land in your account automatically.
+                      </span>
+                    </div>
+                    <ul className="space-y-2 text-sm text-muted-foreground">
+                      <li>· Verify your business and identity with Stripe</li>
+                      <li>· Add the account where you'd like payouts sent</li>
+                      <li>· Come back here — your store is ready to publish</li>
+                    </ul>
+                    <p className="text-sm">
+                      {setup?.payoutStatus === "payout_enabled" ? (
+                        <span className="font-semibold text-accent">Payouts are active.</span>
+                      ) : (
+                        "You can start payments setup from your dashboard at any point — it's the last requirement before publishing."
+                      )}
+                    </p>
+                    <Button asChild variant="outline" className="rounded-full">
+                      <Link to="/orders/dashboard">
+                        Open payments setup <ExternalLink size={14} />
+                      </Link>
+                    </Button>
+                  </div>
+                )}
+
+                {step === 8 && (
                   <div className="grid gap-3">
                     {(plans ?? []).map((p) => (
                       <button
@@ -490,7 +693,7 @@ const GetStarted = () => {
                   </div>
                 )}
 
-                {step === 7 && (
+                {step === 9 && (
                   <div className="space-y-4 text-sm">
                     <div className="rounded-2xl border border-border p-5">
                       <p className="font-display font-semibold">{name || "Your Store"}</p>
@@ -501,18 +704,19 @@ const GetStarted = () => {
                     </div>
                     <div className="rounded-2xl border border-border p-5">
                       <p className="font-display font-semibold">
-                        {items.filter((i) => i.name).length || 0} {terms.catalogItem.toLowerCase()}
-                        {items.filter((i) => i.name).length === 1 ? "" : "s"}
+                        {namedItems.length} {terms.catalogItem.toLowerCase()}
+                        {namedItems.length === 1 ? "" : "s"}
                       </p>
                       <ul className="mt-2 space-y-1 text-muted-foreground">
-                        {items
-                          .filter((i) => i.name)
-                          .map((i, idx) => (
-                            <li key={idx}>
-                              {i.name} — {formatMoney(Math.round((Number(i.price) || 0) * 100))}
-                            </li>
-                          ))}
-                        {items.filter((i) => i.name).length === 0 && <li>Nothing added yet.</li>}
+                        {namedItems.map((i, idx) => (
+                          <li key={idx}>
+                            {i.name} —{" "}
+                            {Number(i.price) > 0
+                              ? formatMoney(Math.round(Number(i.price) * 100))
+                              : "priced per request"}
+                          </li>
+                        ))}
+                        {namedItems.length === 0 && <li>Nothing added yet.</li>}
                       </ul>
                     </div>
                     <div className="rounded-2xl border border-border p-5">
@@ -523,38 +727,52 @@ const GetStarted = () => {
                       <p className="mt-1 text-muted-foreground">{workflow.join(" → ")}</p>
                     </div>
 
-                    {publishedSlug && (
-                      <div className="rounded-2xl border border-accent/20 bg-accent/10 p-5">
-                        <p className="font-display font-semibold text-accent">
-                          Your store is created — one step left.
-                        </p>
-                        <p className="mt-2 text-muted-foreground">
-                          Finish payments setup and your storefront goes live automatically, ready to take
-                          {" "}
-                          {terms.transactions.toLowerCase()} and get paid.
-                        </p>
-                        <div className="mt-4 rounded-xl border border-border bg-card p-4">
-                          <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Your store link</p>
-                          <p className="mt-1 font-display font-semibold">loumilab.com/orders/store/{publishedSlug}</p>
-                          <span className="mt-2 inline-block rounded-full border border-border px-3 py-1 text-xs font-semibold text-muted-foreground">
-                            Draft — not visible yet
-                          </span>
+                    {setup?.merchantId && (
+                      <div className="rounded-2xl border border-border p-5">
+                        <div className="flex flex-wrap items-center justify-between gap-3">
+                          <p className="font-display font-semibold">Before you go live</p>
+                          <StoreStatusBadge status={setup.status} />
                         </div>
-                        <div className="mt-4 flex flex-wrap gap-3">
-                          <Button asChild className="rounded-full">
-                            <Link to="/orders/dashboard">Finish payments setup</Link>
-                          </Button>
-                          <Button asChild variant="outline" className="rounded-full">
-                            <Link to="/orders/dashboard">Open dashboard</Link>
-                          </Button>
-                        </div>
+                        <ul className="mt-3 space-y-1.5">
+                          {setup.tasks
+                            .filter((t) => t.required && t.id !== "publish")
+                            .map((task) => (
+                              <li key={task.id} className="flex items-start gap-2 text-muted-foreground">
+                                <Check
+                                  size={14}
+                                  className={`mt-0.5 shrink-0 ${task.done ? "text-accent" : "opacity-25"}`}
+                                />
+                                {task.id === "catalog" ? terms.catalog : task.label}
+                              </li>
+                            ))}
+                        </ul>
+                        {setup.slug && (
+                          <div className="mt-4 rounded-xl border border-border bg-secondary p-4">
+                            <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
+                              Your store link
+                            </p>
+                            <p className="mt-1 font-display font-semibold">
+                              loumilab.com/orders/store/{setup.slug}
+                            </p>
+                            <div className="mt-3 flex flex-wrap gap-3">
+                              <Button asChild size="sm" variant="outline" className="rounded-full">
+                                <Link to={`/orders/store/${setup.slug}`}>
+                                  {setup.isPublic ? "View store" : "Preview store"} <ExternalLink size={14} />
+                                </Link>
+                              </Button>
+                              <Button asChild size="sm" variant="ghost" className="rounded-full">
+                                <Link to="/orders/dashboard">Open dashboard</Link>
+                              </Button>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
                 )}
               </div>
 
-              <div className="mt-9 flex items-center justify-between gap-3">
+              <div className="mt-9 flex flex-wrap items-center justify-between gap-3">
                 <Button
                   type="button"
                   variant="ghost"
@@ -565,41 +783,53 @@ const GetStarted = () => {
                   <ArrowLeft size={16} /> Back
                 </Button>
 
-                {step < stepTitles.length - 1 ? (
-                  <Button
-                    type="button"
-                    className="rounded-full"
-                    disabled={!canContinue}
-                    onClick={() => setStep((s) => s + 1)}
-                  >
+                {step < lastStep ? (
+                  <Button type="button" className="rounded-full" disabled={!canContinue} onClick={advance}>
                     Continue <ArrowRight size={16} />
                   </Button>
-                ) : publishedSlug ? (
+                ) : setup?.isPublic ? (
                   <Button asChild className="rounded-full">
                     <Link to="/orders/dashboard">
                       Go to dashboard <ArrowRight size={16} />
                     </Link>
                   </Button>
                 ) : (
-                  <Button
-                    type="button"
-                    className="rounded-full"
-                    onClick={publish}
-                    disabled={completeOnboarding.isPending || name.trim().length < 2}
-                  >
-                    {completeOnboarding.isPending ? (
-                      <>
-                        <Loader2 size={16} className="animate-spin" /> Creating your store…
-                      </>
-                    ) : (
-                      <>
-                        Publish store <ArrowRight size={16} />
-                      </>
-                    )}
-                  </Button>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="rounded-full"
+                      onClick={() => persist(false)}
+                      disabled={busy || name.trim().length < 2}
+                    >
+                      Save and finish later
+                    </Button>
+                    <Button
+                      type="button"
+                      className="rounded-full"
+                      onClick={publish}
+                      disabled={busy || name.trim().length < 2}
+                    >
+                      {busy ? (
+                        <>
+                          <Loader2 size={16} className="animate-spin" /> Saving…
+                        </>
+                      ) : (
+                        <>
+                          Publish store <ArrowRight size={16} />
+                        </>
+                      )}
+                    </Button>
+                  </div>
                 )}
-
               </div>
+
+              {step === lastStep && setup && !setup.canPublish && (
+                <p className="mt-4 text-xs text-muted-foreground">
+                  Publishing unlocks once payments setup is complete and the required steps are done. Everything
+                  you've entered is saved.
+                </p>
+              )}
             </div>
 
             {/* Live preview */}
@@ -611,17 +841,15 @@ const GetStarted = () => {
                 <div className="px-5 pb-6 pt-3">
                   <StorefrontHeader store={previewStore} compact />
                   <div className="mt-5 space-y-2.5">
-                    {items
-                      .filter((i) => i.name)
-                      .map((i, idx) => (
-                        <div key={idx} className="flex items-center justify-between rounded-2xl border border-border p-3">
-                          <span className="truncate font-display text-sm font-semibold">{i.name}</span>
-                          <span className="text-xs text-muted-foreground">
-                            {formatMoney(Math.round((Number(i.price) || 0) * 100))}
-                          </span>
-                        </div>
-                      ))}
-                    {items.filter((i) => i.name).length === 0 && (
+                    {namedItems.map((i, idx) => (
+                      <div key={idx} className="flex items-center justify-between rounded-2xl border border-border p-3">
+                        <span className="truncate font-display text-sm font-semibold">{i.name}</span>
+                        <span className="text-xs text-muted-foreground">
+                          {Number(i.price) > 0 ? formatMoney(Math.round(Number(i.price) * 100)) : "Quote"}
+                        </span>
+                      </div>
+                    ))}
+                    {namedItems.length === 0 && (
                       <div className="rounded-2xl border border-dashed border-border p-5 text-center text-xs text-muted-foreground">
                         Your {terms.catalog.toLowerCase()} will appear here.
                       </div>

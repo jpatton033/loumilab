@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import ImageUpload from "@/components/orders/ImageUpload";
+import StoreStatusBadge from "@/components/orders/StoreStatusBadge";
 import {
   useCreateStorefront,
   useDeleteProduct,
@@ -14,6 +16,7 @@ import {
   useStorefrontProducts,
   useUpdateStorefront,
 } from "@/lib/orders/store-admin";
+import { STATUS_DESCRIPTIONS, type StorefrontStatus } from "@/lib/orders/setup";
 import { formatCents } from "@/lib/orders/storefront";
 import { toast } from "sonner";
 
@@ -22,6 +25,8 @@ interface Props {
   businessName?: string;
   catalogLabel: string;
   itemLabel: string;
+  /** Service businesses may quote individually instead of listing a fixed price. */
+  priceOptional?: boolean;
 }
 
 const slugify = (value: string) =>
@@ -32,7 +37,7 @@ const slugify = (value: string) =>
     .slice(0, 48);
 
 /** Merchant-facing storefront settings and catalog editor. */
-const StorePanel = ({ merchantId, businessName, catalogLabel, itemLabel }: Props) => {
+const StorePanel = ({ merchantId, businessName, catalogLabel, itemLabel, priceOptional = false }: Props) => {
   const { data: store, isLoading } = useMyStorefront(merchantId);
   const { data: products } = useStorefrontProducts(store?.id);
   const create = useCreateStorefront(merchantId);
@@ -44,6 +49,8 @@ const StorePanel = ({ merchantId, businessName, catalogLabel, itemLabel }: Props
   const [itemName, setItemName] = useState("");
   const [itemDesc, setItemDesc] = useState("");
   const [itemPrice, setItemPrice] = useState("");
+  const [itemImage, setItemImage] = useState<string | null>(null);
+
 
   if (!merchantId) {
     return (
@@ -109,12 +116,27 @@ const StorePanel = ({ merchantId, businessName, catalogLabel, itemLabel }: Props
           <div>
             <p className="font-display font-semibold">{store.name}</p>
             <p className="mt-1 text-sm text-muted-foreground">/orders/store/{store.slug}</p>
+            <StoreStatusBadge className="mt-3" status={(store.status ?? "setup") as StorefrontStatus} />
           </div>
           <Button asChild variant="outline" size="sm" className="rounded-full">
             <Link to={`/orders/store/${store.slug}`}>
-              View <ExternalLink size={14} />
+              {store.status === "published" ? "View" : "Preview"} <ExternalLink size={14} />
             </Link>
           </Button>
+        </div>
+        <p className="mt-3 text-xs text-muted-foreground">
+          {STATUS_DESCRIPTIONS[(store.status ?? "setup") as StorefrontStatus]}
+        </p>
+
+        <div className="mt-6">
+          <ImageUpload
+            merchantId={merchantId}
+            kind="logo"
+            label="Store logo"
+            hint="Shown on your storefront, receipts and order updates. PNG, JPG, WebP or SVG up to 5 MB."
+            value={store.logo_url}
+            onChange={(url) => patch({ logo_url: url })}
+          />
         </div>
 
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -148,13 +170,6 @@ const StorePanel = ({ merchantId, businessName, catalogLabel, itemLabel }: Props
         <div className="mt-6 space-y-4">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <p className="text-sm font-semibold">Published</p>
-              <p className="text-xs text-muted-foreground">Customers can find and order from this store.</p>
-            </div>
-            <Switch checked={store.is_published} onCheckedChange={(v) => patch({ is_published: v })} />
-          </div>
-          <div className="flex items-center justify-between gap-4">
-            <div>
               <p className="text-sm font-semibold">Pickup</p>
               <p className="text-xs text-muted-foreground">{store.pickup_info ?? "Customers collect their order."}</p>
             </div>
@@ -170,7 +185,11 @@ const StorePanel = ({ merchantId, businessName, catalogLabel, itemLabel }: Props
             </div>
             <Switch checked={store.delivery_enabled} onCheckedChange={(v) => patch({ delivery_enabled: v })} />
           </div>
+          <p className="text-xs text-muted-foreground">
+            Publishing and pausing your store is handled from the setup panel at the top of your dashboard.
+          </p>
         </div>
+
       </div>
 
       <div className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-soft)] sm:p-8">
@@ -180,11 +199,22 @@ const StorePanel = ({ merchantId, businessName, catalogLabel, itemLabel }: Props
           <div className="mt-5 divide-y divide-border border-t border-border">
             {(products ?? []).map((p) => (
               <div key={p.id} className="flex items-center justify-between gap-4 py-3">
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold">{p.name}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {formatCents(p.price_cents, store.currency)} · {p.availability.replace("_", " ")}
-                  </p>
+                <div className="flex min-w-0 items-center gap-3">
+                  {p.image_url ? (
+                    <img
+                      src={p.image_url}
+                      alt={p.name}
+                      className="h-10 w-10 shrink-0 rounded-xl border border-border object-cover"
+                      loading="lazy"
+                    />
+                  ) : null}
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-semibold">{p.name}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {p.price_cents > 0 ? formatCents(p.price_cents, store.currency) : "Priced per request"} ·{" "}
+                      {p.availability.replace("_", " ")}
+                    </p>
+                  </div>
                 </div>
                 <button
                   type="button"
@@ -203,17 +233,30 @@ const StorePanel = ({ merchantId, businessName, catalogLabel, itemLabel }: Props
           onSubmit={(e) => {
             e.preventDefault();
             const cents = Math.round(Number(itemPrice) * 100);
-            if (itemName.trim().length < 2 || !Number.isFinite(cents) || cents <= 0) {
-              toast.error(`Add a name and price for the ${itemLabel.toLowerCase()}.`);
+            const priceValid = priceOptional
+              ? !itemPrice.trim() || (Number.isFinite(cents) && cents >= 0)
+              : Number.isFinite(cents) && cents > 0;
+            if (itemName.trim().length < 2 || !priceValid) {
+              toast.error(
+                priceOptional
+                  ? `Add a name for the ${itemLabel.toLowerCase()}.`
+                  : `Add a name and price for the ${itemLabel.toLowerCase()}.`,
+              );
               return;
             }
             saveProduct.mutate(
-              { name: itemName.trim(), description: itemDesc.trim() || undefined, price_cents: cents },
+              {
+                name: itemName.trim(),
+                description: itemDesc.trim() || undefined,
+                price_cents: Number.isFinite(cents) ? Math.max(0, cents) : 0,
+                image_url: itemImage,
+              },
               {
                 onSuccess: () => {
                   setItemName("");
                   setItemDesc("");
                   setItemPrice("");
+                  setItemImage(null);
                   toast.success(`${itemLabel} added`);
                 },
                 onError: (err) =>
@@ -234,19 +277,32 @@ const StorePanel = ({ merchantId, businessName, catalogLabel, itemLabel }: Props
             <Input id="item-desc" value={itemDesc} onChange={(e) => setItemDesc(e.target.value)} maxLength={280} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="item-price">Price</Label>
+            <Label htmlFor="item-price">Price{priceOptional ? " (optional)" : ""}</Label>
             <Input
               id="item-price"
               inputMode="decimal"
               value={itemPrice}
               onChange={(e) => setItemPrice(e.target.value)}
               className="sm:w-28"
+              placeholder={priceOptional ? "Quote" : "16.00"}
+            />
+          </div>
+          <div className="sm:col-span-3">
+            <ImageUpload
+              merchantId={merchantId}
+              kind="item"
+              shape="wide"
+              label={`${itemLabel} image`}
+              hint="Optional — a clear photo helps customers choose."
+              value={itemImage}
+              onChange={setItemImage}
             />
           </div>
           <Button type="submit" disabled={saveProduct.isPending} className="rounded-full sm:col-span-3 sm:w-fit">
             {saveProduct.isPending ? "Saving…" : `Add ${itemLabel.toLowerCase()}`}
           </Button>
         </form>
+
       </div>
     </div>
   );
