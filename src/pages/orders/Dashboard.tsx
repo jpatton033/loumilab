@@ -287,7 +287,9 @@ const Dashboard = () => {
                 businessName={merchant?.business_name}
                 catalogLabel={terms.catalog}
                 itemLabel={terms.catalogItem}
+                priceOptional={!industry?.is_food}
               />
+
             )}
 
             {/* Estimates */}
