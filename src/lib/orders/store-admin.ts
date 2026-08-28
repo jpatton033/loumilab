@@ -281,10 +281,9 @@ export const useSaveStoreSetup = () => {
       const slug = await uniqueSlug(input.slug, existingStore?.id as string | undefined);
       // Blank wizard fields must never wipe details the merchant already saved,
       // so empty values are simply left out of the update.
-      const optional = <T,>(value: T | null | undefined, empty: boolean) =>
-        empty ? {} : ({ value } as { value: T });
       const text = (key: string, value?: string | null) =>
         value?.trim() ? { [key]: value.trim() } : {};
+
 
       const storePayload: Record<string, unknown> = {
         name: input.businessName.trim(),
