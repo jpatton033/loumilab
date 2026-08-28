@@ -136,6 +136,31 @@ const GetStarted = () => {
     if (!planSlug && plans?.length) setPlanSlug(plans[1]?.slug ?? plans[0].slug);
   }, [plans, planSlug]);
 
+  // A merchant who already has a store sees their saved details, not a blank
+  // form — otherwise the auto-save would overwrite real data with defaults.
+  const { data: prefill } = useOnboardingPrefill();
+  const hydrated = useRef(!!saved);
+  useEffect(() => {
+    if (hydrated.current || !prefill) return;
+    hydrated.current = true;
+    keepRestoredModels.current = true;
+    setIndustrySlug(prefill.industrySlug);
+    if (prefill.purchaseModels.length) setPurchaseModels(prefill.purchaseModels);
+    if (prefill.planSlug) setPlanSlug(prefill.planSlug);
+    if (prefill.businessName) setName(prefill.businessName);
+    if (prefill.category) setCategory(prefill.category);
+    if (prefill.location) setLocation(prefill.location);
+    if (prefill.description) setDescription(prefill.description);
+    if (prefill.logoUrl) setLogoUrl(prefill.logoUrl);
+    if (prefill.hours) setHours(prefill.hours);
+    if (prefill.pickupInfo) setPickupInfo(prefill.pickupInfo);
+    setPickupEnabled(prefill.pickupEnabled);
+    setDeliveryEnabled(prefill.deliveryEnabled);
+    if (prefill.deliveryFee) setDeliveryFee(prefill.deliveryFee);
+    if (prefill.items.length) setItems(prefill.items);
+  }, [prefill]);
+
+
   const stepTitles = [
     "Merchant account",
     "Your industry",
