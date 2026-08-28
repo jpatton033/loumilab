@@ -281,23 +281,22 @@ export const useSaveStoreSetup = () => {
       const slug = await uniqueSlug(input.slug, existingStore?.id as string | undefined);
       // Blank wizard fields must never wipe details the merchant already saved,
       // so empty values are simply left out of the update.
-      const text = (key: string, value?: string | null) =>
-        value?.trim() ? { [key]: value.trim() } : {};
+      const trimmed = (value?: string | null) => (value?.trim() ? value.trim() : undefined);
 
-
-      const storePayload: Record<string, unknown> = {
+      const storePayload = {
         name: input.businessName.trim(),
         monogram: monogramFor(input.businessName),
-        ...text("location", input.location),
-        ...text("description", input.description),
-        ...text("hours", input.hours),
-        ...text("pickup_info", input.pickupInfo),
-        ...(input.logoUrl ? { logo_url: input.logoUrl } : {}),
-        ...(input.pickupEnabled === undefined ? {} : { pickup_enabled: input.pickupEnabled }),
-        ...(input.deliveryEnabled === undefined ? {} : { delivery_enabled: input.deliveryEnabled }),
-        ...(input.deliveryFee?.trim() ? { delivery_fee_cents: toCents(input.deliveryFee) } : {}),
-        ...(input.deliveryMinimum?.trim() ? { delivery_minimum_cents: toCents(input.deliveryMinimum) } : {}),
+        location: trimmed(input.location),
+        description: trimmed(input.description),
+        hours: trimmed(input.hours),
+        pickup_info: trimmed(input.pickupInfo),
+        logo_url: input.logoUrl || undefined,
+        pickup_enabled: input.pickupEnabled,
+        delivery_enabled: input.deliveryEnabled,
+        delivery_fee_cents: input.deliveryFee?.trim() ? toCents(input.deliveryFee) : undefined,
+        delivery_minimum_cents: input.deliveryMinimum?.trim() ? toCents(input.deliveryMinimum) : undefined,
       };
+
       
 
 
