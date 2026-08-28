@@ -138,7 +138,7 @@ const GetStarted = () => {
 
   // A merchant who already has a store sees their saved details, not a blank
   // form — otherwise the auto-save would overwrite real data with defaults.
-  const { data: prefill } = useOnboardingPrefill();
+  const { data: prefill, isFetched: prefillReady } = useOnboardingPrefill();
   const hydrated = useRef(!!saved);
   useEffect(() => {
     if (hydrated.current || !prefill) return;
@@ -282,6 +282,8 @@ const GetStarted = () => {
   /** Persists whatever is filled in so far. Silent unless it fails. */
   const persist = async (silent = true) => {
     if (!signedIn || name.trim().length < 2) return false;
+    // Never save before saved details have had a chance to load.
+    if (!prefillReady) return false;
     try {
       await saveSetup.mutateAsync(setupPayload());
       return true;
