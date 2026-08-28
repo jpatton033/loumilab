@@ -298,7 +298,7 @@ export const useSaveStoreSetup = () => {
         ...(input.deliveryFee?.trim() ? { delivery_fee_cents: toCents(input.deliveryFee) } : {}),
         ...(input.deliveryMinimum?.trim() ? { delivery_minimum_cents: toCents(input.deliveryMinimum) } : {}),
       };
-      void optional;
+      
 
 
       let resolvedSlug = existingStore?.slug as string | undefined;
