@@ -15,7 +15,7 @@ import ImageUpload from "@/components/orders/ImageUpload";
 import StoreStatusBadge from "@/components/orders/StoreStatusBadge";
 import { formatMoney } from "@/data/orders/storefronts";
 import { usePublicPlans, planPriceLabel, planPeriodLabel, formatFeeBps } from "@/lib/orders/plans";
-import { useSaveStoreSetup, type OnboardingItem } from "@/lib/orders/store-admin";
+import { useSaveStoreSetup, useOnboardingPrefill, type OnboardingItem } from "@/lib/orders/store-admin";
 import { useMerchantSetup, useSetStorefrontStatus } from "@/lib/orders/setup";
 import { supabase } from "@/integrations/supabase/client";
 import {
