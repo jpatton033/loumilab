@@ -19,8 +19,14 @@ import {
   type OrdersPlan,
 } from "@/lib/orders/plans";
 import { useQueryClient } from "@tanstack/react-query";
-import { Pencil } from "lucide-react";
+import { Loader2, Pencil } from "lucide-react";
 import { toast } from "sonner";
+import {
+  PLAN_LINK_LABELS,
+  useLinkPlanToStripe,
+  usePlanStripeStatus,
+  type PlanLinkStatus,
+} from "@/lib/orders/planStripe";
 
 interface Draft {
   name: string;
