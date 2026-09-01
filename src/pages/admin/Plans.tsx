@@ -176,6 +176,14 @@ const AdminPlans = () => {
     >
       <SEOHead title="Plans & Fees | Loumilab Admin" description="Loumilab Orders plan management." path="/admin/plans" noindex />
 
+      <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+        <span>Stripe pricing objects are provisioned from this table.</span>
+        {stripeStatus && (
+          <Badge variant="outline">{stripeStatus.mode === "live" ? "Stripe live mode" : "Stripe test mode"}</Badge>
+        )}
+        {statusError && <span>Stripe status is unavailable right now.</span>}
+      </div>
+
       <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-[var(--shadow-soft)]">
         {isLoading ? (
           <p className="py-12 text-center text-sm text-muted-foreground">Loading…</p>
