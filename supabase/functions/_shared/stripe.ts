@@ -7,10 +7,25 @@ export const stripe = new Stripe(SECRET_KEY, {
   httpClient: Stripe.createFetchHttpClient(),
 });
 
-/** "live" when the configured secret key is a live-mode key, otherwise "test". */
-export const stripeMode: "live" | "test" = SECRET_KEY.includes("_live_") ? "live" : "test";
+/**
+ * A usable Stripe secret key is `sk_...` (standard) or `rk_...` (restricted).
+ * Anything else (e.g. a publishable or meter id) authenticates as 401, so we
+ * treat it as "not configured" instead of leaking a raw Stripe auth error.
+ */
+const KEY_SHAPE = /^(sk|rk)_(test|live)_[A-Za-z0-9]/;
+export const stripeConfigured = KEY_SHAPE.test(SECRET_KEY);
+
+/** Mode derived from the key prefix; "unknown" when the key is unusable. */
+export const stripeMode: "live" | "test" | "unknown" = !stripeConfigured
+  ? "unknown"
+  : SECRET_KEY.startsWith("sk_live_") || SECRET_KEY.startsWith("rk_live_")
+    ? "live"
+    : "test";
 export const stripeLivemode = stripeMode === "live";
-export const stripeConfigured = SECRET_KEY.length > 0;
+
+/** True when a key is present but malformed — actionable config error. */
+export const stripeKeyMalformed = SECRET_KEY.length > 0 && !stripeConfigured;
+
 
 /** Origins allowed as Stripe onboarding return/refresh targets. */
 const ALLOWED_ORIGINS = [

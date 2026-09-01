@@ -1,7 +1,7 @@
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { z } from "npm:zod@3";
 import { admin, requireUser } from "../_shared/auth.ts";
-import { stripeConfigured, stripeMode } from "../_shared/stripe.ts";
+import { stripeConfigured, stripeKeyMalformed, stripeMode } from "../_shared/stripe.ts";
 import {
   ensurePlanPrices,
   planLinkStatus,
@@ -33,7 +33,17 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
   try {
-    if (!stripeConfigured) return json({ error: "Payments are not configured yet." }, 503);
+    if (!stripeConfigured) {
+      return json(
+        {
+          error: stripeKeyMalformed
+            ? "The saved Stripe secret key is not valid (it must start with sk_ or rk_). Update the payment key, then try linking again."
+            : "Payments are not configured yet.",
+        },
+        503,
+      );
+    }
+
 
     const user = await requireUser(req);
     if (!user) return json({ error: "Unauthorized" }, 401);
@@ -92,7 +102,15 @@ Deno.serve(async (req) => {
     return json({ mode: stripeMode, plan: status, ...result });
   } catch (err) {
     console.error("orders-plans-stripe error", err);
+    const type = (err as { type?: string })?.type;
+    if (type === "StripeAuthenticationError") {
+      return json(
+        { error: "Stripe rejected the payment key saved for this project. Update the Stripe secret key, then try linking again." },
+        503,
+      );
+    }
     const message = err instanceof Error ? err.message : "Unexpected error";
     return json({ error: message }, 500);
   }
+
 });

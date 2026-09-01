@@ -9,11 +9,16 @@ import { supabase } from "@/integrations/supabase/client";
 
 export type PlanLinkState = "not_applicable" | "not_linked" | "linked" | "stale";
 
+/** "unknown" when the backend has no usable Stripe secret key. */
+export type StripeMode = "live" | "test" | "unknown";
+
+
 export interface PlanLinkStatus {
   plan_id: string;
   slug: string;
   state: PlanLinkState;
-  mode: "live" | "test";
+  mode: StripeMode;
+
   product_id: string | null;
   monthly_price_id: string | null;
   annual_price_id: string | null;
@@ -36,7 +41,7 @@ export const usePlanStripeStatus = () =>
     queryKey: ["orders", "plans", "stripe-status"],
     staleTime: 60_000,
     retry: false,
-    queryFn: () => call<{ mode: "live" | "test"; plans: PlanLinkStatus[] }>({ action: "status" }),
+    queryFn: () => call<{ mode: StripeMode; plans: PlanLinkStatus[] }>({ action: "status" }),
   });
 
 export const useLinkPlanToStripe = () => {
