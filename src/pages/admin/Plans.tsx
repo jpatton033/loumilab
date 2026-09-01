@@ -250,7 +250,7 @@ const AdminPlans = () => {
           </Badge>
         )}
         {statusError && (
-          <span>
+          <span className="text-destructive">
             {statusError instanceof Error ? statusError.message : "Stripe status is unavailable right now."}
           </span>
         )}
