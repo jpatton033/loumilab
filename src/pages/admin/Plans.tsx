@@ -71,9 +71,51 @@ const toDraft = (plan: OrdersPlan): Draft => ({
 const cents = (value: string) => (value.trim() === "" ? null : Math.round(Number(value) * 100));
 const bps = (value: string) => (value.trim() === "" ? null : Math.round(Number(value) * 100));
 
+/** Stripe linkage state for one plan, with a provisioning action for admins. */
+const StripeCell = ({
+  plan,
+  status,
+  loading,
+  unavailable,
+  linking,
+  onLink,
+}: {
+  plan: OrdersPlan;
+  status?: PlanLinkStatus;
+  loading: boolean;
+  unavailable: boolean;
+  linking: boolean;
+  onLink: () => void;
+}) => {
+  if (!plan.requires_subscription || !plan.monthly_price_cents) return <span>—</span>;
+  if (loading && !status) return <span>Checking…</span>;
+
+  const state = status?.state ?? (plan.stripe_price_monthly_id ? "linked" : "not_linked");
+  const linked = state === "linked";
+  const intervals = status?.annual_required ? "monthly + annual" : "monthly";
+
+  return (
+    <div className="space-y-1.5">
+      <Badge variant={linked ? "default" : state === "stale" ? "destructive" : "outline"}>
+        {linked ? `Linked (${intervals})` : PLAN_LINK_LABELS[state]}
+      </Badge>
+      {unavailable && <p>Stripe could not be reached — showing saved IDs only.</p>}
+      {status?.detail && !unavailable && <p>{status.detail}</p>}
+      {!linked && (
+        <Button variant="outline" size="sm" className="h-7 rounded-full text-xs" disabled={linking} onClick={onLink}>
+          {linking ? <Loader2 className="animate-spin" size={12} /> : "Link to Stripe"}
+        </Button>
+      )}
+    </div>
+  );
+};
+
 const AdminPlans = () => {
   const { data: plans = [], isLoading } = useAllPlans();
   const { data: feeChanges = [] } = usePlanFeeChanges();
+  const { data: stripeStatus, isLoading: statusLoading, error: statusError } = usePlanStripeStatus();
+  const linkPlan = useLinkPlanToStripe();
+  const [linkingId, setLinkingId] = useState<string | null>(null);
   const queryClient = useQueryClient();
   const [editing, setEditing] = useState<OrdersPlan | null>(null);
   const [draft, setDraft] = useState<Draft | null>(null);
