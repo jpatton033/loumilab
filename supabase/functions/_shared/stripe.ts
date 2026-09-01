@@ -31,6 +31,14 @@ export const stripeKeyMalformed = SECRET_KEY.length > 0 && !stripeConfigured;
 export const stripePublishableKeySaved = SECRET_KEY.startsWith("pk_");
 
 /**
+ * The key's type marker only (text before the first underscore, capped short),
+ * so an admin can tell which value was pasted. Never exposes key material.
+ */
+const KEY_PREFIX = SECRET_KEY.includes("_")
+  ? SECRET_KEY.slice(0, Math.min(SECRET_KEY.indexOf("_"), 8))
+  : "";
+
+/**
  * Plain-English description of an unusable key, safe to return to admins.
  * Never includes any part of the key value itself.
  */
@@ -40,7 +48,7 @@ export const stripeKeyProblem: string | null = stripeConfigured
     ? "No Stripe key is saved for this project yet."
     : stripePublishableKeySaved
       ? "A publishable key (pk_…) is saved as the payment key. Publishable keys only work in the browser — save the Secret key (sk_live_… or sk_test_…) instead."
-      : "The saved payment key is not a Stripe secret key. It must start with sk_ or rk_.";
+      : `The saved payment key is not a Stripe secret key (it begins with "${KEY_PREFIX || "an unrecognised value"}"). Save the Secret key from Stripe's API keys page — it starts with sk_live_ or sk_test_.`;
 
 
 
