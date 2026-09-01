@@ -213,11 +213,36 @@ const AdminPlans = () => {
                     </div>
                   </TableCell>
                   <TableCell className="text-xs text-muted-foreground">
-                    {plan.requires_subscription
-                      ? plan.stripe_price_monthly_id
-                        ? "Linked"
-                        : "Not linked yet"
-                      : "—"}
+                    <StripeCell
+                      plan={plan}
+                      status={stripeStatus?.plans.find((s) => s.plan_id === plan.id)}
+                      loading={statusLoading}
+                      unavailable={!!statusError}
+                      linking={linkPlan.isPending && linkingId === plan.id}
+                      onLink={() => {
+                        setLinkingId(plan.id);
+                        linkPlan.mutate(plan.id, {
+                          onSuccess: (res) => {
+                            toast.success(
+                              `${plan.name} linked to Stripe (${res.plan.mode === "live" ? "live" : "test"} mode)`,
+                            );
+                            void logAudit({
+                              action: "plan.stripe_linked",
+                              targetType: "orders_plan",
+                              targetId: plan.id,
+                              newValue: {
+                                monthly_price_id: res.plan.monthly_price_id,
+                                annual_price_id: res.plan.annual_price_id,
+                                mode: res.plan.mode,
+                              },
+                            }).catch(() => undefined);
+                          },
+                          onError: (err) =>
+                            toast.error(err instanceof Error ? err.message : "Could not link this plan to Stripe."),
+                          onSettled: () => setLinkingId(null),
+                        });
+                      }}
+                    />
                   </TableCell>
                   <TableCell>
                     <Button variant="ghost" size="sm" onClick={() => setEditing(plan)} aria-label={`Edit ${plan.name}`}>
