@@ -279,9 +279,9 @@ export const useSaveStoreSetup = () => {
       if (storeReadError) throw storeReadError;
 
       const slug = await uniqueSlug(input.slug, existingStore?.id as string | undefined);
-      // Blank wizard fields must never wipe details the merchant already saved,
-      // so empty values are simply left out of the update.
-      const trimmed = (value?: string | null) => (value?.trim() ? value.trim() : undefined);
+      // The wizard is hydrated with saved details before any auto-save runs, so a
+      // blank field is a deliberate removal and must clear the stored value.
+      const trimmed = (value?: string | null) => (value?.trim() ? value.trim() : null);
 
       const storePayload = {
         name: input.businessName.trim(),
@@ -290,11 +290,11 @@ export const useSaveStoreSetup = () => {
         description: trimmed(input.description),
         hours: trimmed(input.hours),
         pickup_info: trimmed(input.pickupInfo),
-        logo_url: input.logoUrl || undefined,
+        logo_url: input.logoUrl || null,
         pickup_enabled: input.pickupEnabled,
         delivery_enabled: input.deliveryEnabled,
-        delivery_fee_cents: input.deliveryFee?.trim() ? toCents(input.deliveryFee) : undefined,
-        delivery_minimum_cents: input.deliveryMinimum?.trim() ? toCents(input.deliveryMinimum) : undefined,
+        delivery_fee_cents: toCents(input.deliveryFee),
+        delivery_minimum_cents: toCents(input.deliveryMinimum),
       };
 
       
