@@ -201,6 +201,20 @@ const AdminPlans = () => {
         reason: draft.fee_reason.trim() || undefined,
       });
 
+      // A changed amount makes the existing Stripe price stale — re-provision it
+      // straight away so checkout never charges an outdated price.
+      const priceChanged =
+        payload.monthly_price_cents !== editing.monthly_price_cents ||
+        payload.annual_price_cents !== editing.annual_price_cents ||
+        payload.annual_billing_active !== editing.annual_billing_active;
+      if (priceChanged && editing.requires_subscription && payload.monthly_price_cents) {
+        try {
+          await linkPlan.mutateAsync(editing.id);
+        } catch {
+          toast.warning("Plan saved, but Stripe pricing needs relinking.");
+        }
+      }
+
       await queryClient.invalidateQueries({ queryKey: ["orders"] });
       toast.success(`${payload.name} saved`);
       setEditing(null);
