@@ -102,7 +102,15 @@ Deno.serve(async (req) => {
     return json({ mode: stripeMode, plan: status, ...result });
   } catch (err) {
     console.error("orders-plans-stripe error", err);
+    const type = (err as { type?: string })?.type;
+    if (type === "StripeAuthenticationError") {
+      return json(
+        { error: "Stripe rejected the payment key saved for this project. Update the Stripe secret key, then try linking again." },
+        503,
+      );
+    }
     const message = err instanceof Error ? err.message : "Unexpected error";
     return json({ error: message }, 500);
   }
+
 });
