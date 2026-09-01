@@ -1,6 +1,7 @@
 import Stripe from "npm:stripe@17";
 
-const SECRET_KEY = Deno.env.get("STRIPE_SECRET_KEY") ?? "";
+/** Pasted keys often carry stray whitespace or wrapping quotes — strip both. */
+const SECRET_KEY = (Deno.env.get("STRIPE_SECRET_KEY") ?? "").trim().replace(/^["']|["']$/g, "");
 
 export const stripe = new Stripe(SECRET_KEY, {
   apiVersion: "2024-12-18.acacia",
@@ -25,6 +26,22 @@ export const stripeLivemode = stripeMode === "live";
 
 /** True when a key is present but malformed — actionable config error. */
 export const stripeKeyMalformed = SECRET_KEY.length > 0 && !stripeConfigured;
+
+/** A publishable key was saved by mistake — front-end only, never valid here. */
+export const stripePublishableKeySaved = SECRET_KEY.startsWith("pk_");
+
+/**
+ * Plain-English description of an unusable key, safe to return to admins.
+ * Never includes any part of the key value itself.
+ */
+export const stripeKeyProblem: string | null = stripeConfigured
+  ? null
+  : SECRET_KEY.length === 0
+    ? "No Stripe key is saved for this project yet."
+    : stripePublishableKeySaved
+      ? "A publishable key (pk_…) is saved as the payment key. Publishable keys only work in the browser — save the Secret key (sk_live_… or sk_test_…) instead."
+      : "The saved payment key is not a Stripe secret key. It must start with sk_ or rk_.";
+
 
 
 /** Origins allowed as Stripe onboarding return/refresh targets. */
