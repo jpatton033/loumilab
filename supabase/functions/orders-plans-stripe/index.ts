@@ -1,7 +1,7 @@
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { z } from "npm:zod@3";
 import { admin, requireUser } from "../_shared/auth.ts";
-import { stripeConfigured, stripeKeyMalformed, stripeMode } from "../_shared/stripe.ts";
+import { stripeConfigured, stripeKeyProblem, stripeMode } from "../_shared/stripe.ts";
 import {
   ensurePlanPrices,
   planLinkStatus,
@@ -36,9 +36,8 @@ Deno.serve(async (req) => {
     if (!stripeConfigured) {
       return json(
         {
-          error: stripeKeyMalformed
-            ? "The saved Stripe secret key is not valid (it must start with sk_ or rk_). Update the payment key, then try linking again."
-            : "Payments are not configured yet.",
+          error: stripeKeyProblem ?? "Payments are not configured yet.",
+          mode: stripeMode,
         },
         503,
       );
