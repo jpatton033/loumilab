@@ -241,9 +241,20 @@ const AdminPlans = () => {
       <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
         <span>Stripe pricing objects are provisioned from this table.</span>
         {stripeStatus && (
-          <Badge variant="outline">{stripeStatus.mode === "live" ? "Stripe live mode" : "Stripe test mode"}</Badge>
+          <Badge variant={stripeStatus.mode === "unknown" ? "destructive" : "outline"}>
+            {stripeStatus.mode === "live"
+              ? "Stripe live mode"
+              : stripeStatus.mode === "test"
+                ? "Stripe test mode"
+                : "Stripe key invalid"}
+          </Badge>
         )}
-        {statusError && <span>Stripe status is unavailable right now.</span>}
+        {statusError && (
+          <span>
+            {statusError instanceof Error ? statusError.message : "Stripe status is unavailable right now."}
+          </span>
+        )}
+
       </div>
 
       <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-[var(--shadow-soft)]">
