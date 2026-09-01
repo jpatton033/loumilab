@@ -2,6 +2,7 @@ import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { z } from "npm:zod@3";
 import { admin, requireUser } from "../_shared/auth.ts";
 import { resolveReturnBase, stripe, stripeConfigured, stripeLivemode } from "../_shared/stripe.ts";
+import { ensurePrice, PLAN_STRIPE_COLUMNS, type PlanRow } from "../_shared/plan-prices.ts";
 
 /**
  * Merchant plan subscriptions (Loumilab's own billing, on the platform account).
@@ -22,62 +23,6 @@ const json = (body: unknown, status = 200) =>
     status,
     headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
-
-/** Ensures the plan has a Stripe product and a price for this interval. */
-async function ensurePrice(plan: {
-  id: string;
-  slug: string;
-  name: string;
-  description: string;
-  monthly_price_cents: number | null;
-  annual_price_cents: number | null;
-  stripe_product_id: string | null;
-  stripe_price_monthly_id: string | null;
-  stripe_price_annual_id: string | null;
-}, interval: "month" | "year") {
-  const amount = interval === "month" ? plan.monthly_price_cents : plan.annual_price_cents;
-  if (!amount || amount <= 0) throw new Error("This plan is not available for self-serve checkout.");
-
-  let productId = plan.stripe_product_id;
-  if (!productId) {
-    const product = await stripe.products.create({
-      name: `Loumilab Orders — ${plan.name}`,
-      description: plan.description?.slice(0, 300) || undefined,
-      metadata: { plan_slug: plan.slug },
-    });
-    productId = product.id;
-  }
-
-  const existing = interval === "month" ? plan.stripe_price_monthly_id : plan.stripe_price_annual_id;
-  let priceId = existing;
-
-  if (priceId) {
-    // Re-create the price when the admin changed the amount.
-    const price = await stripe.prices.retrieve(priceId).catch(() => null);
-    if (!price || price.unit_amount !== amount || price.recurring?.interval !== interval) priceId = null;
-  }
-
-  if (!priceId) {
-    const price = await stripe.prices.create({
-      product: productId,
-      currency: "usd",
-      unit_amount: amount,
-      recurring: { interval },
-      metadata: { plan_slug: plan.slug },
-    });
-    priceId = price.id;
-  }
-
-  await admin
-    .from("orders_plans")
-    .update({
-      stripe_product_id: productId,
-      ...(interval === "month" ? { stripe_price_monthly_id: priceId } : { stripe_price_annual_id: priceId }),
-    })
-    .eq("id", plan.id);
-
-  return priceId;
-}
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
@@ -134,16 +79,14 @@ Deno.serve(async (req) => {
 
     const { data: plan } = await admin
       .from("orders_plans")
-      .select(
-        "id, slug, name, description, monthly_price_cents, annual_price_cents, platform_fee_bps, requires_subscription, is_active, stripe_product_id, stripe_price_monthly_id, stripe_price_annual_id",
-      )
+      .select(PLAN_STRIPE_COLUMNS)
       .eq("slug", plan_slug)
       .maybeSingle();
 
     if (!plan || !plan.is_active) return json({ error: "That plan is not available." }, 404);
     if (!plan.requires_subscription) return json({ error: "That plan doesn't need a subscription." }, 400);
 
-    const priceId = await ensurePrice(plan, interval);
+    const priceId = await ensurePrice(plan as unknown as PlanRow, interval);
 
     await admin.from("merchant_subscriptions").upsert(
       {
