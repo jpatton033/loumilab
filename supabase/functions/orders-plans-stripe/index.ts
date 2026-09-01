@@ -33,7 +33,17 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
   try {
-    if (!stripeConfigured) return json({ error: "Payments are not configured yet." }, 503);
+    if (!stripeConfigured) {
+      return json(
+        {
+          error: stripeKeyMalformed
+            ? "The saved Stripe secret key is not valid (it must start with sk_ or rk_). Update the payment key, then try linking again."
+            : "Payments are not configured yet.",
+        },
+        503,
+      );
+    }
+
 
     const user = await requireUser(req);
     if (!user) return json({ error: "Unauthorized" }, 401);
