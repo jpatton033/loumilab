@@ -30,6 +30,15 @@ Two secondary problems make this worse than it needs to be:
 - `src/lib/orders/planStripe.ts` / `src/pages/admin/Plans.tsx`: widen the mode type to include the unconfigured case and render the friendlier message.
 - No database or schema changes.
 
+## Starter and Custom tiers stay unlinked
+
+These tiers do not need a Stripe product/price link.
+
+- **Starter** has no recurring subscription charge, so there is no subscription to bill.
+- **Custom** is negotiated directly, so it also has no self-serve recurring price.
+- The **platform fee percentage** is still collected on every customer order transaction via Stripe Connect's `application_fee_amount` at checkout. That is independent of subscription billing and does not require a plan price link.
+- The Plans & Fees table will continue showing "—" for Starter and Custom link status, and only Business and Premium should be linked.
+
 ## What I need from you
 
 A valid Stripe secret key for the environment you want to launch in (live if you're going live, test if you're still rehearsing). I'll ask for it through the secure secret prompt — don't paste it into chat.
