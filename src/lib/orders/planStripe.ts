@@ -28,11 +28,28 @@ export interface PlanLinkStatus {
   detail: string;
 }
 
+/**
+ * On a non-2xx response `invoke` throws a generic "non-2xx status code" error and
+ * leaves `data` null, so the function's own explanation (e.g. an unusable Stripe
+ * key) is read back off the response before falling back to that message.
+ */
+const readErrorMessage = async (error: unknown): Promise<string | null> => {
+  const response = (error as { context?: unknown })?.context;
+  if (!(response instanceof Response)) return null;
+  try {
+    const body = await response.clone().json();
+    const message = (body as { error?: unknown })?.error;
+    return typeof message === "string" ? message : null;
+  } catch {
+    return null;
+  }
+};
+
 const call = async <T>(body: unknown): Promise<T> => {
   const { data, error } = await supabase.functions.invoke("orders-plans-stripe", { body });
   const payload = data as ({ error?: string } & T) | null;
   if (payload && typeof payload.error === "string") throw new Error(payload.error);
-  if (error) throw new Error(error.message);
+  if (error) throw new Error((await readErrorMessage(error)) ?? error.message);
   return payload as T;
 };
 
