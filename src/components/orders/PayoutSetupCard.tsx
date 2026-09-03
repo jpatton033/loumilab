@@ -40,6 +40,9 @@ const PayoutSetupCard = () => {
       setForm((f) => ({ ...f, contact_email: data.session?.user.email ?? "" }));
       const res = await fetchConnectStatus();
       if (!active) return;
+      if (res.code === "connect_not_enabled" || res.code === "stripe_key_invalid") {
+        setConfigNotice(res.error ?? null);
+      }
       if (res.merchant) setMerchant(res.merchant);
       if (res.account) setAccount(res.account);
       if (res.mode) setMode(res.mode);
