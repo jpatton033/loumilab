@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { usePayoutStatus } from "@/lib/orders/connect";
+
 
 /**
  * One source of truth for "how far along is this merchant?".
