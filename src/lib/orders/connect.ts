@@ -140,9 +140,14 @@ export async function callConnect(
   action: ConnectAction,
   body: Record<string, unknown> = {}
 ): Promise<ConnectResponse> {
+  const returnUrl =
+    action === "start"
+      ? `${window.location.origin}/orders/dashboard?payments=return`
+      : `${window.location.origin}/orders/dashboard`;
   const { data, error } = await supabase.functions.invoke<ConnectResponse>("stripe-connect", {
-    body: { action, returnUrl: `${window.location.origin}/orders/dashboard`, ...body },
+    body: { action, returnUrl, ...body },
   });
+
   if (error) {
     // Non-2xx responses carry the function's JSON body — surface the real reason.
     const response = (error as { context?: Response }).context;
