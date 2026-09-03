@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { CheckCircle2, ExternalLink, Info, Loader2, ShieldCheck, AlertTriangle } from "lucide-react";
+import { CheckCircle2, ExternalLink, Info, Loader2, RefreshCw, ShieldCheck, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -8,51 +8,50 @@ import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import {
   callConnect,
-  fetchConnectStatus,
-  friendlyRequirements,
+  splitRequirements,
+  usePayoutStatus,
+  useRefreshPayouts,
   PAYOUT_DESCRIPTIONS,
   PAYOUT_LABELS,
   PAYOUT_STEPS,
-  type ConnectedAccount,
-  type MerchantRecord,
 } from "@/lib/orders/connect";
 
-
 const PayoutSetupCard = () => {
-  const [loading, setLoading] = useState(true);
+  const { data, isLoading, isFetching } = usePayoutStatus();
+  const refresh = useRefreshPayouts();
   const [working, setWorking] = useState(false);
-  const [signedIn, setSignedIn] = useState(false);
-  const [merchant, setMerchant] = useState<MerchantRecord | null>(null);
-  const [account, setAccount] = useState<ConnectedAccount | null>(null);
-  const [mode, setMode] = useState<"live" | "test" | null>(null);
   const [form, setForm] = useState({ business_name: "", contact_email: "", phone: "" });
   const [configNotice, setConfigNotice] = useState<string | null>(null);
 
+  const signedIn = data?.code !== "signed_out";
+  const merchant = data?.merchant ?? null;
+  const account = data?.account ?? null;
+  const mode = data?.mode ?? null;
+
   useEffect(() => {
-    let active = true;
+    if (data?.code === "connect_not_enabled" || data?.code === "stripe_key_invalid") {
+      setConfigNotice(data.error ?? null);
+    }
+  }, [data?.code, data?.error]);
+
+  useEffect(() => {
     (async () => {
-      const { data } = await supabase.auth.getSession();
-      if (!active) return;
-      if (!data.session) {
-        setSignedIn(false);
-        setLoading(false);
-        return;
+      const { data: session } = await supabase.auth.getSession();
+      if (session.session?.user.email) {
+        setForm((f) => (f.contact_email ? f : { ...f, contact_email: session.session!.user.email! }));
       }
-      setSignedIn(true);
-      setForm((f) => ({ ...f, contact_email: data.session?.user.email ?? "" }));
-      const res = await fetchConnectStatus();
-      if (!active) return;
-      if (res.code === "connect_not_enabled" || res.code === "stripe_key_invalid") {
-        setConfigNotice(res.error ?? null);
-      }
-      if (res.merchant) setMerchant(res.merchant);
-      if (res.account) setAccount(res.account);
-      if (res.mode) setMode(res.mode);
-      setLoading(false);
     })();
-    return () => {
-      active = false;
-    };
+  }, []);
+
+  // Returning from Stripe onboarding: re-sync so both panels reflect reality.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("payments") !== "return") return;
+    params.delete("payments");
+    const query = params.toString();
+    window.history.replaceState({}, "", `${window.location.pathname}${query ? `?${query}` : ""}`);
+    void refresh();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const start = async () => {
@@ -69,9 +68,7 @@ const PayoutSetupCard = () => {
       return;
     }
     setConfigNotice(null);
-    if (res.merchant) setMerchant(res.merchant);
-    if (res.account) setAccount(res.account);
-    if (res.mode) setMode(res.mode);
+    await refresh();
     if (res.url) window.location.href = res.url;
   };
 
@@ -86,10 +83,12 @@ const PayoutSetupCard = () => {
   const status = account?.payout_status ?? "not_started";
   const enabled = status === "payout_enabled";
   const needsAttention = status === "restricted" || status === "disabled";
-  const outstanding = friendlyRequirements(account?.requirements_due);
+  const { provided, merchant: merchantTodo } = splitRequirements(account?.requirements_due);
+  const lastSynced = account?.last_synced_at
+    ? new Date(account.last_synced_at).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })
+    : null;
 
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex items-center gap-3 rounded-3xl border border-border bg-card p-6 text-sm text-muted-foreground shadow-[var(--shadow-soft)]">
         <Loader2 size={16} className="animate-spin" /> Checking payments status…
@@ -146,7 +145,7 @@ const PayoutSetupCard = () => {
         })}
       </ol>
 
-      {outstanding.length ? (
+      {merchantTodo.length ? (
         <div
           className={`mt-4 flex items-start gap-2 rounded-2xl border p-4 text-xs ${
             needsAttention
@@ -163,10 +162,10 @@ const PayoutSetupCard = () => {
             <p className="font-semibold">
               {needsAttention
                 ? "Stripe needs these details to restore payouts"
-                : "Finish these details to enable payouts"}
+                : "Only Stripe can collect these — everything else is already filled in"}
             </p>
             <ul className="mt-2 space-y-1">
-              {outstanding.map((item) => (
+              {merchantTodo.map((item) => (
                 <li key={item} className="flex gap-1.5">
                   <span aria-hidden>•</span>
                   <span>{item}</span>
@@ -177,6 +176,12 @@ const PayoutSetupCard = () => {
         </div>
       ) : null}
 
+      {provided.length ? (
+        <p className="mt-3 flex items-start gap-2 text-xs text-muted-foreground">
+          <CheckCircle2 size={13} className="mt-0.5 shrink-0 text-accent" />
+          <span>Pre-filled from your store set-up: {provided.join(", ").toLowerCase()}.</span>
+        </p>
+      ) : null}
 
       {!merchant ? (
         <div className="mt-6 grid gap-4 sm:grid-cols-3">
@@ -232,7 +237,22 @@ const PayoutSetupCard = () => {
             Payouts &amp; balance <ExternalLink size={14} />
           </Button>
         ) : null}
-        <p className="text-xs text-muted-foreground">Payments securely powered by Stripe.</p>
+        {account ? (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="rounded-full text-xs"
+            onClick={() => void refresh()}
+            disabled={isFetching}
+          >
+            <RefreshCw size={13} className={isFetching ? "animate-spin" : undefined} />
+            {isFetching ? "Refreshing" : "Refresh status"}
+          </Button>
+        ) : null}
+        <p className="text-xs text-muted-foreground">
+          Payments securely powered by Stripe.
+          {lastSynced ? ` Last checked ${lastSynced}.` : ""}
+        </p>
         {mode === "test" ? (
           <Badge variant="outline" className="text-[10px] uppercase tracking-[0.14em]">
             Test mode

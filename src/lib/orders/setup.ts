@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { usePayoutStatus } from "@/lib/orders/connect";
+
 
 /**
  * One source of truth for "how far along is this merchant?".
@@ -188,10 +190,18 @@ export const buildSnapshot = (source: SetupSource, catalogLabel = "items"): Setu
   };
 };
 
-/** Live setup snapshot for the signed-in merchant. */
-export const useMerchantSetup = (catalogLabel = "items") =>
-  useQuery({
-    queryKey: ["orders", "setup"],
+/**
+ * Live setup snapshot for the signed-in merchant. The payments step reads the
+ * shared, Stripe-synced payout status so this checklist and the Payments &
+ * payouts panel always tell the merchant the same thing.
+ */
+export const useMerchantSetup = (catalogLabel = "items") => {
+  const { data: payouts } = usePayoutStatus();
+  const livePayoutStatus = payouts?.account?.payout_status ?? null;
+
+  return useQuery({
+    queryKey: ["orders", "setup", livePayoutStatus],
+
     queryFn: async (): Promise<SetupSnapshot> => {
       const { data: auth } = await supabase.auth.getUser();
       if (!auth.user) return emptySnapshot;
@@ -243,12 +253,14 @@ export const useMerchantSetup = (catalogLabel = "items") =>
           merchant: merchant as SetupSource["merchant"],
           storefront: (storefront ?? null) as SetupSource["storefront"],
           catalogCount,
-          payoutStatus: account?.payout_status ?? "not_started",
+          payoutStatus: livePayoutStatus ?? account?.payout_status ?? "not_started",
         },
         catalogLabel,
       );
     },
   });
+};
+
 
 /** Publish, pause or resume the merchant's storefront. */
 export const useSetStorefrontStatus = () => {

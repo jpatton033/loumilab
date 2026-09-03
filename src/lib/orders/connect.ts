@@ -1,4 +1,6 @@
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+
 
 export type PayoutStatus =
   | "not_started"
@@ -114,6 +116,23 @@ export function friendlyRequirements(fields: string[] | null | undefined): strin
   return out;
 }
 
+/**
+ * Fields Loumilab fills in from the store set-up (business profile, category,
+ * website, business type) versus the ones only the merchant can provide.
+ */
+const PLATFORM_PROVIDED = /^(business_profile\.|business_type$)/;
+
+export function splitRequirements(fields: string[] | null | undefined): {
+  provided: string[];
+  merchant: string[];
+} {
+  const provided = friendlyRequirements((fields ?? []).filter((f) => PLATFORM_PROVIDED.test(f)));
+  const merchant = friendlyRequirements((fields ?? []).filter((f) => !PLATFORM_PROVIDED.test(f)));
+  return { provided, merchant };
+}
+
+
+
 type ConnectAction = "start" | "status" | "dashboard_link";
 
 
@@ -121,9 +140,14 @@ export async function callConnect(
   action: ConnectAction,
   body: Record<string, unknown> = {}
 ): Promise<ConnectResponse> {
+  const returnUrl =
+    action === "start"
+      ? `${window.location.origin}/orders/dashboard?payments=return`
+      : `${window.location.origin}/orders/dashboard`;
   const { data, error } = await supabase.functions.invoke<ConnectResponse>("stripe-connect", {
-    body: { action, returnUrl: `${window.location.origin}/orders/dashboard`, ...body },
+    body: { action, returnUrl, ...body },
   });
+
   if (error) {
     // Non-2xx responses carry the function's JSON body — surface the real reason.
     const response = (error as { context?: Response }).context;
@@ -144,3 +168,32 @@ export async function callConnect(
 export async function fetchConnectStatus(): Promise<ConnectResponse> {
   return callConnect("status");
 }
+
+/** Shared cache key so every panel reads one payments answer. */
+export const PAYOUTS_QUERY_KEY = ["orders", "payouts"] as const;
+
+/**
+ * Single source of truth for payments status. It re-syncs from Stripe on the
+ * server, so the setup checklist and the payments card can never disagree.
+ */
+export const usePayoutStatus = () =>
+  useQuery({
+    queryKey: PAYOUTS_QUERY_KEY,
+    queryFn: async (): Promise<ConnectResponse> => {
+      const { data } = await supabase.auth.getSession();
+      if (!data.session) return { code: "signed_out" };
+      return fetchConnectStatus();
+    },
+    staleTime: 30_000,
+    refetchOnWindowFocus: true,
+  });
+
+/** Refresh payments status and everything derived from it. */
+export const useRefreshPayouts = () => {
+  const qc = useQueryClient();
+  return async () => {
+    await qc.invalidateQueries({ queryKey: PAYOUTS_QUERY_KEY });
+    await qc.invalidateQueries({ queryKey: ["orders", "setup"] });
+  };
+};
+
