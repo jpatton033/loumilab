@@ -156,6 +156,39 @@ Deno.serve(async (req) => {
   } catch (err) {
     console.error("stripe-connect error", err);
     const message = err instanceof Error ? err.message : "Unexpected error";
+
+    /**
+     * Platform-side configuration problems (Connect not activated on the
+     * platform account, bad key) are not the merchant's fault — never leak raw
+     * Stripe copy, and record the reason so admins can see it.
+     */
+    const type = (err as { type?: string })?.type;
+    const isConnectDisabled = /signed up for Connect|dashboard\.stripe\.com\/connect/i.test(message);
+    const isAuthError = type === "StripeAuthenticationError";
+
+    if (isConnectDisabled || isAuthError) {
+      const code = isConnectDisabled ? "connect_not_enabled" : "stripe_key_invalid";
+      try {
+        await admin.from("audit_logs").insert({
+          actor_role: "system",
+          action: "payments.config_error",
+          target_type: "stripe_connect",
+          new_value: { code, mode: stripeMode, message },
+        });
+      } catch (logErr) {
+        console.error("stripe-connect audit log failed", logErr);
+      }
+      return json(
+        {
+          code,
+          mode: stripeMode,
+          error:
+            "Payments aren't fully activated yet. Loumilab is finishing payment provider setup — please try again shortly. Nothing is wrong with your account.",
+        },
+        503,
+      );
+    }
+
     return json({ error: message }, 500);
   }
 });

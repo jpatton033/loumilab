@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { CheckCircle2, ExternalLink, Loader2, ShieldCheck, AlertTriangle } from "lucide-react";
+import { CheckCircle2, ExternalLink, Info, Loader2, ShieldCheck, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -24,6 +24,7 @@ const PayoutSetupCard = () => {
   const [account, setAccount] = useState<ConnectedAccount | null>(null);
   const [mode, setMode] = useState<"live" | "test" | null>(null);
   const [form, setForm] = useState({ business_name: "", contact_email: "", phone: "" });
+  const [configNotice, setConfigNotice] = useState<string | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -39,6 +40,9 @@ const PayoutSetupCard = () => {
       setForm((f) => ({ ...f, contact_email: data.session?.user.email ?? "" }));
       const res = await fetchConnectStatus();
       if (!active) return;
+      if (res.code === "connect_not_enabled" || res.code === "stripe_key_invalid") {
+        setConfigNotice(res.error ?? null);
+      }
       if (res.merchant) setMerchant(res.merchant);
       if (res.account) setAccount(res.account);
       if (res.mode) setMode(res.mode);
@@ -53,10 +57,16 @@ const PayoutSetupCard = () => {
     setWorking(true);
     const res = await callConnect("start", merchant ? {} : { business: form });
     setWorking(false);
+    if (res.code === "connect_not_enabled" || res.code === "stripe_key_invalid") {
+      setConfigNotice(res.error ?? null);
+      return;
+    }
     if (res.error) {
+      setConfigNotice(null);
       toast({ title: "Payments setup failed", description: res.error, variant: "destructive" });
       return;
     }
+    setConfigNotice(null);
     if (res.merchant) setMerchant(res.merchant);
     if (res.account) setAccount(res.account);
     if (res.mode) setMode(res.mode);
@@ -170,11 +180,20 @@ const PayoutSetupCard = () => {
         </div>
       ) : null}
 
+      {configNotice ? (
+        <div className="mt-6 flex items-start gap-2 rounded-2xl border border-border bg-secondary p-4 text-xs text-muted-foreground">
+          <Info size={14} className="mt-0.5 shrink-0" />
+          <span>{configNotice}</span>
+        </div>
+      ) : null}
+
       <div className="mt-6 flex flex-wrap items-center gap-3">
         <Button
           className="rounded-full"
           onClick={start}
-          disabled={working || (!merchant && (!form.business_name || !form.contact_email))}
+          disabled={
+            working || Boolean(configNotice) || (!merchant && (!form.business_name || !form.contact_email))
+          }
         >
           {working ? <Loader2 size={15} className="animate-spin" /> : null}
           {status === "not_started" ? "Set up payments" : enabled ? "Update details" : "Continue setup"}
