@@ -94,7 +94,9 @@ Deno.serve(async (req) => {
         .insert({
           merchant_id: merchant.id,
           stripe_account_id: account.id,
-          livemode: account.livemode ?? false,
+          // Stripe's Account object has no `livemode` field — the platform key's
+          // mode is what the account was created under.
+          livemode: stripeLivemode,
           payout_status: resolvePayoutStatus(account),
         })
         .select("*")
@@ -103,18 +105,46 @@ Deno.serve(async (req) => {
       link = insert.data;
     }
 
+
     const origin = req.headers.get("origin") ?? "";
     const base = resolveReturnBase(returnUrl, origin);
 
-    // Never mix modes: a stored account from the other mode cannot be used with this key.
+    /**
+     * Always refresh from Stripe so status is authoritative. Whether the stored
+     * account belongs to this key's mode is decided by Stripe itself: an account
+     * from the other mode simply does not resolve. A stale stored `livemode`
+     * flag must never block a merchant on its own.
+     */
+    let account;
+    try {
+      account = await stripe.accounts.retrieve(link.stripe_account_id);
+    } catch (retrieveErr) {
+      const code = (retrieveErr as { code?: string })?.code;
+      const notFound =
+        code === "resource_missing" ||
+        (retrieveErr as { statusCode?: number })?.statusCode === 404;
+      if (notFound) {
+        return json(
+          {
+            error:
+              `This payments account cannot be found in ${stripeMode} mode. Contact support to reset payments setup.`,
+            mode: stripeMode,
+          },
+          409,
+        );
+      }
+      throw retrieveErr;
+    }
+
+    // The account resolved under the current key, so heal a wrong stored mode.
     if (link.livemode !== stripeLivemode) {
-      return json(
-        {
-          error: `This payments account was created in ${link.livemode ? "live" : "test"} mode but the platform is running in ${stripeMode} mode. Contact support to reset payments setup.`,
-          mode: stripeMode,
-        },
-        409,
-      );
+      const healed = await admin
+        .from("merchant_stripe_accounts")
+        .update({ livemode: stripeLivemode })
+        .eq("id", link.id)
+        .select("*")
+        .single();
+      if (healed.data) link = healed.data;
     }
 
     if (action === "dashboard_link") {
@@ -122,9 +152,8 @@ Deno.serve(async (req) => {
       return json({ url: loginLink.url, mode: stripeMode });
     }
 
-    // Always refresh from Stripe so status is authoritative.
-    const account = await stripe.accounts.retrieve(link.stripe_account_id);
     const status = resolvePayoutStatus(account);
+
     const { data: synced } = await admin
       .from("merchant_stripe_accounts")
       .update({
