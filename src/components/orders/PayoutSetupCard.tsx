@@ -9,12 +9,14 @@ import { supabase } from "@/integrations/supabase/client";
 import {
   callConnect,
   fetchConnectStatus,
+  friendlyRequirements,
   PAYOUT_DESCRIPTIONS,
   PAYOUT_LABELS,
   PAYOUT_STEPS,
   type ConnectedAccount,
   type MerchantRecord,
 } from "@/lib/orders/connect";
+
 
 const PayoutSetupCard = () => {
   const [loading, setLoading] = useState(true);
