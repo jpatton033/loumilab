@@ -71,6 +71,42 @@ Deno.serve(async (req) => {
       merchant = insert.data;
     }
 
+    const origin = req.headers.get("origin") ?? "";
+    const base = resolveReturnBase(returnUrl, origin);
+    const publicOrigin = (() => {
+      try {
+        return new URL(base).origin;
+      } catch {
+        return "https://loumilab.com";
+      }
+    })();
+
+    /**
+     * Everything Loumilab already knows about the business is handed to Stripe,
+     * so the merchant is never asked to re-enter details they gave us during
+     * store set-up. Only what Stripe must collect first-hand (bank account,
+     * owner identity, terms acceptance) is left to them.
+     */
+    const { data: storefront } = await admin
+      .from("merchant_storefronts")
+      .select("slug, name, description, location")
+      .eq("merchant_id", merchant.id)
+      .order("created_at")
+      .limit(1)
+      .maybeSingle();
+
+    const description = (storefront?.description ?? "").trim();
+    const businessProfile: Record<string, unknown> = {
+      name: storefront?.name || merchant.business_name,
+      mcc: mccForIndustry(merchant.industry_slug),
+      url: storefront?.slug ? `${publicOrigin}/orders/store/${storefront.slug}` : `${publicOrigin}/orders`,
+      product_description:
+        description ||
+        `Orders, pickup and delivery for ${storefront?.name || merchant.business_name}.`,
+      support_email: merchant.contact_email,
+    };
+    if (merchant.phone) businessProfile.support_phone = merchant.phone;
+
     let { data: link } = await admin
       .from("merchant_stripe_accounts")
       .select("*")
@@ -84,13 +120,14 @@ Deno.serve(async (req) => {
         type: "express",
         country: merchant.country || "US",
         email: merchant.contact_email,
-        business_profile: { name: merchant.business_name },
+        business_profile: businessProfile,
         capabilities: {
           card_payments: { requested: true },
           transfers: { requested: true },
         },
         metadata: { merchant_id: merchant.id, loumilab_owner_id: user.id },
       });
+
       const insert = await admin
         .from("merchant_stripe_accounts")
         .insert({
