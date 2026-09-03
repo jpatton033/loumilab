@@ -180,11 +180,20 @@ const PayoutSetupCard = () => {
         </div>
       ) : null}
 
+      {configNotice ? (
+        <div className="mt-6 flex items-start gap-2 rounded-2xl border border-border bg-secondary p-4 text-xs text-muted-foreground">
+          <Info size={14} className="mt-0.5 shrink-0" />
+          <span>{configNotice}</span>
+        </div>
+      ) : null}
+
       <div className="mt-6 flex flex-wrap items-center gap-3">
         <Button
           className="rounded-full"
           onClick={start}
-          disabled={working || (!merchant && (!form.business_name || !form.contact_email))}
+          disabled={
+            working || Boolean(configNotice) || (!merchant && (!form.business_name || !form.contact_email))
+          }
         >
           {working ? <Loader2 size={15} className="animate-spin" /> : null}
           {status === "not_started" ? "Set up payments" : enabled ? "Update details" : "Continue setup"}
