@@ -94,7 +94,9 @@ Deno.serve(async (req) => {
         .insert({
           merchant_id: merchant.id,
           stripe_account_id: account.id,
-          livemode: account.livemode ?? false,
+          // Stripe's Account object has no `livemode` field — the platform key's
+          // mode is what the account was created under.
+          livemode: stripeLivemode,
           payout_status: resolvePayoutStatus(account),
         })
         .select("*")
@@ -102,6 +104,7 @@ Deno.serve(async (req) => {
       if (insert.error) return json({ error: insert.error.message }, 400);
       link = insert.data;
     }
+
 
     const origin = req.headers.get("origin") ?? "";
     const base = resolveReturnBase(returnUrl, origin);
