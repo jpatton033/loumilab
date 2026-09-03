@@ -163,7 +163,10 @@ Deno.serve(async (req) => {
      * Stripe copy, and record the reason so admins can see it.
      */
     const type = (err as { type?: string })?.type;
-    const isConnectDisabled = /signed up for Connect|dashboard\.stripe\.com\/connect/i.test(message);
+    const isConnectDisabled =
+      /signed up for Connect|dashboard\.stripe\.com\/connect|responsibilities of managing losses|platform-profile|platform profile/i.test(
+        message,
+      );
     const isAuthError = type === "StripeAuthenticationError";
 
     if (isConnectDisabled || isAuthError) {
