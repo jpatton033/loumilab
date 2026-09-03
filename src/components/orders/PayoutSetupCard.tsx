@@ -22,6 +22,8 @@ const PayoutSetupCard = () => {
   const [working, setWorking] = useState(false);
   const [form, setForm] = useState({ business_name: "", contact_email: "", phone: "" });
   const [configNotice, setConfigNotice] = useState<string | null>(null);
+  const [pendingUrl, setPendingUrl] = useState<string | null>(null);
+
 
   const signedIn = data?.code !== "signed_out";
   const merchant = data?.merchant ?? null;
@@ -59,6 +61,35 @@ const PayoutSetupCard = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Coming back to this tab after finishing on Stripe should update the card.
+  useEffect(() => {
+    const onVisible = () => {
+      if (document.visibilityState === "visible" && pendingUrl) void refresh();
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => document.removeEventListener("visibilitychange", onVisible);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pendingUrl]);
+
+  /**
+   * Stripe's hosted onboarding refuses to be framed, so navigating the current
+   * (possibly embedded) view to it renders a blank screen. Always open it as a
+   * top-level new tab, and expose a clickable link if the browser blocks it.
+   */
+  const openOnboarding = (url: string) => {
+    const tab = window.open(url, "_blank", "noopener");
+    if (tab) {
+      setPendingUrl(url);
+      return;
+    }
+    setPendingUrl(url);
+    try {
+      if (window.top && window.top !== window.self) window.top.location.href = url;
+    } catch {
+      // Cross-origin top frame: the inline link below is the way forward.
+    }
+  };
+
   const start = async () => {
     setWorking(true);
     const res = await callConnect("start", merchant ? {} : { business: form });
@@ -74,8 +105,9 @@ const PayoutSetupCard = () => {
     }
     setConfigNotice(null);
     await refresh();
-    if (res.url) window.location.href = res.url;
+    if (res.url) openOnboarding(res.url);
   };
+
 
   const openStripeDashboard = async () => {
     setWorking(true);
@@ -226,7 +258,20 @@ const PayoutSetupCard = () => {
         </div>
       ) : null}
 
+      {pendingUrl ? (
+        <div className="mt-6 flex flex-wrap items-center gap-3 rounded-2xl border border-border bg-secondary p-4 text-xs text-muted-foreground">
+          <Info size={14} className="shrink-0" />
+          <span>Stripe onboarding opens in a new tab. If it didn't open, continue here.</span>
+          <Button asChild size="sm" variant="outline" className="rounded-full">
+            <a href={pendingUrl} target="_blank" rel="noopener noreferrer">
+              Continue on Stripe <ExternalLink size={13} />
+            </a>
+          </Button>
+        </div>
+      ) : null}
+
       <div className="mt-6 flex flex-wrap items-center gap-3">
+
         <Button
           className="rounded-full"
           onClick={start}
