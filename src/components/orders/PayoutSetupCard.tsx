@@ -258,7 +258,20 @@ const PayoutSetupCard = () => {
         </div>
       ) : null}
 
+      {pendingUrl ? (
+        <div className="mt-6 flex flex-wrap items-center gap-3 rounded-2xl border border-border bg-secondary p-4 text-xs text-muted-foreground">
+          <Info size={14} className="shrink-0" />
+          <span>Stripe onboarding opens in a new tab. If it didn't open, continue here.</span>
+          <Button asChild size="sm" variant="outline" className="rounded-full">
+            <a href={pendingUrl} target="_blank" rel="noopener noreferrer">
+              Continue on Stripe <ExternalLink size={13} />
+            </a>
+          </Button>
+        </div>
+      ) : null}
+
       <div className="mt-6 flex flex-wrap items-center gap-3">
+
         <Button
           className="rounded-full"
           onClick={start}
