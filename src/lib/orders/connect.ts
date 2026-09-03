@@ -78,11 +78,19 @@ export async function callConnect(
     body: { action, returnUrl: `${window.location.origin}/orders/dashboard`, ...body },
   });
   if (error) {
-    return {
-      error:
-        "We couldn't reach the payments service. Please try again in a moment — if it keeps failing, contact support.",
-    };
+    // Non-2xx responses carry the function's JSON body — surface the real reason.
+    const response = (error as { context?: Response }).context;
+    if (response && typeof response.json === "function") {
+      try {
+        const payload = (await response.clone().json()) as ConnectResponse;
+        if (payload?.error) return payload;
+      } catch {
+        // fall through to the network fallback
+      }
+    }
+    return { error: NETWORK_FALLBACK };
   }
+  if (data?.error) return data;
   return data ?? {};
 }
 
