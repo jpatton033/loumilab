@@ -24,6 +24,7 @@ const PayoutSetupCard = () => {
   const [account, setAccount] = useState<ConnectedAccount | null>(null);
   const [mode, setMode] = useState<"live" | "test" | null>(null);
   const [form, setForm] = useState({ business_name: "", contact_email: "", phone: "" });
+  const [configNotice, setConfigNotice] = useState<string | null>(null);
 
   useEffect(() => {
     let active = true;
