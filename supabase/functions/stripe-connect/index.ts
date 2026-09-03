@@ -145,8 +145,8 @@ Deno.serve(async (req) => {
     }
 
 
-    const origin = req.headers.get("origin") ?? "";
-    const base = resolveReturnBase(returnUrl, origin);
+
+
 
     /**
      * Always refresh from Stripe so status is authoritative. Whether the stored
