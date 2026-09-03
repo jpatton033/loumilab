@@ -230,9 +230,8 @@ const PayoutSetupCard = () => {
         <Button
           className="rounded-full"
           onClick={start}
-          disabled={
-            working || Boolean(configNotice) || (!merchant && (!form.business_name || !form.contact_email))
-          }
+          disabled={working || (!merchant && (!form.business_name || !form.contact_email))}
+
         >
           {working ? <Loader2 size={15} className="animate-spin" /> : null}
           {status === "not_started" ? "Set up payments" : enabled ? "Update details" : "Continue setup"}
