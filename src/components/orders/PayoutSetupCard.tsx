@@ -84,6 +84,8 @@ const PayoutSetupCard = () => {
   const status = account?.payout_status ?? "not_started";
   const enabled = status === "payout_enabled";
   const needsAttention = status === "restricted" || status === "disabled";
+  const outstanding = friendlyRequirements(account?.requirements_due);
+
 
   if (loading) {
     return (
