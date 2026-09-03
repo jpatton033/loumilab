@@ -116,6 +116,23 @@ export function friendlyRequirements(fields: string[] | null | undefined): strin
   return out;
 }
 
+/**
+ * Fields Loumilab fills in from the store set-up (business profile, category,
+ * website, business type) versus the ones only the merchant can provide.
+ */
+const PLATFORM_PROVIDED = /^(business_profile\.|business_type$)/;
+
+export function splitRequirements(fields: string[] | null | undefined): {
+  provided: string[];
+  merchant: string[];
+} {
+  const provided = friendlyRequirements((fields ?? []).filter((f) => PLATFORM_PROVIDED.test(f)));
+  const merchant = friendlyRequirements((fields ?? []).filter((f) => !PLATFORM_PROVIDED.test(f)));
+  return { provided, merchant };
+}
+
+
+
 type ConnectAction = "start" | "status" | "dashboard_link";
 
 
