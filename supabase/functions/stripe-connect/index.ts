@@ -175,6 +175,29 @@ Deno.serve(async (req) => {
       throw retrieveErr;
     }
 
+    /**
+     * Push the store's details onto Stripe whenever business-profile fields are
+     * still outstanding, so onboarding opens with them already answered.
+     */
+    if (!account.details_submitted) {
+      const due = [
+        ...(account.requirements?.currently_due ?? []),
+        ...(account.requirements?.eventually_due ?? []),
+      ];
+      if (due.some((field) => field.startsWith("business_profile."))) {
+        try {
+          account = await stripe.accounts.update(link.stripe_account_id, {
+            business_profile: businessProfile,
+          });
+        } catch (prefillErr) {
+          // Prefill is a convenience — never block onboarding on it.
+          console.error("stripe-connect prefill failed", prefillErr);
+        }
+      }
+    }
+
+
+
     // The account resolved under the current key, so heal a wrong stored mode.
     if (link.livemode !== stripeLivemode) {
       const healed = await admin
