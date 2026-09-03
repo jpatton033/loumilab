@@ -163,3 +163,32 @@ export async function callConnect(
 export async function fetchConnectStatus(): Promise<ConnectResponse> {
   return callConnect("status");
 }
+
+/** Shared cache key so every panel reads one payments answer. */
+export const PAYOUTS_QUERY_KEY = ["orders", "payouts"] as const;
+
+/**
+ * Single source of truth for payments status. It re-syncs from Stripe on the
+ * server, so the setup checklist and the payments card can never disagree.
+ */
+export const usePayoutStatus = () =>
+  useQuery({
+    queryKey: PAYOUTS_QUERY_KEY,
+    queryFn: async (): Promise<ConnectResponse> => {
+      const { data } = await supabase.auth.getSession();
+      if (!data.session) return { code: "signed_out" };
+      return fetchConnectStatus();
+    },
+    staleTime: 30_000,
+    refetchOnWindowFocus: true,
+  });
+
+/** Refresh payments status and everything derived from it. */
+export const useRefreshPayouts = () => {
+  const qc = useQueryClient();
+  return async () => {
+    await qc.invalidateQueries({ queryKey: PAYOUTS_QUERY_KEY });
+    await qc.invalidateQueries({ queryKey: ["orders", "setup"] });
+  };
+};
+
