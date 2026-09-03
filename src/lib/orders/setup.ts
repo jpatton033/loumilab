@@ -251,12 +251,14 @@ export const useMerchantSetup = (catalogLabel = "items") => {
           merchant: merchant as SetupSource["merchant"],
           storefront: (storefront ?? null) as SetupSource["storefront"],
           catalogCount,
-          payoutStatus: account?.payout_status ?? "not_started",
+          payoutStatus: livePayoutStatus ?? account?.payout_status ?? "not_started",
         },
         catalogLabel,
       );
     },
   });
+};
+
 
 /** Publish, pause or resume the merchant's storefront. */
 export const useSetStorefrontStatus = () => {
