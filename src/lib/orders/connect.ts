@@ -36,7 +36,12 @@ export type ConnectResponse = {
   account?: ConnectedAccount;
   url?: string;
   error?: string;
+  /** Machine-readable reason, e.g. "connect_not_enabled" for platform config issues. */
+  code?: string;
 };
+
+const NETWORK_FALLBACK =
+  "We couldn't reach the payments service. Please try again in a moment — if it keeps failing, contact support.";
 
 export const PAYOUT_STEPS: { status: PayoutStatus; label: string }[] = [
   { status: "not_started", label: "Not started" },
