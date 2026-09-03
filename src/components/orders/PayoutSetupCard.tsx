@@ -28,11 +28,16 @@ const PayoutSetupCard = () => {
   const account = data?.account ?? null;
   const mode = data?.mode ?? null;
 
+  // A later clean status must clear the notice, otherwise the card stays stuck.
   useEffect(() => {
-    if (data?.code === "connect_not_enabled" || data?.code === "stripe_key_invalid") {
+    if (!data) return;
+    if (data.code === "connect_not_enabled" || data.code === "stripe_key_invalid") {
       setConfigNotice(data.error ?? null);
+    } else {
+      setConfigNotice(null);
     }
-  }, [data?.code, data?.error]);
+  }, [data]);
+
 
   useEffect(() => {
     (async () => {
