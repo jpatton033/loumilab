@@ -95,12 +95,23 @@ export function resolvePayoutStatus(account: {
   } | null;
 }): PayoutStatus {
   const req = account.requirements ?? {};
-  if (req.disabled_reason) return "disabled";
+  const reason = req.disabled_reason ?? null;
+
   if (account.payouts_enabled && account.charges_enabled) return "payout_enabled";
+
+  // An account that has never submitted its details is simply mid-onboarding —
+  // Stripe still reports `requirements.past_due` as the disabled reason, which
+  // must not be surfaced as a hard "Disabled" state.
   if (!account.details_submitted) {
-    const started = (req.currently_due?.length ?? 0) > 0;
+    const started = (req.currently_due?.length ?? 0) > 0 || Boolean(reason);
     return started ? "onboarding" : "not_started";
   }
-  if ((req.past_due?.length ?? 0) > 0) return "restricted";
+
+  // Details submitted: only non-requirements reasons are genuinely disabling.
+  if (reason && !/^requirements?\./.test(reason)) return "disabled";
+  if (reason || (req.past_due?.length ?? 0) > 0 || (req.currently_due?.length ?? 0) > 0) {
+    return "restricted";
+  }
   return "pending_verification";
 }
+
