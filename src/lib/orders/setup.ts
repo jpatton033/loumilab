@@ -188,10 +188,18 @@ export const buildSnapshot = (source: SetupSource, catalogLabel = "items"): Setu
   };
 };
 
-/** Live setup snapshot for the signed-in merchant. */
-export const useMerchantSetup = (catalogLabel = "items") =>
-  useQuery({
-    queryKey: ["orders", "setup"],
+/**
+ * Live setup snapshot for the signed-in merchant. The payments step reads the
+ * shared, Stripe-synced payout status so this checklist and the Payments &
+ * payouts panel always tell the merchant the same thing.
+ */
+export const useMerchantSetup = (catalogLabel = "items") => {
+  const { data: payouts } = usePayoutStatus();
+  const livePayoutStatus = payouts?.account?.payout_status ?? null;
+
+  return useQuery({
+    queryKey: ["orders", "setup", livePayoutStatus],
+
     queryFn: async (): Promise<SetupSnapshot> => {
       const { data: auth } = await supabase.auth.getUser();
       if (!auth.user) return emptySnapshot;
