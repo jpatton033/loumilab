@@ -1,6 +1,7 @@
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { z } from "npm:zod@3";
 import { admin, requireUser } from "../_shared/auth.ts";
+import { mccForIndustry } from "../_shared/industry-mcc.ts";
 import {
   resolvePayoutStatus,
   resolveReturnBase,
@@ -9,6 +10,7 @@ import {
   stripeLivemode,
   stripeMode,
 } from "../_shared/stripe.ts";
+
 
 const BodySchema = z.object({
   action: z.enum(["start", "status", "dashboard_link"]),
