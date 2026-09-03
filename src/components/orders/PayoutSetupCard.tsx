@@ -142,12 +142,37 @@ const PayoutSetupCard = () => {
         })}
       </ol>
 
-      {needsAttention && account?.requirements_due?.length ? (
-        <div className="mt-4 flex items-start gap-2 rounded-2xl border border-border bg-secondary p-4 text-xs text-muted-foreground">
-          <AlertTriangle size={14} className="mt-0.5 shrink-0" />
-          <span>Outstanding items: {account.requirements_due.join(", ")}</span>
+      {outstanding.length ? (
+        <div
+          className={`mt-4 flex items-start gap-2 rounded-2xl border p-4 text-xs ${
+            needsAttention
+              ? "border-destructive/30 bg-destructive/5 text-foreground"
+              : "border-border bg-secondary text-muted-foreground"
+          }`}
+        >
+          {needsAttention ? (
+            <AlertTriangle size={14} className="mt-0.5 shrink-0" />
+          ) : (
+            <Info size={14} className="mt-0.5 shrink-0" />
+          )}
+          <div>
+            <p className="font-semibold">
+              {needsAttention
+                ? "Stripe needs these details to restore payouts"
+                : "Finish these details to enable payouts"}
+            </p>
+            <ul className="mt-2 space-y-1">
+              {outstanding.map((item) => (
+                <li key={item} className="flex gap-1.5">
+                  <span aria-hidden>•</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       ) : null}
+
 
       {!merchant ? (
         <div className="mt-6 grid gap-4 sm:grid-cols-3">
