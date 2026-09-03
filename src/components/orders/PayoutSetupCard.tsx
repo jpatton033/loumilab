@@ -57,10 +57,16 @@ const PayoutSetupCard = () => {
     setWorking(true);
     const res = await callConnect("start", merchant ? {} : { business: form });
     setWorking(false);
+    if (res.code === "connect_not_enabled" || res.code === "stripe_key_invalid") {
+      setConfigNotice(res.error ?? null);
+      return;
+    }
     if (res.error) {
+      setConfigNotice(null);
       toast({ title: "Payments setup failed", description: res.error, variant: "destructive" });
       return;
     }
+    setConfigNotice(null);
     if (res.merchant) setMerchant(res.merchant);
     if (res.account) setAccount(res.account);
     if (res.mode) setMode(res.mode);
