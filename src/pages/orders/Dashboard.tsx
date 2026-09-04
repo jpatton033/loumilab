@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { ArrowLeft, ExternalLink, RefreshCw } from "lucide-react";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import Eyebrow from "@/components/brand/Eyebrow";
@@ -10,8 +10,20 @@ import PayoutSetupCard from "@/components/orders/PayoutSetupCard";
 import PaymentsPanel from "@/components/orders/PaymentsPanel";
 import StorePanel from "@/components/orders/StorePanel";
 import OrderQueue from "@/components/orders/OrderQueue";
+import LiveOrderQueue from "@/components/orders/LiveOrderQueue";
+import AnalyticsPanel from "@/components/orders/AnalyticsPanel";
 import EstimatesPanel from "@/components/orders/EstimatesPanel";
 import LockedFeature from "@/components/orders/LockedFeature";
+import {
+  ORDER_STATUS_LABELS,
+  useAdvanceOrder,
+  useMerchantOrders,
+  useOrderAnalytics,
+  describeChange,
+  type LiveOrderStatus,
+} from "@/lib/orders/orders";
+import { formatCents } from "@/lib/orders/storefront";
+
 import {
   dashboardMetrics,
   demoOrders,
@@ -41,6 +53,19 @@ import { useMerchantSetup } from "@/lib/orders/setup";
 type Filter = "All" | OrderStatus;
 const filters: Filter[] = ["All", ...ORDER_STATUSES];
 
+/** Order of the live status chips, active stages first. */
+const LIVE_FILTER_ORDER: LiveOrderStatus[] = [
+  "paid",
+  "preparing",
+  "ready",
+  "out_for_delivery",
+  "completed",
+  "refunded",
+  "cancelled",
+  "failed",
+  "pending",
+];
+
 const Dashboard = () => {
   const [orders, setOrders] = useState<MerchantOrder[]>(demoOrders);
   const [filter, setFilter] = useState<Filter>("All");
@@ -67,6 +92,29 @@ const Dashboard = () => {
   const advanceJob = useAdvanceJob(merchant?.id);
   const { data: setup } = useMerchantSetup(terms.catalog);
 
+  const {
+    data: liveOrdersData,
+    isFetching: ordersLoading,
+    refetch: refetchOrders,
+  } = useMerchantOrders(merchant?.id);
+  const liveOrders = liveOrdersData ?? [];
+  const analytics = useOrderAnalytics(liveOrdersData);
+  const advanceOrder = useAdvanceOrder(merchant?.id);
+  const [liveFilter, setLiveFilter] = useState<LiveOrderStatus | "all">("all");
+
+  const liveFilters = useMemo<(LiveOrderStatus | "all")[]>(() => {
+    const present = LIVE_FILTER_ORDER.filter((s) => liveOrders.some((o) => o.status === s));
+    return ["all", ...present];
+  }, [liveOrders]);
+
+  const visibleLiveOrders = useMemo(
+    () => (liveFilter === "all" ? liveOrders : liveOrders.filter((o) => o.status === liveFilter)),
+    [liveOrders, liveFilter],
+  );
+
+  useEffect(() => {
+    if (liveFilter !== "all" && !liveFilters.includes(liveFilter)) setLiveFilter("all");
+  }, [liveFilters, liveFilter]);
 
   useEffect(() => {
     if (!modules.includes(activeModule)) setActiveModule(modules[0]);
@@ -80,10 +128,16 @@ const Dashboard = () => {
   const advance = (orderId: string) =>
     setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status: nextStatus(o.status) } : o)));
 
-  const openCount = orders.filter((o) => o.status !== "Completed").length;
-  const openValue = orders
-    .filter((o) => o.status !== "Completed")
-    .reduce((sum, o) => sum + o.totalCents, 0);
+  const openLive = liveOrders.filter((o) =>
+    ["paid", "preparing", "ready", "out_for_delivery"].includes(o.status),
+  );
+  const openCount = merchant ? openLive.length : orders.filter((o) => o.status !== "Completed").length;
+  const openValue = merchant
+    ? openLive.reduce((sum, o) => sum + o.total_cents, 0)
+    : orders
+        .filter((o) => o.status !== "Completed")
+        .reduce((sum, o) => sum + o.totalCents, 0);
+
 
   const moduleAllowed = (key: ModuleKey) => {
     const required = MODULE_ENTITLEMENT[key] as EntitlementKey | undefined;
@@ -186,15 +240,46 @@ const Dashboard = () => {
           )}
 
           <div className="mt-8 grid gap-4 md:grid-cols-3">
-            {dashboardMetrics.map((m) => (
-              <MetricCard
-                key={m.id}
-                label={m.id === "orders" ? transactionsLabel : m.label}
-                value={m.value}
-                delta={m.delta}
-              />
-            ))}
+            {merchant ? (
+              <>
+                <MetricCard
+                  label="Today's revenue"
+                  value={formatCents(analytics.today.revenueCents, analytics.currency)}
+                  delta={
+                    describeChange(analytics.today.revenueCents, analytics.sameDayLastWeek.revenueCents) ??
+                    "No sales yet today"
+                  }
+                />
+                <MetricCard
+                  label={transactionsLabel}
+                  value={String(analytics.today.orders)}
+                  delta={
+                    analytics.awaitingAction
+                      ? `${analytics.awaitingAction} still to finish`
+                      : "Nothing waiting on you"
+                  }
+                />
+                <MetricCard
+                  label="Average order"
+                  value={formatCents(analytics.today.averageCents, analytics.currency)}
+                  delta={
+                    describeChange(analytics.today.averageCents, analytics.sameDayLastWeek.averageCents) ??
+                    `${formatCents(analytics.last30.averageCents, analytics.currency)} over 30 days`
+                  }
+                />
+              </>
+            ) : (
+              dashboardMetrics.map((m) => (
+                <MetricCard
+                  key={m.id}
+                  label={m.id === "orders" ? transactionsLabel : m.label}
+                  value={m.value}
+                  delta={m.delta}
+                />
+              ))
+            )}
           </div>
+
 
           {/* Industry modules */}
           <div className="mt-10 flex flex-wrap gap-2">
@@ -222,28 +307,81 @@ const Dashboard = () => {
             {/* Transactions */}
             {(activeModule === "orders" || activeModule === "jobs") && (
               <>
-                <div className="flex flex-wrap gap-2">
-                  {filters.map((f) => (
-                    <button
-                      key={f}
-                      type="button"
-                      onClick={() => setFilter(f)}
-                      className={`rounded-full border px-4 py-2 text-xs font-semibold transition-colors ${
-                        filter === f
-                          ? "border-transparent bg-foreground text-background"
-                          : "border-border text-muted-foreground hover:text-foreground"
-                      }`}
-                    >
-                      {f}
-                      {f !== "All" && ` (${orders.filter((o) => o.status === f).length})`}
-                    </button>
-                  ))}
-                </div>
+                {merchant ? (
+                  <>
+                    <div className="flex flex-wrap items-center gap-2">
+                      {liveFilters.map((f) => (
+                        <button
+                          key={f}
+                          type="button"
+                          onClick={() => setLiveFilter(f)}
+                          className={`rounded-full border px-4 py-2 text-xs font-semibold transition-colors ${
+                            liveFilter === f
+                              ? "border-transparent bg-foreground text-background"
+                              : "border-border text-muted-foreground hover:text-foreground"
+                          }`}
+                        >
+                          {f === "all" ? "All" : ORDER_STATUS_LABELS[f]}
+                          {f !== "all" && ` (${liveOrders.filter((o) => o.status === f).length})`}
+                        </button>
+                      ))}
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="ml-auto rounded-full"
+                        disabled={ordersLoading}
+                        onClick={() => void refetchOrders()}
+                      >
+                        <RefreshCw size={14} className={ordersLoading ? "animate-spin" : undefined} /> Refresh
+                      </Button>
+                    </div>
+
+                    <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-[var(--shadow-soft)]">
+                      <div className="border-b border-border px-5 py-4 sm:px-6">
+                        <p className="font-display font-semibold">{transactionsLabel}</p>
+                        <p className="mt-1 text-xs text-muted-foreground">{workflow.join(" → ")}</p>
+                      </div>
+                      <LiveOrderQueue
+                        orders={visibleLiveOrders}
+                        storeSlug={setup?.slug}
+                        pending={advanceOrder.isPending}
+                        onAdvance={(order, status) => advanceOrder.mutate({ id: order.id, status })}
+                      />
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex flex-wrap gap-2">
+                      {filters.map((f) => (
+                        <button
+                          key={f}
+                          type="button"
+                          onClick={() => setFilter(f)}
+                          className={`rounded-full border px-4 py-2 text-xs font-semibold transition-colors ${
+                            filter === f
+                              ? "border-transparent bg-foreground text-background"
+                              : "border-border text-muted-foreground hover:text-foreground"
+                          }`}
+                        >
+                          {f}
+                          {f !== "All" && ` (${orders.filter((o) => o.status === f).length})`}
+                        </button>
+                      ))}
+                    </div>
+                    <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-[var(--shadow-soft)]">
+                      <div className="border-b border-border px-5 py-4 sm:px-6">
+                        <p className="font-display font-semibold">{transactionsLabel} queue</p>
+                        <p className="mt-1 text-xs text-muted-foreground">{workflow.join(" → ")}</p>
+                      </div>
+                      <OrderQueue orders={visible} onAdvance={advance} />
+                    </div>
+                  </>
+                )}
 
                 {merchant && jobs?.length ? (
                   <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-[var(--shadow-soft)]">
                     <div className="border-b border-border px-5 py-4 sm:px-6">
-                      <p className="font-display font-semibold">{transactionsLabel}</p>
+                      <p className="font-display font-semibold">Requested work</p>
                     </div>
                     <div className="divide-y divide-border">
                       {jobs.map((job) => (
@@ -268,17 +406,10 @@ const Dashboard = () => {
                       ))}
                     </div>
                   </div>
-                ) : (
-                  <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-[var(--shadow-soft)]">
-                    <div className="border-b border-border px-5 py-4 sm:px-6">
-                      <p className="font-display font-semibold">{transactionsLabel} queue</p>
-                      <p className="mt-1 text-xs text-muted-foreground">{workflow.join(" → ")}</p>
-                    </div>
-                    <OrderQueue orders={visible} onAdvance={advance} />
-                  </div>
-                )}
+                ) : null}
               </>
             )}
+
 
             {/* Catalog */}
             {(activeModule === "menu" || activeModule === "products" || activeModule === "services") && (
@@ -350,21 +481,31 @@ const Dashboard = () => {
               <PaymentsPanel merchantId={merchant?.id} planSlug={merchant?.plan_slug} />
             )}
 
-            {activeModule === "analytics" && (
-              <div className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-soft)] sm:p-8">
-                <p className="font-display font-semibold">Analytics</p>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Revenue, {transactionsLabel.toLowerCase()} volume and repeat rate.
-                </p>
-                {!isEnabled(entitlements, "exports.enabled") && (
-                  <LockedFeature
-                    className="mt-5"
-                    entitlement="exports.enabled"
-                    description="Download your data as CSV for accounting and reporting."
+            {activeModule === "analytics" &&
+              (merchant ? (
+                <div className="space-y-6">
+                  <AnalyticsPanel
+                    analytics={analytics}
+                    transactionsLabel={transactionsLabel}
+                    catalogItemLabel={terms.catalogItem}
                   />
-                )}
-              </div>
-            )}
+                  {!isEnabled(entitlements, "exports.enabled") && (
+                    <LockedFeature
+                      entitlement="exports.enabled"
+                      description="Download your data as CSV for accounting and reporting."
+                    />
+                  )}
+                </div>
+              ) : (
+                <div className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-soft)] sm:p-8">
+                  <p className="font-display font-semibold">Analytics</p>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Revenue, {transactionsLabel.toLowerCase()} volume, best sellers and repeat rate appear
+                    here once you are signed in with your business account.
+                  </p>
+                </div>
+              ))}
+
           </div>
         </div>
       </section>
