@@ -14,11 +14,25 @@ const RATE_LIMIT_WINDOW_SECONDS = 3600;
 const escapeHtml = (str: string) =>
   str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
-async function sendEmail(apiKey: string, from: string, to: string, subject: string, html: string) {
+async function sendEmail(
+  apiKey: string,
+  from: string,
+  to: string,
+  subject: string,
+  html: string,
+  replyTo?: string,
+) {
   const res = await fetch("https://smtp.maileroo.com/api/v2/emails", {
     method: "POST",
     headers: { "X-Api-Key": apiKey, "Content-Type": "application/json" },
-    body: JSON.stringify({ from: { address: from }, to: { address: to }, subject, html }),
+    body: JSON.stringify({
+      // Automatic mail always leaves from the unattended Loumilab address.
+      from: { address: from, display_name: "Loumilab" },
+      to: { address: to },
+      ...(replyTo ? { reply_to: { address: replyTo } } : {}),
+      subject,
+      html,
+    }),
   });
   if (!res.ok) {
     console.error(`Maileroo error (${res.status}):`, await res.text());
