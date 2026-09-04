@@ -186,15 +186,46 @@ const Dashboard = () => {
           )}
 
           <div className="mt-8 grid gap-4 md:grid-cols-3">
-            {dashboardMetrics.map((m) => (
-              <MetricCard
-                key={m.id}
-                label={m.id === "orders" ? transactionsLabel : m.label}
-                value={m.value}
-                delta={m.delta}
-              />
-            ))}
+            {merchant ? (
+              <>
+                <MetricCard
+                  label="Today's revenue"
+                  value={formatCents(analytics.today.revenueCents, analytics.currency)}
+                  delta={
+                    describeChange(analytics.today.revenueCents, analytics.sameDayLastWeek.revenueCents) ??
+                    "No sales yet today"
+                  }
+                />
+                <MetricCard
+                  label={transactionsLabel}
+                  value={String(analytics.today.orders)}
+                  delta={
+                    analytics.awaitingAction
+                      ? `${analytics.awaitingAction} still to finish`
+                      : "Nothing waiting on you"
+                  }
+                />
+                <MetricCard
+                  label="Average order"
+                  value={formatCents(analytics.today.averageCents, analytics.currency)}
+                  delta={
+                    describeChange(analytics.today.averageCents, analytics.sameDayLastWeek.averageCents) ??
+                    `${formatCents(analytics.last30.averageCents, analytics.currency)} over 30 days`
+                  }
+                />
+              </>
+            ) : (
+              dashboardMetrics.map((m) => (
+                <MetricCard
+                  key={m.id}
+                  label={m.id === "orders" ? transactionsLabel : m.label}
+                  value={m.value}
+                  delta={m.delta}
+                />
+              ))
+            )}
           </div>
+
 
           {/* Industry modules */}
           <div className="mt-10 flex flex-wrap gap-2">
