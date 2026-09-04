@@ -156,7 +156,7 @@ const handler = createAuthEmailHandler({
           siteName: SITE_NAME,
           siteUrl: SITE_URL,
           recipient: data.email,
-          confirmationUrl: data.url,
+          confirmationUrl: canonicalizeUrl(data.url ?? ''),
         }),
     },
     invite: {
@@ -165,7 +165,7 @@ const handler = createAuthEmailHandler({
         React.createElement(InviteEmail, {
           siteName: SITE_NAME,
           siteUrl: SITE_URL,
-          confirmationUrl: data.url,
+          confirmationUrl: canonicalizeUrl(data.url ?? ''),
         }),
     },
     magiclink: {
@@ -173,7 +173,7 @@ const handler = createAuthEmailHandler({
       render: (data) =>
         React.createElement(MagicLinkEmail, {
           siteName: SITE_NAME,
-          confirmationUrl: data.url,
+          confirmationUrl: canonicalizeUrl(data.url ?? ''),
         }),
     },
     recovery: {
@@ -181,7 +181,7 @@ const handler = createAuthEmailHandler({
       render: (data) =>
         React.createElement(RecoveryEmail, {
           siteName: SITE_NAME,
-          confirmationUrl: data.url,
+          confirmationUrl: canonicalizeUrl(data.url ?? ''),
         }),
     },
     email_change: {
@@ -192,7 +192,7 @@ const handler = createAuthEmailHandler({
           oldEmail: data.old_email ?? '',
           email: data.email,
           newEmail: data.new_email ?? '',
-          confirmationUrl: data.url,
+          confirmationUrl: canonicalizeUrl(data.url ?? ''),
         }),
     },
     reauthentication: {
