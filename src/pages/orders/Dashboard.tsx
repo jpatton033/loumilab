@@ -350,21 +350,31 @@ const Dashboard = () => {
               <PaymentsPanel merchantId={merchant?.id} planSlug={merchant?.plan_slug} />
             )}
 
-            {activeModule === "analytics" && (
-              <div className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-soft)] sm:p-8">
-                <p className="font-display font-semibold">Analytics</p>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Revenue, {transactionsLabel.toLowerCase()} volume and repeat rate.
-                </p>
-                {!isEnabled(entitlements, "exports.enabled") && (
-                  <LockedFeature
-                    className="mt-5"
-                    entitlement="exports.enabled"
-                    description="Download your data as CSV for accounting and reporting."
+            {activeModule === "analytics" &&
+              (merchant ? (
+                <div className="space-y-6">
+                  <AnalyticsPanel
+                    analytics={analytics}
+                    transactionsLabel={transactionsLabel}
+                    catalogItemLabel={terms.catalogItem}
                   />
-                )}
-              </div>
-            )}
+                  {!isEnabled(entitlements, "exports.enabled") && (
+                    <LockedFeature
+                      entitlement="exports.enabled"
+                      description="Download your data as CSV for accounting and reporting."
+                    />
+                  )}
+                </div>
+              ) : (
+                <div className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-soft)] sm:p-8">
+                  <p className="font-display font-semibold">Analytics</p>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Revenue, {transactionsLabel.toLowerCase()} volume, best sellers and repeat rate appear
+                    here once you are signed in with your business account.
+                  </p>
+                </div>
+              ))}
+
           </div>
         </div>
       </section>
