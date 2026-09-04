@@ -192,10 +192,24 @@ serve(async (req) => {
       `,
     });
 
-    const fromAddress = "hello@loumilab.com";
+    const fromAddress = "no-reply@loumilab.com";
     const results = await Promise.allSettled([
-      sendEmail(apiKey, fromAddress, "hello@loumilab.com", `Custom project request — ${safeBusiness}`, notificationHtml),
-      sendEmail(apiKey, fromAddress, lead.email as string, "We received your custom project request — Loumilab", confirmationHtml),
+      sendEmail(
+        apiKey,
+        fromAddress,
+        "hello@loumilab.com",
+        `Custom project request — ${safeBusiness}`,
+        notificationHtml,
+        lead.email as string,
+      ),
+      sendEmail(
+        apiKey,
+        fromAddress,
+        lead.email as string,
+        "We received your custom project request — Loumilab",
+        confirmationHtml,
+        "hello@loumilab.com",
+      ),
     ]);
     const failures = results.filter((r) => r.status === "rejected");
     if (failures.length > 0) console.error("Some emails failed:", failures);

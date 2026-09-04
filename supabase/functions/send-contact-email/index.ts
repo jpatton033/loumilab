@@ -125,7 +125,7 @@ serve(async (req) => {
     const safeCompany = submission.company ? escapeHtml(String(submission.company)) : "Not provided";
     const safeMessage = escapeHtml(submission.message as string);
 
-    const fromAddress = "hello@loumilab.com";
+    const fromAddress = "no-reply@loumilab.com";
 
     // --- Shared email design tokens (Loumilab light system) ---
     const t = {
@@ -211,8 +211,22 @@ serve(async (req) => {
     });
 
     const results = await Promise.allSettled([
-      sendEmail(apiKey, fromAddress, "hello@loumilab.com", `New inquiry from ${safeName}`, notificationHtml),
-      sendEmail(apiKey, fromAddress, submission.email as string, "We received your message — Loumilab", confirmationHtml),
+      sendEmail(
+        apiKey,
+        fromAddress,
+        "hello@loumilab.com",
+        `New inquiry from ${safeName}`,
+        notificationHtml,
+        submission.email as string,
+      ),
+      sendEmail(
+        apiKey,
+        fromAddress,
+        submission.email as string,
+        "We received your message — Loumilab",
+        confirmationHtml,
+        "hello@loumilab.com",
+      ),
     ]);
 
 
