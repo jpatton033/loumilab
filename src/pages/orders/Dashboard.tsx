@@ -53,6 +53,19 @@ import { useMerchantSetup } from "@/lib/orders/setup";
 type Filter = "All" | OrderStatus;
 const filters: Filter[] = ["All", ...ORDER_STATUSES];
 
+/** Order of the live status chips, active stages first. */
+const LIVE_FILTER_ORDER: LiveOrderStatus[] = [
+  "paid",
+  "preparing",
+  "ready",
+  "out_for_delivery",
+  "completed",
+  "refunded",
+  "cancelled",
+  "failed",
+  "pending",
+];
+
 const Dashboard = () => {
   const [orders, setOrders] = useState<MerchantOrder[]>(demoOrders);
   const [filter, setFilter] = useState<Filter>("All");
