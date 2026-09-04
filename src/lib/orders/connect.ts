@@ -37,6 +37,8 @@ export type ConnectResponse = {
   merchant?: MerchantRecord;
   account?: ConnectedAccount;
   url?: string;
+  /** Unix seconds when `url` stops working (Stripe links are short-lived). */
+  expiresAt?: number | null;
   error?: string;
   /** Machine-readable reason, e.g. "connect_not_enabled" for platform config issues. */
   code?: string;
