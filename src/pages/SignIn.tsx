@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import SEOHead from "@/components/SEOHead";
+import { passwordResetRedirectUrl } from "@/lib/authRedirect";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LogIn, Mail, KeyRound, ArrowRight, Loader2 } from "lucide-react";
 
@@ -137,7 +138,7 @@ const SignIn = () => {
 
     setLoading(true);
     const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-      redirectTo: `${window.location.origin}/reset-password`,
+      redirectTo: passwordResetRedirectUrl(),
     });
     setLoading(false);
 

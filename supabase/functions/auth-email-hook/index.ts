@@ -21,6 +21,27 @@ const ROOT_DOMAIN = "loumilab.com"
 const FROM_DOMAIN = "notify.loumilab.com"
 const SITE_URL = `https://${ROOT_DOMAIN}`
 
+// The published *.lovable.app host 302-redirects to the custom domain, and that
+// redirect strips the URL fragment carrying Supabase's tokens. Rewrite any emailed
+// link so `redirect_to` points straight at the canonical domain.
+const REDIRECTING_HOSTS = new Set(['loumilab.lovable.app', 'www.loumilab.com'])
+
+function canonicalizeUrl(rawUrl: string): string {
+  try {
+    const url = new URL(rawUrl)
+    const redirectTo = url.searchParams.get('redirect_to')
+    if (!redirectTo) return rawUrl
+    const target = new URL(redirectTo)
+    if (!REDIRECTING_HOSTS.has(target.hostname)) return rawUrl
+    target.protocol = 'https:'
+    target.hostname = ROOT_DOMAIN
+    url.searchParams.set('redirect_to', target.toString())
+    return url.toString()
+  } catch {
+    return rawUrl
+  }
+}
+
 // Template mapping for preview mode
 const EMAIL_TEMPLATES: Record<string, React.ComponentType<any>> = {
   signup: SignupEmail,
@@ -135,7 +156,7 @@ const handler = createAuthEmailHandler({
           siteName: SITE_NAME,
           siteUrl: SITE_URL,
           recipient: data.email,
-          confirmationUrl: data.url,
+          confirmationUrl: canonicalizeUrl(data.url ?? ''),
         }),
     },
     invite: {
@@ -144,7 +165,7 @@ const handler = createAuthEmailHandler({
         React.createElement(InviteEmail, {
           siteName: SITE_NAME,
           siteUrl: SITE_URL,
-          confirmationUrl: data.url,
+          confirmationUrl: canonicalizeUrl(data.url ?? ''),
         }),
     },
     magiclink: {
@@ -152,7 +173,7 @@ const handler = createAuthEmailHandler({
       render: (data) =>
         React.createElement(MagicLinkEmail, {
           siteName: SITE_NAME,
-          confirmationUrl: data.url,
+          confirmationUrl: canonicalizeUrl(data.url ?? ''),
         }),
     },
     recovery: {
@@ -160,7 +181,7 @@ const handler = createAuthEmailHandler({
       render: (data) =>
         React.createElement(RecoveryEmail, {
           siteName: SITE_NAME,
-          confirmationUrl: data.url,
+          confirmationUrl: canonicalizeUrl(data.url ?? ''),
         }),
     },
     email_change: {
@@ -171,7 +192,7 @@ const handler = createAuthEmailHandler({
           oldEmail: data.old_email ?? '',
           email: data.email,
           newEmail: data.new_email ?? '',
-          confirmationUrl: data.url,
+          confirmationUrl: canonicalizeUrl(data.url ?? ''),
         }),
     },
     reauthentication: {
