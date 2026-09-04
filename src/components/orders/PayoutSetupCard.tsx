@@ -72,40 +72,71 @@ const PayoutSetupCard = () => {
   }, [pendingUrl]);
 
   /**
-   * Stripe's hosted onboarding refuses to be framed, so navigating the current
-   * (possibly embedded) view to it renders a blank screen. Always open it as a
-   * top-level new tab, and expose a clickable link if the browser blocks it.
+   * Stripe's hosted onboarding refuses to be framed, so this view can never
+   * navigate to it directly. A tab opened *after* an awaited request is treated
+   * as programmatic and silently blocked, so the tab is claimed synchronously on
+   * the click and pointed at Stripe once the link comes back.
    */
-  const openOnboarding = (url: string) => {
-    const tab = window.open(url, "_blank", "noopener");
-    if (tab) {
-      setPendingUrl(url);
+  const openOnboarding = (tab: Window | null, url: string) => {
+    setPendingUrl(url);
+    if (tab && !tab.closed) {
+      try {
+        tab.opener = null;
+      } catch {
+        // Not all browsers allow clearing opener; harmless.
+      }
+      tab.location.replace(url);
       return;
     }
-    setPendingUrl(url);
     try {
-      if (window.top && window.top !== window.self) window.top.location.href = url;
+      if (window.top && window.top !== window.self) {
+        window.top.location.href = url;
+        return;
+      }
     } catch {
       // Cross-origin top frame: the inline link below is the way forward.
     }
+    window.open(url, "_blank", "noopener");
   };
 
   const start = async () => {
+    // Claimed during the click so the browser keeps the user-gesture context.
+    const tab = window.open("about:blank", "_blank");
     setWorking(true);
     const res = await callConnect("start", merchant ? {} : { business: form });
     setWorking(false);
     if (res.code === "connect_not_enabled" || res.code === "stripe_key_invalid") {
+      tab?.close();
       setConfigNotice(res.error ?? null);
       return;
     }
     if (res.error) {
+      tab?.close();
       setConfigNotice(null);
       toast({ title: "Payments setup failed", description: res.error, variant: "destructive" });
       return;
     }
     setConfigNotice(null);
+    if (res.url) openOnboarding(tab, res.url);
+    else tab?.close();
     await refresh();
-    if (res.url) openOnboarding(res.url);
+  };
+
+  /** A stale Stripe link is worse than none — fetch a fresh one on demand. */
+  const resume = async () => {
+    const tab = window.open("about:blank", "_blank");
+    setWorking(true);
+    const res = await callConnect("start", {});
+    setWorking(false);
+    if (res.url) openOnboarding(tab, res.url);
+    else {
+      tab?.close();
+      toast({
+        title: "Couldn't open Stripe",
+        description: res.error ?? "Please try again in a moment.",
+        variant: "destructive",
+      });
+    }
   };
 
 
