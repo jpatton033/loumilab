@@ -11,3 +11,6 @@ project_id = "yjjwpbjcxdaifizpbkad"
     verify_jwt = false
   [functions.stripe-connect-webhook]
     verify_jwt = false
+
+  [functions.process-email-queue]
+    verify_jwt = true
