@@ -243,7 +243,15 @@ Deno.serve(async (req) => {
       collection_options: { fields: "eventually_due" },
     });
 
-    return json({ merchant, account: synced ?? link, url: accountLink.url, mode: stripeMode });
+    return json({
+      merchant,
+      account: synced ?? link,
+      url: accountLink.url,
+      // Stripe onboarding links are short-lived; the client uses this to avoid
+      // handing the merchant a dead link.
+      expiresAt: accountLink.expires_at ?? null,
+      mode: stripeMode,
+    });
   } catch (err) {
     console.error("stripe-connect error", err);
     const message = err instanceof Error ? err.message : "Unexpected error";
