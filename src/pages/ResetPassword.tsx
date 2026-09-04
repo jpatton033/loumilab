@@ -32,9 +32,12 @@ const ResetPassword = () => {
 
       const errorDescription = url.searchParams.get("error_description") || hash.get("error_description");
       if (errorDescription) {
-        if (!cancelled) setStatus("invalid");
+        // A recovery session may already exist from an earlier successful exchange.
+        const { data } = await supabase.auth.getSession();
+        if (!cancelled) setStatus(data.session ? "ready" : "invalid");
         return;
       }
+
 
       // PKCE / code-based recovery links
       const code = url.searchParams.get("code");
