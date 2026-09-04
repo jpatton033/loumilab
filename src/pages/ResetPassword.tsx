@@ -44,8 +44,15 @@ const ResetPassword = () => {
       if (code) {
         const { error } = await supabase.auth.exchangeCodeForSession(code);
         if (!cancelled) {
-          setStatus(error ? "invalid" : "ready");
-          if (!error) window.history.replaceState({}, "", "/reset-password");
+          if (error) {
+            // The link may already have been consumed by a mail-app preview while a
+            // valid session was established, so check before declaring it invalid.
+            const { data } = await supabase.auth.getSession();
+            setStatus(data.session ? "ready" : "invalid");
+          } else {
+            setStatus("ready");
+            window.history.replaceState({}, "", "/reset-password");
+          }
         }
         return;
       }
@@ -59,8 +66,15 @@ const ResetPassword = () => {
           refresh_token: refreshToken,
         });
         if (!cancelled) {
-          setStatus(error ? "invalid" : "ready");
-          if (!error) window.history.replaceState({}, "", "/reset-password");
+          if (error) {
+            // The link may already have been consumed by a mail-app preview while a
+            // valid session was established, so check before declaring it invalid.
+            const { data } = await supabase.auth.getSession();
+            setStatus(data.session ? "ready" : "invalid");
+          } else {
+            setStatus("ready");
+            window.history.replaceState({}, "", "/reset-password");
+          }
         }
         return;
       }
@@ -70,8 +84,15 @@ const ResetPassword = () => {
       if (tokenHash) {
         const { error } = await supabase.auth.verifyOtp({ type: "recovery", token_hash: tokenHash });
         if (!cancelled) {
-          setStatus(error ? "invalid" : "ready");
-          if (!error) window.history.replaceState({}, "", "/reset-password");
+          if (error) {
+            // The link may already have been consumed by a mail-app preview while a
+            // valid session was established, so check before declaring it invalid.
+            const { data } = await supabase.auth.getSession();
+            setStatus(data.session ? "ready" : "invalid");
+          } else {
+            setStatus("ready");
+            window.history.replaceState({}, "", "/reset-password");
+          }
         }
         return;
       }
@@ -149,6 +170,10 @@ const ResetPassword = () => {
               <p className="mt-2 text-sm text-muted-foreground">
                 Password reset links can only be used once and expire after a short time. Request a new one and open the
                 latest email.
+              </p>
+              <p className="mt-2 text-sm text-muted-foreground">
+                If your email app previews links automatically, copy the link from the email and paste it into your
+                browser instead of clicking it.
               </p>
               <div className="mt-6 flex flex-col gap-3">
                 <Button asChild size="lg">
