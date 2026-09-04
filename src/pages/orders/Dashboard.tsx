@@ -222,28 +222,81 @@ const Dashboard = () => {
             {/* Transactions */}
             {(activeModule === "orders" || activeModule === "jobs") && (
               <>
-                <div className="flex flex-wrap gap-2">
-                  {filters.map((f) => (
-                    <button
-                      key={f}
-                      type="button"
-                      onClick={() => setFilter(f)}
-                      className={`rounded-full border px-4 py-2 text-xs font-semibold transition-colors ${
-                        filter === f
-                          ? "border-transparent bg-foreground text-background"
-                          : "border-border text-muted-foreground hover:text-foreground"
-                      }`}
-                    >
-                      {f}
-                      {f !== "All" && ` (${orders.filter((o) => o.status === f).length})`}
-                    </button>
-                  ))}
-                </div>
+                {merchant ? (
+                  <>
+                    <div className="flex flex-wrap items-center gap-2">
+                      {liveFilters.map((f) => (
+                        <button
+                          key={f}
+                          type="button"
+                          onClick={() => setLiveFilter(f)}
+                          className={`rounded-full border px-4 py-2 text-xs font-semibold transition-colors ${
+                            liveFilter === f
+                              ? "border-transparent bg-foreground text-background"
+                              : "border-border text-muted-foreground hover:text-foreground"
+                          }`}
+                        >
+                          {f === "all" ? "All" : ORDER_STATUS_LABELS[f]}
+                          {f !== "all" && ` (${liveOrders.filter((o) => o.status === f).length})`}
+                        </button>
+                      ))}
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="ml-auto rounded-full"
+                        disabled={ordersLoading}
+                        onClick={() => void refetchOrders()}
+                      >
+                        <RefreshCw size={14} className={ordersLoading ? "animate-spin" : undefined} /> Refresh
+                      </Button>
+                    </div>
+
+                    <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-[var(--shadow-soft)]">
+                      <div className="border-b border-border px-5 py-4 sm:px-6">
+                        <p className="font-display font-semibold">{transactionsLabel}</p>
+                        <p className="mt-1 text-xs text-muted-foreground">{workflow.join(" → ")}</p>
+                      </div>
+                      <LiveOrderQueue
+                        orders={visibleLiveOrders}
+                        storeSlug={setup?.slug}
+                        pending={advanceOrder.isPending}
+                        onAdvance={(order, status) => advanceOrder.mutate({ id: order.id, status })}
+                      />
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex flex-wrap gap-2">
+                      {filters.map((f) => (
+                        <button
+                          key={f}
+                          type="button"
+                          onClick={() => setFilter(f)}
+                          className={`rounded-full border px-4 py-2 text-xs font-semibold transition-colors ${
+                            filter === f
+                              ? "border-transparent bg-foreground text-background"
+                              : "border-border text-muted-foreground hover:text-foreground"
+                          }`}
+                        >
+                          {f}
+                          {f !== "All" && ` (${orders.filter((o) => o.status === f).length})`}
+                        </button>
+                      ))}
+                    </div>
+                    <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-[var(--shadow-soft)]">
+                      <div className="border-b border-border px-5 py-4 sm:px-6">
+                        <p className="font-display font-semibold">{transactionsLabel} queue</p>
+                        <p className="mt-1 text-xs text-muted-foreground">{workflow.join(" → ")}</p>
+                      </div>
+                      <OrderQueue orders={visible} onAdvance={advance} />
+                    </div>
+                  </>
+                )}
 
                 {merchant && jobs?.length ? (
                   <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-[var(--shadow-soft)]">
                     <div className="border-b border-border px-5 py-4 sm:px-6">
-                      <p className="font-display font-semibold">{transactionsLabel}</p>
+                      <p className="font-display font-semibold">Requested work</p>
                     </div>
                     <div className="divide-y divide-border">
                       {jobs.map((job) => (
@@ -268,17 +321,10 @@ const Dashboard = () => {
                       ))}
                     </div>
                   </div>
-                ) : (
-                  <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-[var(--shadow-soft)]">
-                    <div className="border-b border-border px-5 py-4 sm:px-6">
-                      <p className="font-display font-semibold">{transactionsLabel} queue</p>
-                      <p className="mt-1 text-xs text-muted-foreground">{workflow.join(" → ")}</p>
-                    </div>
-                    <OrderQueue orders={visible} onAdvance={advance} />
-                  </div>
-                )}
+                ) : null}
               </>
             )}
+
 
             {/* Catalog */}
             {(activeModule === "menu" || activeModule === "products" || activeModule === "services") && (
