@@ -13,7 +13,7 @@ import {
 
 
 const BodySchema = z.object({
-  action: z.enum(["start", "status", "dashboard_link"]),
+  action: z.enum(["start", "status", "dashboard_link", "platform_status"]),
   returnUrl: z.string().url().max(500).optional(),
   business: z
     .object({
