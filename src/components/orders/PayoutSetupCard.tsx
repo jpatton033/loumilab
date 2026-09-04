@@ -283,9 +283,18 @@ const PayoutSetupCard = () => {
       ) : null}
 
       {configNotice ? (
-        <div className="mt-6 flex items-start gap-2 rounded-2xl border border-border bg-secondary p-4 text-xs text-muted-foreground">
+        <div className="mt-6 flex flex-wrap items-start gap-2 rounded-2xl border border-border bg-secondary p-4 text-xs text-muted-foreground">
           <Info size={14} className="mt-0.5 shrink-0" />
-          <span>{configNotice}</span>
+          <span className="min-w-0 flex-1">{configNotice}</span>
+          <Button
+            size="sm"
+            variant="outline"
+            className="rounded-full"
+            disabled={working}
+            onClick={start}
+          >
+            {working ? <Loader2 className="animate-spin" size={14} /> : null} Try again
+          </Button>
         </div>
       ) : null}
 

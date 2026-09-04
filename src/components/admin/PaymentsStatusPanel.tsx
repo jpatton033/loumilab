@@ -1,8 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
-import { AlertTriangle, CreditCard, Loader2 } from "lucide-react";
+import { AlertTriangle, CheckCircle2, CreditCard, Loader2, RefreshCw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { PAYOUT_LABELS, type PayoutStatus } from "@/lib/orders/connect";
+import {
+  PAYOUT_LABELS,
+  PLATFORM_PAYMENTS_LABELS,
+  usePlatformPaymentsStatus,
+  type PayoutStatus,
+} from "@/lib/orders/connect";
 
 type PaymentsSnapshot = {
   mode: "live" | "test" | "mixed" | "none";
@@ -11,6 +17,7 @@ type PaymentsSnapshot = {
   lastEvent: { type: string; created_at: string; livemode: boolean; error: string | null } | null;
   failedEvents: number;
 };
+
 
 const usePaymentsSnapshot = () =>
   useQuery({
@@ -61,6 +68,12 @@ const MODE_LABEL: Record<PaymentsSnapshot["mode"], string> = {
 
 const PaymentsStatusPanel = () => {
   const { data, isLoading } = usePaymentsSnapshot();
+  const {
+    data: platform,
+    isFetching: platformChecking,
+    refetch: recheckPlatform,
+  } = usePlatformPaymentsStatus();
+  const platformState = platform?.state ?? "unknown";
 
   return (
     <div className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-soft)]">
@@ -77,6 +90,49 @@ const PaymentsStatusPanel = () => {
           </Badge>
         )}
       </div>
+
+      {/* Can a merchant actually be handed Stripe onboarding right now? */}
+      <div className="mt-4 rounded-2xl border border-border bg-secondary p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-2 text-sm">
+            {platformChecking ? (
+              <Loader2 size={14} className="animate-spin text-muted-foreground" />
+            ) : platformState === "ready" ? (
+              <CheckCircle2 size={14} className="text-accent" />
+            ) : (
+              <AlertTriangle size={14} className="text-muted-foreground" />
+            )}
+            <span className="font-medium">Payments platform</span>
+            <Badge variant={platformState === "ready" ? "default" : "outline"}>
+              {PLATFORM_PAYMENTS_LABELS[platformState]}
+            </Badge>
+          </div>
+          <Button
+            size="sm"
+            variant="outline"
+            className="rounded-full"
+            disabled={platformChecking}
+            onClick={() => void recheckPlatform()}
+          >
+            <RefreshCw size={14} /> Re-check
+          </Button>
+        </div>
+        {platform?.detail && (
+          <p className="mt-2 text-xs text-muted-foreground">{platform.detail}</p>
+        )}
+        {platformState === "profile_incomplete" && (
+          <p className="mt-2 text-xs text-muted-foreground">
+            Complete it in Stripe under Connect → Settings → Platform profile, including the question
+            about who covers refunds, disputes and negative balances.
+          </p>
+        )}
+        {platform?.checkedAt && (
+          <p className="mt-2 text-[11px] text-muted-foreground">
+            Last checked {new Date(platform.checkedAt).toLocaleString()}
+          </p>
+        )}
+      </div>
+
 
       {isLoading ? (
         <p className="mt-4 text-sm text-muted-foreground">Loading payments status…</p>

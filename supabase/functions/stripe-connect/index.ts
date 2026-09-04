@@ -7,13 +7,14 @@ import {
   resolveReturnBase,
   stripe,
   stripeConfigured,
+  stripeKeyProblem,
   stripeLivemode,
   stripeMode,
 } from "../_shared/stripe.ts";
 
 
 const BodySchema = z.object({
-  action: z.enum(["start", "status", "dashboard_link"]),
+  action: z.enum(["start", "status", "dashboard_link", "platform_status"]),
   returnUrl: z.string().url().max(500).optional(),
   business: z
     .object({
@@ -37,14 +38,97 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
   try {
-    if (!stripeConfigured) return json({ error: "Payments are not configured yet." }, 503);
-
     const user = await requireUser(req);
     if (!user) return json({ error: "Unauthorized" }, 401);
 
     const parsed = BodySchema.safeParse(await req.json().catch(() => null));
     if (!parsed.success) return json({ error: parsed.error.flatten().fieldErrors }, 400);
     const { action, returnUrl, business } = parsed.data;
+
+    /**
+     * Admin-only readiness probe. It answers one question: can Stripe Connect
+     * onboarding actually be handed to a merchant right now? Failures here are
+     * platform configuration (missing platform profile / loss-liability answer,
+     * or a bad key), never a merchant problem.
+     */
+    if (action === "platform_status") {
+      const [{ data: isAdmin }, { data: isSuperAdmin }] = await Promise.all([
+        admin.rpc("has_role", { _user_id: user.id, _role: "admin" }),
+        admin.rpc("has_admin_role", { _user_id: user.id, _role: "super_admin" }),
+      ]);
+      if (!isAdmin && !isSuperAdmin) return json({ error: "Forbidden" }, 403);
+
+      const checkedAt = new Date().toISOString();
+      if (!stripeConfigured) {
+        return json({
+          state: "key_problem",
+          mode: stripeMode,
+          detail: stripeKeyProblem ?? "No usable Stripe secret key is saved.",
+          checkedAt,
+        });
+      }
+
+      // Non-destructive probe: creating an onboarding link for an existing
+      // connected account exercises the exact Stripe path that fails when the
+      // platform profile is incomplete. No account is created or changed.
+      const { data: probeAccount } = await admin
+        .from("merchant_stripe_accounts")
+        .select("stripe_account_id")
+        .eq("livemode", stripeLivemode)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (!probeAccount) {
+        return json({
+          state: "unknown",
+          mode: stripeMode,
+          detail:
+            "No merchant has started payments setup in this mode yet, so there is nothing to test against. This check will report a real answer after the first attempt.",
+          checkedAt,
+        });
+      }
+
+      try {
+        await stripe.accountLinks.create({
+          account: probeAccount.stripe_account_id,
+          refresh_url: "https://loumilab.com/orders/dashboard",
+          return_url: "https://loumilab.com/orders/dashboard",
+          type: "account_onboarding",
+          collection_options: { fields: "eventually_due" },
+        });
+        return json({ state: "ready", mode: stripeMode, checkedAt });
+      } catch (probeErr) {
+        const message = probeErr instanceof Error ? probeErr.message : "Unknown Stripe error";
+        const type = (probeErr as { type?: string })?.type;
+        const profileIncomplete =
+          /signed up for Connect|dashboard\.stripe\.com\/connect|responsibilities of managing losses|platform-profile|platform profile/i.test(
+            message,
+          );
+        if (profileIncomplete) {
+          return json({
+            state: "profile_incomplete",
+            mode: stripeMode,
+            detail:
+              "Stripe still needs your Connect platform profile completed — including the question about who is responsible for losses such as refunds and disputes. Until that is saved, merchants cannot finish payments setup.",
+            checkedAt,
+          });
+        }
+        if (type === "StripeAuthenticationError") {
+          return json({
+            state: "key_problem",
+            mode: stripeMode,
+            detail: "Stripe rejected the saved payment key. Save a current secret key and re-check.",
+            checkedAt,
+          });
+        }
+        return json({ state: "error", mode: stripeMode, detail: message, checkedAt });
+      }
+    }
+
+    if (!stripeConfigured) return json({ error: "Payments are not configured yet." }, 503);
+
+
 
     // Resolve or create the merchant record for this user.
     let { data: merchant } = await admin

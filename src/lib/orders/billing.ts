@@ -52,6 +52,10 @@ export interface PayoutsSnapshot {
   available_cents: number;
   pending_cents: number;
   currency: string;
+  /** Plain-English payout schedule, e.g. "Daily, 2 days after the sale". */
+  payout_schedule: string | null;
+  /** ISO date of the next expected payout, when Stripe reports one. */
+  next_payout_at: string | null;
   payouts: {
     id: string;
     amount_cents: number;
@@ -59,13 +63,20 @@ export interface PayoutsSnapshot {
     status: string;
     arrival_date: number | null;
     created: number;
+    failure_message: string | null;
   }[];
 }
 
+/**
+ * Stripe balance and payout history. Its cache slot is deliberately separate
+ * from the payments *status* query in `connect.ts` — sharing one made the two
+ * overwrite each other and blanked the balance for verified merchants.
+ */
 export const usePayouts = (enabled = true) =>
   useQuery({
-    queryKey: ["orders", "payouts"],
+    queryKey: ["orders", "payout-balance"],
     enabled,
     retry: false,
     queryFn: async () => call<PayoutsSnapshot>({}, "orders-payouts"),
   });
+
