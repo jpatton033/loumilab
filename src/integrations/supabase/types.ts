@@ -2041,15 +2041,6 @@ export type Database = {
       }
       cleanup_old_rate_limits: { Args: never; Returns: undefined }
       create_custom_project_upload_slot: { Args: never; Returns: string }
-      delete_email: {
-        Args: { message_id: number; queue_name: string }
-        Returns: boolean
-      }
-      email_queue_dispatch: { Args: never; Returns: undefined }
-      enqueue_email: {
-        Args: { payload: Json; queue_name: string }
-        Returns: number
-      }
       get_invoice_by_token: { Args: { _token: string }; Returns: Json }
       get_order_by_token: { Args: { _token: string }; Returns: Json }
       get_quote_by_token: { Args: { _token: string }; Returns: Json }
@@ -2084,15 +2075,6 @@ export type Database = {
           section_slug: string
         }[]
       }
-      move_to_dlq: {
-        Args: {
-          dlq_name: string
-          message_id: number
-          payload: Json
-          source_queue: string
-        }
-        Returns: number
-      }
       newsletter_subscribe: {
         Args: { _email: string; _source: string }
         Returns: boolean
@@ -2104,14 +2086,6 @@ export type Database = {
       owns_merchant_media_path: {
         Args: { object_name: string }
         Returns: boolean
-      }
-      read_email_batch: {
-        Args: { batch_size: number; queue_name: string; vt: number }
-        Returns: {
-          message: Json
-          msg_id: number
-          read_ct: number
-        }[]
       }
       respond_to_quote: {
         Args: { _approve: boolean; _token: string }
