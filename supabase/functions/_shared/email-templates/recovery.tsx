@@ -16,18 +16,18 @@ export const RecoveryEmail = ({
   confirmationUrl,
 }: RecoveryEmailProps) => (
   <Layout
-    preview={`Reset your ${siteName} password`}
-    heading="Reset your password"
+    preview={`Securely reset your ${siteName} password`}
+    heading="Password reset requested"
     confirmationUrl={confirmationUrl}
-    expiryNote="This link expires in 60 minutes and can be used once. If you didn't ask to reset your password, you can ignore this email — nothing will change."
+    expiryNote="This secure link expires in 60 minutes. If you didn't request a password reset, you can safely ignore this email."
   >
     <Text style={text}>
-      We received a request to reset the password for your {siteName} account.
-      Choose a new one below.
+      A password reset was requested for your {siteName} account. Continue to
+      verify the request and choose a new password.
     </Text>
     <Text style={{ ...text, margin: '0 0 26px' }}>
       <Button className="dm-btn" style={button} href={confirmationUrl}>
-        Set a new password
+        Continue securely
       </Button>
     </Text>
   </Layout>
