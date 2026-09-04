@@ -1,13 +1,13 @@
 project_id = "yjjwpbjcxdaifizpbkad"
 
-[functions.send-contact-email]
-verify_jwt = false
-
-[functions.stripe-connect-webhook]
-verify_jwt = false
-
-[functions.orders-checkout]
-verify_jwt = false
-
-[functions.orders-invoice-checkout]
-verify_jwt = false
+[functions]
+  [functions.auth-email-hook]
+    verify_jwt = false
+  [functions.orders-checkout]
+    verify_jwt = false
+  [functions.orders-invoice-checkout]
+    verify_jwt = false
+  [functions.send-contact-email]
+    verify_jwt = false
+  [functions.stripe-connect-webhook]
+    verify_jwt = false
