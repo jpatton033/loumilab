@@ -8,7 +8,16 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { KeyRound, Loader2, AlertCircle } from "lucide-react";
 
-type Status = "checking" | "ready" | "invalid";
+type Status = "checking" | "continue" | "ready" | "invalid";
+
+const isSafeRecoveryUrl = (value: string): boolean => {
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" && url.hostname.endsWith(".supabase.co") && url.pathname === "/auth/v1/verify";
+  } catch {
+    return false;
+  }
+};
 
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -17,24 +26,49 @@ const ResetPassword = () => {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [saving, setSaving] = useState(false);
+  const [recoveryUrl, setRecoveryUrl] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
+    let settled = false;
+
+    const finish = (nextStatus: Status) => {
+      if (cancelled) return;
+      settled = true;
+      setStatus(nextStatus);
+    };
+
+    const timeout = window.setTimeout(() => {
+      if (!settled) finish("invalid");
+    }, 8000);
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (cancelled) return;
-      if (event === "PASSWORD_RECOVERY" || session) setStatus("ready");
+      if (event === "PASSWORD_RECOVERY" || session) finish("ready");
     });
 
     const bootstrap = async () => {
       const url = new URL(window.location.href);
       const hash = new URLSearchParams(url.hash.replace(/^#/, ""));
 
+      // New recovery emails land here without redeeming the one-time auth link.
+      // Only the recipient's explicit click continues to the verification endpoint.
+      const continueUrl = url.searchParams.get("continue");
+      if (continueUrl) {
+        if (isSafeRecoveryUrl(continueUrl)) {
+          setRecoveryUrl(continueUrl);
+          finish("continue");
+        } else {
+          finish("invalid");
+        }
+        return;
+      }
+
       const errorDescription = url.searchParams.get("error_description") || hash.get("error_description");
       if (errorDescription) {
         // A recovery session may already exist from an earlier successful exchange.
         const { data } = await supabase.auth.getSession();
-        if (!cancelled) setStatus(data.session ? "ready" : "invalid");
+        finish(data.session ? "ready" : "invalid");
         return;
       }
 
@@ -48,9 +82,9 @@ const ResetPassword = () => {
             // The link may already have been consumed by a mail-app preview while a
             // valid session was established, so check before declaring it invalid.
             const { data } = await supabase.auth.getSession();
-            setStatus(data.session ? "ready" : "invalid");
+            finish(data.session ? "ready" : "invalid");
           } else {
-            setStatus("ready");
+            finish("ready");
             window.history.replaceState({}, "", "/reset-password");
           }
         }
@@ -70,9 +104,9 @@ const ResetPassword = () => {
             // The link may already have been consumed by a mail-app preview while a
             // valid session was established, so check before declaring it invalid.
             const { data } = await supabase.auth.getSession();
-            setStatus(data.session ? "ready" : "invalid");
+            finish(data.session ? "ready" : "invalid");
           } else {
-            setStatus("ready");
+            finish("ready");
             window.history.replaceState({}, "", "/reset-password");
           }
         }
@@ -88,9 +122,9 @@ const ResetPassword = () => {
             // The link may already have been consumed by a mail-app preview while a
             // valid session was established, so check before declaring it invalid.
             const { data } = await supabase.auth.getSession();
-            setStatus(data.session ? "ready" : "invalid");
+            finish(data.session ? "ready" : "invalid");
           } else {
-            setStatus("ready");
+            finish("ready");
             window.history.replaceState({}, "", "/reset-password");
           }
         }
@@ -99,13 +133,14 @@ const ResetPassword = () => {
 
       // Already-established recovery session
       const { data } = await supabase.auth.getSession();
-      if (!cancelled) setStatus(data.session ? "ready" : "invalid");
+      finish(data.session ? "ready" : "invalid");
     };
 
     bootstrap();
 
     return () => {
       cancelled = true;
+      window.clearTimeout(timeout);
       subscription.unsubscribe();
     };
   }, []);
@@ -162,6 +197,27 @@ const ResetPassword = () => {
             <div className="text-center text-muted-foreground">
               <Loader2 className="mx-auto h-6 w-6 animate-spin" />
               <p className="mt-3 text-sm">Verifying your reset link…</p>
+            </div>
+          ) : status === "continue" ? (
+            <div className="rounded-3xl border border-border bg-background p-8 text-center shadow-[var(--shadow-card)]">
+              <KeyRound className="mx-auto h-8 w-8 text-accent" />
+              <h1 className="mt-4 text-2xl font-semibold">Continue securely</h1>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Confirm that you want to continue to Loumilab’s secure password reset.
+              </p>
+              <Button
+                size="lg"
+                className="mt-6 w-full"
+                onClick={() => {
+                  if (!recoveryUrl || !isSafeRecoveryUrl(recoveryUrl)) {
+                    setStatus("invalid");
+                    return;
+                  }
+                  window.location.assign(recoveryUrl);
+                }}
+              >
+                Continue to reset password <KeyRound size={16} />
+              </Button>
             </div>
           ) : status === "invalid" ? (
             <div className="rounded-3xl border border-border bg-background p-8 text-center shadow-[var(--shadow-card)]">

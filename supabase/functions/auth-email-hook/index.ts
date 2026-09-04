@@ -42,6 +42,14 @@ function canonicalizeUrl(rawUrl: string): string {
   }
 }
 
+// Email security scanners commonly open one-time auth links before the recipient
+// does. Route recovery emails through a non-consuming page first; the auth link is
+// only opened after the recipient presses Continue on that page.
+function recoveryHandoffUrl(rawUrl: string): string {
+  const canonicalUrl = canonicalizeUrl(rawUrl)
+  return `${SITE_URL}/reset-password?continue=${encodeURIComponent(canonicalUrl)}`
+}
+
 // Template mapping for preview mode
 const EMAIL_TEMPLATES: Record<string, React.ComponentType<any>> = {
   signup: SignupEmail,
@@ -145,7 +153,7 @@ async function handlePreview(req: Request): Promise<Response> {
 // owns only the email decisions: subjects, templates, and per-type props.
 const handler = createAuthEmailHandler({
   apiKey: Deno.env.get('LOVABLE_API_KEY')!,
-  from: `${SITE_NAME} <noreply@${FROM_DOMAIN}>`,
+  from: `${SITE_NAME} <no-reply@${FROM_DOMAIN}>`,
   senderDomain: SENDER_DOMAIN,
   sendUrl: Deno.env.get('LOVABLE_SEND_URL'),
   emails: {
@@ -177,11 +185,11 @@ const handler = createAuthEmailHandler({
         }),
     },
     recovery: {
-      subject: 'Reset your password',
+      subject: 'Loumilab password reset',
       render: (data) =>
         React.createElement(RecoveryEmail, {
           siteName: SITE_NAME,
-          confirmationUrl: canonicalizeUrl(data.url ?? ''),
+          confirmationUrl: recoveryHandoffUrl(data.url ?? ''),
         }),
     },
     email_change: {
