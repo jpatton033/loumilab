@@ -79,6 +79,29 @@ const Dashboard = () => {
   const advanceJob = useAdvanceJob(merchant?.id);
   const { data: setup } = useMerchantSetup(terms.catalog);
 
+  const {
+    data: liveOrdersData,
+    isFetching: ordersLoading,
+    refetch: refetchOrders,
+  } = useMerchantOrders(merchant?.id);
+  const liveOrders = liveOrdersData ?? [];
+  const analytics = useOrderAnalytics(liveOrdersData);
+  const advanceOrder = useAdvanceOrder(merchant?.id);
+  const [liveFilter, setLiveFilter] = useState<LiveOrderStatus | "all">("all");
+
+  const liveFilters = useMemo<(LiveOrderStatus | "all")[]>(() => {
+    const present = LIVE_FILTER_ORDER.filter((s) => liveOrders.some((o) => o.status === s));
+    return ["all", ...present];
+  }, [liveOrders]);
+
+  const visibleLiveOrders = useMemo(
+    () => (liveFilter === "all" ? liveOrders : liveOrders.filter((o) => o.status === liveFilter)),
+    [liveOrders, liveFilter],
+  );
+
+  useEffect(() => {
+    if (liveFilter !== "all" && !liveFilters.includes(liveFilter)) setLiveFilter("all");
+  }, [liveFilters, liveFilter]);
 
   useEffect(() => {
     if (!modules.includes(activeModule)) setActiveModule(modules[0]);
@@ -92,10 +115,16 @@ const Dashboard = () => {
   const advance = (orderId: string) =>
     setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status: nextStatus(o.status) } : o)));
 
-  const openCount = orders.filter((o) => o.status !== "Completed").length;
-  const openValue = orders
-    .filter((o) => o.status !== "Completed")
-    .reduce((sum, o) => sum + o.totalCents, 0);
+  const openLive = liveOrders.filter((o) =>
+    ["paid", "preparing", "ready", "out_for_delivery"].includes(o.status),
+  );
+  const openCount = merchant ? openLive.length : orders.filter((o) => o.status !== "Completed").length;
+  const openValue = merchant
+    ? openLive.reduce((sum, o) => sum + o.total_cents, 0)
+    : orders
+        .filter((o) => o.status !== "Completed")
+        .reduce((sum, o) => sum + o.totalCents, 0);
+
 
   const moduleAllowed = (key: ModuleKey) => {
     const required = MODULE_ENTITLEMENT[key] as EntitlementKey | undefined;
