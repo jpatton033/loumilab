@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import SEOHead from "@/components/SEOHead";
+import { passwordResetRedirectUrl } from "@/lib/authRedirect";
 import { LogIn, Mail } from "lucide-react";
 
 const Login = () => {
