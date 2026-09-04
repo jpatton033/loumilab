@@ -24,7 +24,14 @@ async function checkRateLimit(supabaseAdmin: ReturnType<typeof createClient>, ke
   return data === true; // true => limited
 }
 
-async function sendEmail(apiKey: string, from: string, to: string, subject: string, html: string) {
+async function sendEmail(
+  apiKey: string,
+  from: string,
+  to: string,
+  subject: string,
+  html: string,
+  replyTo?: string,
+) {
   const res = await fetch("https://smtp.maileroo.com/api/v2/emails", {
     method: "POST",
     headers: {
@@ -32,8 +39,11 @@ async function sendEmail(apiKey: string, from: string, to: string, subject: stri
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: { address: from },
+      // Automatic mail always leaves from the unattended Loumilab address;
+      // replies are steered to a monitored inbox instead.
+      from: { address: from, display_name: "Loumilab" },
       to: { address: to },
+      ...(replyTo ? { reply_to: { address: replyTo } } : {}),
       subject,
       html,
     }),
@@ -115,7 +125,7 @@ serve(async (req) => {
     const safeCompany = submission.company ? escapeHtml(String(submission.company)) : "Not provided";
     const safeMessage = escapeHtml(submission.message as string);
 
-    const fromAddress = "hello@loumilab.com";
+    const fromAddress = "no-reply@loumilab.com";
 
     // --- Shared email design tokens (Loumilab light system) ---
     const t = {
@@ -201,8 +211,22 @@ serve(async (req) => {
     });
 
     const results = await Promise.allSettled([
-      sendEmail(apiKey, fromAddress, "hello@loumilab.com", `New inquiry from ${safeName}`, notificationHtml),
-      sendEmail(apiKey, fromAddress, submission.email as string, "We received your message — Loumilab", confirmationHtml),
+      sendEmail(
+        apiKey,
+        fromAddress,
+        "hello@loumilab.com",
+        `New inquiry from ${safeName}`,
+        notificationHtml,
+        submission.email as string,
+      ),
+      sendEmail(
+        apiKey,
+        fromAddress,
+        submission.email as string,
+        "We received your message — Loumilab",
+        confirmationHtml,
+        "hello@loumilab.com",
+      ),
     ]);
 
 

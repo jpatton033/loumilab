@@ -29,7 +29,13 @@ export async function sendEmail(to: string, subject: string, html: string) {
     const res = await fetch("https://smtp.maileroo.com/api/v2/emails", {
       method: "POST",
       headers: { "X-Api-Key": API_KEY, "Content-Type": "application/json" },
-      body: JSON.stringify({ from: { address: FROM }, to: { address: to }, subject, html }),
+      body: JSON.stringify({
+        from: { address: FROM, display_name: "Loumilab" },
+        to: { address: to },
+        reply_to: { address: "hello@loumilab.com" },
+        subject,
+        html,
+      }),
     });
     if (!res.ok) console.error("Maileroo error", res.status, await res.text());
   } catch (err) {
