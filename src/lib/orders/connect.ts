@@ -196,6 +196,71 @@ export const useRefreshPayouts = () => {
   return async () => {
     await qc.invalidateQueries({ queryKey: PAYOUTS_QUERY_KEY });
     await qc.invalidateQueries({ queryKey: ["orders", "setup"] });
+    await qc.invalidateQueries({ queryKey: PAYOUT_BALANCE_QUERY_KEY });
   };
 };
+
+/** Cache slot for the merchant's Stripe balance — kept apart from status. */
+export const PAYOUT_BALANCE_QUERY_KEY = ["orders", "payout-balance"] as const;
+
+/** Open the merchant's own Stripe Express dashboard. */
+export async function openStripeDashboard(): Promise<string | null> {
+  const res = await callConnect("dashboard_link");
+  return res.url ?? null;
+}
+
+export type PlatformPaymentsState =
+  | "ready"
+  | "profile_incomplete"
+  | "key_problem"
+  | "unknown"
+  | "error";
+
+export type PlatformPaymentsStatus = {
+  state: PlatformPaymentsState;
+  mode?: "live" | "test" | "unknown";
+  detail?: string;
+  checkedAt?: string;
+  error?: string;
+};
+
+export const PLATFORM_PAYMENTS_LABELS: Record<PlatformPaymentsState, string> = {
+  ready: "Ready",
+  profile_incomplete: "Stripe profile incomplete",
+  key_problem: "Payment key problem",
+  unknown: "Not testable yet",
+  error: "Check failed",
+};
+
+/**
+ * Admin-only readiness probe: can a merchant be handed Stripe onboarding right
+ * now? Answers the platform-profile / loss-liability question from inside the
+ * app, so nobody has to guess whether Stripe setup is finished.
+ */
+export const usePlatformPaymentsStatus = () =>
+  useQuery({
+    queryKey: ["admin", "payments-platform-status"],
+    queryFn: async (): Promise<PlatformPaymentsStatus> => {
+      const { data, error } = await supabase.functions.invoke<PlatformPaymentsStatus>(
+        "stripe-connect",
+        { body: { action: "platform_status" } }
+      );
+      if (error) {
+        const response = (error as { context?: Response }).context;
+        if (response && typeof response.json === "function") {
+          try {
+            const payload = (await response.clone().json()) as { error?: string };
+            return { state: "error", detail: payload?.error ?? NETWORK_FALLBACK };
+          } catch {
+            // fall through
+          }
+        }
+        return { state: "error", detail: NETWORK_FALLBACK };
+      }
+      return data ?? { state: "error", detail: NETWORK_FALLBACK };
+    },
+    staleTime: 60_000,
+    retry: false,
+  });
+
 
