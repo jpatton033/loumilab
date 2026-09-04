@@ -1,8 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
-import { AlertTriangle, CreditCard, Loader2 } from "lucide-react";
+import { AlertTriangle, CheckCircle2, CreditCard, Loader2, RefreshCw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { PAYOUT_LABELS, type PayoutStatus } from "@/lib/orders/connect";
+import {
+  PAYOUT_LABELS,
+  PLATFORM_PAYMENTS_LABELS,
+  usePlatformPaymentsStatus,
+  type PayoutStatus,
+} from "@/lib/orders/connect";
 
 type PaymentsSnapshot = {
   mode: "live" | "test" | "mixed" | "none";
@@ -11,6 +17,7 @@ type PaymentsSnapshot = {
   lastEvent: { type: string; created_at: string; livemode: boolean; error: string | null } | null;
   failedEvents: number;
 };
+
 
 const usePaymentsSnapshot = () =>
   useQuery({
