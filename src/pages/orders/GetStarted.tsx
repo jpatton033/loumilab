@@ -374,7 +374,7 @@ const GetStarted = () => {
           </div>
 
           {/* Progress */}
-          <div className="mt-12 flex flex-wrap gap-2">
+          <div className="-mx-6 mt-12 flex gap-2 overflow-x-auto px-6 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
             {stepTitles.map((title, i) => (
               <button
                 key={title}
