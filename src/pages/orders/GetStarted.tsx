@@ -380,7 +380,7 @@ const GetStarted = () => {
                 key={title}
                 type="button"
                 onClick={() => i <= step && setStep(i)}
-                className={`rounded-full border px-4 py-2 text-xs font-semibold transition-colors ${
+                className={`shrink-0 whitespace-nowrap rounded-full border px-4 py-2 text-xs font-semibold transition-colors ${
                   i === step
                     ? "border-transparent bg-foreground text-background"
                     : i < step
