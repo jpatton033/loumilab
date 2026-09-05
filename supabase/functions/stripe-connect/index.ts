@@ -199,7 +199,12 @@ Deno.serve(async (req) => {
 
     // Create the connected account on first start.
     if (!link) {
+      // A status check before setup begins is a normal state, not an error.
+      if (action === "status") {
+        return json({ mode: stripeLivemode ? "live" : "test", merchant, account: null });
+      }
       if (action !== "start") return json({ error: "Payments setup has not been started." }, 404);
+
       const account = await stripe.accounts.create({
         type: "express",
         country: merchant.country || "US",
