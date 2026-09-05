@@ -93,11 +93,13 @@ export const usePublicStorefront = (slug?: string) =>
         supabase.rpc("get_public_store_context", { _storefront_id: store.id }),
       ]);
 
+      const context = merchant as { industry_slug: string; accepting_orders: boolean } | null;
+
       return {
         store,
         products: products ?? [],
-        industrySlug: merchant?.industry_slug ?? "food-catering",
-        acceptingOrders: merchant?.accepting_orders ?? false,
+        industrySlug: context?.industry_slug ?? "food-catering",
+        acceptingOrders: context?.accepting_orders ?? false,
       };
     },
   });
