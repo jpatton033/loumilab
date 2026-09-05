@@ -9,6 +9,8 @@ import StoreProductCard from "@/components/orders/StoreProductCard";
 import CartBar from "@/components/orders/CartBar";
 import CheckoutSheet from "@/components/orders/CheckoutSheet";
 import ServiceRequestForm from "@/components/orders/ServiceRequestForm";
+import PublishStoreButton from "@/components/orders/PublishStoreButton";
+import { useMerchantSetup } from "@/lib/orders/setup";
 import { useCart } from "@/hooks/use-cart";
 import { getStorefront } from "@/data/orders/storefronts";
 import { usePublicStorefront, toStoreProduct } from "@/lib/orders/storefront";
@@ -27,6 +29,9 @@ const Storefront = () => {
   const demo = getStorefront(slug);
   const cart = useCart();
   const [checkoutOpen, setCheckoutOpen] = useState(false);
+  /** Owner-aware: the merchant viewing their own store gets a way back and a publish control. */
+  const { data: setup } = useMerchantSetup();
+  const isOwner = !!setup?.slug && setup.slug === slug;
 
   /** A live row exists whenever the visitor can read the store (public, paused, or owner preview). */
   const isLive = !!live;
@@ -136,8 +141,27 @@ const Storefront = () => {
               <p className="mt-1 text-muted-foreground">
                 {isPaused
                   ? "The business has paused new orders. Please check back soon."
-                  : "Only you can see this page. Publish from your dashboard when you're ready to take orders."}
+                  : "Only you can see this page. Publish when you're ready to take orders."}
               </p>
+              {isOwner && setup && (
+                <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
+                  <PublishStoreButton snapshot={setup} catalogLabel={terms.catalog} size="sm" />
+                  <Button asChild size="sm" variant="ghost" className="rounded-full">
+                    <Link to="/orders/dashboard">Back to dashboard</Link>
+                  </Button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {isLive && isPublic && isOwner && (
+            <div className="mt-6 flex flex-col gap-2 rounded-2xl border border-border bg-secondary p-4 text-sm sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-muted-foreground">
+                This is your live store, exactly as customers see it.
+              </p>
+              <Button asChild size="sm" variant="outline" className="rounded-full">
+                <Link to="/orders/dashboard">Manage store</Link>
+              </Button>
             </div>
           )}
 
