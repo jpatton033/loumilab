@@ -89,11 +89,9 @@ export const usePublicStorefront = (slug?: string) =>
           .eq("is_active", true)
           .order("display_order")
           .returns<LiveProduct[]>(),
+        // Public-safe lookup: the merchants table itself is owner/staff only.
         supabase
-          .from("merchants")
-          .select("industry_slug, accepting_orders")
-          .eq("id", store.merchant_id)
-          .maybeSingle()
+          .rpc("get_public_store_context", { _storefront_id: store.id })
           .returns<{ industry_slug: string; accepting_orders: boolean } | null>(),
       ]);
 
