@@ -1,19 +1,17 @@
-import { Link } from "react-router-dom";
-import { Check, ChevronRight, ExternalLink, Loader2 } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Check, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import StoreStatusBadge from "@/components/orders/StoreStatusBadge";
-import {
-  STATUS_DESCRIPTIONS,
-  useSetStorefrontStatus,
-  type SetupSnapshot,
-} from "@/lib/orders/setup";
-import { toast } from "sonner";
+import StoreLink from "@/components/orders/StoreLink";
+import PublishStoreButton from "@/components/orders/PublishStoreButton";
+import { STATUS_DESCRIPTIONS, type SetupSnapshot } from "@/lib/orders/setup";
 
 interface Props {
   snapshot: SetupSnapshot;
   /** Industry wording, e.g. "Menu items" or "Services". */
   catalogLabel: string;
-  onJump?: (id: SetupSnapshot["tasks"][number]["id"]) => void;
+  /** Return true to handle the task in place instead of navigating. */
+  onJump?: (id: SetupSnapshot["tasks"][number]["id"]) => boolean | void;
 }
 
 /**
@@ -21,7 +19,7 @@ interface Props {
  * action that moves them forward. Collapses to a single line once live.
  */
 const SetupChecklist = ({ snapshot, catalogLabel, onJump }: Props) => {
-  const setStatus = useSetStorefrontStatus();
+  const navigate = useNavigate();
 
   if (!snapshot.merchantId) {
     return (
@@ -30,7 +28,7 @@ const SetupChecklist = ({ snapshot, catalogLabel, onJump }: Props) => {
         <p className="mt-2 max-w-xl text-sm text-muted-foreground">
           Register your business, add what you sell, connect payments and publish when you're ready.
         </p>
-        <Button asChild className="mt-5 rounded-full">
+        <Button asChild className="mt-5 w-full rounded-full sm:w-auto">
           <Link to="/orders/get-started">
             Start setup <ChevronRight size={15} />
           </Link>
@@ -40,74 +38,38 @@ const SetupChecklist = ({ snapshot, catalogLabel, onJump }: Props) => {
   }
 
   const outstanding = snapshot.tasks.filter((t) => !t.done && t.id !== "publish");
-  const publish = (status: "published" | "paused") => {
-    if (!snapshot.storefrontId) return;
-    setStatus.mutate(
-      { id: snapshot.storefrontId, status },
-      {
-        onSuccess: () =>
-          toast.success(status === "published" ? "Your store is live" : "Store paused", {
-            description:
-              status === "published"
-                ? "Customers can order from your link right now."
-                : "You can resume any time — your link stays the same.",
-          }),
-        onError: (error) =>
-          toast.error("Couldn't update your store", {
-            description: error instanceof Error ? error.message : "Please try again.",
-          }),
-      },
-    );
-  };
+  const firstOutstanding = snapshot.tasks.find((t) => t.required && t.id !== "publish" && !t.done);
 
   return (
     <div className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-soft)] sm:p-8">
       <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
+        <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-3">
             <h2 className="font-display text-base font-semibold">Store setup</h2>
             <StoreStatusBadge status={snapshot.status} />
           </div>
           <p className="mt-2 max-w-xl text-sm text-muted-foreground">{STATUS_DESCRIPTIONS[snapshot.status]}</p>
-          {snapshot.slug && (
-            <p className="mt-2 text-xs text-muted-foreground">
-              loumilab.com/orders/store/{snapshot.slug}
-            </p>
-          )}
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-          {snapshot.slug && (
-            <Button asChild variant="outline" size="sm" className="rounded-full">
-              <Link to={`/orders/store/${snapshot.slug}`}>
-                {snapshot.isPublic ? "View store" : "Preview"} <ExternalLink size={14} />
-              </Link>
-            </Button>
-          )}
-          {snapshot.isPublic ? (
+        <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
+          {firstOutstanding && (
             <Button
               size="sm"
-              variant="secondary"
+              variant="outline"
               className="rounded-full"
-              disabled={setStatus.isPending}
-              onClick={() => publish("paused")}
+              onClick={() => {
+                if (onJump?.(firstOutstanding.id)) return;
+                navigate(firstOutstanding.href);
+              }}
             >
-              {setStatus.isPending ? <Loader2 size={14} className="animate-spin" /> : null}
-              Pause store
-            </Button>
-          ) : (
-            <Button
-              size="sm"
-              className="rounded-full"
-              disabled={!snapshot.canPublish || setStatus.isPending || !snapshot.storefrontId}
-              onClick={() => publish("published")}
-            >
-              {setStatus.isPending ? <Loader2 size={14} className="animate-spin" /> : null}
-              {snapshot.status === "paused" ? "Resume store" : "Publish store"}
+              Continue setup <ChevronRight size={14} />
             </Button>
           )}
+          <PublishStoreButton snapshot={snapshot} catalogLabel={catalogLabel} />
         </div>
       </div>
+
+      {snapshot.slug && <StoreLink className="mt-5" slug={snapshot.slug} isPublic={snapshot.isPublic} />}
 
       {(!snapshot.isPublic || outstanding.length > 0) && (
         <>
@@ -148,22 +110,17 @@ const SetupChecklist = ({ snapshot, catalogLabel, onJump }: Props) => {
                   </div>
                 </div>
                 {!task.done && task.id !== "publish" && (
-                  onJump ? (
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="rounded-full text-accent"
-                      onClick={() => onJump(task.id)}
-                    >
-                      Finish <ChevronRight size={14} />
-                    </Button>
-                  ) : (
-                    <Button asChild size="sm" variant="ghost" className="rounded-full text-accent">
-                      <Link to={task.href}>
-                        Finish <ChevronRight size={14} />
-                      </Link>
-                    </Button>
-                  )
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="rounded-full text-accent"
+                    onClick={() => {
+                      if (onJump?.(task.id)) return;
+                      navigate(task.href);
+                    }}
+                  >
+                    Finish <ChevronRight size={14} />
+                  </Button>
                 )}
               </li>
             ))}
