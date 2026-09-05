@@ -11,3 +11,12 @@
 - [x] Live order queue with stage buttons, filters and real-time updates.
 - [x] Headline metrics from real orders (today's revenue, orders, average order).
 - [x] Analytics tab: 30-day revenue trend, best sellers, pickup vs delivery, returning customers.
+
+## Merchant journey continuity
+- [x] Wizard resumes at the first unfinished step; dashboard links deep-link to a step.
+- [x] Payments setup happens inside the wizard and returns to the same step.
+- [x] One publish control everywhere, with confirmation of the exact store link and an outstanding-items guard.
+- [x] Store link element with view, preview, copy and share.
+- [x] Store-created and store-published emails, each sent once.
+- [x] Owner-aware storefront banner with publish and back-to-dashboard.
+- [x] Mobile: sticky next-action bar, scrolling chip rows, full-width wizard buttons.

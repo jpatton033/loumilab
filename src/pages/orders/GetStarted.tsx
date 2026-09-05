@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Check, ExternalLink, Loader2, ShieldCheck } from "lucide-react";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
@@ -13,10 +13,13 @@ import PhoneFrame from "@/components/orders/PhoneFrame";
 import StorefrontHeader from "@/components/orders/StorefrontHeader";
 import ImageUpload from "@/components/orders/ImageUpload";
 import StoreStatusBadge from "@/components/orders/StoreStatusBadge";
+import StoreLink from "@/components/orders/StoreLink";
+import PublishStoreButton from "@/components/orders/PublishStoreButton";
+import PayoutSetupCard from "@/components/orders/PayoutSetupCard";
 import { formatMoney } from "@/data/orders/storefronts";
 import { usePublicPlans, planPriceLabel, planPeriodLabel, formatFeeBps } from "@/lib/orders/plans";
 import { useSaveStoreSetup, useOnboardingPrefill, type OnboardingItem } from "@/lib/orders/store-admin";
-import { useMerchantSetup, useSetStorefrontStatus } from "@/lib/orders/setup";
+import { useMerchantSetup, SETUP_STEP_INDEX } from "@/lib/orders/setup";
 import { supabase } from "@/integrations/supabase/client";
 import {
   useIndustries,
@@ -93,7 +96,6 @@ const GetStarted = () => {
   const { data: industries } = useIndustries();
   const { data: plans } = usePublicPlans();
   const saveSetup = useSaveStoreSetup();
-  const setStatus = useSetStorefrontStatus();
 
   const industry = findIndustry(industries, industrySlug);
   const terms = resolveTerms(industry);
@@ -174,6 +176,30 @@ const GetStarted = () => {
     "Preview & publish",
   ];
   const lastStep = stepTitles.length - 1;
+
+  // Returning merchants pick up at the first unfinished step, and dashboard
+  // links can point straight at one (?step=5).
+  const [params] = useSearchParams();
+  const stepParam = params.get("step");
+  const jumped = useRef(false);
+  const [resumed, setResumed] = useState(false);
+  useEffect(() => {
+    if (jumped.current) return;
+    if (stepParam !== null && Number.isFinite(Number(stepParam))) {
+      jumped.current = true;
+      setStep(Math.min(lastStep, Math.max(0, Number(stepParam))));
+      return;
+    }
+    if (saved || !setup?.merchantId) return;
+    jumped.current = true;
+    const outstanding = setup.tasks.find((t) => t.required && t.id !== "publish" && !t.done);
+    const next = outstanding ? SETUP_STEP_INDEX[outstanding.id] : lastStep;
+    if (next > 0) {
+      setStep(next);
+      setResumed(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setup?.merchantId, stepParam]);
 
   const slug = useMemo(() => slugify(name) || "your-store", [name]);
   const monogram = useMemo(
@@ -305,36 +331,19 @@ const GetStarted = () => {
     setStep((s) => Math.min(lastStep, s + 1));
   };
 
-  const publish = async () => {
+  const finishSaving = async () => {
     const ok = await persist(false);
-    if (!ok) return;
-
-    if (!setup?.storefrontId) {
-      toast.success("Store saved", { description: "Finish the remaining steps in your dashboard to go live." });
-      return;
-    }
-    if (!setup.canPublish) {
-      toast.info("Almost there", {
-        description: "Finish payments setup and the required steps, then publish from your dashboard.",
-      });
-      return;
-    }
-    try {
-      await setStatus.mutateAsync({ id: setup.storefrontId, status: "published" });
-      try {
-        sessionStorage.removeItem(DRAFT_KEY);
-      } catch {
-        // Ignore storage errors.
-      }
-      toast.success("Your store is live", { description: "Share your link and start taking orders." });
-    } catch (error) {
-      toast.error("Couldn't publish your store", {
-        description: error instanceof Error ? error.message : "Please try again in a moment.",
+    if (ok) {
+      toast.success("Everything is saved", {
+        description: setup?.canPublish
+          ? "You're ready to publish whenever you like."
+          : "Pick up where you left off from your dashboard any time.",
       });
     }
+    return ok;
   };
 
-  const busy = saveSetup.isPending || setStatus.isPending;
+  const busy = saveSetup.isPending;
 
   return (
     <Layout>
@@ -365,13 +374,13 @@ const GetStarted = () => {
           </div>
 
           {/* Progress */}
-          <div className="mt-12 flex flex-wrap gap-2">
+          <div className="-mx-6 mt-12 flex gap-2 overflow-x-auto px-6 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
             {stepTitles.map((title, i) => (
               <button
                 key={title}
                 type="button"
                 onClick={() => i <= step && setStep(i)}
-                className={`rounded-full border px-4 py-2 text-xs font-semibold transition-colors ${
+                className={`shrink-0 whitespace-nowrap rounded-full border px-4 py-2 text-xs font-semibold transition-colors ${
                   i === step
                     ? "border-transparent bg-foreground text-background"
                     : i < step
@@ -397,6 +406,13 @@ const GetStarted = () => {
                 </h2>
                 {setup?.merchantId && <StoreStatusBadge status={setup.status} />}
               </div>
+
+              {resumed && (
+                <p className="mt-3 rounded-2xl border border-border bg-secondary px-4 py-3 text-sm text-muted-foreground">
+                  Picking up where you left off — everything you saved before is still here.
+                </p>
+              )}
+
 
               <div className="mt-7 space-y-5">
                 {step === 0 && (
@@ -669,23 +685,20 @@ const GetStarted = () => {
                         details — you enter them once with Stripe and payouts land in your account automatically.
                       </span>
                     </div>
-                    <ul className="space-y-2 text-sm text-muted-foreground">
-                      <li>· Verify your business and identity with Stripe</li>
-                      <li>· Add the account where you'd like payouts sent</li>
-                      <li>· Come back here — your store is ready to publish</li>
-                    </ul>
-                    <p className="text-sm">
-                      {setup?.payoutStatus === "payout_enabled" ? (
-                        <span className="font-semibold text-accent">Payouts are active.</span>
-                      ) : (
-                        "You can start payments setup from your dashboard at any point — it's the last requirement before publishing."
-                      )}
+                    {signedIn ? (
+                      <div className="rounded-2xl border border-border p-5">
+                        <PayoutSetupCard bare returnPath="/orders/get-started?step=7" />
+                      </div>
+                    ) : (
+                      <p className="text-sm text-muted-foreground">
+                        Create your account on the first step to connect payments.
+                      </p>
+                    )}
+                    <p className="text-sm text-muted-foreground">
+                      {setup?.payoutStatus === "payout_enabled"
+                        ? "Payouts are active — continue to choose your plan."
+                        : "Stripe opens in a new tab and brings you straight back here when you're done. You can also finish this later from your dashboard."}
                     </p>
-                    <Button asChild variant="outline" className="rounded-full">
-                      <Link to="/orders/dashboard">
-                        Open payments setup <ExternalLink size={14} />
-                      </Link>
-                    </Button>
                   </div>
                 )}
 
@@ -720,7 +733,30 @@ const GetStarted = () => {
                   </div>
                 )}
 
-                {step === 9 && (
+                {step === 9 && setup?.isPublic && setup.slug ? (
+                  <div className="space-y-4 text-sm">
+                    <div className="rounded-2xl border border-accent/20 bg-accent/5 p-5">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <p className="font-display text-base font-semibold text-accent">Your store is live</p>
+                        <StoreStatusBadge status={setup.status} />
+                      </div>
+                      <p className="mt-2 text-muted-foreground">
+                        Customers can order from your link right now. We've emailed it to you as well.
+                      </p>
+                    </div>
+                    <StoreLink slug={setup.slug} isPublic />
+                    <div className="flex flex-wrap gap-3">
+                      <Button asChild className="rounded-full">
+                        <Link to="/orders/dashboard">
+                          Manage orders <ArrowRight size={16} />
+                        </Link>
+                      </Button>
+                      <Button asChild variant="outline" className="rounded-full">
+                        <Link to="/orders/dashboard">Manage store</Link>
+                      </Button>
+                    </div>
+                  </div>
+                ) : step === 9 ? (
                   <div className="space-y-4 text-sm">
                     <div className="rounded-2xl border border-border p-5">
                       <p className="font-display font-semibold">{name || "Your Store"}</p>
@@ -764,39 +800,31 @@ const GetStarted = () => {
                           {setup.tasks
                             .filter((t) => t.required && t.id !== "publish")
                             .map((task) => (
-                              <li key={task.id} className="flex items-start gap-2 text-muted-foreground">
+                              <li key={task.id} className="flex flex-wrap items-center gap-2 text-muted-foreground">
                                 <Check
                                   size={14}
-                                  className={`mt-0.5 shrink-0 ${task.done ? "text-accent" : "opacity-25"}`}
+                                  className={`shrink-0 ${task.done ? "text-accent" : "opacity-25"}`}
                                 />
-                                {task.id === "catalog" ? terms.catalog : task.label}
+                                <span>{task.id === "catalog" ? terms.catalog : task.label}</span>
+                                {!task.done && (
+                                  <Button
+                                    type="button"
+                                    size="sm"
+                                    variant="ghost"
+                                    className="h-auto rounded-full px-2 py-1 text-xs text-accent"
+                                    onClick={() => setStep(SETUP_STEP_INDEX[task.id])}
+                                  >
+                                    Finish
+                                  </Button>
+                                )}
                               </li>
                             ))}
                         </ul>
-                        {setup.slug && (
-                          <div className="mt-4 rounded-xl border border-border bg-secondary p-4">
-                            <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
-                              Your store link
-                            </p>
-                            <p className="mt-1 font-display font-semibold">
-                              loumilab.com/orders/store/{setup.slug}
-                            </p>
-                            <div className="mt-3 flex flex-wrap gap-3">
-                              <Button asChild size="sm" variant="outline" className="rounded-full">
-                                <Link to={`/orders/store/${setup.slug}`}>
-                                  {setup.isPublic ? "View store" : "Preview store"} <ExternalLink size={14} />
-                                </Link>
-                              </Button>
-                              <Button asChild size="sm" variant="ghost" className="rounded-full">
-                                <Link to="/orders/dashboard">Open dashboard</Link>
-                              </Button>
-                            </div>
-                          </div>
-                        )}
+                        {setup.slug && <StoreLink className="mt-4" slug={setup.slug} />}
                       </div>
                     )}
                   </div>
-                )}
+                ) : null}
               </div>
 
               <div className="mt-9 flex flex-wrap items-center justify-between gap-3">
@@ -811,52 +839,56 @@ const GetStarted = () => {
                 </Button>
 
                 {step < lastStep ? (
-                  <Button type="button" className="rounded-full" disabled={!canContinue} onClick={advance}>
+                  <Button
+                    type="button"
+                    className="w-full rounded-full sm:w-auto"
+                    disabled={!canContinue}
+                    onClick={advance}
+                  >
                     Continue <ArrowRight size={16} />
                   </Button>
                 ) : setup?.isPublic ? (
-                  <Button asChild className="rounded-full">
+                  <Button asChild className="w-full rounded-full sm:w-auto">
                     <Link to="/orders/dashboard">
                       Go to dashboard <ArrowRight size={16} />
                     </Link>
                   </Button>
                 ) : (
-                  <div className="flex flex-wrap items-center gap-3">
+                  <div className="flex w-full flex-col items-stretch gap-3 sm:w-auto sm:flex-row sm:items-center">
                     <Button
                       type="button"
                       variant="outline"
                       className="rounded-full"
-                      onClick={() => persist(false)}
+                      onClick={() => void finishSaving()}
                       disabled={busy || name.trim().length < 2}
                     >
-                      Save and finish later
+                      {busy ? <Loader2 size={16} className="animate-spin" /> : null} Save and finish later
                     </Button>
-                    <Button
-                      type="button"
-                      className="rounded-full"
-                      onClick={publish}
-                      disabled={busy || name.trim().length < 2}
-                    >
-                      {busy ? (
-                        <>
-                          <Loader2 size={16} className="animate-spin" /> Saving…
-                        </>
-                      ) : (
-                        <>
-                          Publish store <ArrowRight size={16} />
-                        </>
-                      )}
-                    </Button>
+                    {setup ? (
+                      <PublishStoreButton
+                        snapshot={setup}
+                        catalogLabel={terms.catalog}
+                        size="default"
+                        onPublished={() => {
+                          try {
+                            sessionStorage.removeItem(DRAFT_KEY);
+                          } catch {
+                            // Ignore storage errors.
+                          }
+                        }}
+                      />
+                    ) : null}
                   </div>
                 )}
               </div>
 
               {step === lastStep && setup && !setup.canPublish && (
                 <p className="mt-4 text-xs text-muted-foreground">
-                  Publishing unlocks once payments setup is complete and the required steps are done. Everything
-                  you've entered is saved.
+                  Publishing unlocks once the required steps above are done. Everything you've entered is saved —
+                  you can leave and come back any time.
                 </p>
               )}
+
             </div>
 
             {/* Live preview */}

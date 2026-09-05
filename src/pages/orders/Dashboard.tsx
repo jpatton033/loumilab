@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, ExternalLink, RefreshCw } from "lucide-react";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
@@ -47,6 +47,9 @@ import { useMyMerchant, useJobs, useAdvanceJob, nextJobStatus, JOB_STATUS_LABELS
 import { usePublicPlans } from "@/lib/orders/plans";
 import { resolveEntitlements, isEnabled, type EntitlementKey } from "@/lib/orders/entitlements";
 import SetupChecklist from "@/components/orders/SetupChecklist";
+import StoreLink from "@/components/orders/StoreLink";
+import PublishStoreButton from "@/components/orders/PublishStoreButton";
+import { storePath } from "@/lib/orders/setup";
 import { useMerchantSetup } from "@/lib/orders/setup";
 
 
@@ -67,6 +70,7 @@ const LIVE_FILTER_ORDER: LiveOrderStatus[] = [
 ];
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [orders, setOrders] = useState<MerchantOrder[]>(demoOrders);
   const [filter, setFilter] = useState<Filter>("All");
   const [accepting, setAccepting] = useState(true);
@@ -145,6 +149,7 @@ const Dashboard = () => {
   };
 
   const transactionsLabel = terms.transactions;
+  const firstOutstanding = setup?.tasks.find((t) => t.required && t.id !== "publish" && !t.done);
 
   return (
     <Layout>
@@ -179,21 +184,28 @@ const Dashboard = () => {
               </p>
             </div>
 
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex w-full flex-wrap items-center gap-3 lg:w-auto">
               {!merchant && (
-                <Button
-                  variant={accepting ? "secondary" : "default"}
-                  className="rounded-full"
-                  onClick={() => setAccepting((v) => !v)}
-                >
-                  {accepting ? `Pause new ${transactionsLabel.toLowerCase()}` : `Resume ${transactionsLabel.toLowerCase()}`}
-                </Button>
+                <>
+                  <Button
+                    variant={accepting ? "secondary" : "default"}
+                    className="rounded-full"
+                    onClick={() => setAccepting((v) => !v)}
+                  >
+                    {accepting
+                      ? `Pause new ${transactionsLabel.toLowerCase()}`
+                      : `Resume ${transactionsLabel.toLowerCase()}`}
+                  </Button>
+                  <Button variant="outline" asChild className="rounded-full">
+                    <Link to={`/orders/store/${demoStorefront.slug}`}>
+                      Preview storefront <ExternalLink size={15} />
+                    </Link>
+                  </Button>
+                </>
               )}
-              <Button variant="outline" asChild className="rounded-full">
-                <Link to={`/orders/store/${setup?.slug ?? demoStorefront.slug}`}>
-                  {setup?.isPublic ? "View storefront" : "Preview storefront"} <ExternalLink size={15} />
-                </Link>
-              </Button>
+              {merchant && setup?.slug && (
+                <StoreLink slug={setup.slug} isPublic={setup.isPublic} variant="inline" />
+              )}
             </div>
           </div>
 
@@ -203,17 +215,23 @@ const Dashboard = () => {
                 snapshot={setup}
                 catalogLabel={terms.catalog}
                 onJump={(id) => {
-                  if (id === "catalog" || id === "business" || id === "branding" || id === "fulfilment") {
+                  if (id === "catalog") {
                     setActiveModule(
                       modules.find((m) => m === "menu" || m === "products" || m === "services") ?? modules[0],
                     );
+                    return true;
                   }
-                  if (id === "payments") setActiveModule("payments");
+                  if (id === "payments") {
+                    setActiveModule("payments");
+                    return true;
+                  }
+                  return false;
                 }}
               />
             )}
             <PayoutSetupCard />
           </div>
+
 
 
           {!merchant && (
@@ -282,13 +300,13 @@ const Dashboard = () => {
 
 
           {/* Industry modules */}
-          <div className="mt-10 flex flex-wrap gap-2">
+          <div className="-mx-6 mt-10 flex gap-2 overflow-x-auto px-6 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
             {modules.map((key) => (
               <button
                 key={key}
                 type="button"
                 onClick={() => setActiveModule(key)}
-                className={`rounded-full border px-4 py-2 text-xs font-semibold transition-colors ${
+                className={`shrink-0 whitespace-nowrap rounded-full border px-4 py-2 text-xs font-semibold transition-colors ${
                   activeModule === key
                     ? "border-transparent bg-foreground text-background"
                     : "border-border text-muted-foreground hover:text-foreground"
@@ -509,6 +527,47 @@ const Dashboard = () => {
           </div>
         </div>
       </section>
+
+      {/* Mobile: one always-visible next action so nothing important is buried. */}
+      {merchant && setup && (
+        <div className="sticky bottom-0 z-30 border-t border-border bg-background/95 px-4 py-3 backdrop-blur lg:hidden">
+          {!setup.canPublish ? (
+            firstOutstanding ? (
+              <Button
+                className="w-full rounded-full"
+                onClick={() => {
+                  if (firstOutstanding.id === "catalog") {
+                    setActiveModule(
+                      modules.find((m) => m === "menu" || m === "products" || m === "services") ?? modules[0],
+                    );
+                  } else if (firstOutstanding.id === "payments") {
+                    setActiveModule("payments");
+                  } else {
+                    navigate(firstOutstanding.href);
+                    return;
+                  }
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+              >
+                Continue setup: {firstOutstanding.id === "catalog" ? terms.catalog : firstOutstanding.label}
+              </Button>
+            ) : null
+          ) : setup.isPublic ? (
+            <Button asChild className="w-full rounded-full">
+              <Link to={storePath(setup.slug ?? "")}>
+                View live store <ExternalLink size={15} />
+              </Link>
+            </Button>
+          ) : (
+            <PublishStoreButton
+              snapshot={setup}
+              catalogLabel={terms.catalog}
+              size="default"
+              className="w-full"
+            />
+          )}
+        </div>
+      )}
     </Layout>
   );
 };

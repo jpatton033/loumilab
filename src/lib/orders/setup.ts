@@ -14,6 +14,26 @@ import { usePayoutStatus } from "@/lib/orders/connect";
 
 export type StorefrontStatus = "setup" | "ready" | "published" | "paused" | "restricted";
 
+/** The address customers use. Always canonical, so a shared link never breaks. */
+export const STORE_ORIGIN = "https://loumilab.com";
+
+/** In-app route for the storefront (preview or live). */
+export const storePath = (slug: string) => `/orders/store/${slug}`;
+
+/** Full, shareable customer URL for a storefront. */
+export const storeUrl = (slug: string) => `${STORE_ORIGIN}${storePath(slug)}`;
+
+/** Wizard step index for each setup task, so "Finish" lands in the right place. */
+export const SETUP_STEP_INDEX: Record<SetupStepId, number> = {
+  account: 0,
+  business: 4,
+  branding: 4,
+  catalog: 5,
+  fulfilment: 6,
+  payments: 7,
+  publish: 9,
+};
+
 export const STATUS_LABELS: Record<StorefrontStatus, string> = {
   setup: "Setup incomplete",
   ready: "Ready to publish",
@@ -29,6 +49,7 @@ export const STATUS_DESCRIPTIONS: Record<StorefrontStatus, string> = {
   paused: "You've paused your store. Customers can't place new orders right now.",
   restricted: "Payouts need attention before your store can be public again.",
 };
+
 
 export type SetupStepId =
   | "account"
@@ -106,7 +127,7 @@ export const buildSnapshot = (source: SetupSource, catalogLabel = "items"): Setu
       label: "Merchant account",
       detail: merchant ? merchant.business_name : "Register your business with Loumilab Orders.",
       done: !!merchant,
-      href: "/orders/get-started",
+      href: "/orders/get-started?step=0",
       required: true,
     },
     {
@@ -116,7 +137,7 @@ export const buildSnapshot = (source: SetupSource, catalogLabel = "items"): Setu
         ? "Name, city and description are set."
         : "Tell customers who you are and what you offer.",
       done: !!storefront && !!storefront.description?.trim(),
-      href: "/orders/get-started",
+      href: "/orders/get-started?step=4",
       required: true,
     },
     {
@@ -124,7 +145,7 @@ export const buildSnapshot = (source: SetupSource, catalogLabel = "items"): Setu
       label: "Store branding",
       detail: storefront?.logo_url ? "Your logo is in place." : "Add a logo so your store looks like you.",
       done: !!storefront?.logo_url,
-      href: "/orders/get-started",
+      href: "/orders/get-started?step=4",
       required: false,
     },
     {
@@ -146,7 +167,7 @@ export const buildSnapshot = (source: SetupSource, catalogLabel = "items"): Setu
           ? "Pickup and delivery preferences are set."
           : "Choose pickup, delivery or both.",
       done: !!(storefront?.pickup_enabled || storefront?.delivery_enabled),
-      href: "/orders/dashboard",
+      href: "/orders/get-started?step=6",
       required: true,
     },
     {
@@ -269,9 +290,14 @@ export const useSetStorefrontStatus = () => {
     mutationFn: async ({ id, status }: { id: string; status: StorefrontStatus }) => {
       const { error } = await supabase.from("merchant_storefronts").update({ status }).eq("id", id);
       if (error) throw error;
+      // Going live is worth an email — sent once, and never blocking the action.
+      if (status === "published") {
+        void supabase.functions.invoke("orders-store-published").catch(() => undefined);
+      }
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["orders"] });
     },
   });
 };
+

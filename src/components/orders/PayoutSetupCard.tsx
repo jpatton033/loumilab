@@ -16,7 +16,14 @@ import {
   PAYOUT_STEPS,
 } from "@/lib/orders/connect";
 
-const PayoutSetupCard = () => {
+interface Props {
+  /** Where Stripe returns the merchant to — the page they started from. */
+  returnPath?: string;
+  /** Hides the card chrome when it sits inside another card (the wizard step). */
+  bare?: boolean;
+}
+
+const PayoutSetupCard = ({ returnPath = "/orders/dashboard", bare = false }: Props) => {
   const { data, isLoading, isFetching } = usePayoutStatus();
   const refresh = useRefreshPayouts();
   const [working, setWorking] = useState(false);
@@ -57,7 +64,13 @@ const PayoutSetupCard = () => {
     params.delete("payments");
     const query = params.toString();
     window.history.replaceState({}, "", `${window.location.pathname}${query ? `?${query}` : ""}`);
-    void refresh();
+    setPendingUrl(null);
+    void refresh().then(() => {
+      toast({
+        title: "Back from Stripe",
+        description: "We're checking your payments status — this card updates in a moment.",
+      });
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -103,7 +116,7 @@ const PayoutSetupCard = () => {
     // Claimed during the click so the browser keeps the user-gesture context.
     const tab = window.open("about:blank", "_blank");
     setWorking(true);
-    const res = await callConnect("start", merchant ? {} : { business: form });
+    const res = await callConnect("start", merchant ? {} : { business: form }, returnPath);
     setWorking(false);
     if (res.code === "connect_not_enabled" || res.code === "stripe_key_invalid") {
       tab?.close();
@@ -126,7 +139,7 @@ const PayoutSetupCard = () => {
   const resume = async () => {
     const tab = window.open("about:blank", "_blank");
     setWorking(true);
-    const res = await callConnect("start", {});
+    const res = await callConnect("start", {}, returnPath);
     setWorking(false);
     if (res.url) openOnboarding(tab, res.url);
     else {
@@ -179,7 +192,13 @@ const PayoutSetupCard = () => {
   }
 
   return (
-    <div className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-soft)]">
+    <div
+      className={
+        bare
+          ? ""
+          : "rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-soft)]"
+      }
+    >
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">

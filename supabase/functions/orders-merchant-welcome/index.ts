@@ -16,11 +16,26 @@ const json = (body: unknown, status = 200) =>
 
 const SITE = "https://loumilab.com";
 
-const body = (businessName: string) => `
+const body = (businessName: string, slug: string | null) => `
   <p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:#3f3f46">
     Welcome to Loumilab Orders. Your merchant account for
     <strong>${escapeHtml(businessName)}</strong> is registered and ready to set up.
   </p>
+  ${
+    slug
+      ? `<div style="margin:0 0 22px;padding:16px 18px;border:1px solid #e4e4e7;border-radius:16px;background:#fafafa">
+           <p style="margin:0 0 6px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#71717a">
+             Your store link
+           </p>
+           <a href="${SITE}/orders/store/${slug}" style="font-size:15px;font-weight:600;color:#18181b;text-decoration:none;word-break:break-all">
+             ${escapeHtml(`${SITE}/orders/store/${slug}`)}
+           </a>
+           <p style="margin:8px 0 0;font-size:12px;color:#71717a">
+             Reserved for you and not visible to customers yet.
+           </p>
+         </div>`
+      : ""
+  }
   <p style="margin:0 0 10px;font-size:14px;font-weight:600">Your next steps</p>
   <ol style="margin:0 0 20px;padding-left:20px;font-size:14px;line-height:1.7;color:#3f3f46">
     <li>Finish your store details and add what you sell.</li>
@@ -33,9 +48,15 @@ const body = (businessName: string) => `
       Continue setup
     </a>
   </p>
-  <p style="margin:0;font-size:13px;line-height:1.6;color:#71717a">
+  <p style="margin:0 0 12px;font-size:14px;line-height:1.7;color:#3f3f46">
+    Your dashboard is where you manage what you sell, take orders, set pickup and delivery, and track payouts.
+  </p>
+  <p style="margin:0 0 12px;font-size:13px;line-height:1.6;color:#71717a">
     Your storefront stays private until setup is complete and you choose to publish it —
     nothing is visible to customers before then.
+  </p>
+  <p style="margin:0;font-size:13px;line-height:1.6;color:#71717a">
+    Need a hand? Reply to this email or reach us at hello@loumilab.com.
   </p>
 `;
 
@@ -59,18 +80,27 @@ Deno.serve(async (req) => {
       .from("merchant_welcome_emails")
       .select("merchant_id")
       .eq("merchant_id", merchant.id)
+      .eq("kind", "welcome")
       .maybeSingle();
 
     if (alreadySent) return json({ sent: false, reason: "already_sent" });
+
+    const { data: storefront } = await admin
+      .from("merchant_storefronts")
+      .select("slug")
+      .eq("merchant_id", merchant.id)
+      .order("created_at")
+      .limit(1)
+      .maybeSingle();
 
     const to = merchant.contact_email || user.email || "";
     await sendEmail(
       to,
       "Welcome to Loumilab Orders",
-      shell("You're registered", body(merchant.business_name)),
+      shell("You're registered", body(merchant.business_name, storefront?.slug ?? null)),
     );
 
-    await admin.from("merchant_welcome_emails").insert({ merchant_id: merchant.id });
+    await admin.from("merchant_welcome_emails").insert({ merchant_id: merchant.id, kind: "welcome" });
 
     return json({ sent: true });
   } catch (err) {

@@ -1219,14 +1219,17 @@ export type Database = {
       }
       merchant_welcome_emails: {
         Row: {
+          kind: string
           merchant_id: string
           sent_at: string
         }
         Insert: {
+          kind?: string
           merchant_id: string
           sent_at?: string
         }
         Update: {
+          kind?: string
           merchant_id?: string
           sent_at?: string
         }
@@ -1234,7 +1237,7 @@ export type Database = {
           {
             foreignKeyName: "merchant_welcome_emails_merchant_id_fkey"
             columns: ["merchant_id"]
-            isOneToOne: true
+            isOneToOne: false
             referencedRelation: "merchants"
             referencedColumns: ["id"]
           },
