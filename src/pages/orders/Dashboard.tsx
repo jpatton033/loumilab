@@ -300,13 +300,13 @@ const Dashboard = () => {
 
 
           {/* Industry modules */}
-          <div className="mt-10 flex flex-wrap gap-2">
+          <div className="-mx-6 mt-10 flex gap-2 overflow-x-auto px-6 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
             {modules.map((key) => (
               <button
                 key={key}
                 type="button"
                 onClick={() => setActiveModule(key)}
-                className={`rounded-full border px-4 py-2 text-xs font-semibold transition-colors ${
+                className={`shrink-0 whitespace-nowrap rounded-full border px-4 py-2 text-xs font-semibold transition-colors ${
                   activeModule === key
                     ? "border-transparent bg-foreground text-background"
                     : "border-border text-muted-foreground hover:text-foreground"
