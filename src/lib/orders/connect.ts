@@ -140,12 +140,13 @@ type ConnectAction = "start" | "status" | "dashboard_link";
 
 export async function callConnect(
   action: ConnectAction,
-  body: Record<string, unknown> = {}
+  body: Record<string, unknown> = {},
+  /** Where Stripe should send the merchant back to, e.g. "/orders/get-started". */
+  returnPath = "/orders/dashboard"
 ): Promise<ConnectResponse> {
+  const base = `${window.location.origin}${returnPath}`;
   const returnUrl =
-    action === "start"
-      ? `${window.location.origin}/orders/dashboard?payments=return`
-      : `${window.location.origin}/orders/dashboard`;
+    action === "start" ? `${base}${base.includes("?") ? "&" : "?"}payments=return` : base;
   const { data, error } = await supabase.functions.invoke<ConnectResponse>("stripe-connect", {
     body: { action, returnUrl, ...body },
   });
