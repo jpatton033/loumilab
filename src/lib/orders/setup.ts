@@ -127,7 +127,7 @@ export const buildSnapshot = (source: SetupSource, catalogLabel = "items"): Setu
       label: "Merchant account",
       detail: merchant ? merchant.business_name : "Register your business with Loumilab Orders.",
       done: !!merchant,
-      href: "/orders/get-started",
+      href: "/orders/get-started?step=0",
       required: true,
     },
     {
@@ -137,7 +137,7 @@ export const buildSnapshot = (source: SetupSource, catalogLabel = "items"): Setu
         ? "Name, city and description are set."
         : "Tell customers who you are and what you offer.",
       done: !!storefront && !!storefront.description?.trim(),
-      href: "/orders/get-started",
+      href: "/orders/get-started?step=4",
       required: true,
     },
     {
@@ -145,7 +145,7 @@ export const buildSnapshot = (source: SetupSource, catalogLabel = "items"): Setu
       label: "Store branding",
       detail: storefront?.logo_url ? "Your logo is in place." : "Add a logo so your store looks like you.",
       done: !!storefront?.logo_url,
-      href: "/orders/get-started",
+      href: "/orders/get-started?step=4",
       required: false,
     },
     {
@@ -167,7 +167,7 @@ export const buildSnapshot = (source: SetupSource, catalogLabel = "items"): Setu
           ? "Pickup and delivery preferences are set."
           : "Choose pickup, delivery or both.",
       done: !!(storefront?.pickup_enabled || storefront?.delivery_enabled),
-      href: "/orders/dashboard",
+      href: "/orders/get-started?step=6",
       required: true,
     },
     {
