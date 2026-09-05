@@ -177,6 +177,30 @@ const GetStarted = () => {
   ];
   const lastStep = stepTitles.length - 1;
 
+  // Returning merchants pick up at the first unfinished step, and dashboard
+  // links can point straight at one (?step=5).
+  const [params] = useSearchParams();
+  const stepParam = params.get("step");
+  const jumped = useRef(false);
+  const [resumed, setResumed] = useState(false);
+  useEffect(() => {
+    if (jumped.current) return;
+    if (stepParam !== null && Number.isFinite(Number(stepParam))) {
+      jumped.current = true;
+      setStep(Math.min(lastStep, Math.max(0, Number(stepParam))));
+      return;
+    }
+    if (saved || !setup?.merchantId) return;
+    jumped.current = true;
+    const outstanding = setup.tasks.find((t) => t.required && t.id !== "publish" && !t.done);
+    const next = outstanding ? SETUP_STEP_INDEX[outstanding.id] : lastStep;
+    if (next > 0) {
+      setStep(next);
+      setResumed(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setup?.merchantId, stepParam]);
+
   const slug = useMemo(() => slugify(name) || "your-store", [name]);
   const monogram = useMemo(
     () =>
@@ -654,23 +678,20 @@ const GetStarted = () => {
                         details — you enter them once with Stripe and payouts land in your account automatically.
                       </span>
                     </div>
-                    <ul className="space-y-2 text-sm text-muted-foreground">
-                      <li>· Verify your business and identity with Stripe</li>
-                      <li>· Add the account where you'd like payouts sent</li>
-                      <li>· Come back here — your store is ready to publish</li>
-                    </ul>
-                    <p className="text-sm">
-                      {setup?.payoutStatus === "payout_enabled" ? (
-                        <span className="font-semibold text-accent">Payouts are active.</span>
-                      ) : (
-                        "You can start payments setup from your dashboard at any point — it's the last requirement before publishing."
-                      )}
+                    {signedIn ? (
+                      <div className="rounded-2xl border border-border p-5">
+                        <PayoutSetupCard bare returnPath="/orders/get-started?step=7" />
+                      </div>
+                    ) : (
+                      <p className="text-sm text-muted-foreground">
+                        Create your account on the first step to connect payments.
+                      </p>
+                    )}
+                    <p className="text-sm text-muted-foreground">
+                      {setup?.payoutStatus === "payout_enabled"
+                        ? "Payouts are active — continue to choose your plan."
+                        : "Stripe opens in a new tab and brings you straight back here when you're done. You can also finish this later from your dashboard."}
                     </p>
-                    <Button asChild variant="outline" className="rounded-full">
-                      <Link to="/orders/dashboard">
-                        Open payments setup <ExternalLink size={14} />
-                      </Link>
-                    </Button>
                   </div>
                 )}
 
