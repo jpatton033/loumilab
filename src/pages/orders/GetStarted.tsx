@@ -407,6 +407,13 @@ const GetStarted = () => {
                 {setup?.merchantId && <StoreStatusBadge status={setup.status} />}
               </div>
 
+              {resumed && (
+                <p className="mt-3 rounded-2xl border border-border bg-secondary px-4 py-3 text-sm text-muted-foreground">
+                  Picking up where you left off — everything you saved before is still here.
+                </p>
+              )}
+
+
               <div className="mt-7 space-y-5">
                 {step === 0 && (
                   <div className="space-y-5">
