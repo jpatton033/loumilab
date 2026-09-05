@@ -726,7 +726,30 @@ const GetStarted = () => {
                   </div>
                 )}
 
-                {step === 9 && (
+                {step === 9 && setup?.isPublic && setup.slug ? (
+                  <div className="space-y-4 text-sm">
+                    <div className="rounded-2xl border border-accent/20 bg-accent/5 p-5">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <p className="font-display text-base font-semibold text-accent">Your store is live</p>
+                        <StoreStatusBadge status={setup.status} />
+                      </div>
+                      <p className="mt-2 text-muted-foreground">
+                        Customers can order from your link right now. We've emailed it to you as well.
+                      </p>
+                    </div>
+                    <StoreLink slug={setup.slug} isPublic />
+                    <div className="flex flex-wrap gap-3">
+                      <Button asChild className="rounded-full">
+                        <Link to="/orders/dashboard">
+                          Manage orders <ArrowRight size={16} />
+                        </Link>
+                      </Button>
+                      <Button asChild variant="outline" className="rounded-full">
+                        <Link to="/orders/dashboard">Manage store</Link>
+                      </Button>
+                    </div>
+                  </div>
+                ) : step === 9 ? (
                   <div className="space-y-4 text-sm">
                     <div className="rounded-2xl border border-border p-5">
                       <p className="font-display font-semibold">{name || "Your Store"}</p>
@@ -770,39 +793,31 @@ const GetStarted = () => {
                           {setup.tasks
                             .filter((t) => t.required && t.id !== "publish")
                             .map((task) => (
-                              <li key={task.id} className="flex items-start gap-2 text-muted-foreground">
+                              <li key={task.id} className="flex flex-wrap items-center gap-2 text-muted-foreground">
                                 <Check
                                   size={14}
-                                  className={`mt-0.5 shrink-0 ${task.done ? "text-accent" : "opacity-25"}`}
+                                  className={`shrink-0 ${task.done ? "text-accent" : "opacity-25"}`}
                                 />
-                                {task.id === "catalog" ? terms.catalog : task.label}
+                                <span>{task.id === "catalog" ? terms.catalog : task.label}</span>
+                                {!task.done && (
+                                  <Button
+                                    type="button"
+                                    size="sm"
+                                    variant="ghost"
+                                    className="h-auto rounded-full px-2 py-1 text-xs text-accent"
+                                    onClick={() => setStep(SETUP_STEP_INDEX[task.id])}
+                                  >
+                                    Finish
+                                  </Button>
+                                )}
                               </li>
                             ))}
                         </ul>
-                        {setup.slug && (
-                          <div className="mt-4 rounded-xl border border-border bg-secondary p-4">
-                            <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
-                              Your store link
-                            </p>
-                            <p className="mt-1 font-display font-semibold">
-                              loumilab.com/orders/store/{setup.slug}
-                            </p>
-                            <div className="mt-3 flex flex-wrap gap-3">
-                              <Button asChild size="sm" variant="outline" className="rounded-full">
-                                <Link to={`/orders/store/${setup.slug}`}>
-                                  {setup.isPublic ? "View store" : "Preview store"} <ExternalLink size={14} />
-                                </Link>
-                              </Button>
-                              <Button asChild size="sm" variant="ghost" className="rounded-full">
-                                <Link to="/orders/dashboard">Open dashboard</Link>
-                              </Button>
-                            </div>
-                          </div>
-                        )}
+                        {setup.slug && <StoreLink className="mt-4" slug={setup.slug} />}
                       </div>
                     )}
                   </div>
-                )}
+                ) : null}
               </div>
 
               <div className="mt-9 flex flex-wrap items-center justify-between gap-3">
@@ -817,52 +832,56 @@ const GetStarted = () => {
                 </Button>
 
                 {step < lastStep ? (
-                  <Button type="button" className="rounded-full" disabled={!canContinue} onClick={advance}>
+                  <Button
+                    type="button"
+                    className="w-full rounded-full sm:w-auto"
+                    disabled={!canContinue}
+                    onClick={advance}
+                  >
                     Continue <ArrowRight size={16} />
                   </Button>
                 ) : setup?.isPublic ? (
-                  <Button asChild className="rounded-full">
+                  <Button asChild className="w-full rounded-full sm:w-auto">
                     <Link to="/orders/dashboard">
                       Go to dashboard <ArrowRight size={16} />
                     </Link>
                   </Button>
                 ) : (
-                  <div className="flex flex-wrap items-center gap-3">
+                  <div className="flex w-full flex-col items-stretch gap-3 sm:w-auto sm:flex-row sm:items-center">
                     <Button
                       type="button"
                       variant="outline"
                       className="rounded-full"
-                      onClick={() => persist(false)}
+                      onClick={() => void finishSaving()}
                       disabled={busy || name.trim().length < 2}
                     >
-                      Save and finish later
+                      {busy ? <Loader2 size={16} className="animate-spin" /> : null} Save and finish later
                     </Button>
-                    <Button
-                      type="button"
-                      className="rounded-full"
-                      onClick={publish}
-                      disabled={busy || name.trim().length < 2}
-                    >
-                      {busy ? (
-                        <>
-                          <Loader2 size={16} className="animate-spin" /> Saving…
-                        </>
-                      ) : (
-                        <>
-                          Publish store <ArrowRight size={16} />
-                        </>
-                      )}
-                    </Button>
+                    {setup ? (
+                      <PublishStoreButton
+                        snapshot={setup}
+                        catalogLabel={terms.catalog}
+                        size="default"
+                        onPublished={() => {
+                          try {
+                            sessionStorage.removeItem(DRAFT_KEY);
+                          } catch {
+                            // Ignore storage errors.
+                          }
+                        }}
+                      />
+                    ) : null}
                   </div>
                 )}
               </div>
 
               {step === lastStep && setup && !setup.canPublish && (
                 <p className="mt-4 text-xs text-muted-foreground">
-                  Publishing unlocks once payments setup is complete and the required steps are done. Everything
-                  you've entered is saved.
+                  Publishing unlocks once the required steps above are done. Everything you've entered is saved —
+                  you can leave and come back any time.
                 </p>
               )}
+
             </div>
 
             {/* Live preview */}
