@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Check, ExternalLink, Loader2, ShieldCheck } from "lucide-react";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
@@ -13,10 +13,13 @@ import PhoneFrame from "@/components/orders/PhoneFrame";
 import StorefrontHeader from "@/components/orders/StorefrontHeader";
 import ImageUpload from "@/components/orders/ImageUpload";
 import StoreStatusBadge from "@/components/orders/StoreStatusBadge";
+import StoreLink from "@/components/orders/StoreLink";
+import PublishStoreButton from "@/components/orders/PublishStoreButton";
+import PayoutSetupCard from "@/components/orders/PayoutSetupCard";
 import { formatMoney } from "@/data/orders/storefronts";
 import { usePublicPlans, planPriceLabel, planPeriodLabel, formatFeeBps } from "@/lib/orders/plans";
 import { useSaveStoreSetup, useOnboardingPrefill, type OnboardingItem } from "@/lib/orders/store-admin";
-import { useMerchantSetup, useSetStorefrontStatus } from "@/lib/orders/setup";
+import { useMerchantSetup, SETUP_STEP_INDEX } from "@/lib/orders/setup";
 import { supabase } from "@/integrations/supabase/client";
 import {
   useIndustries,
@@ -93,7 +96,6 @@ const GetStarted = () => {
   const { data: industries } = useIndustries();
   const { data: plans } = usePublicPlans();
   const saveSetup = useSaveStoreSetup();
-  const setStatus = useSetStorefrontStatus();
 
   const industry = findIndustry(industries, industrySlug);
   const terms = resolveTerms(industry);
@@ -305,36 +307,19 @@ const GetStarted = () => {
     setStep((s) => Math.min(lastStep, s + 1));
   };
 
-  const publish = async () => {
+  const finishSaving = async () => {
     const ok = await persist(false);
-    if (!ok) return;
-
-    if (!setup?.storefrontId) {
-      toast.success("Store saved", { description: "Finish the remaining steps in your dashboard to go live." });
-      return;
-    }
-    if (!setup.canPublish) {
-      toast.info("Almost there", {
-        description: "Finish payments setup and the required steps, then publish from your dashboard.",
-      });
-      return;
-    }
-    try {
-      await setStatus.mutateAsync({ id: setup.storefrontId, status: "published" });
-      try {
-        sessionStorage.removeItem(DRAFT_KEY);
-      } catch {
-        // Ignore storage errors.
-      }
-      toast.success("Your store is live", { description: "Share your link and start taking orders." });
-    } catch (error) {
-      toast.error("Couldn't publish your store", {
-        description: error instanceof Error ? error.message : "Please try again in a moment.",
+    if (ok) {
+      toast.success("Everything is saved", {
+        description: setup?.canPublish
+          ? "You're ready to publish whenever you like."
+          : "Pick up where you left off from your dashboard any time.",
       });
     }
+    return ok;
   };
 
-  const busy = saveSetup.isPending || setStatus.isPending;
+  const busy = saveSetup.isPending;
 
   return (
     <Layout>
