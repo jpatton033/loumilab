@@ -89,19 +89,17 @@ export const usePublicStorefront = (slug?: string) =>
           .eq("is_active", true)
           .order("display_order")
           .returns<LiveProduct[]>(),
-        supabase
-          .from("merchants")
-          .select("industry_slug, accepting_orders")
-          .eq("id", store.merchant_id)
-          .maybeSingle()
-          .returns<{ industry_slug: string; accepting_orders: boolean } | null>(),
+        // Public-safe lookup: the merchants table itself is owner/staff only.
+        supabase.rpc("get_public_store_context", { _storefront_id: store.id }),
       ]);
+
+      const context = merchant as { industry_slug: string; accepting_orders: boolean } | null;
 
       return {
         store,
         products: products ?? [],
-        industrySlug: merchant?.industry_slug ?? "food-catering",
-        acceptingOrders: merchant?.accepting_orders ?? false,
+        industrySlug: context?.industry_slug ?? "food-catering",
+        acceptingOrders: context?.accepting_orders ?? false,
       };
     },
   });
