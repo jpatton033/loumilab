@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, ExternalLink, RefreshCw } from "lucide-react";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
@@ -47,6 +47,9 @@ import { useMyMerchant, useJobs, useAdvanceJob, nextJobStatus, JOB_STATUS_LABELS
 import { usePublicPlans } from "@/lib/orders/plans";
 import { resolveEntitlements, isEnabled, type EntitlementKey } from "@/lib/orders/entitlements";
 import SetupChecklist from "@/components/orders/SetupChecklist";
+import StoreLink from "@/components/orders/StoreLink";
+import PublishStoreButton from "@/components/orders/PublishStoreButton";
+import { storePath } from "@/lib/orders/setup";
 import { useMerchantSetup } from "@/lib/orders/setup";
 
 
@@ -67,6 +70,7 @@ const LIVE_FILTER_ORDER: LiveOrderStatus[] = [
 ];
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [orders, setOrders] = useState<MerchantOrder[]>(demoOrders);
   const [filter, setFilter] = useState<Filter>("All");
   const [accepting, setAccepting] = useState(true);
@@ -145,6 +149,7 @@ const Dashboard = () => {
   };
 
   const transactionsLabel = terms.transactions;
+  const firstOutstanding = setup?.tasks.find((t) => t.required && t.id !== "publish" && !t.done);
 
   return (
     <Layout>
@@ -522,6 +527,47 @@ const Dashboard = () => {
           </div>
         </div>
       </section>
+
+      {/* Mobile: one always-visible next action so nothing important is buried. */}
+      {merchant && setup && (
+        <div className="sticky bottom-0 z-30 border-t border-border bg-background/95 px-4 py-3 backdrop-blur lg:hidden">
+          {!setup.canPublish ? (
+            firstOutstanding ? (
+              <Button
+                className="w-full rounded-full"
+                onClick={() => {
+                  if (firstOutstanding.id === "catalog") {
+                    setActiveModule(
+                      modules.find((m) => m === "menu" || m === "products" || m === "services") ?? modules[0],
+                    );
+                  } else if (firstOutstanding.id === "payments") {
+                    setActiveModule("payments");
+                  } else {
+                    navigate(firstOutstanding.href);
+                    return;
+                  }
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+              >
+                Continue setup: {firstOutstanding.id === "catalog" ? terms.catalog : firstOutstanding.label}
+              </Button>
+            ) : null
+          ) : setup.isPublic ? (
+            <Button asChild className="w-full rounded-full">
+              <Link to={storePath(setup.slug ?? "")}>
+                View live store <ExternalLink size={15} />
+              </Link>
+            </Button>
+          ) : (
+            <PublishStoreButton
+              snapshot={setup}
+              catalogLabel={terms.catalog}
+              size="default"
+              className="w-full"
+            />
+          )}
+        </div>
+      )}
     </Layout>
   );
 };
