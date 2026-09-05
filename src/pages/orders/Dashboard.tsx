@@ -179,21 +179,28 @@ const Dashboard = () => {
               </p>
             </div>
 
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex w-full flex-wrap items-center gap-3 lg:w-auto">
               {!merchant && (
-                <Button
-                  variant={accepting ? "secondary" : "default"}
-                  className="rounded-full"
-                  onClick={() => setAccepting((v) => !v)}
-                >
-                  {accepting ? `Pause new ${transactionsLabel.toLowerCase()}` : `Resume ${transactionsLabel.toLowerCase()}`}
-                </Button>
+                <>
+                  <Button
+                    variant={accepting ? "secondary" : "default"}
+                    className="rounded-full"
+                    onClick={() => setAccepting((v) => !v)}
+                  >
+                    {accepting
+                      ? `Pause new ${transactionsLabel.toLowerCase()}`
+                      : `Resume ${transactionsLabel.toLowerCase()}`}
+                  </Button>
+                  <Button variant="outline" asChild className="rounded-full">
+                    <Link to={`/orders/store/${demoStorefront.slug}`}>
+                      Preview storefront <ExternalLink size={15} />
+                    </Link>
+                  </Button>
+                </>
               )}
-              <Button variant="outline" asChild className="rounded-full">
-                <Link to={`/orders/store/${setup?.slug ?? demoStorefront.slug}`}>
-                  {setup?.isPublic ? "View storefront" : "Preview storefront"} <ExternalLink size={15} />
-                </Link>
-              </Button>
+              {merchant && setup?.slug && (
+                <StoreLink slug={setup.slug} isPublic={setup.isPublic} variant="inline" />
+              )}
             </div>
           </div>
 
@@ -203,17 +210,23 @@ const Dashboard = () => {
                 snapshot={setup}
                 catalogLabel={terms.catalog}
                 onJump={(id) => {
-                  if (id === "catalog" || id === "business" || id === "branding" || id === "fulfilment") {
+                  if (id === "catalog") {
                     setActiveModule(
                       modules.find((m) => m === "menu" || m === "products" || m === "services") ?? modules[0],
                     );
+                    return true;
                   }
-                  if (id === "payments") setActiveModule("payments");
+                  if (id === "payments") {
+                    setActiveModule("payments");
+                    return true;
+                  }
+                  return false;
                 }}
               />
             )}
             <PayoutSetupCard />
           </div>
+
 
 
           {!merchant && (
