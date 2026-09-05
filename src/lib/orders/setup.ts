@@ -14,6 +14,26 @@ import { usePayoutStatus } from "@/lib/orders/connect";
 
 export type StorefrontStatus = "setup" | "ready" | "published" | "paused" | "restricted";
 
+/** The address customers use. Always canonical, so a shared link never breaks. */
+export const STORE_ORIGIN = "https://loumilab.com";
+
+/** In-app route for the storefront (preview or live). */
+export const storePath = (slug: string) => `/orders/store/${slug}`;
+
+/** Full, shareable customer URL for a storefront. */
+export const storeUrl = (slug: string) => `${STORE_ORIGIN}${storePath(slug)}`;
+
+/** Wizard step index for each setup task, so "Finish" lands in the right place. */
+export const SETUP_STEP_INDEX: Record<SetupStepId, number> = {
+  account: 0,
+  business: 4,
+  branding: 4,
+  catalog: 5,
+  fulfilment: 6,
+  payments: 7,
+  publish: 9,
+};
+
 export const STATUS_LABELS: Record<StorefrontStatus, string> = {
   setup: "Setup incomplete",
   ready: "Ready to publish",
@@ -29,6 +49,7 @@ export const STATUS_DESCRIPTIONS: Record<StorefrontStatus, string> = {
   paused: "You've paused your store. Customers can't place new orders right now.",
   restricted: "Payouts need attention before your store can be public again.",
 };
+
 
 export type SetupStepId =
   | "account"
