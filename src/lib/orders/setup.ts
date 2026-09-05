@@ -290,9 +290,14 @@ export const useSetStorefrontStatus = () => {
     mutationFn: async ({ id, status }: { id: string; status: StorefrontStatus }) => {
       const { error } = await supabase.from("merchant_storefronts").update({ status }).eq("id", id);
       if (error) throw error;
+      // Going live is worth an email — sent once, and never blocking the action.
+      if (status === "published") {
+        void supabase.functions.invoke("orders-store-published").catch(() => undefined);
+      }
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["orders"] });
     },
   });
 };
+
