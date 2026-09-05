@@ -2046,6 +2046,10 @@ export type Database = {
       create_custom_project_upload_slot: { Args: never; Returns: string }
       get_invoice_by_token: { Args: { _token: string }; Returns: Json }
       get_order_by_token: { Args: { _token: string }; Returns: Json }
+      get_public_store_context: {
+        Args: { _storefront_id: string }
+        Returns: Json
+      }
       get_quote_by_token: { Args: { _token: string }; Returns: Json }
       has_admin_role: {
         Args: {
