@@ -1,14 +1,27 @@
+import { useEffect, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import { CheckCircle2, Clock, XCircle } from "lucide-react";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { formatCents, useOrderByToken } from "@/lib/orders/storefront";
+import { syncOrders } from "@/lib/orders/reconcile";
 
 /** Public order receipt, reachable only with the order's secret token. */
 const Receipt = () => {
   const { token } = useParams<{ token: string }>();
-  const { data: order, isLoading } = useOrderByToken(token);
+  const { data: order, isLoading, refetch } = useOrderByToken(token);
+
+  // A missed Stripe notification used to leave this stuck on "Confirming
+  // payment" — ask Stripe directly instead of waiting for the webhook.
+  const asked = useRef(false);
+  useEffect(() => {
+    if (!token || asked.current || order?.status !== "pending") return;
+    asked.current = true;
+    void syncOrders({ token }).then((res) => {
+      if (res.synced) void refetch();
+    });
+  }, [token, order?.status, refetch]);
 
   const paid = order?.status && !["pending", "failed", "cancelled"].includes(order.status);
   const failed = order?.status === "failed" || order?.status === "cancelled";

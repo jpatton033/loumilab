@@ -98,12 +98,19 @@ Deno.serve(async (req) => {
       .filter((d): d is number => typeof d === "number")
       .sort((a, b) => a - b)[0];
 
+    const schedule = connected.settings?.payouts?.schedule ?? null;
+
     return json({
       payout_status: account.payout_status,
       available_cents: balance.available.reduce((sum, b) => sum + b.amount, 0),
       pending_cents: balance.pending.reduce((sum, b) => sum + b.amount, 0),
       currency: balance.available[0]?.currency ?? "usd",
-      payout_schedule: describeSchedule(connected.settings?.payouts?.schedule ?? null),
+      payout_schedule: describeSchedule(schedule),
+      schedule_interval: schedule?.interval ?? null,
+      schedule_delay_days: typeof schedule?.delay_days === "number" ? schedule.delay_days : null,
+      schedule_anchor:
+        schedule?.weekly_anchor ??
+        (typeof schedule?.monthly_anchor === "number" ? String(schedule.monthly_anchor) : null),
       next_payout_at: upcoming ? new Date(upcoming * 1000).toISOString() : null,
       payouts: payouts.data.map((p) => ({
         id: p.id,

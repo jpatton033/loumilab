@@ -23,6 +23,7 @@ import {
   type LiveOrderStatus,
 } from "@/lib/orders/orders";
 import { formatCents } from "@/lib/orders/storefront";
+import { useReconcilePendingOrders } from "@/lib/orders/reconcile";
 
 import {
   dashboardMetrics,
@@ -103,6 +104,8 @@ const Dashboard = () => {
   } = useMerchantOrders(merchant?.id);
   const liveOrders = liveOrdersData ?? [];
   const analytics = useOrderAnalytics(liveOrdersData);
+  // Self-heal orders left "Awaiting payment" by a missed Stripe notification.
+  useReconcilePendingOrders(merchant?.id, liveOrders.filter((o) => o.status === "pending").length);
   const advanceOrder = useAdvanceOrder(merchant?.id);
   const [liveFilter, setLiveFilter] = useState<LiveOrderStatus | "all">("all");
 
