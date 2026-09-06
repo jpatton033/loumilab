@@ -145,6 +145,12 @@ const Orders = () => {
               <p className="mt-6 text-sm text-muted-foreground">
                 Create your store. Share your link. Take orders. Get paid.
               </p>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Already have a store?{" "}
+                <Link to="/orders/dashboard" className="underline underline-offset-4 hover:text-foreground">
+                  Go to dashboard
+                </Link>
+              </p>
             </div>
 
             <div className="flex flex-col items-center gap-8 lg:flex-row lg:items-center lg:justify-end lg:gap-6">
