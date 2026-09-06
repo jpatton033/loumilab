@@ -1,7 +1,13 @@
 import { useState } from "react";
 import { ExternalLink, Loader2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { openBillingPortal, subscribeToPlan, useBillingStatus, usePayouts } from "@/lib/orders/billing";
+import {
+  openBillingPortal,
+  subscribeToPlan,
+  useBillingStatus,
+  usePayouts,
+  type PayoutsSnapshot,
+} from "@/lib/orders/billing";
 import { openStripeDashboard, usePayoutStatus } from "@/lib/orders/connect";
 import { useMerchantOrders } from "@/lib/orders/store-admin";
 import { formatCents } from "@/lib/orders/storefront";
@@ -20,6 +26,38 @@ const PAYOUT_ROW_LABELS: Record<string, string> = {
   pending: "Scheduled",
   canceled: "Cancelled",
   failed: "Failed",
+};
+
+/** Plain-English payout status for a single order. */
+const ORDER_PAYMENT_LABELS: Record<string, string> = {
+  pending: "Awaiting payment",
+  failed: "Payment failed",
+  cancelled: "Cancelled",
+  refunded: "Refunded",
+};
+
+/**
+ * Payout schedule in words. Stripe usually returns a ready-made sentence; when
+ * it only returns the raw interval we build one rather than showing vague copy.
+ */
+const describeSchedule = (p: PayoutsSnapshot): string => {
+  if (p.payout_schedule) return p.payout_schedule;
+  const delay =
+    p.schedule_delay_days !== null
+      ? `, ${p.schedule_delay_days} day${p.schedule_delay_days === 1 ? "" : "s"} after the sale`
+      : "";
+  switch (p.schedule_interval) {
+    case "daily":
+      return `Paid to your bank every business day${delay}.`;
+    case "weekly":
+      return `Paid to your bank every week${p.schedule_anchor ? ` on ${p.schedule_anchor}` : ""}${delay}.`;
+    case "monthly":
+      return `Paid to your bank monthly${p.schedule_anchor ? ` on day ${p.schedule_anchor}` : ""}${delay}.`;
+    case "manual":
+      return "Payouts are sent when you request them in Stripe.";
+    default:
+      return "Set in Stripe — open View in Stripe to see or change your schedule.";
+  }
 };
 
 /**
@@ -147,11 +185,17 @@ const PaymentsPanel = ({ merchantId, planSlug }: Props) => {
               </div>
             </div>
 
-            {payouts.next_payout_at && (
-              <p className="mt-4 text-sm text-muted-foreground">
-                Next payout expected {new Date(payouts.next_payout_at).toLocaleDateString()}.
+            <div className="mt-4 rounded-2xl border border-border bg-secondary p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-muted-foreground">
+                Payout schedule
               </p>
-            )}
+              <p className="mt-2 text-sm font-medium">{describeSchedule(payouts)}</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {payouts.next_payout_at
+                  ? `Next payout expected ${new Date(payouts.next_payout_at).toLocaleDateString()}.`
+                  : "Your next payout appears here as soon as a paid order settles."}
+              </p>
+            </div>
 
             {payouts.payouts.length > 0 ? (
               <div className="mt-6 divide-y divide-border border-t border-border">
@@ -183,10 +227,6 @@ const PaymentsPanel = ({ merchantId, planSlug }: Props) => {
               </p>
             )}
 
-            <p className="mt-5 text-xs text-muted-foreground">
-              {payouts.payout_schedule ??
-                "Stripe pays your bank account automatically on your payout schedule."}
-            </p>
           </>
         )}
       </div>
