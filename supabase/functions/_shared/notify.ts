@@ -1,5 +1,4 @@
-const API_KEY = Deno.env.get("MAILEROO_API_KEY") ?? "";
-const FROM = "no-reply@loumilab.com";
+import { sendManagedEmail } from "./managed-email.ts";
 
 const escapeHtml = (str: string) =>
   str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -23,24 +22,10 @@ export function shell(title: string, bodyHtml: string) {
 }
 
 /** Best-effort send: a failed notification must never fail a payment webhook. */
-export async function sendEmail(to: string, subject: string, html: string) {
-  if (!API_KEY || !to) return;
-  try {
-    const res = await fetch("https://smtp.maileroo.com/api/v2/emails", {
-      method: "POST",
-      headers: { "X-Api-Key": API_KEY, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        from: { address: FROM, display_name: "Loumilab" },
-        to: { address: to },
-        reply_to: { address: "hello@loumilab.com" },
-        subject,
-        html,
-      }),
-    });
-    if (!res.ok) console.error("Maileroo error", res.status, await res.text());
-  } catch (err) {
-    console.error("Maileroo send failed", err instanceof Error ? err.message : err);
-  }
+export async function sendEmail(to: string, subject: string, html: string, idempotencyKey?: string) {
+  if (!to) return;
+  const result = await sendManagedEmail({ to, subject, html, label: "orders-notification", idempotencyKey });
+  if (!result.ok && !result.suppressed) console.error("Order notification not sent:", result.error);
 }
 
 export const row = (label: string, value: string, bold = false) =>

@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { sendManagedEmail } from "../_shared/managed-email.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -22,40 +23,6 @@ async function checkRateLimit(supabaseAdmin: ReturnType<typeof createClient>, ke
     return false; // fail-open for legitimate traffic
   }
   return data === true; // true => limited
-}
-
-async function sendEmail(
-  apiKey: string,
-  from: string,
-  to: string,
-  subject: string,
-  html: string,
-  replyTo?: string,
-) {
-  const res = await fetch("https://smtp.maileroo.com/api/v2/emails", {
-    method: "POST",
-    headers: {
-      "X-Api-Key": apiKey,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      // Automatic mail always leaves from the unattended Loumilab address;
-      // replies are steered to a monitored inbox instead.
-      from: { address: from, display_name: "Loumilab" },
-      to: { address: to },
-      ...(replyTo ? { reply_to: { address: replyTo } } : {}),
-      subject,
-      html,
-    }),
-  });
-
-  if (!res.ok) {
-    const text = await res.text();
-    console.error(`Maileroo error (${res.status}):`, text);
-    throw new Error(`Maileroo API error: ${res.status}`);
-  }
-
-  return res.json();
 }
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -85,8 +52,6 @@ serve(async (req) => {
       );
     }
 
-    const apiKey = Deno.env.get("MAILEROO_API_KEY");
-    if (!apiKey) throw new Error("MAILEROO_API_KEY not configured");
 
     const body = await req.json().catch(() => null);
     const emailInput = typeof body?.email === 'string' ? body.email.trim().toLowerCase() : null;
@@ -125,7 +90,6 @@ serve(async (req) => {
     const safeCompany = submission.company ? escapeHtml(String(submission.company)) : "Not provided";
     const safeMessage = escapeHtml(submission.message as string);
 
-    const fromAddress = "no-reply@loumilab.com";
 
     // --- Shared email design tokens (Loumilab light system) ---
     const t = {
@@ -211,27 +175,28 @@ serve(async (req) => {
     });
 
     const results = await Promise.allSettled([
-      sendEmail(
-        apiKey,
-        fromAddress,
-        "hello@loumilab.com",
-        `New inquiry from ${safeName}`,
-        notificationHtml,
-        submission.email as string,
-      ),
-      sendEmail(
-        apiKey,
-        fromAddress,
-        submission.email as string,
-        "We received your message — Loumilab",
-        confirmationHtml,
-        "hello@loumilab.com",
-      ),
+      sendManagedEmail({
+        to: "hello@loumilab.com",
+        subject: `New inquiry from ${safeName}`,
+        html: notificationHtml,
+        replyTo: submission.email as string,
+        label: "contact-notification",
+        idempotencyKey: `contact-notify-${submission.id}`,
+      }),
+      sendManagedEmail({
+        to: submission.email as string,
+        subject: "We received your message — Loumilab",
+        html: confirmationHtml,
+        label: "contact-confirmation",
+        idempotencyKey: `contact-confirm-${submission.id}`,
+      }),
     ]);
 
 
-    const errors = results.filter(r => r.status === "rejected");
-    if (errors.length > 0) console.error("Some emails failed:", errors);
+    const failures = results.filter(
+      (r) => r.status === "rejected" || (r.value && !r.value.ok && !r.value.suppressed),
+    );
+    if (failures.length > 0) console.error("Some contact emails were not sent:", failures.length);
 
     return new Response(
       JSON.stringify({ success: true }),
