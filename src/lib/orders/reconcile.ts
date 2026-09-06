@@ -33,8 +33,7 @@ export const useReconcilePendingOrders = (merchantId?: string, pendingCount = 0)
     void (async () => {
       const result = await syncOrders();
       if (result.synced && result.synced > 0) {
-        await qc.invalidateQueries({ queryKey: ["orders", "live-orders", merchantId] });
-        await qc.invalidateQueries({ queryKey: ["orders", "merchant-orders", merchantId] });
+        await qc.invalidateQueries({ queryKey: ["orders", "merchant-orders"] });
       }
     })();
   }, [merchantId, pendingCount, qc]);

@@ -128,8 +128,14 @@ export interface MerchantOrderRow {
   customer_name: string;
   fulfilment: "pickup" | "delivery";
   currency: string;
+  subtotal_cents: number;
+  delivery_fee_cents: number;
+  tip_cents: number;
+  tax_cents: number;
   total_cents: number;
   platform_fee_cents: number;
+  /** Stripe's own processing fee, once Stripe has reported it. */
+  stripe_fee_cents: number | null;
   paid_at: string | null;
   created_at: string;
 }
@@ -137,13 +143,13 @@ export interface MerchantOrderRow {
 /** Real paid + pending orders for this merchant. */
 export const useMerchantOrders = (merchantId?: string) =>
   useQuery({
-    queryKey: ["orders", "merchant-orders", merchantId],
+    queryKey: ["orders", "merchant-orders", "payments", merchantId],
     enabled: !!merchantId,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("orders")
         .select(
-          "id, reference, status, customer_name, fulfilment, currency, total_cents, platform_fee_cents, paid_at, created_at",
+          "id, reference, status, customer_name, fulfilment, currency, subtotal_cents, delivery_fee_cents, tip_cents, tax_cents, total_cents, platform_fee_cents, stripe_fee_cents, paid_at, created_at",
         )
         .eq("merchant_id", merchantId as string)
         .order("created_at", { ascending: false })
