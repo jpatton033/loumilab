@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ExternalLink, Loader2, RefreshCw } from "lucide-react";
+import { ChevronDown, ExternalLink, Loader2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   openBillingPortal,
@@ -13,6 +13,14 @@ import { useMerchantOrders } from "@/lib/orders/store-admin";
 import { formatCents } from "@/lib/orders/storefront";
 import { usePublicPlans } from "@/lib/orders/plans";
 import { toast } from "sonner";
+
+/** One line of an order's money breakdown. */
+const Row = ({ label, value, strong }: { label: string; value: string; strong?: boolean }) => (
+  <div className={`flex justify-between gap-4 ${strong ? "font-semibold" : "text-muted-foreground"}`}>
+    <span>{label}</span>
+    <span>{value}</span>
+  </div>
+);
 
 interface Props {
   merchantId?: string;
@@ -79,6 +87,7 @@ const PaymentsPanel = ({ merchantId, planSlug }: Props) => {
   } = usePayouts(!!merchantId && payoutsReady);
   const { data: billing } = useBillingStatus(!!merchantId);
   const { data: orders } = useMerchantOrders(merchantId);
+  const [expanded, setExpanded] = useState<string | null>(null);
   const { data: plans } = usePublicPlans();
   const [busy, setBusy] = useState<string | null>(null);
 
@@ -113,8 +122,11 @@ const PaymentsPanel = ({ merchantId, planSlug }: Props) => {
 
   const currentPlan = plans?.find((p) => p.slug === (billing?.subscription?.plan_slug ?? planSlug));
   const paidOrders = (orders ?? []).filter((o) => o.paid_at);
+  const unsettled = (orders ?? []).filter((o) => !o.paid_at && o.status === "pending");
   const grossCents = paidOrders.reduce((n, o) => n + o.total_cents, 0);
   const feesCents = paidOrders.reduce((n, o) => n + (o.platform_fee_cents ?? 0), 0);
+  const stripeFeeCents = paidOrders.reduce((n, o) => n + (o.stripe_fee_cents ?? 0), 0);
+  const netCents = grossCents - feesCents - stripeFeeCents;
 
   return (
     <div className="space-y-6">
@@ -239,7 +251,7 @@ const PaymentsPanel = ({ merchantId, planSlug }: Props) => {
           <p className="mt-3 text-sm text-muted-foreground">No paid orders yet.</p>
         ) : (
           <>
-            <div className="mt-5 grid gap-4 sm:grid-cols-2">
+            <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <div className="rounded-2xl border border-border bg-secondary p-4">
                 <p className="text-xs font-semibold uppercase tracking-[0.15em] text-muted-foreground">Gross</p>
                 <p className="mt-2 font-hero text-2xl font-semibold tracking-tight">{formatCents(grossCents)}</p>
@@ -250,17 +262,78 @@ const PaymentsPanel = ({ merchantId, planSlug }: Props) => {
                 </p>
                 <p className="mt-2 font-hero text-2xl font-semibold tracking-tight">{formatCents(feesCents)}</p>
               </div>
+              <div className="rounded-2xl border border-border bg-secondary p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.15em] text-muted-foreground">
+                  Card fees
+                </p>
+                <p className="mt-2 font-hero text-2xl font-semibold tracking-tight">
+                  {formatCents(stripeFeeCents)}
+                </p>
+              </div>
+              <div className="rounded-2xl border border-border bg-secondary p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.15em] text-muted-foreground">Net to you</p>
+                <p className="mt-2 font-hero text-2xl font-semibold tracking-tight">{formatCents(netCents)}</p>
+              </div>
             </div>
+
             <div className="mt-6 divide-y divide-border border-t border-border">
-              {paidOrders.slice(0, 10).map((o) => (
-                <div key={o.id} className="flex items-center justify-between gap-4 py-3 text-sm">
-                  <span className="min-w-0 truncate text-muted-foreground">
-                    {o.reference ?? o.id.slice(0, 8)} · {o.customer_name} · {o.fulfilment}
-                  </span>
-                  <span className="font-semibold">{formatCents(o.total_cents, o.currency)}</span>
-                </div>
-              ))}
+              {paidOrders.slice(0, 10).map((o) => {
+                const open = expanded === o.id;
+                const net = o.total_cents - (o.platform_fee_cents ?? 0) - (o.stripe_fee_cents ?? 0);
+                return (
+                  <div key={o.id} className="py-3 text-sm">
+                    <button
+                      type="button"
+                      className="flex w-full items-center justify-between gap-4 text-left"
+                      onClick={() => setExpanded(open ? null : o.id)}
+                    >
+                      <span className="min-w-0 truncate text-muted-foreground">
+                        {o.reference ?? o.id.slice(0, 8)} · {o.customer_name} · {o.fulfilment}
+                      </span>
+                      <span className="flex shrink-0 items-center gap-2 font-semibold">
+                        {formatCents(o.total_cents, o.currency)}
+                        <ChevronDown
+                          size={14}
+                          className={`text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
+                        />
+                      </span>
+                    </button>
+
+                    {open && (
+                      <div className="mt-3 space-y-1.5 rounded-2xl bg-secondary p-4">
+                        <Row label="Items" value={formatCents(o.subtotal_cents, o.currency)} />
+                        {o.delivery_fee_cents > 0 && (
+                          <Row label="Delivery" value={formatCents(o.delivery_fee_cents, o.currency)} />
+                        )}
+                        {o.tip_cents > 0 && <Row label="Tip" value={formatCents(o.tip_cents, o.currency)} />}
+                        {o.tax_cents > 0 && <Row label="Tax" value={formatCents(o.tax_cents, o.currency)} />}
+                        <Row label="Customer paid" value={formatCents(o.total_cents, o.currency)} strong />
+                        <Row
+                          label="Loumilab fee"
+                          value={`−${formatCents(o.platform_fee_cents ?? 0, o.currency)}`}
+                        />
+                        <Row
+                          label="Card fee"
+                          value={
+                            o.stripe_fee_cents === null
+                              ? "Pending"
+                              : `−${formatCents(o.stripe_fee_cents, o.currency)}`
+                          }
+                        />
+                        <Row label="Net to you" value={formatCents(net, o.currency)} strong />
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
+
+            {unsettled.length > 0 && (
+              <p className="mt-5 text-xs text-muted-foreground">
+                {unsettled.length} order{unsettled.length === 1 ? "" : "s"} still awaiting payment
+                confirmation. We check with Stripe automatically.
+              </p>
+            )}
           </>
         )}
       </div>
