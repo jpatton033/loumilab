@@ -54,6 +54,10 @@ export interface PayoutsSnapshot {
   currency: string;
   /** Plain-English payout schedule, e.g. "Daily, 2 days after the sale". */
   payout_schedule: string | null;
+  /** Raw schedule fields, used when the sentence can't be built. */
+  schedule_interval: string | null;
+  schedule_delay_days: number | null;
+  schedule_anchor: string | null;
   /** ISO date of the next expected payout, when Stripe reports one. */
   next_payout_at: string | null;
   payouts: {
