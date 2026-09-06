@@ -108,6 +108,7 @@ async function completeOrder(orderId: string, session: Obj, stripeAccount?: stri
         merchant?.business_name ?? "The business"
       } has your ${order.fulfilment} order.</p>${table}`,
     ),
+    `order-confirm-${order.id}`,
   );
 
   if (merchant?.contact_email) {
@@ -118,6 +119,7 @@ async function completeOrder(orderId: string, session: Obj, stripeAccount?: stri
         "New paid order",
         `<p style="margin:0 0 10px;font-size:15px;line-height:1.55">${order.customer_name} placed a ${order.fulfilment} order.</p>${table}`,
       ),
+      `order-merchant-${order.id}`,
     );
   }
 }
@@ -161,6 +163,7 @@ async function completeInvoice(invoiceId: string, session: Obj) {
           invoice.amount_cents,
         )} has been paid. Funds settle to your bank on Stripe's normal payout schedule.</p>`,
       ),
+      `invoice-paid-${invoice.id}`,
     );
   }
 }
