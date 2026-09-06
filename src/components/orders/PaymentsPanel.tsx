@@ -36,14 +36,6 @@ const PAYOUT_ROW_LABELS: Record<string, string> = {
   failed: "Failed",
 };
 
-/** Plain-English payout status for a single order. */
-const ORDER_PAYMENT_LABELS: Record<string, string> = {
-  pending: "Awaiting payment",
-  failed: "Payment failed",
-  cancelled: "Cancelled",
-  refunded: "Refunded",
-};
-
 /**
  * Payout schedule in words. Stripe usually returns a ready-made sentence; when
  * it only returns the raw interval we build one rather than showing vague copy.
