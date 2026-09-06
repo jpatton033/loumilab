@@ -75,7 +75,10 @@ Deno.serve(async (req) => {
     }
 
     if (event.type === "checkout.session.completed") {
-      await handleCheckoutCompleted(event.data.object as Record<string, unknown>);
+      await handleCheckoutCompleted(
+        event.data.object as Record<string, unknown>,
+        (event as { account?: string }).account ?? undefined,
+      );
     }
 
     if (
