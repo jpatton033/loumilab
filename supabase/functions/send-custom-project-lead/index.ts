@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { sendManagedEmail } from "../_shared/managed-email.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -13,33 +14,6 @@ const RATE_LIMIT_WINDOW_SECONDS = 3600;
 
 const escapeHtml = (str: string) =>
   str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-
-async function sendEmail(
-  apiKey: string,
-  from: string,
-  to: string,
-  subject: string,
-  html: string,
-  replyTo?: string,
-) {
-  const res = await fetch("https://smtp.maileroo.com/api/v2/emails", {
-    method: "POST",
-    headers: { "X-Api-Key": apiKey, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      // Automatic mail always leaves from the unattended Loumilab address.
-      from: { address: from, display_name: "Loumilab" },
-      to: { address: to },
-      ...(replyTo ? { reply_to: { address: replyTo } } : {}),
-      subject,
-      html,
-    }),
-  });
-  if (!res.ok) {
-    console.error(`Maileroo error (${res.status}):`, await res.text());
-    throw new Error(`Maileroo API error: ${res.status}`);
-  }
-  return res.json();
-}
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -68,8 +42,6 @@ serve(async (req) => {
       });
     }
 
-    const apiKey = Deno.env.get("MAILEROO_API_KEY");
-    if (!apiKey) throw new Error("MAILEROO_API_KEY not configured");
 
     const body = await req.json().catch(() => null);
     const leadId = typeof body?.leadId === "string" && UUID_RE.test(body.leadId) ? body.leadId : null;
@@ -192,27 +164,27 @@ serve(async (req) => {
       `,
     });
 
-    const fromAddress = "no-reply@loumilab.com";
     const results = await Promise.allSettled([
-      sendEmail(
-        apiKey,
-        fromAddress,
-        "hello@loumilab.com",
-        `Custom project request — ${safeBusiness}`,
-        notificationHtml,
-        lead.email as string,
-      ),
-      sendEmail(
-        apiKey,
-        fromAddress,
-        lead.email as string,
-        "We received your custom project request — Loumilab",
-        confirmationHtml,
-        "hello@loumilab.com",
-      ),
+      sendManagedEmail({
+        to: "hello@loumilab.com",
+        subject: `Custom project request — ${safeBusiness}`,
+        html: notificationHtml,
+        replyTo: lead.email as string,
+        label: "custom-project-notification",
+        idempotencyKey: `custom-project-notify-${lead.id}`,
+      }),
+      sendManagedEmail({
+        to: lead.email as string,
+        subject: "We received your custom project request — Loumilab",
+        html: confirmationHtml,
+        label: "custom-project-confirmation",
+        idempotencyKey: `custom-project-confirm-${lead.id}`,
+      }),
     ]);
-    const failures = results.filter((r) => r.status === "rejected");
-    if (failures.length > 0) console.error("Some emails failed:", failures);
+    const failures = results.filter(
+      (r) => r.status === "rejected" || (r.value && !r.value.ok && !r.value.suppressed),
+    );
+    if (failures.length > 0) console.error("Some project emails were not sent:", failures.length);
 
     return new Response(JSON.stringify({ success: true }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
