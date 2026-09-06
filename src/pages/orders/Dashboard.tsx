@@ -23,6 +23,7 @@ import {
   type LiveOrderStatus,
 } from "@/lib/orders/orders";
 import { formatCents } from "@/lib/orders/storefront";
+import { useReconcilePendingOrders } from "@/lib/orders/reconcile";
 
 import {
   dashboardMetrics,
