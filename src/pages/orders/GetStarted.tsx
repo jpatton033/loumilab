@@ -16,6 +16,8 @@ import StoreStatusBadge from "@/components/orders/StoreStatusBadge";
 import StoreLink from "@/components/orders/StoreLink";
 import PublishStoreButton from "@/components/orders/PublishStoreButton";
 import PayoutSetupCard from "@/components/orders/PayoutSetupCard";
+import AgreementConsent from "@/components/orders/AgreementConsent";
+import { useAcceptAgreements, useAgreementStatus } from "@/lib/orders/agreements";
 import { formatMoney } from "@/data/orders/storefronts";
 import { usePublicPlans, planPriceLabel, planPeriodLabel, formatFeeBps } from "@/lib/orders/plans";
 import { useSaveStoreSetup, useOnboardingPrefill, type OnboardingItem } from "@/lib/orders/store-admin";
@@ -92,6 +94,10 @@ const GetStarted = () => {
   const [planSlug, setPlanSlug] = useState<string | null>(saved?.planSlug ?? null);
   /** True until the industry-default effect has run once, so a restored draft wins. */
   const keepRestoredModels = useRef(!!saved);
+
+  const { data: agreementStatus } = useAgreementStatus();
+  const acceptAgreements = useAcceptAgreements();
+  const [agreed, setAgreed] = useState(false);
 
   const { data: industries } = useIndustries();
   const { data: plans } = usePublicPlans();
@@ -201,6 +207,10 @@ const GetStarted = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setup?.merchantId, stepParam]);
 
+  useEffect(() => {
+    if (agreementStatus?.accepted) setAgreed(true);
+  }, [agreementStatus?.accepted]);
+
   const slug = useMemo(() => slugify(name) || "your-store", [name]);
   const monogram = useMemo(
     () =>
@@ -214,7 +224,7 @@ const GetStarted = () => {
   );
 
   const canContinue =
-    (step === 0 && signedIn) ||
+    (step === 0 && signedIn && agreed) ||
     (step === 1 && !!industrySlug) ||
     (step === 2 && purchaseModels.length > 0) ||
     (step === 3 && name.trim().length > 1) ||
@@ -327,6 +337,14 @@ const GetStarted = () => {
     navigate(`/sign-in?${mode === "signup" ? "mode=signup&" : ""}next=${encodeURIComponent("/orders/get-started")}`);
 
   const advance = async () => {
+    if (step === 0 && agreed && !agreementStatus?.accepted) {
+      acceptAgreements.mutate(undefined, {
+        onError: (error) =>
+          toast.error("Couldn't record your agreement", {
+            description: error instanceof Error ? error.message : "Please try again.",
+          }),
+      });
+    }
     if (step >= 3) void persist();
     setStep((s) => Math.min(lastStep, s + 1));
   };
@@ -447,6 +465,16 @@ const GetStarted = () => {
                         >
                           I already have one
                         </Button>
+                      </div>
+                    )}
+                    {signedIn && (
+                      <div className="rounded-2xl border border-border bg-secondary p-5">
+                        <AgreementConsent checked={agreed} onCheckedChange={setAgreed} />
+                        {!agreed && (
+                          <p className="mt-3 text-xs text-muted-foreground">
+                            Required to continue — it takes one tick.
+                          </p>
+                        )}
                       </div>
                     )}
                   </div>
