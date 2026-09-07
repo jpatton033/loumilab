@@ -48,6 +48,7 @@ import { useMyMerchant, useJobs, useAdvanceJob, nextJobStatus, JOB_STATUS_LABELS
 import { usePublicPlans } from "@/lib/orders/plans";
 import { resolveEntitlements, isEnabled, type EntitlementKey } from "@/lib/orders/entitlements";
 import SetupChecklist from "@/components/orders/SetupChecklist";
+import { AgreementConsentCard } from "@/components/orders/AgreementConsent";
 import StoreLink from "@/components/orders/StoreLink";
 import PublishStoreButton from "@/components/orders/PublishStoreButton";
 import { storePath } from "@/lib/orders/setup";
@@ -213,6 +214,7 @@ const Dashboard = () => {
           </div>
 
           <div className="mt-8 space-y-6">
+            <AgreementConsentCard merchantId={merchant?.id} />
             {setup && (
               <SetupChecklist
                 snapshot={setup}
