@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Loader2, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -58,7 +59,7 @@ interface CardProps {
 export const AgreementConsentCard = ({ merchantId, className }: CardProps) => {
   const { data: status, isLoading } = useAgreementStatus();
   const accept = useAcceptAgreements(merchantId);
-  const [checked, setChecked] = useLocalChecked();
+  const [checked, setChecked] = useState(false);
 
   if (isLoading || !status?.signedIn || status.accepted) return null;
 
@@ -100,9 +101,5 @@ export const AgreementConsentCard = ({ merchantId, className }: CardProps) => {
     </div>
   );
 };
-
-/** Tiny local state helper so the card stays a single component. */
-import { useState } from "react";
-const useLocalChecked = () => useState(false);
 
 export default AgreementConsent;
