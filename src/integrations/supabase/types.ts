@@ -614,6 +614,44 @@ export type Database = {
         }
         Relationships: []
       }
+      merchant_agreements: {
+        Row: {
+          accepted_at: string
+          created_at: string
+          document: string
+          id: string
+          merchant_id: string | null
+          user_id: string
+          version: string
+        }
+        Insert: {
+          accepted_at?: string
+          created_at?: string
+          document: string
+          id?: string
+          merchant_id?: string | null
+          user_id: string
+          version: string
+        }
+        Update: {
+          accepted_at?: string
+          created_at?: string
+          document?: string
+          id?: string
+          merchant_id?: string | null
+          user_id?: string
+          version?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "merchant_agreements_merchant_id_fkey"
+            columns: ["merchant_id"]
+            isOneToOne: false
+            referencedRelation: "merchants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       merchant_customers: {
         Row: {
           address: string | null
