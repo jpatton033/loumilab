@@ -12,6 +12,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { storePath, useSetStorefrontStatus, type SetupSnapshot } from "@/lib/orders/setup";
+import { useAgreementStatus } from "@/lib/orders/agreements";
 import { toast } from "sonner";
 
 interface Props {
@@ -28,10 +29,12 @@ interface Props {
  */
 const PublishStoreButton = ({ snapshot, catalogLabel = "items", size = "sm", className, onPublished }: Props) => {
   const setStatus = useSetStorefrontStatus();
+  const { data: agreement } = useAgreementStatus();
   const [confirming, setConfirming] = useState(false);
 
+  const agreementMissing = agreement?.signedIn === true && !agreement.accepted;
   const outstanding = snapshot.tasks.filter((t) => t.required && t.id !== "publish" && !t.done);
-  const blocked = !snapshot.canPublish || !snapshot.storefrontId;
+  const blocked = !snapshot.canPublish || !snapshot.storefrontId || agreementMissing;
 
   const apply = (status: "published" | "paused") => {
     if (!snapshot.storefrontId) return;
@@ -86,10 +89,14 @@ const PublishStoreButton = ({ snapshot, catalogLabel = "items", size = "sm", cla
         {snapshot.status === "paused" ? "Resume store" : "Publish store"}
       </Button>
 
-      {blocked && outstanding.length > 0 && (
+      {blocked && (outstanding.length > 0 || agreementMissing) && (
         <p className="w-full text-xs text-muted-foreground">
           Still to finish before publishing:{" "}
-          {outstanding.map((t) => (t.id === "catalog" ? catalogLabel : t.label)).join(", ")}.
+          {[
+            ...outstanding.map((t) => (t.id === "catalog" ? catalogLabel : t.label)),
+            ...(agreementMissing ? ["agree to the merchant terms and privacy policy"] : []),
+          ].join(", ")}
+          .
         </p>
       )}
 

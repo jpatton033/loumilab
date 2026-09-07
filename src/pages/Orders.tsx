@@ -465,6 +465,15 @@ const Orders = () => {
           <p className="mt-12 font-display text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">
             Orders by Loumilab
           </p>
+          <p className="mt-4 text-xs text-muted-foreground">
+            <Link to="/orders/terms" className="underline underline-offset-4 hover:text-foreground">
+              Terms &amp; Conditions
+            </Link>
+            <span className="px-2">·</span>
+            <Link to="/orders/privacy" className="underline underline-offset-4 hover:text-foreground">
+              Privacy Policy
+            </Link>
+          </p>
         </div>
       </section>
     </Layout>

@@ -33,6 +33,7 @@ import AdminAuditLog from "./pages/admin/AuditLog";
 import AdminDailyBrief from "./pages/admin/reports/DailyBrief";
 import AdminDailyBriefSettings from "./pages/admin/settings/DailyBriefSettings";
 import OrdersCustomProject from "./pages/orders/CustomProject";
+import { OrdersTerms, OrdersPrivacy } from "./pages/orders/Legal";
 
 
 import Work from "./pages/Work";
@@ -70,6 +71,8 @@ const App = () => (
           <Route path="/orders/quote/:token" element={<OrdersQuoteView />} />
           <Route path="/orders/invoice/:token" element={<OrdersInvoiceView />} />
           <Route path="/orders/custom" element={<OrdersCustomProject />} />
+          <Route path="/orders/terms" element={<OrdersTerms />} />
+          <Route path="/orders/privacy" element={<OrdersPrivacy />} />
 
 
 
