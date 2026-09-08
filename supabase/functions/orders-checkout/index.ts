@@ -34,6 +34,7 @@ const BodySchema = z.object({
   delivery_address: z.string().max(300).optional(),
   notes: z.string().max(1000).optional(),
   tip_cents: z.number().int().min(0).max(100000).optional(),
+  quote: z.boolean().optional(),
   returnUrl: z.string().url().max(500).optional(),
 });
 
