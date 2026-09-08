@@ -180,21 +180,26 @@ const ImageEditorDialog = ({
   const onPointerMove = (event: React.PointerEvent<HTMLCanvasElement>) => {
     if (!pinchRef.current.has(event.pointerId)) return;
     const previous = pinchRef.current.get(event.pointerId)!;
-    pinchRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
 
     if (pinchRef.current.size >= 2) {
-      const [a, b] = [...pinchRef.current.values()];
-      const distance = Math.hypot(a.x - b.x, a.y - b.y);
-      const previousDistance = Math.hypot(
-        previous.x - (a === previous ? b.x : a.x),
-        previous.y - (a === previous ? b.y : a.y),
-      );
+      // Compute the previous span using the moved pointer's old position and the
+      // other pointer's current position, BEFORE we overwrite it in the map.
+      const points = [...pinchRef.current.values()];
+      const other = points.find((p) => p !== previous)!;
+      const previousDistance = Math.hypot(previous.x - other.x, previous.y - other.y);
+
+      const current = { x: event.clientX, y: event.clientY };
+      pinchRef.current.set(event.pointerId, current);
+
+      const distance = Math.hypot(current.x - other.x, current.y - other.y);
       if (previousDistance > 0) {
         setScale((s) => clamp((s * distance) / previousDistance, baseScale * MIN_SCALE, baseScale * MAX_SCALE));
       }
       return;
     }
 
+    // Single-pointer drag.
+    pinchRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
     if (!dragRef.current) return;
     const rect = event.currentTarget.getBoundingClientRect();
     const ratio = frameWidth / rect.width;
