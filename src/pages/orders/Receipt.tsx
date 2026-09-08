@@ -4,6 +4,7 @@ import { CheckCircle2, Clock, XCircle } from "lucide-react";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
+import TipPanel from "@/components/orders/TipPanel";
 import { formatCents, useOrderByToken } from "@/lib/orders/storefront";
 import { syncOrders } from "@/lib/orders/reconcile";
 
