@@ -224,7 +224,6 @@ const CheckoutSheet = ({ open, onOpenChange, store, lines, subtotalCents, defaul
             </p>
           </div>
 
-          </div>
 
           {belowMinimum && (
             <p className="text-sm text-destructive">
