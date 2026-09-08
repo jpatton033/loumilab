@@ -2,7 +2,8 @@ import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { z } from "npm:zod@3";
 import { admin, requireUser } from "../_shared/auth.ts";
 import { resolveReturnBase, stripe, stripeConfigured, stripeLivemode } from "../_shared/stripe.ts";
-import { loadMerchantContext, PaymentsError, platformFeeCents } from "../_shared/fees.ts";
+import { loadMerchantContext, PaymentsError } from "../_shared/fees.ts";
+import { priceOrder, resolveCustomerShareBps } from "../_shared/pricing.ts";
 
 /**
  * Customer checkout for a Loumilab Orders storefront.
