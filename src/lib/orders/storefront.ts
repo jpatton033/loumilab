@@ -48,7 +48,7 @@ export interface LiveProduct {
 }
 
 const STORE_COLUMNS =
-  "id, merchant_id, slug, name, location, description, monogram, logo_url, hours, pickup_enabled, pickup_info, delivery_enabled, delivery_fee_cents, delivery_minimum_cents, delivery_tiers, service_fee_cents, service_fee_label, customer_fee_share_bps, currency, is_published, status";
+  "id, merchant_id, slug, name, location, description, monogram, logo_url, hours, pickup_enabled, pickup_info, delivery_enabled, delivery_fee_cents, delivery_minimum_cents, delivery_radius_miles, delivery_tiers, service_fee_cents, service_fee_label, customer_fee_share_bps, currency, is_published, status";
 
 
 const PRODUCT_COLUMNS =
