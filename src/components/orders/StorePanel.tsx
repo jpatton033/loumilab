@@ -192,6 +192,10 @@ const StorePanel = ({ merchantId, businessName, catalogLabel, itemLabel, priceOp
 
       </div>
 
+      <FeesPanel store={store} patch={patch} />
+
+
+
       <div className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-soft)] sm:p-8">
         <p className="font-display font-semibold">{catalogLabel}</p>
 
