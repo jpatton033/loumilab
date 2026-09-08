@@ -25,6 +25,7 @@ export interface LiveStorefront {
   delivery_enabled: boolean;
   delivery_fee_cents: number;
   delivery_minimum_cents: number;
+  delivery_radius_miles: number | null;
   delivery_tiers: { max_miles: number; fee_cents: number }[];
   service_fee_cents: number;
   service_fee_label: string;
