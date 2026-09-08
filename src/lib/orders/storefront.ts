@@ -134,6 +134,38 @@ export const startStorefrontCheckout = (input: CheckoutInput) =>
     returnUrl: window.location.origin,
   });
 
+export interface CheckoutQuote {
+  subtotal_cents: number;
+  delivery_fee_cents: number;
+  service_fee_cents: number;
+  service_fee_label: string;
+  customer_fee_cents: number;
+  total_cents: number;
+  distance_miles: number | null;
+  currency: string;
+}
+
+/**
+ * Server-computed totals for the checkout summary. No order is created — the
+ * same code that charges the card produces these figures.
+ */
+export const quoteStorefrontCheckout = async (input: CheckoutInput): Promise<CheckoutQuote> => {
+  const { quote } = await invoke<{ quote: CheckoutQuote }>("orders-checkout", {
+    ...input,
+    quote: true,
+    returnUrl: window.location.origin,
+  });
+  return quote;
+};
+
+/** Starts a separate tip payment for an order the buyer has already received. */
+export const startOrderTip = (token: string, amountCents: number) =>
+  invoke<{ url: string }>("orders-tip", {
+    token,
+    amount_cents: amountCents,
+    returnUrl: window.location.origin,
+  });
+
 export const startInvoicePayment = (token: string, email?: string) =>
   invoke<{ url: string }>("orders-invoice-checkout", {
     token,
@@ -154,7 +186,11 @@ export interface PublicOrder {
   currency: string;
   subtotal_cents: number;
   delivery_fee_cents: number;
+  service_fee_cents: number;
+  customer_fee_cents: number;
   tip_cents: number;
+  tip_paid_at: string | null;
+  tip_eligible: boolean;
   tax_cents: number;
   total_cents: number;
   created_at: string;
@@ -163,6 +199,7 @@ export interface PublicOrder {
   store_slug?: string;
   items: { name: string; quantity: number; unit_price_cents: number; line_total_cents: number }[];
 }
+
 
 export const useOrderByToken = (token?: string) =>
   useQuery({
