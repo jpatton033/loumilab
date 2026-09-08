@@ -1064,10 +1064,12 @@ export type Database = {
         Row: {
           created_at: string
           currency: string
+          customer_fee_share_bps: number
           delivery_enabled: boolean
           delivery_fee_cents: number
           delivery_minimum_cents: number
           delivery_radius_miles: number | null
+          delivery_tiers: Json
           description: string | null
           hero_image_url: string | null
           hours: string | null
@@ -1080,6 +1082,8 @@ export type Database = {
           name: string
           pickup_enabled: boolean
           pickup_info: string | null
+          service_fee_cents: number
+          service_fee_label: string
           slug: string
           status: Database["public"]["Enums"]["storefront_status"]
           updated_at: string
@@ -1087,10 +1091,12 @@ export type Database = {
         Insert: {
           created_at?: string
           currency?: string
+          customer_fee_share_bps?: number
           delivery_enabled?: boolean
           delivery_fee_cents?: number
           delivery_minimum_cents?: number
           delivery_radius_miles?: number | null
+          delivery_tiers?: Json
           description?: string | null
           hero_image_url?: string | null
           hours?: string | null
@@ -1103,6 +1109,8 @@ export type Database = {
           name: string
           pickup_enabled?: boolean
           pickup_info?: string | null
+          service_fee_cents?: number
+          service_fee_label?: string
           slug: string
           status?: Database["public"]["Enums"]["storefront_status"]
           updated_at?: string
@@ -1110,10 +1118,12 @@ export type Database = {
         Update: {
           created_at?: string
           currency?: string
+          customer_fee_share_bps?: number
           delivery_enabled?: boolean
           delivery_fee_cents?: number
           delivery_minimum_cents?: number
           delivery_radius_miles?: number | null
+          delivery_tiers?: Json
           description?: string | null
           hero_image_url?: string | null
           hours?: string | null
@@ -1126,6 +1136,8 @@ export type Database = {
           name?: string
           pickup_enabled?: boolean
           pickup_info?: string | null
+          service_fee_cents?: number
+          service_fee_label?: string
           slug?: string
           status?: Database["public"]["Enums"]["storefront_status"]
           updated_at?: string
@@ -1289,6 +1301,7 @@ export type Database = {
           contact_email: string
           country: string
           created_at: string
+          fee_share_override_bps: number | null
           id: string
           industry_slug: string
           owner_id: string
@@ -1304,6 +1317,7 @@ export type Database = {
           contact_email: string
           country?: string
           created_at?: string
+          fee_share_override_bps?: number | null
           id?: string
           industry_slug?: string
           owner_id: string
@@ -1319,6 +1333,7 @@ export type Database = {
           contact_email?: string
           country?: string
           created_at?: string
+          fee_share_override_bps?: number | null
           id?: string
           industry_slug?: string
           owner_id?: string
@@ -1648,6 +1663,7 @@ export type Database = {
           created_at: string
           currency: string
           customer_email: string
+          customer_fee_cents: number
           customer_name: string
           customer_notes: string | null
           customer_phone: string | null
@@ -1658,12 +1674,14 @@ export type Database = {
           fulfilment: Database["public"]["Enums"]["fulfilment_type"]
           id: string
           livemode: boolean
+          merchant_fee_cents: number
           merchant_id: string
           paid_at: string | null
           platform_fee_bps: number
           platform_fee_cents: number
           public_token: string
           reference: string | null
+          service_fee_cents: number
           status: Database["public"]["Enums"]["order_status"]
           storefront_id: string
           stripe_account_id: string | null
@@ -1673,6 +1691,9 @@ export type Database = {
           subtotal_cents: number
           tax_cents: number
           tip_cents: number
+          tip_paid_at: string | null
+          tip_stripe_checkout_session_id: string | null
+          tip_stripe_payment_intent_id: string | null
           total_cents: number
           updated_at: string
         }
@@ -1680,6 +1701,7 @@ export type Database = {
           created_at?: string
           currency?: string
           customer_email: string
+          customer_fee_cents?: number
           customer_name: string
           customer_notes?: string | null
           customer_phone?: string | null
@@ -1690,12 +1712,14 @@ export type Database = {
           fulfilment?: Database["public"]["Enums"]["fulfilment_type"]
           id?: string
           livemode?: boolean
+          merchant_fee_cents?: number
           merchant_id: string
           paid_at?: string | null
           platform_fee_bps?: number
           platform_fee_cents?: number
           public_token?: string
           reference?: string | null
+          service_fee_cents?: number
           status?: Database["public"]["Enums"]["order_status"]
           storefront_id: string
           stripe_account_id?: string | null
@@ -1705,6 +1729,9 @@ export type Database = {
           subtotal_cents?: number
           tax_cents?: number
           tip_cents?: number
+          tip_paid_at?: string | null
+          tip_stripe_checkout_session_id?: string | null
+          tip_stripe_payment_intent_id?: string | null
           total_cents?: number
           updated_at?: string
         }
@@ -1712,6 +1739,7 @@ export type Database = {
           created_at?: string
           currency?: string
           customer_email?: string
+          customer_fee_cents?: number
           customer_name?: string
           customer_notes?: string | null
           customer_phone?: string | null
@@ -1722,12 +1750,14 @@ export type Database = {
           fulfilment?: Database["public"]["Enums"]["fulfilment_type"]
           id?: string
           livemode?: boolean
+          merchant_fee_cents?: number
           merchant_id?: string
           paid_at?: string | null
           platform_fee_bps?: number
           platform_fee_cents?: number
           public_token?: string
           reference?: string | null
+          service_fee_cents?: number
           status?: Database["public"]["Enums"]["order_status"]
           storefront_id?: string
           stripe_account_id?: string | null
@@ -1737,6 +1767,9 @@ export type Database = {
           subtotal_cents?: number
           tax_cents?: number
           tip_cents?: number
+          tip_paid_at?: string | null
+          tip_stripe_checkout_session_id?: string | null
+          tip_stripe_payment_intent_id?: string | null
           total_cents?: number
           updated_at?: string
         }
@@ -2087,6 +2120,7 @@ export type Database = {
       create_custom_project_upload_slot: { Args: never; Returns: string }
       get_invoice_by_token: { Args: { _token: string }; Returns: Json }
       get_order_by_token: { Args: { _token: string }; Returns: Json }
+      get_order_tip_context: { Args: { _token: string }; Returns: Json }
       get_public_store_context: {
         Args: { _storefront_id: string }
         Returns: Json
