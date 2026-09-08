@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import FeesPanel from "@/components/orders/FeesPanel";
 import ImageUpload from "@/components/orders/ImageUpload";
 import StoreStatusBadge from "@/components/orders/StoreStatusBadge";
 import {
