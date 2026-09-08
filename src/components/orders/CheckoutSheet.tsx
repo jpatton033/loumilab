@@ -186,19 +186,44 @@ const CheckoutSheet = ({ open, onOpenChange, store, lines, subtotalCents, defaul
                 <span>{formatCents(l.quantity * l.product.priceCents, store.currency)}</span>
               </div>
             ))}
-            <div className="mt-2 flex justify-between border-t border-border pt-2 font-display font-semibold">
+            <div className="mt-2 flex justify-between border-t border-border pt-2 text-muted-foreground">
               <span>Subtotal</span>
               <span>{formatCents(subtotalCents, store.currency)}</span>
             </div>
-            {deliveryFee > 0 && (
+            {quote && quote.delivery_fee_cents > 0 && (
               <div className="flex justify-between pt-1 text-muted-foreground">
-                <span>Delivery</span>
-                <span>{formatCents(deliveryFee, store.currency)}</span>
+                <span>
+                  Delivery
+                  {quote.distance_miles !== null
+                    ? ` · ${quote.distance_miles.toFixed(1)} mi`
+                    : ""}
+                </span>
+                <span>{formatCents(quote.delivery_fee_cents, store.currency)}</span>
+              </div>
+            )}
+            {quote && quote.service_fee_cents > 0 && (
+              <div className="flex justify-between pt-1 text-muted-foreground">
+                <span>{quote.service_fee_label}</span>
+                <span>{formatCents(quote.service_fee_cents, store.currency)}</span>
+              </div>
+            )}
+            {quote && quote.customer_fee_cents > 0 && (
+              <div className="flex justify-between pt-1 text-muted-foreground">
+                <span>Processing fee</span>
+                <span>{formatCents(quote.customer_fee_cents, store.currency)}</span>
+              </div>
+            )}
+            {quote && (
+              <div className="mt-2 flex justify-between border-t border-border pt-2 font-display font-semibold">
+                <span>Total before tax</span>
+                <span>{formatCents(quote.total_cents, store.currency)}</span>
               </div>
             )}
             <p className="mt-2 text-xs text-muted-foreground">
-              Tax is calculated at checkout.
+              {quoting ? "Updating your total…" : "Tax is calculated at checkout."}
             </p>
+          </div>
+
           </div>
 
           {belowMinimum && (
