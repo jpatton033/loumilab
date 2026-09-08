@@ -203,6 +203,38 @@ Deno.serve(async (req) => {
       });
     }
 
+    if (pricing.serviceFeeCents > 0) {
+      lineItems.push({
+        quantity: 1,
+        price_data: {
+          currency: store.currency,
+          unit_amount: pricing.serviceFeeCents,
+          product_data: {
+            name: pricing.serviceFeeLabel,
+            description: undefined,
+            tax_code: "txcd_92010001",
+          },
+          tax_behavior: "exclusive" as const,
+        },
+      });
+    }
+
+    if (pricing.customerFeeCents > 0) {
+      lineItems.push({
+        quantity: 1,
+        price_data: {
+          currency: store.currency,
+          unit_amount: pricing.customerFeeCents,
+          product_data: {
+            name: "Processing fee",
+            description: undefined,
+            tax_code: "txcd_92010001",
+          },
+          tax_behavior: "exclusive" as const,
+        },
+      });
+    }
+
     if (tip > 0) {
       lineItems.push({
         quantity: 1,
