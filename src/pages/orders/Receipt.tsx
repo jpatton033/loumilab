@@ -128,6 +128,8 @@ const Receipt = () => {
                 <p className="mt-6 text-sm text-muted-foreground">Delivering to {order.delivery_address}</p>
               )}
 
+              {token && <TipPanel token={token} order={order} />}
+
               <p className="mt-6 text-sm text-muted-foreground">
                 A copy of this receipt was emailed to {order.customer_email}.
               </p>
