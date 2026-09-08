@@ -25,6 +25,11 @@ export interface LiveStorefront {
   delivery_enabled: boolean;
   delivery_fee_cents: number;
   delivery_minimum_cents: number;
+  delivery_radius_miles: number | null;
+  delivery_tiers: { max_miles: number; fee_cents: number }[];
+  service_fee_cents: number;
+  service_fee_label: string;
+  customer_fee_share_bps: number;
   currency: string;
   is_published: boolean;
   status: "setup" | "ready" | "published" | "paused" | "restricted";
@@ -43,7 +48,7 @@ export interface LiveProduct {
 }
 
 const STORE_COLUMNS =
-  "id, merchant_id, slug, name, location, description, monogram, logo_url, hours, pickup_enabled, pickup_info, delivery_enabled, delivery_fee_cents, delivery_minimum_cents, currency, is_published, status";
+  "id, merchant_id, slug, name, location, description, monogram, logo_url, hours, pickup_enabled, pickup_info, delivery_enabled, delivery_fee_cents, delivery_minimum_cents, delivery_radius_miles, delivery_tiers, service_fee_cents, service_fee_label, customer_fee_share_bps, currency, is_published, status";
 
 
 const PRODUCT_COLUMNS =
@@ -134,6 +139,38 @@ export const startStorefrontCheckout = (input: CheckoutInput) =>
     returnUrl: window.location.origin,
   });
 
+export interface CheckoutQuote {
+  subtotal_cents: number;
+  delivery_fee_cents: number;
+  service_fee_cents: number;
+  service_fee_label: string;
+  customer_fee_cents: number;
+  total_cents: number;
+  distance_miles: number | null;
+  currency: string;
+}
+
+/**
+ * Server-computed totals for the checkout summary. No order is created — the
+ * same code that charges the card produces these figures.
+ */
+export const quoteStorefrontCheckout = async (input: CheckoutInput): Promise<CheckoutQuote> => {
+  const { quote } = await invoke<{ quote: CheckoutQuote }>("orders-checkout", {
+    ...input,
+    quote: true,
+    returnUrl: window.location.origin,
+  });
+  return quote;
+};
+
+/** Starts a separate tip payment for an order the buyer has already received. */
+export const startOrderTip = (token: string, amountCents: number) =>
+  invoke<{ url: string }>("orders-tip", {
+    token,
+    amount_cents: amountCents,
+    returnUrl: window.location.origin,
+  });
+
 export const startInvoicePayment = (token: string, email?: string) =>
   invoke<{ url: string }>("orders-invoice-checkout", {
     token,
@@ -154,7 +191,11 @@ export interface PublicOrder {
   currency: string;
   subtotal_cents: number;
   delivery_fee_cents: number;
+  service_fee_cents: number;
+  customer_fee_cents: number;
   tip_cents: number;
+  tip_paid_at: string | null;
+  tip_eligible: boolean;
   tax_cents: number;
   total_cents: number;
   created_at: string;
@@ -163,6 +204,7 @@ export interface PublicOrder {
   store_slug?: string;
   items: { name: string; quantity: number; unit_price_cents: number; line_total_cents: number }[];
 }
+
 
 export const useOrderByToken = (token?: string) =>
   useQuery({

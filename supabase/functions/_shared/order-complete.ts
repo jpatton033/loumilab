@@ -53,10 +53,58 @@ export async function handleCheckoutCompleted(session: Obj, stripeAccount?: stri
 
   if (kind === "storefront_order" && metadata.order_id) {
     await completeOrder(metadata.order_id, session, stripeAccount);
+  } else if (kind === "order_tip" && metadata.order_id) {
+    await completeTip(metadata.order_id, session);
   } else if (kind === "merchant_invoice" && metadata.invoice_id) {
     await completeInvoice(metadata.invoice_id, session);
   }
 }
+
+/**
+ * A tip paid after delivery. Loumilab takes no fee on tips, so this only
+ * records the amount and lets the merchant know. Guarded on `tip_paid_at` so a
+ * replayed webhook can never double-count it.
+ */
+async function completeTip(orderId: string, session: Obj) {
+  const amount = num(session.amount_total);
+  if (amount <= 0) return;
+
+  const { data: order } = await admin
+    .from("orders")
+    .update({
+      tip_cents: amount,
+      tip_paid_at: new Date().toISOString(),
+      tip_stripe_payment_intent_id: str(session.payment_intent),
+    })
+    .eq("id", orderId)
+    .is("tip_paid_at", null)
+    .select("id, merchant_id, currency, customer_name, reference")
+    .maybeSingle();
+
+  if (!order) return;
+
+  const { data: merchant } = await admin
+    .from("merchants")
+    .select("business_name, contact_email")
+    .eq("id", order.merchant_id)
+    .maybeSingle();
+
+  if (merchant?.contact_email) {
+    await sendEmail(
+      merchant.contact_email,
+      `Tip received — ${money(amount, order.currency ?? "usd")}`,
+      shell(
+        "Tip received",
+        `<p style="margin:0;font-size:15px;line-height:1.55">${order.customer_name} added a tip of ${money(
+          amount,
+          order.currency ?? "usd",
+        )}${order.reference ? ` on order ${order.reference}` : ""}. Loumilab takes no fee on tips — it pays out to you in full on your normal Stripe schedule.</p>`,
+      ),
+      `order-tip-${order.id}`,
+    );
+  }
+}
+
 
 async function completeOrder(orderId: string, session: Obj, stripeAccount?: string) {
   const totalDetails = (session.total_details ?? {}) as Obj;
@@ -77,7 +125,7 @@ async function completeOrder(orderId: string, session: Obj, stripeAccount?: stri
     .eq("id", orderId)
     .neq("status", "paid")
     .select(
-      "id, public_token, reference, merchant_id, customer_email, customer_name, currency, subtotal_cents, delivery_fee_cents, tip_cents, tax_cents, total_cents, fulfilment",
+      "id, public_token, reference, merchant_id, customer_email, customer_name, currency, subtotal_cents, delivery_fee_cents, service_fee_cents, customer_fee_cents, tip_cents, tax_cents, total_cents, fulfilment",
     )
     .maybeSingle();
 
@@ -94,6 +142,8 @@ async function completeOrder(orderId: string, session: Obj, stripeAccount?: stri
   const table = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:8px">
     ${row("Subtotal", money(order.subtotal_cents, cur))}
     ${order.delivery_fee_cents ? row("Delivery", money(order.delivery_fee_cents, cur)) : ""}
+    ${order.service_fee_cents ? row("Service fee", money(order.service_fee_cents, cur)) : ""}
+    ${order.customer_fee_cents ? row("Processing fee", money(order.customer_fee_cents, cur)) : ""}
     ${order.tip_cents ? row("Tip", money(order.tip_cents, cur)) : ""}
     ${row("Tax", money(taxCents, cur))}
     ${row("Total paid", money(order.total_cents, cur), true)}

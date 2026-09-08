@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import FeesPanel from "@/components/orders/FeesPanel";
 import ImageUpload from "@/components/orders/ImageUpload";
 import StoreStatusBadge from "@/components/orders/StoreStatusBadge";
 import {
@@ -191,6 +192,10 @@ const StorePanel = ({ merchantId, businessName, catalogLabel, itemLabel, priceOp
         </div>
 
       </div>
+
+      <FeesPanel store={store} patch={patch} />
+
+
 
       <div className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-soft)] sm:p-8">
         <p className="font-display font-semibold">{catalogLabel}</p>

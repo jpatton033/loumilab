@@ -4,6 +4,7 @@ import { CheckCircle2, Clock, XCircle } from "lucide-react";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
+import TipPanel from "@/components/orders/TipPanel";
 import { formatCents, useOrderByToken } from "@/lib/orders/storefront";
 import { syncOrders } from "@/lib/orders/reconcile";
 
@@ -92,6 +93,18 @@ const Receipt = () => {
                       <span>{formatCents(order.delivery_fee_cents, order.currency)}</span>
                     </div>
                   )}
+                  {order.service_fee_cents > 0 && (
+                    <div className="flex justify-between text-muted-foreground">
+                      <span>Service fee</span>
+                      <span>{formatCents(order.service_fee_cents, order.currency)}</span>
+                    </div>
+                  )}
+                  {order.customer_fee_cents > 0 && (
+                    <div className="flex justify-between text-muted-foreground">
+                      <span>Processing fee</span>
+                      <span>{formatCents(order.customer_fee_cents, order.currency)}</span>
+                    </div>
+                  )}
                   {order.tip_cents > 0 && (
                     <div className="flex justify-between text-muted-foreground">
                       <span>Tip</span>
@@ -114,6 +127,8 @@ const Receipt = () => {
               {order.delivery_address && (
                 <p className="mt-6 text-sm text-muted-foreground">Delivering to {order.delivery_address}</p>
               )}
+
+              {token && <TipPanel token={token} order={order} />}
 
               <p className="mt-6 text-sm text-muted-foreground">
                 A copy of this receipt was emailed to {order.customer_email}.
