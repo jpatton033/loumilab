@@ -125,7 +125,7 @@ async function completeOrder(orderId: string, session: Obj, stripeAccount?: stri
     .eq("id", orderId)
     .neq("status", "paid")
     .select(
-      "id, public_token, reference, merchant_id, customer_email, customer_name, currency, subtotal_cents, delivery_fee_cents, tip_cents, tax_cents, total_cents, fulfilment",
+      "id, public_token, reference, merchant_id, customer_email, customer_name, currency, subtotal_cents, delivery_fee_cents, service_fee_cents, customer_fee_cents, tip_cents, tax_cents, total_cents, fulfilment",
     )
     .maybeSingle();
 
