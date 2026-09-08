@@ -110,14 +110,25 @@ Deno.serve(async (req) => {
     const subtotal = lines.reduce((sum, l) => sum + l.line_total_cents, 0);
     if (subtotal <= 0) return json({ error: "Your order total must be greater than zero." }, 400);
 
-    const deliveryFee = input.fulfilment === "delivery" ? store.delivery_fee_cents : 0;
     if (input.fulfilment === "delivery" && subtotal < store.delivery_minimum_cents) {
       return json({ error: "Your order is below the delivery minimum for this store." }, 400);
     }
 
+    const customerShareBps = await resolveCustomerShareBps(store.merchant_id, store.customer_fee_share_bps ?? 0);
+    const pricing = await priceOrder({
+      store,
+      subtotalCents: subtotal,
+      fulfilment: input.fulfilment,
+      deliveryAddress: input.delivery_address,
+      feeBps: ctx.feeBps,
+      customerShareBps,
+    });
+
+    const deliveryFee = pricing.deliveryFeeCents;
     const tip = input.tip_cents ?? 0;
-    // The Loumilab fee applies to merchandise only — never tax, tips or delivery.
-    const feeCents = platformFeeCents(subtotal, ctx.feeBps);
+    // The Loumilab fee applies to merchandise only — never tax, tips, delivery
+    // or the merchant's surcharge.
+    const feeCents = pricing.platformFeeCents;
 
     const user = await requireUser(req);
 
@@ -136,8 +147,11 @@ Deno.serve(async (req) => {
         currency: store.currency,
         subtotal_cents: subtotal,
         delivery_fee_cents: deliveryFee,
+        service_fee_cents: pricing.serviceFeeCents,
+        customer_fee_cents: pricing.customerFeeCents,
+        merchant_fee_cents: pricing.merchantFeeCents,
         tip_cents: tip,
-        total_cents: subtotal + deliveryFee + tip,
+        total_cents: pricing.totalCents + tip,
         platform_fee_cents: feeCents,
         platform_fee_bps: ctx.feeBps,
         stripe_account_id: ctx.account.stripe_account_id,
