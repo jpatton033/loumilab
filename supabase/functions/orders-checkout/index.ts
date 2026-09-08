@@ -125,6 +125,23 @@ Deno.serve(async (req) => {
       customerShareBps,
     });
 
+    // A quote lets the checkout sheet show honest, server-computed totals
+    // before the customer commits. No order is created.
+    if (input.quote) {
+      return json({
+        quote: {
+          subtotal_cents: pricing.subtotalCents,
+          delivery_fee_cents: pricing.deliveryFeeCents,
+          service_fee_cents: pricing.serviceFeeCents,
+          service_fee_label: pricing.serviceFeeLabel,
+          customer_fee_cents: pricing.customerFeeCents,
+          total_cents: pricing.totalCents,
+          distance_miles: pricing.distanceMiles,
+          currency: store.currency,
+        },
+      });
+    }
+
     const deliveryFee = pricing.deliveryFeeCents;
     const tip = input.tip_cents ?? 0;
     // The Loumilab fee applies to merchandise only — never tax, tips, delivery
