@@ -142,6 +142,8 @@ async function completeOrder(orderId: string, session: Obj, stripeAccount?: stri
   const table = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:8px">
     ${row("Subtotal", money(order.subtotal_cents, cur))}
     ${order.delivery_fee_cents ? row("Delivery", money(order.delivery_fee_cents, cur)) : ""}
+    ${order.service_fee_cents ? row("Service fee", money(order.service_fee_cents, cur)) : ""}
+    ${order.customer_fee_cents ? row("Processing fee", money(order.customer_fee_cents, cur)) : ""}
     ${order.tip_cents ? row("Tip", money(order.tip_cents, cur)) : ""}
     ${row("Tax", money(taxCents, cur))}
     ${row("Total paid", money(order.total_cents, cur), true)}
