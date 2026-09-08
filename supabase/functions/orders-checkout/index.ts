@@ -66,7 +66,7 @@ Deno.serve(async (req) => {
     const { data: store } = await admin
       .from("merchant_storefronts")
       .select(
-        "id, merchant_id, name, slug, currency, is_published, pickup_enabled, delivery_enabled, delivery_fee_cents, delivery_minimum_cents",
+        "id, merchant_id, name, slug, location, currency, is_published, pickup_enabled, delivery_enabled, delivery_fee_cents, delivery_minimum_cents, delivery_tiers, service_fee_cents, service_fee_label, customer_fee_share_bps",
       )
       .eq("slug", input.slug)
       .maybeSingle();
