@@ -92,6 +92,18 @@ const Receipt = () => {
                       <span>{formatCents(order.delivery_fee_cents, order.currency)}</span>
                     </div>
                   )}
+                  {order.service_fee_cents > 0 && (
+                    <div className="flex justify-between text-muted-foreground">
+                      <span>Service fee</span>
+                      <span>{formatCents(order.service_fee_cents, order.currency)}</span>
+                    </div>
+                  )}
+                  {order.customer_fee_cents > 0 && (
+                    <div className="flex justify-between text-muted-foreground">
+                      <span>Processing fee</span>
+                      <span>{formatCents(order.customer_fee_cents, order.currency)}</span>
+                    </div>
+                  )}
                   {order.tip_cents > 0 && (
                     <div className="flex justify-between text-muted-foreground">
                       <span>Tip</span>
