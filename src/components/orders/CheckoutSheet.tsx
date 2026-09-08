@@ -1,11 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { formatCents, startStorefrontCheckout, type LiveStorefront } from "@/lib/orders/storefront";
+import {
+  formatCents,
+  quoteStorefrontCheckout,
+  startStorefrontCheckout,
+  type CheckoutQuote,
+  type LiveStorefront,
+} from "@/lib/orders/storefront";
 import type { CartLine } from "@/hooks/use-cart";
 import { toast } from "sonner";
 
@@ -20,7 +26,8 @@ interface Props {
 
 /**
  * Collects contact and fulfilment details, then hands off to Stripe Checkout.
- * All money is recalculated server-side — nothing here is authoritative.
+ * All money is recalculated server-side — nothing here is authoritative. The
+ * summary shows the same server-computed figures the card will be charged.
  */
 const CheckoutSheet = ({ open, onOpenChange, store, lines, subtotalCents, defaults }: Props) => {
   const [name, setName] = useState(defaults?.name ?? "");
@@ -32,9 +39,43 @@ const CheckoutSheet = ({ open, onOpenChange, store, lines, subtotalCents, defaul
   const [address, setAddress] = useState("");
   const [notes, setNotes] = useState("");
   const [busy, setBusy] = useState(false);
+  const [quote, setQuote] = useState<CheckoutQuote | null>(null);
+  const [quoting, setQuoting] = useState(false);
 
-  const deliveryFee = fulfilment === "delivery" ? store.delivery_fee_cents : 0;
   const belowMinimum = fulfilment === "delivery" && subtotalCents < store.delivery_minimum_cents;
+
+  // Ask the server for the real totals whenever the order changes.
+  useEffect(() => {
+    if (!open || lines.length === 0 || belowMinimum) {
+      setQuote(null);
+      return;
+    }
+    let cancelled = false;
+    setQuoting(true);
+    const timer = window.setTimeout(() => {
+      void quoteStorefrontCheckout({
+        slug: store.slug,
+        items: lines.map((l) => ({ product_id: l.product.id, quantity: l.quantity })),
+        customer: { name: "Quote", email: "quote@loumilab.com" },
+        fulfilment,
+        delivery_address: fulfilment === "delivery" ? address.trim() || undefined : undefined,
+      })
+        .then((result) => {
+          if (!cancelled) setQuote(result);
+        })
+        .catch(() => {
+          if (!cancelled) setQuote(null);
+        })
+        .finally(() => {
+          if (!cancelled) setQuoting(false);
+        });
+    }, 500);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
+  }, [open, fulfilment, address, subtotalCents, lines, store.slug, belowMinimum]);
+
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
