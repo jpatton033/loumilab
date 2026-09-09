@@ -10,6 +10,7 @@ import Products from "./pages/Products";
 import Orders from "./pages/Orders";
 import OrdersGetStarted from "./pages/orders/GetStarted";
 import OrdersDashboard from "./pages/orders/Dashboard";
+import QueuePreviewTmp from "./pages/orders/QueuePreviewTmp";
 import OrdersStorefront from "./pages/orders/Storefront";
 import OrdersReceipt from "./pages/orders/Receipt";
 import OrdersQuoteView from "./pages/orders/QuoteView";
