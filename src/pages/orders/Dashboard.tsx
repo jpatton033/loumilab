@@ -11,6 +11,7 @@ import PaymentsPanel from "@/components/orders/PaymentsPanel";
 import StorePanel from "@/components/orders/StorePanel";
 import OrderQueue from "@/components/orders/OrderQueue";
 import LiveOrderQueue from "@/components/orders/LiveOrderQueue";
+import OrderSummaryPanel from "@/components/orders/OrderSummaryPanel";
 import AnalyticsPanel from "@/components/orders/AnalyticsPanel";
 import EstimatesPanel from "@/components/orders/EstimatesPanel";
 import LockedFeature from "@/components/orders/LockedFeature";
@@ -70,6 +71,16 @@ const LIVE_FILTER_ORDER: LiveOrderStatus[] = [
   "failed",
   "pending",
 ];
+
+type RangeKey = "all" | "today" | "7" | "30";
+const RANGE_DAYS: Record<RangeKey, number | null> = { all: null, today: 1, "7": 7, "30": 30 };
+const RANGE_LABELS: Record<RangeKey, string> = {
+  all: "All",
+  today: "Last 24 hrs",
+  "7": "7 days",
+  "30": "30 days",
+};
+const FULFILMENT_LABELS = { all: "All", pickup: "Pickup", delivery: "Delivery" } as const;
 
 const Dashboard = () => {
   const navigate = useNavigate();
