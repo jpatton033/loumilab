@@ -82,11 +82,13 @@ const Storefront = () => {
   if (!store) {
     return (
       <Layout>
-        <SEOHead title="Store Not Found — Loumilab Orders" description="This storefront is not available." path="/orders" noindex />
+        <SEOHead title="Store Unavailable — Loumilab Orders" description="This storefront is not available right now." path="/orders" noindex />
         <section className="section-padding pt-32 text-center">
           <div className="section-container">
-            <h1 className="font-hero text-4xl font-semibold tracking-tight">Store not found</h1>
-            <p className="mt-4 text-muted-foreground">This storefront may have been moved or is not yet published.</p>
+            <h1 className="font-hero text-4xl font-semibold tracking-tight">This store is unavailable right now</h1>
+            <p className="mt-4 text-muted-foreground">
+              It may be paused for a short while, or the link may have changed. Please check back soon.
+            </p>
             <Button asChild className="mt-8 rounded-full">
               <Link to="/orders">Explore Loumilab Orders</Link>
             </Button>

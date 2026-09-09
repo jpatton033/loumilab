@@ -43,7 +43,7 @@ const FeesPanel = ({ store, patch }: Props) => {
     <div className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-soft)] sm:p-8">
       <p className="font-display font-semibold">Fees and delivery pricing</p>
       <p className="mt-1 text-sm text-muted-foreground">
-        These amounts are added to every order total. Leave anything at zero to switch it off.
+        These amounts are added to a customer's order total. Leave anything at zero to switch it off.
       </p>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -55,7 +55,7 @@ const FeesPanel = ({ store, patch }: Props) => {
             defaultValue={toDollars(store.service_fee_cents)}
             onBlur={(e) => patch({ service_fee_cents: toCents(e.target.value) })}
           />
-          <p className="text-xs text-muted-foreground">A flat amount on every order.</p>
+          <p className="text-xs text-muted-foreground">A flat amount added to delivery orders.</p>
         </div>
         <div className="space-y-2">
           <Label htmlFor="fee-service-label">What customers see it called</Label>
@@ -181,13 +181,9 @@ const FeesPanel = ({ store, patch }: Props) => {
 
       <p className="mt-6 text-xs text-muted-foreground">
         Example: a {formatCents(2500, store.currency)} pickup order today costs a customer{" "}
-        {formatCents(
-          2500 +
-            store.service_fee_cents +
-            Math.round(((2500 + store.service_fee_cents) * store.customer_fee_share_bps) / 10000),
-          store.currency,
-        )}{" "}
-        before tax.
+        {formatCents(2500 + Math.round((2500 * store.customer_fee_share_bps) / 10000), store.currency)}{" "}
+        before tax. The same order for delivery adds your delivery fee and{" "}
+        {formatCents(store.service_fee_cents, store.currency)} service fee.
       </p>
     </div>
   );
