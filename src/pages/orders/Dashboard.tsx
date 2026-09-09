@@ -109,16 +109,35 @@ const Dashboard = () => {
   useReconcilePendingOrders(merchant?.id, liveOrders.filter((o) => o.status === "pending").length);
   const advanceOrder = useAdvanceOrder(merchant?.id);
   const [liveFilter, setLiveFilter] = useState<LiveOrderStatus | "all">("all");
+  const [queueView, setQueueView] = useState<"orders" | "summary">("orders");
+  const [fulfilmentFilter, setFulfilmentFilter] = useState<"all" | "pickup" | "delivery">("all");
+  const [rangeFilter, setRangeFilter] = useState<RangeKey>("all");
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const liveFilters = useMemo<(LiveOrderStatus | "all")[]>(() => {
     const present = LIVE_FILTER_ORDER.filter((s) => liveOrders.some((o) => o.status === s));
     return ["all", ...present];
   }, [liveOrders]);
 
-  const visibleLiveOrders = useMemo(
-    () => (liveFilter === "all" ? liveOrders : liveOrders.filter((o) => o.status === liveFilter)),
-    [liveOrders, liveFilter],
+  const visibleLiveOrders = useMemo(() => {
+    const days = RANGE_DAYS[rangeFilter];
+    const from = days === null ? null : new Date(Date.now() - days * 86400000);
+    return liveOrders.filter((o) => {
+      if (liveFilter !== "all" && o.status !== liveFilter) return false;
+      if (fulfilmentFilter !== "all" && o.fulfilment !== fulfilmentFilter) return false;
+      if (from && new Date(o.paid_at ?? o.created_at) < from) return false;
+      return true;
+    });
+  }, [liveOrders, liveFilter, fulfilmentFilter, rangeFilter]);
+
+  const selectedOrders = useMemo(
+    () => visibleLiveOrders.filter((o) => selectedIds.includes(o.id)),
+    [visibleLiveOrders, selectedIds],
   );
+  const summaryOrders = selectedOrders.length ? selectedOrders : visibleLiveOrders;
+
+  const toggleSelected = (id: string) =>
+    setSelectedIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
 
   useEffect(() => {
     if (liveFilter !== "all" && !liveFilters.includes(liveFilter)) setLiveFilter("all");
