@@ -78,10 +78,18 @@ async function completeTip(orderId: string, session: Obj) {
     })
     .eq("id", orderId)
     .is("tip_paid_at", null)
-    .select("id, merchant_id, currency, customer_name, reference")
+    .select("id, merchant_id, currency, customer_name, reference, total_cents")
     .maybeSingle();
 
   if (!order) return;
+
+  // The tip was charged on top of the order, so the receipt total must include
+  // it. Safe to run once: the update above only succeeds for an untipped order.
+  await admin
+    .from("orders")
+    .update({ total_cents: num(order.total_cents) + amount })
+    .eq("id", order.id);
+
 
   const { data: merchant } = await admin
     .from("merchants")
