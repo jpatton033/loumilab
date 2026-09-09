@@ -11,6 +11,7 @@ import PaymentsPanel from "@/components/orders/PaymentsPanel";
 import StorePanel from "@/components/orders/StorePanel";
 import OrderQueue from "@/components/orders/OrderQueue";
 import LiveOrderQueue from "@/components/orders/LiveOrderQueue";
+import OrderSummaryPanel from "@/components/orders/OrderSummaryPanel";
 import AnalyticsPanel from "@/components/orders/AnalyticsPanel";
 import EstimatesPanel from "@/components/orders/EstimatesPanel";
 import LockedFeature from "@/components/orders/LockedFeature";
@@ -71,6 +72,16 @@ const LIVE_FILTER_ORDER: LiveOrderStatus[] = [
   "pending",
 ];
 
+type RangeKey = "all" | "today" | "7" | "30";
+const RANGE_DAYS: Record<RangeKey, number | null> = { all: null, today: 1, "7": 7, "30": 30 };
+const RANGE_LABELS: Record<RangeKey, string> = {
+  all: "All",
+  today: "Last 24 hrs",
+  "7": "7 days",
+  "30": "30 days",
+};
+const FULFILMENT_LABELS = { all: "All", pickup: "Pickup", delivery: "Delivery" } as const;
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const [orders, setOrders] = useState<MerchantOrder[]>(demoOrders);
@@ -109,16 +120,35 @@ const Dashboard = () => {
   useReconcilePendingOrders(merchant?.id, liveOrders.filter((o) => o.status === "pending").length);
   const advanceOrder = useAdvanceOrder(merchant?.id);
   const [liveFilter, setLiveFilter] = useState<LiveOrderStatus | "all">("all");
+  const [queueView, setQueueView] = useState<"orders" | "summary">("orders");
+  const [fulfilmentFilter, setFulfilmentFilter] = useState<"all" | "pickup" | "delivery">("all");
+  const [rangeFilter, setRangeFilter] = useState<RangeKey>("all");
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const liveFilters = useMemo<(LiveOrderStatus | "all")[]>(() => {
     const present = LIVE_FILTER_ORDER.filter((s) => liveOrders.some((o) => o.status === s));
     return ["all", ...present];
   }, [liveOrders]);
 
-  const visibleLiveOrders = useMemo(
-    () => (liveFilter === "all" ? liveOrders : liveOrders.filter((o) => o.status === liveFilter)),
-    [liveOrders, liveFilter],
+  const visibleLiveOrders = useMemo(() => {
+    const days = RANGE_DAYS[rangeFilter];
+    const from = days === null ? null : new Date(Date.now() - days * 86400000);
+    return liveOrders.filter((o) => {
+      if (liveFilter !== "all" && o.status !== liveFilter) return false;
+      if (fulfilmentFilter !== "all" && o.fulfilment !== fulfilmentFilter) return false;
+      if (from && new Date(o.paid_at ?? o.created_at) < from) return false;
+      return true;
+    });
+  }, [liveOrders, liveFilter, fulfilmentFilter, rangeFilter]);
+
+  const selectedOrders = useMemo(
+    () => visibleLiveOrders.filter((o) => selectedIds.includes(o.id)),
+    [visibleLiveOrders, selectedIds],
   );
+  const summaryOrders = selectedOrders.length ? selectedOrders : visibleLiveOrders;
+
+  const toggleSelected = (id: string) =>
+    setSelectedIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
 
   useEffect(() => {
     if (liveFilter !== "all" && !liveFilters.includes(liveFilter)) setLiveFilter("all");
@@ -332,22 +362,23 @@ const Dashboard = () => {
               <>
                 {merchant ? (
                   <>
-                    <div className="flex flex-wrap items-center gap-2">
-                      {liveFilters.map((f) => (
-                        <button
-                          key={f}
-                          type="button"
-                          onClick={() => setLiveFilter(f)}
-                          className={`rounded-full border px-4 py-2 text-xs font-semibold transition-colors ${
-                            liveFilter === f
-                              ? "border-transparent bg-foreground text-background"
-                              : "border-border text-muted-foreground hover:text-foreground"
-                          }`}
-                        >
-                          {f === "all" ? "All" : ORDER_STATUS_LABELS[f]}
-                          {f !== "all" && ` (${liveOrders.filter((o) => o.status === f).length})`}
-                        </button>
-                      ))}
+                    <div className="sticky top-16 z-20 -mx-6 flex flex-wrap items-center gap-2 bg-background/95 px-6 py-3 backdrop-blur sm:mx-0 sm:px-0 print:hidden">
+                      <div className="inline-flex rounded-full border border-border p-1">
+                        {(["orders", "summary"] as const).map((v) => (
+                          <button
+                            key={v}
+                            type="button"
+                            onClick={() => setQueueView(v)}
+                            className={`rounded-full px-4 py-1.5 text-xs font-semibold transition-colors ${
+                              queueView === v
+                                ? "bg-foreground text-background"
+                                : "text-muted-foreground hover:text-foreground"
+                            }`}
+                          >
+                            {v === "orders" ? `${transactionsLabel} view` : "Summary view"}
+                          </button>
+                        ))}
+                      </div>
                       <Button
                         size="sm"
                         variant="ghost"
@@ -359,18 +390,105 @@ const Dashboard = () => {
                       </Button>
                     </div>
 
-                    <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-[var(--shadow-soft)]">
-                      <div className="border-b border-border px-5 py-4 sm:px-6">
-                        <p className="font-display font-semibold">{transactionsLabel}</p>
-                        <p className="mt-1 text-xs text-muted-foreground">{workflow.join(" → ")}</p>
+                    <div className="-mx-6 space-y-2 px-6 sm:mx-0 sm:px-0 print:hidden">
+                      <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] sm:flex-wrap sm:overflow-visible [&::-webkit-scrollbar]:hidden">
+                        {liveFilters.map((f) => (
+                          <button
+                            key={f}
+                            type="button"
+                            onClick={() => setLiveFilter(f)}
+                            className={`shrink-0 whitespace-nowrap rounded-full border px-4 py-2 text-xs font-semibold transition-colors ${
+                              liveFilter === f
+                                ? "border-transparent bg-foreground text-background"
+                                : "border-border text-muted-foreground hover:text-foreground"
+                            }`}
+                          >
+                            {f === "all" ? "All" : ORDER_STATUS_LABELS[f]}
+                            {f !== "all" && ` (${liveOrders.filter((o) => o.status === f).length})`}
+                          </button>
+                        ))}
                       </div>
-                      <LiveOrderQueue
-                        orders={visibleLiveOrders}
-                        storeSlug={setup?.slug}
-                        pending={advanceOrder.isPending}
-                        onAdvance={(order, status) => advanceOrder.mutate({ id: order.id, status })}
-                      />
+                      <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] sm:flex-wrap sm:overflow-visible [&::-webkit-scrollbar]:hidden">
+                        {(["all", "pickup", "delivery"] as const).map((f) => (
+                          <button
+                            key={f}
+                            type="button"
+                            onClick={() => setFulfilmentFilter(f)}
+                            className={`shrink-0 whitespace-nowrap rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors ${
+                              fulfilmentFilter === f
+                                ? "border-foreground text-foreground"
+                                : "border-border text-muted-foreground hover:text-foreground"
+                            }`}
+                          >
+                            {FULFILMENT_LABELS[f]}
+                          </button>
+                        ))}
+                        <span className="mx-1 hidden w-px bg-border sm:block" />
+                        {(["all", "today", "7", "30"] as const).map((f) => (
+                          <button
+                            key={f}
+                            type="button"
+                            onClick={() => setRangeFilter(f)}
+                            className={`shrink-0 whitespace-nowrap rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors ${
+                              rangeFilter === f
+                                ? "border-foreground text-foreground"
+                                : "border-border text-muted-foreground hover:text-foreground"
+                            }`}
+                          >
+                            {RANGE_LABELS[f]}
+                          </button>
+                        ))}
+                      </div>
                     </div>
+
+                    {queueView === "summary" ? (
+                      <OrderSummaryPanel
+                        orders={summaryOrders}
+                        businessName={merchant.business_name}
+                        isSelection={selectedOrders.length > 0}
+                        onClearSelection={() => setSelectedIds([])}
+                      />
+                    ) : (
+                      <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-[var(--shadow-soft)]">
+                        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-5 py-4 sm:px-6">
+                          <div className="min-w-0">
+                            <p className="font-display font-semibold">{transactionsLabel}</p>
+                            <p className="mt-1 text-xs text-muted-foreground">{workflow.join(" → ")}</p>
+                          </div>
+                          {selectedOrders.length > 0 && (
+                            <div className="flex flex-wrap items-center gap-2">
+                              <span className="text-xs text-muted-foreground">
+                                {selectedOrders.length} selected
+                              </span>
+                              <Button
+                                size="sm"
+                                variant="secondary"
+                                className="rounded-full"
+                                onClick={() => setQueueView("summary")}
+                              >
+                                Prep summary
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                className="rounded-full"
+                                onClick={() => setSelectedIds([])}
+                              >
+                                Clear
+                              </Button>
+                            </div>
+                          )}
+                        </div>
+                        <LiveOrderQueue
+                          orders={visibleLiveOrders}
+                          storeSlug={setup?.slug}
+                          pending={advanceOrder.isPending}
+                          onAdvance={(order, status) => advanceOrder.mutate({ id: order.id, status })}
+                          selectedIds={selectedIds}
+                          onToggleSelect={toggleSelected}
+                        />
+                      </div>
+                    )}
                   </>
                 ) : (
                   <>

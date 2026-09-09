@@ -306,3 +306,126 @@ export const describeChange = (current: number, previous: number): string | null
   if (pct === 0) return "Level with last week";
   return `${pct > 0 ? "+" : ""}${pct}% vs last week`;
 };
+
+/* ------------------------------------------------------------------ */
+/* Queue summary: what a merchant needs to prepare right now.          */
+/* ------------------------------------------------------------------ */
+
+export interface SummaryItemOrder {
+  id: string;
+  reference: string | null;
+  customer_name: string;
+  quantity: number;
+  fulfilment: "pickup" | "delivery";
+}
+
+export interface SummaryItem {
+  name: string;
+  quantity: number;
+  revenueCents: number;
+  orders: SummaryItemOrder[];
+}
+
+export interface SummaryNote {
+  id: string;
+  reference: string | null;
+  customer_name: string;
+  fulfilment: "pickup" | "delivery";
+  note: string;
+}
+
+export interface QueueSummary {
+  currency: string;
+  total: number;
+  byStatus: { status: LiveOrderStatus; count: number }[];
+  pickup: number;
+  delivery: number;
+  needsAttention: number;
+  totalItems: number;
+  items: SummaryItem[];
+  salesCents: number;
+  oldestWaiting: LiveOrder | null;
+  notes: SummaryNote[];
+}
+
+const SUMMARY_ATTENTION: LiveOrderStatus[] = ["paid", "preparing"];
+/** Stages where food/work still has to be produced or handed over. */
+const SUMMARY_OPEN: LiveOrderStatus[] = ["paid", "preparing", "ready", "out_for_delivery"];
+
+/** Pure aggregation over whatever set of orders the merchant is looking at. */
+export const buildQueueSummary = (orders: LiveOrder[]): QueueSummary => {
+  const counts = new Map<LiveOrderStatus, number>();
+  const itemMap = new Map<string, SummaryItem>();
+  const notes: SummaryNote[] = [];
+  let pickup = 0;
+  let delivery = 0;
+  let totalItems = 0;
+  let salesCents = 0;
+  let oldestWaiting: LiveOrder | null = null;
+
+  const openStatus = (o: LiveOrder) => SUMMARY_OPEN.includes(o.status);
+  const placedAt = (o: LiveOrder) => new Date(o.paid_at ?? o.created_at).getTime();
+
+  for (const order of orders) {
+    counts.set(order.status, (counts.get(order.status) ?? 0) + 1);
+    if (order.fulfilment === "delivery") delivery += 1;
+    else pickup += 1;
+    if (order.status !== "failed" && order.status !== "cancelled" && order.status !== "refunded") {
+      salesCents += order.total_cents;
+    }
+    if (openStatus(order) && (!oldestWaiting || placedAt(order) < placedAt(oldestWaiting))) {
+      oldestWaiting = order;
+    }
+    if (order.customer_notes?.trim()) {
+      notes.push({
+        id: order.id,
+        reference: order.reference,
+        customer_name: order.customer_name,
+        fulfilment: order.fulfilment,
+        note: order.customer_notes.trim(),
+      });
+    }
+    for (const item of order.order_items ?? []) {
+      totalItems += item.quantity;
+      const entry = itemMap.get(item.name) ?? { name: item.name, quantity: 0, revenueCents: 0, orders: [] };
+      entry.quantity += item.quantity;
+      entry.revenueCents += item.line_total_cents;
+      entry.orders.push({
+        id: order.id,
+        reference: order.reference,
+        customer_name: order.customer_name,
+        quantity: item.quantity,
+        fulfilment: order.fulfilment,
+      });
+      itemMap.set(item.name, entry);
+    }
+  }
+
+  return {
+    currency: orders[0]?.currency ?? "USD",
+    total: orders.length,
+    byStatus: [...counts.entries()]
+      .map(([status, count]) => ({ status, count }))
+      .sort((a, b) => b.count - a.count),
+    pickup,
+    delivery,
+    needsAttention: orders.filter((o) => SUMMARY_ATTENTION.includes(o.status)).length,
+    totalItems,
+    items: [...itemMap.values()].sort((a, b) => b.quantity - a.quantity || a.name.localeCompare(b.name)),
+    salesCents,
+    oldestWaiting,
+    notes,
+  };
+};
+
+/** "23 min", "1 hr 5 min" — plain wording for how long an order has waited. */
+export const describeWaiting = (iso: string, now: number = Date.now()): string => {
+  const mins = Math.max(0, Math.round((now - new Date(iso).getTime()) / 60000));
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins} min`;
+  const hrs = Math.floor(mins / 60);
+  const rest = mins % 60;
+  if (hrs < 24) return rest ? `${hrs} hr ${rest} min` : `${hrs} hr`;
+  const days = Math.floor(hrs / 24);
+  return `${days} day${days === 1 ? "" : "s"}`;
+};

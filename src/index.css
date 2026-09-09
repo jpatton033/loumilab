@@ -232,3 +232,24 @@
     transition-duration: 0.001ms !important;
   }
 }
+
+/* Clean print sheet for the merchant preparation summary. */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #prep-summary,
+  #prep-summary * {
+    visibility: visible;
+  }
+
+  #prep-summary {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100%;
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+  }
+}
