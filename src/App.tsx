@@ -10,7 +10,6 @@ import Products from "./pages/Products";
 import Orders from "./pages/Orders";
 import OrdersGetStarted from "./pages/orders/GetStarted";
 import OrdersDashboard from "./pages/orders/Dashboard";
-import QueuePreviewTmp from "./pages/orders/QueuePreviewTmp";
 import OrdersStorefront from "./pages/orders/Storefront";
 import OrdersReceipt from "./pages/orders/Receipt";
 import OrdersQuoteView from "./pages/orders/QuoteView";
@@ -67,7 +66,6 @@ const App = () => (
           <Route path="/orders" element={<Orders />} />
           <Route path="/orders/get-started" element={<OrdersGetStarted />} />
           <Route path="/orders/dashboard" element={<OrdersDashboard />} />
-          <Route path="/dev/queue-preview" element={<QueuePreviewTmp />} />
           <Route path="/orders/store/:slug" element={<OrdersStorefront />} />
           <Route path="/orders/receipt/:token" element={<OrdersReceipt />} />
           <Route path="/orders/quote/:token" element={<OrdersQuoteView />} />
