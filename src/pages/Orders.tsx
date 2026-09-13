@@ -30,11 +30,13 @@ import OrderStatusBadge from "@/components/orders/OrderStatusBadge";
 import FlowDiagram from "@/components/orders/FlowDiagram";
 import PricingTable from "@/components/orders/PricingTable";
 import IndustryStrip from "@/components/orders/IndustryStrip";
+import OrdersHeroSlideshow from "@/components/orders/OrdersHeroSlideshow";
 import { useCart } from "@/hooks/use-cart";
 import { demoStorefront } from "@/data/orders/storefronts";
 import { dashboardMetrics, demoOrders, ORDER_STATUSES } from "@/data/orders/dashboard";
 import { audiences } from "@/data/orders/audiences";
 import { pricingHeading } from "@/data/orders/pricing";
+import { ordersHeroSlides } from "@/data/orders/hero-slides";
 
 const steps = [
   {
@@ -143,9 +145,6 @@ const Orders = () => {
                 </Button>
               </div>
               <p className="mt-6 text-sm text-muted-foreground">
-                Create your store. Share your link. Take orders. Get paid.
-              </p>
-              <p className="mt-2 text-sm text-muted-foreground">
                 Already have a store?{" "}
                 <Link to="/orders/dashboard" className="underline underline-offset-4 hover:text-foreground">
                   Go to dashboard
@@ -163,6 +162,8 @@ const Orders = () => {
           </div>
         </div>
       </section>
+
+      <OrdersHeroSlideshow slides={ordersHeroSlides} />
 
       {/* Social commerce */}
       <section className="section-padding surface-subtle border-y border-border">
@@ -419,7 +420,7 @@ const Orders = () => {
       </section>
 
       {/* Pricing */}
-      <section className="section-padding surface-subtle border-y border-border">
+      <section id="pricing" className="section-padding surface-subtle border-y border-border">
         <div className="section-container">
           <Reveal className="max-w-2xl">
             <Eyebrow>{pricingHeading.eyebrow}</Eyebrow>
