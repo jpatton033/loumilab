@@ -171,6 +171,11 @@
     animation: fadeIn 0.9s ease-out both;
   }
 
+  .animate-scale-in {
+    animation: scaleIn 0.9s var(--ease-brand) both;
+  }
+
+
   .video-overlay {
     background: linear-gradient(180deg, hsl(0 0% 100% / 0.55) 0%, hsl(0 0% 100% / 0.35) 50%, hsl(0 0% 100% / 0.75) 100%);
   }
