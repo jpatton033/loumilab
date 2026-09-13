@@ -233,18 +233,20 @@
   }
 }
 
-/* Clean print sheet for the merchant preparation summary. */
+/* Clean print sheet for the merchant preparation summary.
+   Scoped to the dashboard so other pages (receipts, storefront, etc.)
+   keep their normal print output. */
 @media print {
-  body * {
+  body.print-prep-summary * {
     visibility: hidden;
   }
 
-  #prep-summary,
-  #prep-summary * {
+  body.print-prep-summary #prep-summary,
+  body.print-prep-summary #prep-summary * {
     visibility: visible;
   }
 
-  #prep-summary {
+  body.print-prep-summary #prep-summary {
     position: absolute;
     inset: 0 auto auto 0;
     width: 100%;
