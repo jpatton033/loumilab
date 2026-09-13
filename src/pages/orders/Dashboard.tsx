@@ -158,6 +158,15 @@ const Dashboard = () => {
     if (!modules.includes(activeModule)) setActiveModule(modules[0]);
   }, [industrySlug]);
 
+  useEffect(() => {
+    if (queueView === "summary") {
+      document.body.classList.add("print-prep-summary");
+    } else {
+      document.body.classList.remove("print-prep-summary");
+    }
+    return () => document.body.classList.remove("print-prep-summary");
+  }, [queueView]);
+
   const visible = useMemo(
     () => (filter === "All" ? orders : orders.filter((o) => o.status === filter)),
     [orders, filter]
