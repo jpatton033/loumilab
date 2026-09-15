@@ -279,7 +279,7 @@ const OrdersHeroSlideshow = ({ slides }: OrdersHeroSlideshowProps) => {
                   aria-selected={isActive}
                   aria-label={`Show ${slide.nav_label}`}
                   onClick={() => {
-                    stopAuto();
+                    pauseAuto();
                     goTo(i);
                   }}
                   className={cn(
