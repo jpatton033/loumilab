@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { OrdersHeroSlide } from "@/data/orders/hero-slides";
 
+const RESUME_AFTER_MS = 6000;
+
 interface OrdersHeroSlideshowProps {
   slides: OrdersHeroSlide[];
 }
