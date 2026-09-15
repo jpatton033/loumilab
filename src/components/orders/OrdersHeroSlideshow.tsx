@@ -159,11 +159,13 @@ const OrdersHeroSlideshow = ({ slides }: OrdersHeroSlideshowProps) => {
 
   return (
     <section
+      ref={sectionRef}
       aria-label="Loumilab Orders benefits"
       className="relative overflow-hidden pb-16 pt-8 lg:pb-24 lg:pt-12"
       style={{ ["--hero-accent" as string]: accent }}
-      onMouseEnter={stopAuto}
-      onFocus={stopAuto}
+      onMouseEnter={pauseAuto}
+      onMouseLeave={resumeAuto}
+      onFocus={pauseAuto}
       onTouchStart={(e) => {
         touchStart.current = e.touches[0].clientX;
       }}
@@ -173,7 +175,7 @@ const OrdersHeroSlideshow = ({ slides }: OrdersHeroSlideshowProps) => {
         if (start === null || count < 2) return;
         const dx = e.changedTouches[0].clientX - start;
         if (Math.abs(dx) < 48) return;
-        stopAuto();
+        pauseAuto();
         goTo(dx < 0 ? (index + 1) % count : (index - 1 + count) % count);
       }}
       onKeyDown={onKeyDown}
