@@ -105,15 +105,15 @@ const OrdersHeroSlideshow = ({ slides }: OrdersHeroSlideshowProps) => {
     return () => window.clearInterval(id);
   }, [reduced, paused, count]);
 
-  /* subtle scroll handoff */
+  /* subtle scroll handoff keyed to the section leaving the viewport */
   useEffect(() => {
     if (reduced) return;
     let frame = 0;
     const onScroll = () => {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
-        const y = window.scrollY;
-        setScrollFade(Math.min(y / 480, 1));
+        const top = sectionRef.current?.getBoundingClientRect().top ?? 0;
+        setScrollFade(Math.max(0, Math.min(-top / 480, 1)));
       });
     };
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -125,6 +125,12 @@ const OrdersHeroSlideshow = ({ slides }: OrdersHeroSlideshowProps) => {
   }, [reduced]);
 
   const stopAuto = useCallback(() => setPaused(true), []);
+
+  useEffect(() => {
+    return () => {
+      if (resumeTimer.current) window.clearTimeout(resumeTimer.current);
+    };
+  }, []);
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (count < 2) return;
