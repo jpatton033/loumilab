@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { OrdersHeroSlide } from "@/data/orders/hero-slides";
 
+const RESUME_AFTER_MS = 6000;
+
 interface OrdersHeroSlideshowProps {
   slides: OrdersHeroSlide[];
 }
@@ -58,6 +60,8 @@ const OrdersHeroSlideshow = ({ slides }: OrdersHeroSlideshowProps) => {
   const [paused, setPaused] = useState(false);
   const [scrollFade, setScrollFade] = useState(0);
   const touchStart = useRef<number | null>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const resumeTimer = useRef<number | null>(null);
 
   const count = slides.length;
   const active = slides[Math.min(index, Math.max(count - 1, 0))];
@@ -65,6 +69,25 @@ const OrdersHeroSlideshow = ({ slides }: OrdersHeroSlideshowProps) => {
   const goTo = useCallback((next: number) => {
     setIndex(next);
     setElapsed(0);
+  }, []);
+
+  const resumeAuto = useCallback(() => {
+    if (resumeTimer.current) {
+      window.clearTimeout(resumeTimer.current);
+      resumeTimer.current = null;
+    }
+    setPaused(false);
+  }, []);
+
+  const pauseAuto = useCallback(() => {
+    if (resumeTimer.current) {
+      window.clearTimeout(resumeTimer.current);
+    }
+    setPaused(true);
+    resumeTimer.current = window.setTimeout(() => {
+      setPaused(false);
+      resumeTimer.current = null;
+    }, RESUME_AFTER_MS);
   }, []);
 
   /* auto rotation + progress */
@@ -82,15 +105,15 @@ const OrdersHeroSlideshow = ({ slides }: OrdersHeroSlideshowProps) => {
     return () => window.clearInterval(id);
   }, [reduced, paused, count]);
 
-  /* subtle scroll handoff */
+  /* subtle scroll handoff keyed to the section leaving the viewport */
   useEffect(() => {
     if (reduced) return;
     let frame = 0;
     const onScroll = () => {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
-        const y = window.scrollY;
-        setScrollFade(Math.min(y / 480, 1));
+        const top = sectionRef.current?.getBoundingClientRect().top ?? 0;
+        setScrollFade(Math.max(0, Math.min(-top / 480, 1)));
       });
     };
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -102,6 +125,12 @@ const OrdersHeroSlideshow = ({ slides }: OrdersHeroSlideshowProps) => {
   }, [reduced]);
 
   const stopAuto = useCallback(() => setPaused(true), []);
+
+  useEffect(() => {
+    return () => {
+      if (resumeTimer.current) window.clearTimeout(resumeTimer.current);
+    };
+  }, []);
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (count < 2) return;
@@ -130,11 +159,13 @@ const OrdersHeroSlideshow = ({ slides }: OrdersHeroSlideshowProps) => {
 
   return (
     <section
+      ref={sectionRef}
       aria-label="Loumilab Orders benefits"
       className="relative overflow-hidden pb-16 pt-8 lg:pb-24 lg:pt-12"
       style={{ ["--hero-accent" as string]: accent }}
-      onMouseEnter={stopAuto}
-      onFocus={stopAuto}
+      onMouseEnter={pauseAuto}
+      onMouseLeave={resumeAuto}
+      onFocus={pauseAuto}
       onTouchStart={(e) => {
         touchStart.current = e.touches[0].clientX;
       }}
@@ -144,7 +175,7 @@ const OrdersHeroSlideshow = ({ slides }: OrdersHeroSlideshowProps) => {
         if (start === null || count < 2) return;
         const dx = e.changedTouches[0].clientX - start;
         if (Math.abs(dx) < 48) return;
-        stopAuto();
+        pauseAuto();
         goTo(dx < 0 ? (index + 1) % count : (index - 1 + count) % count);
       }}
       onKeyDown={onKeyDown}
@@ -248,7 +279,7 @@ const OrdersHeroSlideshow = ({ slides }: OrdersHeroSlideshowProps) => {
                   aria-selected={isActive}
                   aria-label={`Show ${slide.nav_label}`}
                   onClick={() => {
-                    stopAuto();
+                    pauseAuto();
                     goTo(i);
                   }}
                   className={cn(
