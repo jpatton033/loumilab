@@ -60,6 +60,8 @@ const OrdersHeroSlideshow = ({ slides }: OrdersHeroSlideshowProps) => {
   const [paused, setPaused] = useState(false);
   const [scrollFade, setScrollFade] = useState(0);
   const touchStart = useRef<number | null>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const resumeTimer = useRef<number | null>(null);
 
   const count = slides.length;
   const active = slides[Math.min(index, Math.max(count - 1, 0))];
@@ -67,6 +69,25 @@ const OrdersHeroSlideshow = ({ slides }: OrdersHeroSlideshowProps) => {
   const goTo = useCallback((next: number) => {
     setIndex(next);
     setElapsed(0);
+  }, []);
+
+  const resumeAuto = useCallback(() => {
+    if (resumeTimer.current) {
+      window.clearTimeout(resumeTimer.current);
+      resumeTimer.current = null;
+    }
+    setPaused(false);
+  }, []);
+
+  const pauseAuto = useCallback(() => {
+    if (resumeTimer.current) {
+      window.clearTimeout(resumeTimer.current);
+    }
+    setPaused(true);
+    resumeTimer.current = window.setTimeout(() => {
+      setPaused(false);
+      resumeTimer.current = null;
+    }, RESUME_AFTER_MS);
   }, []);
 
   /* auto rotation + progress */
