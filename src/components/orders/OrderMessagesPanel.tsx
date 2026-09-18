@@ -60,7 +60,7 @@ const OrderMessagesPanel = ({
       <div className="max-h-[26rem] min-h-[8rem] flex-1 space-y-3 overflow-y-auto px-5 py-4 sm:px-6">
         {messages.length === 0 && (
           <p className="py-4 text-center text-sm text-muted-foreground">
-            No messages yet. Start the conversation below.
+            {locked ? "No messages were exchanged on this order." : "No messages yet. Start the conversation below."}
           </p>
         )}
         {messages.map((m) => {

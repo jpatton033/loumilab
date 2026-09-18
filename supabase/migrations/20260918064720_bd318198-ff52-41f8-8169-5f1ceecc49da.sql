@@ -1,0 +1,1 @@
+UPDATE public.orders SET status = 'paid' WHERE public_token = '4f055989-2582-415b-8c5e-803989dcb5a8';
