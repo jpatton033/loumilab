@@ -7,9 +7,9 @@
  * and merchants will be asked to agree again.
  */
 
-export const AGREEMENT_VERSION = "2026-09-07";
-export const AGREEMENT_EFFECTIVE_DATE = "September 7, 2026";
-export const AGREEMENT_LAST_UPDATED = "September 7, 2026";
+export const AGREEMENT_VERSION = "2026-09-18";
+export const AGREEMENT_EFFECTIVE_DATE = "September 18, 2026";
+export const AGREEMENT_LAST_UPDATED = "September 18, 2026";
 
 export const TERMS_PATH = "/orders/terms";
 export const PRIVACY_PATH = "/orders/privacy";
@@ -279,6 +279,11 @@ export const ORDERS_TERMS: LegalDocument = {
         "- Subscription information; and",
         "- Service-related communications.",
         "Marketing communications will be handled in accordance with applicable law and available communication preferences.",
+        "In-platform order messaging. On eligible paid Merchant subscription plans, Loumilab Orders provides in-platform messaging that allows a Customer and the Merchant associated with that Customer's order to exchange messages about that order. Messaging is available only in connection with an actual order and is not a general-purpose messaging service.",
+        "Messages are limited to matters relating to the order. You agree not to use messaging to send unlawful, abusive, deceptive, or harassing content, to send unsolicited marketing, or to request or transmit payment card numbers, bank credentials, or other sensitive financial information. Payments are handled only through Loumilab Orders checkout.",
+        "Messages sent through Loumilab Orders are stored by Loumilab and may be accessed or reviewed by authorized Loumilab personnel where reasonably necessary for customer support, safety, dispute resolution, abuse investigation, legal compliance, or technical troubleshooting.",
+        "Conversations remain attached to their order and generally become read-only after the order is completed or cancelled. Historical conversations are retained for support, dispute, security, and recordkeeping purposes, including where a Merchant's subscription is cancelled, expires, or is changed to a plan that does not include messaging. In that case new messages may be restricted while existing conversation records remain available.",
+        "Where a Merchant's plan does not include in-platform messaging, the Customer's order contact email address is made available to the Merchant for order fulfillment purposes only.",
       ],
     },
     {
@@ -461,6 +466,8 @@ export const ORDERS_PRIVACY: LegalDocument = {
         "- Order status; and",
         "- Relevant transaction identifiers.",
         "Certain information must be shared with the Merchant so the Merchant can fulfill the order.",
+        "Where the Merchant's subscription plan includes in-platform messaging, messages exchanged between the Customer and that Merchant about the order are also processed and stored, together with their timestamps and read status.",
+        "Where the Merchant's plan does not include in-platform messaging, the Customer's order contact email address is made available to the Merchant so the order can still be fulfilled. Merchants may use it only for that order.",
       ],
     },
     {
@@ -527,6 +534,7 @@ export const ORDERS_PRIVACY: LegalDocument = {
         "- Important policy changes.",
         "Where permitted, we may separately send marketing communications.",
         "Users may opt out of eligible marketing communications. Transactional or security communications necessary to operate an account may continue.",
+        "On eligible paid Merchant plans, Customers and Merchants may also exchange in-platform messages about an order. Those messages are delivered inside Loumilab Orders and are stored with the order.",
       ],
     },
     {
@@ -605,6 +613,7 @@ export const ORDERS_PRIVACY: LegalDocument = {
         "- Meeting legal obligations.",
         "Different categories of information may have different retention periods.",
         "Information may remain in secure backups for a limited period after deletion from active systems.",
+        "Order conversations are retained after an order closes for support, dispute, security, and recordkeeping purposes, including where a Merchant changes or cancels a subscription plan.",
       ],
     },
     {

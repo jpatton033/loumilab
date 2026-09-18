@@ -36,6 +36,7 @@ export type EntitlementKey =
   | "customer_insights.enabled"
   | "custom_workflows.enabled"
   | "priority_support.enabled"
+  | "messaging.enabled"
   | "custom";
 
 export type EntitlementValue = boolean | number | string | string[];
@@ -66,6 +67,7 @@ export const BASE_ENTITLEMENTS: Entitlements = {
   "customer_insights.enabled": false,
   "custom_workflows.enabled": false,
   "priority_support.enabled": false,
+  "messaging.enabled": false,
 };
 
 /** Plain-language label for each capability, used in upgrade prompts. */
@@ -84,6 +86,7 @@ export const ENTITLEMENT_LABELS: Partial<Record<EntitlementKey, string>> = {
   "custom_workflows.enabled": "Custom workflow stages",
   "branding.remove_loumilab": "Remove Loumilab branding",
   "priority_support.enabled": "Priority support",
+  "messaging.enabled": "Customer messaging",
 };
 
 /** Lowest paid tier that unlocks a capability, for upgrade copy. */
@@ -102,6 +105,7 @@ export const ENTITLEMENT_TIER: Partial<Record<EntitlementKey, string>> = {
   "custom_workflows.enabled": "Premium",
   "branding.remove_loumilab": "Premium",
   "priority_support.enabled": "Premium",
+  "messaging.enabled": "Starter",
 };
 
 

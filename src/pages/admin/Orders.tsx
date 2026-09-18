@@ -1,4 +1,5 @@
 import AdminShell from "@/components/admin/AdminShell";
+import OrderConversationsPanel from "@/components/admin/OrderConversationsPanel";
 import SEOHead from "@/components/SEOHead";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -122,6 +123,8 @@ const AdminOrders = () => (
         </TableBody>
       </Table>
     </div>
+
+    <OrderConversationsPanel />
   </AdminShell>
 );
 

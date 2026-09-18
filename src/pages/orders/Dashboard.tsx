@@ -15,6 +15,12 @@ import OrderSummaryPanel from "@/components/orders/OrderSummaryPanel";
 import AnalyticsPanel from "@/components/orders/AnalyticsPanel";
 import EstimatesPanel from "@/components/orders/EstimatesPanel";
 import LockedFeature from "@/components/orders/LockedFeature";
+import MerchantMessages from "@/components/orders/MerchantMessages";
+import {
+  useMerchantConversations,
+  unreadByOrder,
+  totalUnread,
+} from "@/lib/orders/messaging";
 import {
   ORDER_STATUS_LABELS,
   useAdvanceOrder,
@@ -87,7 +93,9 @@ const Dashboard = () => {
   const [orders, setOrders] = useState<MerchantOrder[]>(demoOrders);
   const [filter, setFilter] = useState<Filter>("All");
   const [accepting, setAccepting] = useState(true);
-  const [activeModule, setActiveModule] = useState<ModuleKey>("orders");
+  const [activeModule, setActiveModule] = useState<ModuleKey | "messages">("orders");
+  /** Order the merchant chose to message from the queue. */
+  const [messageOrderId, setMessageOrderId] = useState<string | null>(null);
   /** Demo-only industry preview when the visitor has no merchant record. */
   const [previewIndustry, setPreviewIndustry] = useState(demoStorefront.industrySlug);
 
@@ -104,6 +112,11 @@ const Dashboard = () => {
 
   const plan = plans?.find((p) => p.slug === (merchant?.plan_slug ?? "launch")) ?? null;
   const entitlements = resolveEntitlements(plan);
+  const messagingEnabled = isEnabled(entitlements, "messaging.enabled");
+  const { data: conversations } = useMerchantConversations(merchant?.id, messagingEnabled);
+  const unreadOrders = unreadByOrder(conversations);
+  const unreadTotal = totalUnread(conversations);
+
 
   const { data: jobs } = useJobs(merchant?.id);
   const advanceJob = useAdvanceJob(merchant?.id);
@@ -155,7 +168,7 @@ const Dashboard = () => {
   }, [liveFilters, liveFilter]);
 
   useEffect(() => {
-    if (!modules.includes(activeModule)) setActiveModule(modules[0]);
+    if (activeModule !== "messages" && !modules.includes(activeModule)) setActiveModule(modules[0]);
   }, [industrySlug]);
 
   useEffect(() => {
@@ -363,6 +376,22 @@ const Dashboard = () => {
                     : MODULE_LABELS[key]}
               </button>
             ))}
+            <button
+              type="button"
+              onClick={() => setActiveModule("messages")}
+              className={`shrink-0 whitespace-nowrap rounded-full border px-4 py-2 text-xs font-semibold transition-colors ${
+                activeModule === "messages"
+                  ? "border-transparent bg-foreground text-background"
+                  : "border-border text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Messages
+              {unreadTotal > 0 && (
+                <span className="ml-2 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1.5 text-[11px] font-semibold text-accent-foreground">
+                  {unreadTotal}
+                </span>
+              )}
+            </button>
           </div>
 
           <div className="mt-6 space-y-6">
@@ -495,6 +524,16 @@ const Dashboard = () => {
                           onAdvance={(order, status) => advanceOrder.mutate({ id: order.id, status })}
                           selectedIds={selectedIds}
                           onToggleSelect={toggleSelected}
+                          unread={unreadOrders}
+                          showCustomerEmail={!messagingEnabled}
+                          onMessage={
+                            messagingEnabled
+                              ? (order) => {
+                                  setMessageOrderId(order.id);
+                                  setActiveModule("messages");
+                                }
+                              : undefined
+                          }
                         />
                       </div>
                     )}
@@ -655,6 +694,30 @@ const Dashboard = () => {
                   </p>
                 </div>
               ))}
+
+            {/* Customer messaging */}
+            {activeModule === "messages" &&
+              (!merchant ? (
+                <div className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-soft)] sm:p-8">
+                  <p className="font-display font-semibold">Messages</p>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Sign in with your business account to message customers about their orders.
+                  </p>
+                </div>
+              ) : messagingEnabled ? (
+                <MerchantMessages
+                  merchantId={merchant.id}
+                  businessName={merchant.business_name}
+                  startOrderId={messageOrderId}
+                  onStartHandled={() => setMessageOrderId(null)}
+                />
+              ) : (
+                <LockedFeature
+                  entitlement="messaging.enabled"
+                  description="Message customers about their orders inside Loumilab Orders, without sharing personal phone numbers. On your current plan, each order shows the customer's email so you can still reach them."
+                />
+              ))}
+
 
           </div>
         </div>

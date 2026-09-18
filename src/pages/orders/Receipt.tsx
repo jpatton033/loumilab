@@ -5,6 +5,7 @@ import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import TipPanel from "@/components/orders/TipPanel";
+import CustomerOrderMessages from "@/components/orders/CustomerOrderMessages";
 import { formatCents, useOrderByToken } from "@/lib/orders/storefront";
 import { syncOrders } from "@/lib/orders/reconcile";
 
@@ -129,6 +130,14 @@ const Receipt = () => {
               )}
 
               {token && <TipPanel token={token} order={order} />}
+
+              {token && (
+                <CustomerOrderMessages
+                  token={token}
+                  paid={Boolean(paid)}
+                  storeName={order.store_name}
+                />
+              )}
 
               <p className="mt-6 text-sm text-muted-foreground">
                 A copy of this receipt was emailed to {order.customer_email}.

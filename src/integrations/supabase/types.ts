@@ -1610,6 +1610,67 @@ export type Database = {
         }
         Relationships: []
       }
+      order_conversations: {
+        Row: {
+          created_at: string
+          customer_unread_count: number
+          id: string
+          last_message_at: string | null
+          locked_at: string | null
+          merchant_id: string
+          merchant_unread_count: number
+          order_id: string
+          storefront_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          customer_unread_count?: number
+          id?: string
+          last_message_at?: string | null
+          locked_at?: string | null
+          merchant_id: string
+          merchant_unread_count?: number
+          order_id: string
+          storefront_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          customer_unread_count?: number
+          id?: string
+          last_message_at?: string | null
+          locked_at?: string | null
+          merchant_id?: string
+          merchant_unread_count?: number
+          order_id?: string
+          storefront_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_conversations_merchant_id_fkey"
+            columns: ["merchant_id"]
+            isOneToOne: false
+            referencedRelation: "merchants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_conversations_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: true
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_conversations_storefront_id_fkey"
+            columns: ["storefront_id"]
+            isOneToOne: false
+            referencedRelation: "merchant_storefronts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       order_items: {
         Row: {
           created_at: string
@@ -1654,6 +1715,57 @@ export type Database = {
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "merchant_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      order_messages: {
+        Row: {
+          body: string
+          conversation_id: string
+          created_at: string
+          event_type: string | null
+          id: string
+          merchant_id: string
+          read_at: string | null
+          sender: string
+          sender_user_id: string | null
+        }
+        Insert: {
+          body: string
+          conversation_id: string
+          created_at?: string
+          event_type?: string | null
+          id?: string
+          merchant_id: string
+          read_at?: string | null
+          sender: string
+          sender_user_id?: string | null
+        }
+        Update: {
+          body?: string
+          conversation_id?: string
+          created_at?: string
+          event_type?: string | null
+          id?: string
+          merchant_id?: string
+          read_at?: string | null
+          sender?: string
+          sender_user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "order_conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_messages_merchant_id_fkey"
+            columns: ["merchant_id"]
+            isOneToOne: false
+            referencedRelation: "merchants"
             referencedColumns: ["id"]
           },
         ]
@@ -2118,8 +2230,13 @@ export type Database = {
       }
       cleanup_old_rate_limits: { Args: never; Returns: undefined }
       create_custom_project_upload_slot: { Args: never; Returns: string }
+      ensure_order_conversation: {
+        Args: { _order_id: string }
+        Returns: string
+      }
       get_invoice_by_token: { Args: { _token: string }; Returns: Json }
       get_order_by_token: { Args: { _token: string }; Returns: Json }
+      get_order_conversation: { Args: { _token: string }; Returns: Json }
       get_order_tip_context: { Args: { _token: string }; Returns: Json }
       get_public_store_context: {
         Args: { _storefront_id: string }
@@ -2157,6 +2274,18 @@ export type Database = {
           section_slug: string
         }[]
       }
+      merchant_mark_conversation_read: {
+        Args: { _conversation_id: string }
+        Returns: undefined
+      }
+      merchant_messaging_enabled: {
+        Args: { _merchant_id: string }
+        Returns: boolean
+      }
+      merchant_send_order_message: {
+        Args: { _body: string; _order_id: string }
+        Returns: Json
+      }
       newsletter_subscribe: {
         Args: { _email: string; _source: string }
         Returns: boolean
@@ -2165,12 +2294,20 @@ export type Database = {
         Args: { _job: string; _lease_seconds?: number }
         Returns: string
       }
+      order_conversation_lock_at: {
+        Args: { _order: Database["public"]["Tables"]["orders"]["Row"] }
+        Returns: string
+      }
       owns_merchant_media_path: {
         Args: { object_name: string }
         Returns: boolean
       }
       respond_to_quote: {
         Args: { _approve: boolean; _token: string }
+        Returns: Json
+      }
+      send_order_message: {
+        Args: { _body: string; _token: string }
         Returns: Json
       }
       storefront_can_publish: {

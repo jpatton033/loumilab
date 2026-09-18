@@ -1,0 +1,1 @@
+UPDATE public.merchants SET plan_slug = 'starter' WHERE business_name = 'Jay''s Kitchen';
