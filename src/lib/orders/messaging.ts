@@ -119,8 +119,10 @@ export const useMerchantConversations = (merchantId?: string, enabled = true) =>
   // New customer messages land in the dashboard without a refresh.
   useEffect(() => {
     if (!merchantId || !enabled) return;
+    // Unique name per hook instance: the dashboard badge and the Messages view
+    // both listen, and a shared channel name breaks the second subscriber.
     const channel = supabase
-      .channel(`merchant-messages-${merchantId}`)
+      .channel(`merchant-messages-${merchantId}-${Math.random().toString(36).slice(2)}`)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "order_messages", filter: `merchant_id=eq.${merchantId}` },
