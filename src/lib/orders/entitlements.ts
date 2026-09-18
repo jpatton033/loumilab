@@ -105,7 +105,7 @@ export const ENTITLEMENT_TIER: Partial<Record<EntitlementKey, string>> = {
   "custom_workflows.enabled": "Premium",
   "branding.remove_loumilab": "Premium",
   "priority_support.enabled": "Premium",
-  "messaging.enabled": "Business",
+  "messaging.enabled": "Starter",
 };
 
 
