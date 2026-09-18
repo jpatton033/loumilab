@@ -1,4 +1,13 @@
-import { ArrowRight, MapPin, ShoppingBag, StickyNote, Truck } from "lucide-react";
+import {
+  ArrowRight,
+  Copy,
+  Mail,
+  MapPin,
+  MessageSquare,
+  ShoppingBag,
+  StickyNote,
+  Truck,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -41,7 +50,21 @@ interface Props {
   /** When set, each row shows a tick box for building a prep summary. */
   selectedIds?: string[];
   onToggleSelect?: (id: string) => void;
+  /** Paid plans: open the order's conversation. */
+  onMessage?: (order: LiveOrder) => void;
+  /** Unread customer messages per order id. */
+  unread?: Record<string, number>;
+  /** Free plan: show the customer's email so the order can still be fulfilled. */
+  showCustomerEmail?: boolean;
 }
+
+const MESSAGEABLE: LiveOrderStatus[] = [
+  "paid",
+  "preparing",
+  "ready",
+  "out_for_delivery",
+  "completed",
+];
 
 const LiveOrderQueue = ({
   orders,
@@ -51,6 +74,9 @@ const LiveOrderQueue = ({
   className,
   selectedIds,
   onToggleSelect,
+  onMessage,
+  unread,
+  showCustomerEmail,
 }: Props) => {
   const selectable = Boolean(selectedIds && onToggleSelect);
 
@@ -121,6 +147,22 @@ const LiveOrderQueue = ({
                 >
                   {ORDER_STATUS_LABELS[order.status]}
                 </span>
+                {onMessage && MESSAGEABLE.includes(order.status) && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="h-10 w-full shrink-0 rounded-full md:w-auto"
+                    onClick={() => onMessage(order)}
+                  >
+                    <MessageSquare size={14} />
+                    <span className="truncate">Message</span>
+                    {(unread?.[order.id] ?? 0) > 0 && (
+                      <span className="ml-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1.5 text-[11px] font-semibold text-accent-foreground">
+                        {unread?.[order.id]}
+                      </span>
+                    )}
+                  </Button>
+                )}
                 {next ? (
                   <Button
                     size="sm"
@@ -162,6 +204,25 @@ const LiveOrderQueue = ({
                     <span className="break-words">{order.customer_notes}</span>
                   </span>
                 )}
+              </div>
+            )}
+
+            {showCustomerEmail && MESSAGEABLE.includes(order.status) && (
+              <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                <span className="break-all">Contact: {order.customer_email}</span>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="h-8 rounded-full px-3 text-xs"
+                  onClick={() => void navigator.clipboard?.writeText(order.customer_email)}
+                >
+                  <Copy size={12} /> Copy
+                </Button>
+                <Button size="sm" variant="ghost" asChild className="h-8 rounded-full px-3 text-xs">
+                  <a href={`mailto:${order.customer_email}`}>
+                    <Mail size={12} /> Email
+                  </a>
+                </Button>
               </div>
             )}
           </li>
