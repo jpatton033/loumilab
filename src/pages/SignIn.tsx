@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -119,13 +120,16 @@ const SignIn = () => {
 
   const handleGoogle = async () => {
     setLoading(true);
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: `${window.location.origin}${nextPath ?? ""}` },
+    // Route through Lovable Cloud's managed Google OAuth (credentials are
+    // managed there); the direct Supabase provider call fails without a
+    // configured client secret.
+    const result = await lovable.auth.signInWithOAuth("google", {
+      redirect_uri: `${window.location.origin}${nextPath ?? ""}`,
     });
+    if (result.redirected) return;
     setLoading(false);
-    if (error) {
-      toast({ title: "Google sign in failed", description: error.message, variant: "destructive" });
+    if (result.error) {
+      toast({ title: "Google sign in failed", description: result.error.message, variant: "destructive" });
     }
   };
 
