@@ -51,17 +51,24 @@ const MerchantMessages = ({ merchantId, businessName, startOrderId, onStartHandl
 
   const active: MerchantConversation | undefined = conversations?.find((c) => c.id === activeId);
 
+  // After the merchant sends the first message on an order with no thread yet,
+  // the new conversation appears in the refetched list — adopt it so the view
+  // stays on the thread instead of dropping back to the list.
+  useEffect(() => {
+    if (!pendingOrderId) return;
+    const created = conversations?.find((c) => c.order_id === pendingOrderId);
+    if (created) {
+      setActiveId(created.id);
+      setPendingOrderId(null);
+    }
+  }, [pendingOrderId, conversations]);
+
   useEffect(() => {
     if (active && active.merchant_unread_count > 0) markRead.mutate(active.id);
   }, [active?.id, active?.merchant_unread_count]);
 
   const sendTo = (orderId: string) => (body: string) => {
-    send.mutate(
-      { orderId, body },
-      {
-        onSuccess: () => setPendingOrderId(null),
-      },
-    );
+    send.mutate({ orderId, body });
   };
 
   if (active || pendingOrderId) {
