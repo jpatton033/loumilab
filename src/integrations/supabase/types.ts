@@ -14,6 +14,178 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_email_attachments: {
+        Row: {
+          content_type: string | null
+          created_at: string
+          file_name: string
+          id: string
+          message_id: string
+          size_bytes: number
+          storage_path: string
+          updated_at: string
+        }
+        Insert: {
+          content_type?: string | null
+          created_at?: string
+          file_name: string
+          id?: string
+          message_id: string
+          size_bytes?: number
+          storage_path: string
+          updated_at?: string
+        }
+        Update: {
+          content_type?: string | null
+          created_at?: string
+          file_name?: string
+          id?: string
+          message_id?: string
+          size_bytes?: number
+          storage_path?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_email_attachments_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "admin_email_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      admin_email_messages: {
+        Row: {
+          bcc_addresses: string[]
+          body_html: string
+          body_text: string
+          cc_addresses: string[]
+          created_at: string
+          direction: string
+          display_name: string
+          error_text: string | null
+          id: string
+          provider_message_id: string | null
+          sent_at: string | null
+          sent_by: string | null
+          sent_by_email: string | null
+          status: string
+          subject: string
+          template_id: string | null
+          thread_id: string
+          to_addresses: string[]
+          updated_at: string
+        }
+        Insert: {
+          bcc_addresses?: string[]
+          body_html?: string
+          body_text?: string
+          cc_addresses?: string[]
+          created_at?: string
+          direction?: string
+          display_name?: string
+          error_text?: string | null
+          id?: string
+          provider_message_id?: string | null
+          sent_at?: string | null
+          sent_by?: string | null
+          sent_by_email?: string | null
+          status?: string
+          subject?: string
+          template_id?: string | null
+          thread_id?: string
+          to_addresses?: string[]
+          updated_at?: string
+        }
+        Update: {
+          bcc_addresses?: string[]
+          body_html?: string
+          body_text?: string
+          cc_addresses?: string[]
+          created_at?: string
+          direction?: string
+          display_name?: string
+          error_text?: string | null
+          id?: string
+          provider_message_id?: string | null
+          sent_at?: string | null
+          sent_by?: string | null
+          sent_by_email?: string | null
+          status?: string
+          subject?: string
+          template_id?: string | null
+          thread_id?: string
+          to_addresses?: string[]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_email_messages_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "admin_email_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      admin_email_signatures: {
+        Row: {
+          body_html: string
+          created_at: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          body_html?: string
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          body_html?: string
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      admin_email_templates: {
+        Row: {
+          body_html: string
+          category: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          name: string
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          body_html?: string
+          category?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name: string
+          subject?: string
+          updated_at?: string
+        }
+        Update: {
+          body_html?: string
+          category?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name?: string
+          subject?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       admin_roles: {
         Row: {
           created_at: string
