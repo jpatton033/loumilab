@@ -272,3 +272,27 @@
     padding: 0;
   }
 }
+
+/* Loumilab Mail composer surface — editor content styling */
+@layer components {
+  .mail-content h1 { @apply mb-3 mt-2 text-2xl font-bold tracking-tight; }
+  .mail-content h2 { @apply mb-2 mt-4 text-xl font-semibold tracking-tight; }
+  .mail-content h3 { @apply mb-2 mt-3 text-lg font-semibold; }
+  .mail-content p { @apply mb-3 leading-relaxed; }
+  .mail-content a { @apply text-accent underline underline-offset-2; }
+  .mail-content ul { @apply mb-3 list-disc pl-5; }
+  .mail-content ol { @apply mb-3 list-decimal pl-5; }
+  .mail-content blockquote { @apply mb-3 border-l-2 border-border pl-3 italic text-muted-foreground; }
+  .mail-content hr { @apply my-5 border-border; }
+  .mail-content img { @apply my-3 max-w-full rounded-xl; }
+  .mail-content table { @apply my-3 w-full border-collapse text-sm; }
+  .mail-content th,
+  .mail-content td { @apply border border-border px-2 py-1 align-top; }
+  .mail-content th { @apply bg-muted font-semibold; }
+  .mail-content ul[data-type="taskList"] { @apply list-none pl-0; }
+  .mail-content ul[data-type="taskList"] li { @apply flex items-start gap-2; }
+  .mail-content p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    @apply pointer-events-none float-left h-0 text-muted-foreground;
+  }
+}
