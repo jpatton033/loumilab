@@ -5,6 +5,7 @@ import {
   LayoutDashboard,
   Mail,
   ScrollText,
+  Send,
   ShoppingBag,
   SlidersHorizontal,
   Sparkles,
@@ -43,6 +44,10 @@ export const adminNav: AdminNavGroup[] = [
         badge: (c) => (c?.inquiriesNew ? c.inquiriesNew : undefined),
       },
     ],
+  },
+  {
+    label: "Mail",
+    items: [{ title: "Loumilab Mail", url: "/admin/mail", icon: Send }],
   },
   {
     label: "Content",
