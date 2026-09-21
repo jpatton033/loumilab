@@ -105,7 +105,11 @@ export const useAdminOrdersSnapshot = () =>
     staleTime: 30_000,
     queryFn: async (): Promise<AdminOrdersSnapshot> => {
       const [merchantsRes, storefrontsRes, accountsRes, subsRes, ordersRes, plansRes] = await Promise.all([
-        supabase.from("merchants").select("id, business_name, plan_slug, accepting_orders, created_at"),
+        supabase
+          .from("merchants")
+          .select(
+            "id, owner_id, business_name, contact_name, contact_email, phone, address_line1, address_line2, city, region, postal_code, country, plan_slug, accepting_orders, created_at",
+          ),
         supabase
           .from("merchant_storefronts")
           .select("merchant_id, name, slug, location, is_published")
