@@ -265,8 +265,11 @@ export const formatMailingAddress = (m: {
   country: string | null;
 }): string | null => {
   const cityLine = [m.city, [m.region, m.postalCode].filter(Boolean).join(" ")].filter(Boolean).join(", ");
-  const parts = [m.addressLine1, m.addressLine2, cityLine, m.country].map((p) => (p ?? "").trim()).filter(Boolean);
-  return parts.length ? parts.join("\n") : null;
+  // A country on its own is not an address — treat that as nothing captured yet.
+  const street = [m.addressLine1, m.addressLine2, cityLine].map((p) => (p ?? "").trim()).filter(Boolean);
+  if (!street.length) return null;
+  const country = (m.country ?? "").trim();
+  return [...street, country].filter(Boolean).join("\n");
 };
 
 /**
