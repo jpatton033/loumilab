@@ -171,6 +171,16 @@ function buildExecutive(sections: Section[], actions: ActionItem[], changes: Cha
         : "No new merchants registered",
     );
   }
+  const paidOrders = numeric(pick("orders", "Paid orders")?.value);
+  if (paidOrders !== null) {
+    const grossSales = pick("orders", "Gross sales")?.value;
+    parts.push(
+      paidOrders > 0
+        ? `${formatInt(paidOrders)} paid order${paidOrders === 1 ? "" : "s"} totalling ${grossSales ?? "—"}`
+        : "no customer orders were paid for",
+    );
+  }
+
   const pipeline = (leadsNew ?? 0) + (inquiriesNew ?? 0);
   parts.push(
     pipeline > 0
