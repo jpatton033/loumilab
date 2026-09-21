@@ -116,7 +116,7 @@ function ContactPicker({
 
       <Input value={term} onChange={(e) => setTerm(e.target.value)} placeholder="Search name or email" />
       <div className="flex flex-wrap gap-1.5">
-        {(["all", "Inquiries", "Merchants", "Subscribers"] as const).map((g) => (
+        {(["all", ...CONTACT_GROUPS] as const).map((g) => (
           <button
             key={g}
             type="button"
