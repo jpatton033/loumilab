@@ -156,8 +156,11 @@ const AdminOrders = () => {
                   </div>
                   <p className="mt-1 text-xs text-muted-foreground">
                     {p.merchantCount} merchant{p.merchantCount === 1 ? "" : "s"}
-                    {p.platformFeeBps !== null ? ` · ${(p.platformFeeBps / 100).toFixed(2)}% per order` : ""}
-                    {p.feeLabel ? ` · ${p.feeLabel}` : ""}
+                    {p.platformFeeBps !== null
+                      ? ` · ${(p.platformFeeBps / 100).toFixed(2)}% platform fee per order`
+                      : p.feeLabel
+                        ? ` · ${p.feeLabel}`
+                        : ""}
                   </p>
                 </div>
               ))}
