@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { EMAIL_RE, parseAddresses, useMailContacts, type Contact } from "@/lib/admin/mail";
+import { CONTACT_GROUPS, EMAIL_RE, parseAddresses, useMailContacts, type Contact } from "@/lib/admin/mail";
 import { cn } from "@/lib/utils";
 
 /** Address chips with a searchable picker of known Loumilab contacts. */
@@ -94,8 +94,12 @@ function ContactPicker({
     const t = term.trim().toLowerCase();
     return (contacts ?? []).filter(
       (c) =>
-        (group === "all" || c.group === group) &&
-        (!t || c.email.includes(t) || c.label.toLowerCase().includes(t)),
+        // "Everyone" hides the merchant sub-groups so nobody is listed twice.
+        (group === "all" ? !c.group.startsWith("Merchants —") : c.group === group) &&
+        (!t ||
+          c.email.includes(t) ||
+          c.label.toLowerCase().includes(t) ||
+          (c.hint ?? "").toLowerCase().includes(t)),
     );
   }, [contacts, term, group]);
 
@@ -113,7 +117,7 @@ function ContactPicker({
 
       <Input value={term} onChange={(e) => setTerm(e.target.value)} placeholder="Search name or email" />
       <div className="flex flex-wrap gap-1.5">
-        {(["all", "Inquiries", "Merchants", "Subscribers"] as const).map((g) => (
+        {(["all", ...CONTACT_GROUPS] as const).map((g) => (
           <button
             key={g}
             type="button"
@@ -154,6 +158,7 @@ function ContactPicker({
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-sm">{c.label}</span>
                 <span className="block truncate text-xs text-muted-foreground">{c.email}</span>
+                {c.hint && <span className="block truncate text-xs text-muted-foreground/80">{c.hint}</span>}
               </span>
               <span className="text-[10px] uppercase tracking-wider text-muted-foreground">{c.group}</span>
             </button>

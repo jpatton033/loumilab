@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
 /**
@@ -10,9 +10,31 @@ import { supabase } from "@/integrations/supabase/client";
 
 export const ORDERS_WINDOW_DAYS = 30;
 
+export interface MerchantContactInput {
+  contactName: string;
+  contactEmail: string;
+  phone: string;
+  addressLine1: string;
+  addressLine2: string;
+  city: string;
+  region: string;
+  postalCode: string;
+  country: string;
+}
+
 export interface AdminMerchantRow {
   id: string;
   businessName: string;
+  contactName: string | null;
+  contactEmail: string;
+  phone: string | null;
+  ownerName: string | null;
+  addressLine1: string | null;
+  addressLine2: string | null;
+  city: string | null;
+  region: string | null;
+  postalCode: string | null;
+  country: string | null;
   planSlug: string;
   acceptingOrders: boolean;
   createdAt: string;
@@ -82,13 +104,18 @@ export const useAdminOrdersSnapshot = () =>
     queryKey: ["admin", "orders-snapshot"],
     staleTime: 30_000,
     queryFn: async (): Promise<AdminOrdersSnapshot> => {
-      const [merchantsRes, storefrontsRes, accountsRes, subsRes, ordersRes, plansRes] = await Promise.all([
-        supabase.from("merchants").select("id, business_name, plan_slug, accepting_orders, created_at"),
+      const [merchantsRes, storefrontsRes, accountsRes, profilesRes, subsRes, ordersRes, plansRes] = await Promise.all([
+        supabase
+          .from("merchants")
+          .select(
+            "id, owner_id, business_name, contact_name, contact_email, phone, address_line1, address_line2, city, region, postal_code, country, plan_slug, accepting_orders, created_at",
+          ),
         supabase
           .from("merchant_storefronts")
           .select("merchant_id, name, slug, location, is_published")
           .order("created_at", { ascending: true }),
         supabase.from("merchant_stripe_accounts").select("merchant_id, payout_status, livemode"),
+        supabase.from("profiles").select("user_id, display_name"),
         supabase.from("merchant_subscriptions").select("merchant_id, status"),
         supabase
           .from("orders")
@@ -106,6 +133,10 @@ export const useAdminOrdersSnapshot = () =>
       for (const res of [merchantsRes, storefrontsRes, accountsRes, subsRes, ordersRes, plansRes]) {
         if (res.error) throw res.error;
       }
+      // Display names are a nicety — never fail the whole snapshot over them.
+      const ownerNames = new Map(
+        (profilesRes.data ?? []).map((p) => [p.user_id as string, (p.display_name as string | null) ?? null]),
+      );
 
       const storefrontByMerchant = new Map<string, (typeof storefrontsRes.data)[number]>();
       (storefrontsRes.data ?? []).forEach((s) => {
@@ -125,6 +156,16 @@ export const useAdminOrdersSnapshot = () =>
           return {
             id: m.id,
             businessName: m.business_name,
+            contactName: m.contact_name ?? null,
+            contactEmail: m.contact_email ?? "",
+            phone: m.phone ?? null,
+            ownerName: ownerNames.get(m.owner_id) ?? null,
+            addressLine1: m.address_line1 ?? null,
+            addressLine2: m.address_line2 ?? null,
+            city: m.city ?? null,
+            region: m.region ?? null,
+            postalCode: m.postal_code ?? null,
+            country: m.country ?? null,
             planSlug: m.plan_slug,
             acceptingOrders: m.accepting_orders,
             createdAt: m.created_at,
@@ -212,4 +253,77 @@ export const PAYOUT_STATUS_LABELS: Record<string, string> = {
   restricted: "Restricted",
   payout_enabled: "Payouts enabled",
   disabled: "Payouts disabled",
+};
+
+/** One-line mailing address, or null when nothing has been captured yet. */
+export const formatMailingAddress = (m: {
+  addressLine1: string | null;
+  addressLine2: string | null;
+  city: string | null;
+  region: string | null;
+  postalCode: string | null;
+  country: string | null;
+}): string | null => {
+  const cityLine = [m.city, [m.region, m.postalCode].filter(Boolean).join(" ")].filter(Boolean).join(", ");
+  // A country on its own is not an address — treat that as nothing captured yet.
+  const street = [m.addressLine1, m.addressLine2, cityLine].map((p) => (p ?? "").trim()).filter(Boolean);
+  if (!street.length) return null;
+  const country = (m.country ?? "").trim();
+  return [...street, country].filter(Boolean).join("\n");
+};
+
+/**
+ * Staff correction of a merchant's contact record. Staff already hold update
+ * rights on `merchants`; every change is written to the audit log.
+ */
+export const useSaveMerchantContact = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ merchant, input }: { merchant: AdminMerchantRow; input: MerchantContactInput }) => {
+      const trim = (v: string) => v.trim();
+      const orNull = (v: string) => (trim(v) ? trim(v) : null);
+      const email = trim(input.contactEmail);
+      if (!email) throw new Error("A contact email is required.");
+
+      const payload = {
+        contact_name: orNull(input.contactName),
+        contact_email: email,
+        phone: orNull(input.phone),
+        address_line1: orNull(input.addressLine1),
+        address_line2: orNull(input.addressLine2),
+        city: orNull(input.city),
+        region: orNull(input.region),
+        postal_code: orNull(input.postalCode),
+        country: trim(input.country) || merchant.country || "US",
+      };
+
+      const { error } = await supabase.from("merchants").update(payload).eq("id", merchant.id);
+      if (error) throw error;
+
+      const { data: auth } = await supabase.auth.getUser();
+      await supabase.from("audit_logs").insert({
+        actor_id: auth.user?.id ?? null,
+        actor_email: auth.user?.email ?? null,
+        action: "merchant.contact_updated",
+        target_type: "merchant",
+        target_id: merchant.id,
+        old_value: {
+          contact_name: merchant.contactName,
+          contact_email: merchant.contactEmail,
+          phone: merchant.phone,
+          address_line1: merchant.addressLine1,
+          address_line2: merchant.addressLine2,
+          city: merchant.city,
+          region: merchant.region,
+          postal_code: merchant.postalCode,
+          country: merchant.country,
+        },
+        new_value: payload,
+      });
+    },
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ["admin", "orders-snapshot"] });
+      void qc.invalidateQueries({ queryKey: ["admin", "mail", "contacts"] });
+    },
+  });
 };

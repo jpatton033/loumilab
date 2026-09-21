@@ -32,10 +32,20 @@ const clean = (list: unknown): string[] =>
     ? [...new Set(list.map((v) => String(v ?? "").trim().toLowerCase()).filter((v) => EMAIL_RE.test(v)))]
     : [];
 
-const personalise = (html: string, email: string) => {
-  const first = email.split("@")[0].split(/[._-]/)[0];
-  const name = first ? first.charAt(0).toUpperCase() + first.slice(1) : "there";
-  return html.replaceAll("{{first_name}}", name).replaceAll("{{email}}", email);
+interface MerchantFacts {
+  contactName: string | null;
+  businessName: string | null;
+}
+
+const personalise = (html: string, email: string, facts?: MerchantFacts) => {
+  const fromEmail = email.split("@")[0].split(/[._-]/)[0];
+  const derived = fromEmail ? fromEmail.charAt(0).toUpperCase() + fromEmail.slice(1) : "there";
+  const first = facts?.contactName?.trim().split(/\s+/)[0] || derived;
+  return html
+    .replaceAll("{{first_name}}", first)
+    .replaceAll("{{contact_name}}", facts?.contactName?.trim() || first)
+    .replaceAll("{{business_name}}", facts?.businessName?.trim() || "your business")
+    .replaceAll("{{email}}", email);
 };
 
 Deno.serve(async (req) => {
@@ -112,13 +122,33 @@ Deno.serve(async (req) => {
   }
 
   const safeBody = sanitizeEmailHtml(rawBody);
+
+  // Merge-field facts for recipients that are Loumilab Orders merchants.
+  const merchantFacts = new Map<string, MerchantFacts>();
+  {
+    const { data: merchantRows } = await supabase
+      .from("merchants")
+      .select("contact_email, contact_name, business_name")
+      .in("contact_email", to);
+    (merchantRows ?? []).forEach((m: Record<string, unknown>) => {
+      const key = String(m.contact_email ?? "").trim().toLowerCase();
+      if (key) {
+        merchantFacts.set(key, {
+          contactName: (m.contact_name as string | null) ?? null,
+          businessName: (m.business_name as string | null) ?? null,
+        });
+      }
+    });
+  }
+
   const threadId = crypto.randomUUID();
   const results: { email: string; ok: boolean; error?: string }[] = [];
   let sentCount = 0;
 
   for (const recipient of to) {
+    const facts = merchantFacts.get(recipient);
     const html = buildBrandedEmail({
-      bodyHtml: personalise(safeBody, recipient),
+      bodyHtml: personalise(safeBody, recipient, facts),
       signatureHtml,
       attachments,
     });
@@ -126,7 +156,7 @@ Deno.serve(async (req) => {
 
     const result = await sendManagedEmail({
       to: recipient,
-      subject: personalise(subject, recipient),
+      subject: personalise(subject, recipient, facts),
       html,
       text,
       displayName,

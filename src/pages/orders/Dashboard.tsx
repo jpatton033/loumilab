@@ -16,6 +16,7 @@ import AnalyticsPanel from "@/components/orders/AnalyticsPanel";
 import EstimatesPanel from "@/components/orders/EstimatesPanel";
 import LockedFeature from "@/components/orders/LockedFeature";
 import MerchantMessages from "@/components/orders/MerchantMessages";
+import MerchantContactCard from "@/components/orders/MerchantContactCard";
 import {
   useMerchantConversations,
   unreadByOrder,
@@ -718,7 +719,7 @@ const Dashboard = () => {
                 />
               ))}
 
-
+            {merchant && <MerchantContactCard merchantId={merchant.id} />}
           </div>
         </div>
       </section>

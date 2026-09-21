@@ -308,10 +308,19 @@ export const useSaveSignature = () => {
 
 /* ---------------------------- recipient picker --------------------------- */
 
+export const CONTACT_GROUPS = [
+  "Inquiries",
+  "Merchants",
+  "Merchants — live",
+  "Merchants — setting up",
+  "Subscribers",
+] as const;
+
 export interface Contact {
   email: string;
   label: string;
-  group: "Inquiries" | "Merchants" | "Subscribers";
+  hint?: string;
+  group: (typeof CONTACT_GROUPS)[number];
 }
 
 export const useMailContacts = () =>
@@ -319,26 +328,48 @@ export const useMailContacts = () =>
     queryKey: ["admin", "mail", "contacts"],
     staleTime: 5 * 60_000,
     queryFn: async (): Promise<Contact[]> => {
-      const [inquiries, merchants, subs] = await Promise.all([
+      const [inquiries, merchants, storefronts, subs] = await Promise.all([
         supabase.from("contact_submissions").select("email, name, company").order("created_at", { ascending: false }).limit(500),
-        supabase.from("merchants").select("contact_email, business_name").order("business_name").limit(500),
+        supabase
+          .from("merchants")
+          .select("id, contact_email, contact_name, business_name, phone, city, region, accepting_orders")
+          .order("business_name")
+          .limit(500),
+        supabase.from("merchant_storefronts").select("merchant_id, is_published, location"),
         supabase.from("newsletter_subscribers").select("email").order("created_at", { ascending: false }).limit(1000),
       ]);
       if (inquiries.error) throw inquiries.error;
       if (merchants.error) throw merchants.error;
+      if (storefronts.error) throw storefronts.error;
       if (subs.error) throw subs.error;
 
       const out: Contact[] = [];
       const seen = new Set<string>();
-      const push = (email: string | null, label: string, group: Contact["group"]) => {
+      const push = (email: string | null, label: string, group: Contact["group"], hint?: string) => {
         const e = (email ?? "").trim().toLowerCase();
         if (!e || seen.has(`${group}:${e}`)) return;
         seen.add(`${group}:${e}`);
-        out.push({ email: e, label, group });
+        out.push({ email: e, label, group, hint });
       };
 
+      const published = new Set(
+        (storefronts.data ?? []).filter((s) => s.is_published).map((s) => s.merchant_id),
+      );
+      const storeLocation = new Map(
+        (storefronts.data ?? []).filter((s) => s.location).map((s) => [s.merchant_id, s.location as string]),
+      );
+
       (inquiries.data ?? []).forEach((r) => push(r.email, r.company ? `${r.name} · ${r.company}` : r.name, "Inquiries"));
-      (merchants.data ?? []).forEach((r) => push(r.contact_email, r.business_name, "Merchants"));
+
+      (merchants.data ?? []).forEach((r) => {
+        const label = r.contact_name ? `${r.contact_name} · ${r.business_name}` : r.business_name;
+        const place = [r.city, r.region].filter(Boolean).join(", ") || storeLocation.get(r.id) || null;
+        const hint = [place, r.phone].filter(Boolean).join(" · ") || undefined;
+        const isLive = published.has(r.id) && r.accepting_orders;
+        push(r.contact_email, label, "Merchants", hint);
+        push(r.contact_email, label, isLive ? "Merchants — live" : "Merchants — setting up", hint);
+      });
+
       (subs.data ?? []).forEach((r) => push(r.email, r.email, "Subscribers"));
       return out;
     },
