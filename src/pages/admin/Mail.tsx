@@ -39,6 +39,7 @@ import {
   Trash2,
   X,
 } from "lucide-react";
+import { junkRiskSignals } from "@/lib/admin/spamRisk";
 import { cn } from "@/lib/utils";
 
 const STATUS_STYLES: Record<string, string> = {
@@ -72,6 +73,7 @@ const Mail = () => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewWidth, setPreviewWidth] = useState<"desktop" | "mobile">("desktop");
   const [outcome, setOutcome] = useState<{ email: string; ok: boolean; error?: string }[] | null>(null);
+  const [riskSignals, setRiskSignals] = useState<string[] | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const { data: signature = "" } = useSignature();
@@ -160,6 +162,16 @@ const Mail = () => {
     if (!subject.trim()) return toast({ title: "Add a subject", variant: "destructive" });
     if (!hasContent) return toast({ title: "Write a message first", variant: "destructive" });
 
+    const signals = junkRiskSignals(subject, bodyHtml);
+    if (signals.length) {
+      setRiskSignals(signals);
+      return;
+    }
+    await deliver();
+  };
+
+  const deliver = async () => {
+    setRiskSignals(null);
     try {
       const result = await send.mutateAsync({
         id: draftId,
@@ -361,6 +373,33 @@ const Mail = () => {
               </ul>
             </div>
           )}
+
+          <Dialog open={!!riskSignals} onOpenChange={(v) => !v && setRiskSignals(null)}>
+            <DialogContent className="max-w-md">
+              <DialogHeader>
+                <DialogTitle>This may land in junk</DialogTitle>
+              </DialogHeader>
+              <p className="text-sm text-muted-foreground">
+                Mail providers score these patterns harshly, especially Apple and Gmail:
+              </p>
+              <ul className="space-y-1.5 text-sm">
+                {(riskSignals ?? []).map((s) => (
+                  <li key={s} className="flex items-start gap-2">
+                    <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                    <span>{s}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="flex flex-wrap gap-2">
+                <Button onClick={() => setRiskSignals(null)} className="gap-1.5">
+                  <PenLine className="h-4 w-4" /> Let me edit it
+                </Button>
+                <Button variant="outline" onClick={deliver} disabled={send.isPending} className="gap-1.5">
+                  <Send className="h-4 w-4" /> Send anyway
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </TabsContent>
 
         {/* -------------------------------- SENT ------------------------------ */}
