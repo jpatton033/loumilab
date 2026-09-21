@@ -40,6 +40,14 @@ const Panel = ({
   </div>
 );
 
+/** Plain-language movement against the previous 30-day window. */
+const merchantTrend = (current: number, previous: number) => {
+  if (previous === 0) return current === 0 ? "None in the last 30 days" : "First signups in this window";
+  const diff = current - previous;
+  if (diff === 0) return `Same as the previous 30 days (${previous})`;
+  return `${diff > 0 ? "+" : ""}${diff} vs previous 30 days (${previous})`;
+};
+
 const AdminOverview = () => {
   const { data: counts, isLoading } = useAdminCounts();
   const { data: inquiries = [] } = useRecentInquiries();
@@ -67,12 +75,24 @@ const AdminOverview = () => {
       <SEOHead title="Admin Overview | Loumilab" description="Loumilab admin overview." path="/admin/overview" noindex />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <Metric
+          label="Live merchants"
+          value={isLoading ? "—" : counts!.merchantsLive}
+          hint={
+            isLoading
+              ? undefined
+              : `${counts!.merchantsTotal} signed up · ${counts!.merchantsSettingUp} still setting up`
+          }
+        />
+        <Metric
+          label="New merchants (30 days)"
+          value={isLoading ? "—" : counts!.merchantsNew30}
+          hint={isLoading ? undefined : merchantTrend(counts!.merchantsNew30, counts!.merchantsNewPrevious30)}
+        />
         <Metric label="Inquiries" value={isLoading ? "—" : counts!.inquiriesTotal} hint={`${counts?.inquiriesNew ?? 0} unread`} />
         <Metric label="Published articles" value={isLoading ? "—" : counts!.articlesPublished} hint={`${counts?.articlesDraft ?? 0} drafts`} />
         <Metric label="Article views" value={isLoading ? "—" : counts!.articleViews} hint="All-time, Knowledge Center" />
         <Metric label="Newsletter" value={isLoading ? "—" : counts!.subscribers} hint="Subscribers" />
-        <Metric label="Hero slides" value={isLoading ? "—" : counts!.heroActive} hint="Active on homepage" />
-        <Metric label="Orders" value="Preview" hint="Mock data — not live yet" />
       </div>
 
       <div className="mt-6">
