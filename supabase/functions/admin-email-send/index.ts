@@ -32,10 +32,20 @@ const clean = (list: unknown): string[] =>
     ? [...new Set(list.map((v) => String(v ?? "").trim().toLowerCase()).filter((v) => EMAIL_RE.test(v)))]
     : [];
 
-const personalise = (html: string, email: string) => {
-  const first = email.split("@")[0].split(/[._-]/)[0];
-  const name = first ? first.charAt(0).toUpperCase() + first.slice(1) : "there";
-  return html.replaceAll("{{first_name}}", name).replaceAll("{{email}}", email);
+interface MerchantFacts {
+  contactName: string | null;
+  businessName: string | null;
+}
+
+const personalise = (html: string, email: string, facts?: MerchantFacts) => {
+  const fromEmail = email.split("@")[0].split(/[._-]/)[0];
+  const derived = fromEmail ? fromEmail.charAt(0).toUpperCase() + fromEmail.slice(1) : "there";
+  const first = facts?.contactName?.trim().split(/\s+/)[0] || derived;
+  return html
+    .replaceAll("{{first_name}}", first)
+    .replaceAll("{{contact_name}}", facts?.contactName?.trim() || first)
+    .replaceAll("{{business_name}}", facts?.businessName?.trim() || "your business")
+    .replaceAll("{{email}}", email);
 };
 
 Deno.serve(async (req) => {
