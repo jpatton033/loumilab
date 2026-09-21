@@ -43,9 +43,30 @@ export function FindReplaceDialog({
 
   const replaceAll = () => {
     if (!find) return;
+    // Replace only inside text nodes — never tag names or attributes
+    // (hrefs, styles, classes), so markup can't be corrupted.
     const re = new RegExp(escapeRe(find), caseSensitive ? "g" : "gi");
-    editor.commands.setContent(editor.getHTML().replace(re, escapeHtml(replace)), { emitUpdate: true });
-    countMatches();
+    const { state, view } = editor;
+    const ranges: { from: number; to: number }[] = [];
+    state.doc.descendants((node, pos) => {
+      if (!node.isText || !node.text) return;
+      re.lastIndex = 0;
+      let m: RegExpExecArray | null;
+      while ((m = re.exec(node.text))) {
+        if (m[0].length === 0) {
+          re.lastIndex++;
+          continue;
+        }
+        ranges.push({ from: pos + m.index, to: pos + m.index + m[0].length });
+      }
+    });
+    if (!ranges.length) return setCount(0);
+    const tr = state.tr;
+    for (let i = ranges.length - 1; i >= 0; i--) {
+      tr.insertText(replace, ranges[i].from, ranges[i].to);
+    }
+    view.dispatch(tr);
+    setCount(0);
   };
 
   return (
