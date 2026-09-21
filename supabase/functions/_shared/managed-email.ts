@@ -67,7 +67,7 @@ export async function sendManagedEmail(params: ManagedEmailParams): Promise<Mana
     await sendLovableEmail(
       {
         to: params.to,
-        from: `"${name}" <no-reply@${FROM_DOMAIN}>`,
+        from: `"${name}" <${params.fromAddress ?? "no-reply"}@${FROM_DOMAIN}>`,
         sender_domain: SENDER_DOMAIN,
         subject: params.subject,
         html: params.html,
