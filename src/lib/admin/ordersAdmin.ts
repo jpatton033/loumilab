@@ -104,7 +104,7 @@ export const useAdminOrdersSnapshot = () =>
     queryKey: ["admin", "orders-snapshot"],
     staleTime: 30_000,
     queryFn: async (): Promise<AdminOrdersSnapshot> => {
-      const [merchantsRes, storefrontsRes, accountsRes, subsRes, ordersRes, plansRes] = await Promise.all([
+      const [merchantsRes, storefrontsRes, accountsRes, profilesRes, subsRes, ordersRes, plansRes] = await Promise.all([
         supabase
           .from("merchants")
           .select(
