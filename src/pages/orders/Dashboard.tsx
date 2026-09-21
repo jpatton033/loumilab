@@ -718,7 +718,7 @@ const Dashboard = () => {
                 />
               ))}
 
-
+            {merchant && <MerchantContactCard merchantId={merchant.id} />}
           </div>
         </div>
       </section>
