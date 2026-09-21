@@ -146,8 +146,9 @@ Deno.serve(async (req) => {
   let sentCount = 0;
 
   for (const recipient of to) {
+    const facts = merchantFacts.get(recipient);
     const html = buildBrandedEmail({
-      bodyHtml: personalise(safeBody, recipient),
+      bodyHtml: personalise(safeBody, recipient, facts),
       signatureHtml,
       attachments,
     });
