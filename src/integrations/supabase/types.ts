@@ -1468,9 +1468,13 @@ export type Database = {
       merchants: {
         Row: {
           accepting_orders: boolean
+          address_line1: string | null
+          address_line2: string | null
           business_name: string
           business_type: string | null
+          city: string | null
           contact_email: string
+          contact_name: string | null
           country: string
           created_at: string
           fee_share_override_bps: number | null
@@ -1479,14 +1483,20 @@ export type Database = {
           owner_id: string
           phone: string | null
           plan_slug: string
+          postal_code: string | null
           purchase_models: string[]
+          region: string | null
           updated_at: string
         }
         Insert: {
           accepting_orders?: boolean
+          address_line1?: string | null
+          address_line2?: string | null
           business_name: string
           business_type?: string | null
+          city?: string | null
           contact_email: string
+          contact_name?: string | null
           country?: string
           created_at?: string
           fee_share_override_bps?: number | null
@@ -1495,14 +1505,20 @@ export type Database = {
           owner_id: string
           phone?: string | null
           plan_slug?: string
+          postal_code?: string | null
           purchase_models?: string[]
+          region?: string | null
           updated_at?: string
         }
         Update: {
           accepting_orders?: boolean
+          address_line1?: string | null
+          address_line2?: string | null
           business_name?: string
           business_type?: string | null
+          city?: string | null
           contact_email?: string
+          contact_name?: string | null
           country?: string
           created_at?: string
           fee_share_override_bps?: number | null
@@ -1511,7 +1527,9 @@ export type Database = {
           owner_id?: string
           phone?: string | null
           plan_slug?: string
+          postal_code?: string | null
           purchase_models?: string[]
+          region?: string | null
           updated_at?: string
         }
         Relationships: []
