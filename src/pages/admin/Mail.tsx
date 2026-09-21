@@ -39,6 +39,7 @@ import {
   Trash2,
   X,
 } from "lucide-react";
+import { junkRiskSignals } from "@/lib/admin/spamRisk";
 import { cn } from "@/lib/utils";
 
 const STATUS_STYLES: Record<string, string> = {
@@ -72,6 +73,7 @@ const Mail = () => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewWidth, setPreviewWidth] = useState<"desktop" | "mobile">("desktop");
   const [outcome, setOutcome] = useState<{ email: string; ok: boolean; error?: string }[] | null>(null);
+  const [riskSignals, setRiskSignals] = useState<string[] | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const { data: signature = "" } = useSignature();
