@@ -98,38 +98,27 @@ const AdminOrders = () => {
 
       <div className="mt-6 grid gap-4 lg:grid-cols-2">
         <div className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-soft)]">
-          <h2 className="font-display text-sm font-semibold">Merchants &amp; storefronts</h2>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h2 className="font-display text-sm font-semibold">Merchants &amp; storefronts</h2>
+            <Input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search name, email, city"
+              className="h-9 w-full sm:w-56"
+              aria-label="Search merchants"
+            />
+          </div>
           <div className="mt-4 space-y-3">
             {isLoading && <p className="text-sm text-muted-foreground">Loading merchants…</p>}
             {!isLoading && data!.merchants.length === 0 && (
               <p className="text-sm text-muted-foreground">No merchants have signed up yet.</p>
             )}
-            {!isLoading &&
-              data!.merchants.map((m) => (
-                <div key={m.id} className="flex items-center gap-3 rounded-2xl border border-border p-4">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary font-display text-xs font-bold">
-                    {m.businessName.slice(0, 2).toUpperCase()}
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium">{m.businessName}</p>
-                    <p className="truncate text-xs text-muted-foreground">
-                      {m.storefrontLocation ? `${m.storefrontLocation} · ` : ""}
-                      {m.planSlug} plan
-                      {m.payoutStatus ? ` · ${PAYOUT_STATUS_LABELS[m.payoutStatus] ?? m.payoutStatus}` : " · Payments not started"}
-                    </p>
-                  </div>
-                  <Badge variant={m.isLive ? "default" : "outline"}>
-                    {m.isLive ? "Live" : m.isPublished ? "Paused" : "Setting up"}
-                  </Badge>
-                  {m.storefrontSlug && m.isPublished && (
-                    <Button variant="ghost" size="sm" asChild>
-                      <Link to={`/orders/store/${m.storefrontSlug}`} aria-label={`View ${m.businessName}`}>
-                        <ExternalLink size={14} />
-                      </Link>
-                    </Button>
-                  )}
-                </div>
-              ))}
+            {!isLoading && data!.merchants.length > 0 && merchants.length === 0 && (
+              <p className="text-sm text-muted-foreground">No merchants match “{search}”.</p>
+            )}
+            {merchants.map((m) => (
+              <MerchantCard key={m.id} merchant={m} onEdit={() => setEditing(m)} />
+            ))}
           </div>
         </div>
 
