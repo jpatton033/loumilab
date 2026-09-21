@@ -25,12 +25,22 @@ export const merchantsCollector: Collector = {
   async collect(ctx) {
     const { db, window, previous, settings } = ctx;
 
-    const [{ data: all }, { data: accounts }] = await Promise.all([
+    const [{ data: all }, { data: accounts }, { data: storefronts }] = await Promise.all([
       db.from("merchants").select("id, business_name, plan_slug, accepting_orders, created_at"),
       db
         .from("merchant_stripe_accounts")
         .select("merchant_id, payout_status, requirements_due, requirements_disabled_reason, livemode, updated_at"),
+      db.from("merchant_storefronts").select("merchant_id, is_published"),
     ]);
+
+    // A "live" merchant means a published storefront that is accepting orders.
+    // This definition is shared with the Super Admin dashboard
+    // (src/lib/admin/queries.ts) so both surfaces always agree.
+    const publishedMerchantIds = new Set(
+      ((storefronts ?? []) as { merchant_id: string; is_published: boolean }[])
+        .filter((s) => s.is_published)
+        .map((s) => s.merchant_id),
+    );
 
     const merchants = all ?? [];
     const stripeAccounts = accounts ?? [];
@@ -52,8 +62,14 @@ export const merchantsCollector: Collector = {
 
     const nameById = new Map(merchants.map((m: { id: string; business_name: string }) => [m.id, m.business_name]));
 
+    const live = merchants.filter(
+      (m: { id: string; accepting_orders: boolean }) => m.accepting_orders && publishedMerchantIds.has(m.id),
+    );
+
     const rows: Row[] = [
+      { label: "Live merchants (published and accepting orders)", value: formatInt(live.length) },
       { label: "Total merchants", value: formatInt(merchants.length) },
+      { label: "Still finishing setup", value: formatInt(merchants.length - live.length) },
       { label: "New this period", value: formatInt(inWindow.length) },
       { label: "Accepting orders", value: formatInt(merchants.filter((m: { accepting_orders: boolean }) => m.accepting_orders).length) },
       { label: "Payments set up", value: formatInt(stripeAccounts.length) },
@@ -121,6 +137,7 @@ export const merchantsCollector: Collector = {
       title: "Merchants",
       status: "live",
       metrics: [
+        metric("Live merchants", formatInt(live.length)),
         metric("Total merchants", formatInt(merchants.length)),
         metric("New merchants", formatInt(inWindow.length), {
           current: inWindow.length,
@@ -138,8 +155,7 @@ export const merchantsCollector: Collector = {
             : undefined,
       linkPath: "/admin/orders",
       linkLabel: "View merchants",
-      note:
-        "Upgrades, downgrades and cancellations appear here once plan subscriptions are live.",
+      note: "Plan upgrades, downgrades and cancellations are reported in the Subscriptions section.",
     };
   },
 };
