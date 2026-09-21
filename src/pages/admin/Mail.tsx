@@ -160,6 +160,16 @@ const Mail = () => {
     if (!subject.trim()) return toast({ title: "Add a subject", variant: "destructive" });
     if (!hasContent) return toast({ title: "Write a message first", variant: "destructive" });
 
+    const signals = junkRiskSignals(subject, bodyHtml);
+    if (signals.length) {
+      setRiskSignals(signals);
+      return;
+    }
+    await deliver();
+  };
+
+  const deliver = async () => {
+    setRiskSignals(null);
     try {
       const result = await send.mutateAsync({
         id: draftId,
