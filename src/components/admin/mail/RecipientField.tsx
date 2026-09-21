@@ -95,7 +95,10 @@ function ContactPicker({
     return (contacts ?? []).filter(
       (c) =>
         (group === "all" || c.group === group) &&
-        (!t || c.email.includes(t) || c.label.toLowerCase().includes(t)),
+        (!t ||
+          c.email.includes(t) ||
+          c.label.toLowerCase().includes(t) ||
+          (c.hint ?? "").toLowerCase().includes(t)),
     );
   }, [contacts, term, group]);
 
