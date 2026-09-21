@@ -17,8 +17,26 @@ export interface AdminCounts {
   subscribers: number;
   heroActive: number;
   articleViews: number;
+  /** Merchants whose storefront is published and accepting orders. */
+  merchantsLive: number;
+  /** Every merchant account that has been created. */
+  merchantsTotal: number;
+  /** Merchants signed up in the trailing 30 days. */
+  merchantsNew30: number;
+  /** Merchants signed up in the 30 days before that, for movement. */
+  merchantsNewPrevious30: number;
+  /** Signed up but not yet live (unpublished store or not accepting orders). */
+  merchantsSettingUp: number;
 }
 
+export const MERCHANT_WINDOW_DAYS = 30;
+
+/**
+ * Live merchant definition used everywhere in the admin portal and in the
+ * Daily Brief: a merchant with at least one published storefront that is
+ * currently accepting orders. Keep this in sync with the brief's merchants
+ * collector (supabase/functions/_shared/ops-brief/collectors/merchants.ts).
+ */
 export const useAdminCounts = () =>
   useQuery({
     queryKey: ["admin", "counts"],
@@ -34,9 +52,35 @@ export const useAdminCounts = () =>
           count("hero_products", (q) => q.eq("is_active", true)),
         ]);
 
-      const { data: views, error } = await supabase.from("kc_articles").select("view_count");
-      if (error) throw error;
-      const articleViews = (views ?? []).reduce((sum, r) => sum + (r.view_count ?? 0), 0);
+      const [viewsRes, merchantsRes, storefrontsRes] = await Promise.all([
+        supabase.from("kc_articles").select("view_count"),
+        supabase.from("merchants").select("id, accepting_orders, created_at"),
+        supabase.from("merchant_storefronts").select("merchant_id, is_published"),
+      ]);
+      if (viewsRes.error) throw viewsRes.error;
+      if (merchantsRes.error) throw merchantsRes.error;
+      if (storefrontsRes.error) throw storefrontsRes.error;
+
+      const articleViews = (viewsRes.data ?? []).reduce((sum, r) => sum + (r.view_count ?? 0), 0);
+
+      const merchants = merchantsRes.data ?? [];
+      const publishedMerchantIds = new Set(
+        (storefrontsRes.data ?? []).filter((s) => s.is_published).map((s) => s.merchant_id),
+      );
+
+      const now = Date.now();
+      const dayMs = 24 * 60 * 60 * 1000;
+      const windowStart = now - MERCHANT_WINDOW_DAYS * dayMs;
+      const previousStart = now - 2 * MERCHANT_WINDOW_DAYS * dayMs;
+
+      const merchantsLive = merchants.filter(
+        (m) => m.accepting_orders && publishedMerchantIds.has(m.id),
+      ).length;
+      const merchantsNew30 = merchants.filter((m) => new Date(m.created_at).getTime() >= windowStart).length;
+      const merchantsNewPrevious30 = merchants.filter((m) => {
+        const t = new Date(m.created_at).getTime();
+        return t >= previousStart && t < windowStart;
+      }).length;
 
       return {
         inquiriesTotal,
@@ -46,6 +90,11 @@ export const useAdminCounts = () =>
         subscribers,
         heroActive,
         articleViews,
+        merchantsLive,
+        merchantsTotal: merchants.length,
+        merchantsNew30,
+        merchantsNewPrevious30,
+        merchantsSettingUp: merchants.length - merchantsLive,
       };
     },
   });
