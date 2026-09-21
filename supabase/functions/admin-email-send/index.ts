@@ -160,6 +160,7 @@ Deno.serve(async (req) => {
       html,
       text,
       displayName,
+      fromAddress: "mail",
       label: "admin-mail",
       idempotencyKey: `${threadId}-${recipient}`,
     });

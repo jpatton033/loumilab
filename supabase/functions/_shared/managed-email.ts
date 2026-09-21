@@ -20,6 +20,8 @@ export interface ManagedEmailParams {
   replyTo?: string;
   /** Shown before the address in the From: header. */
   displayName?: string;
+  /** Local part of the From: address on the sending domain. Defaults to "no-reply". */
+  fromAddress?: string;
   /** Short label used for delivery logs. */
   label?: string;
   /** Dedupes retries of the same logical send. */
@@ -65,7 +67,7 @@ export async function sendManagedEmail(params: ManagedEmailParams): Promise<Mana
     await sendLovableEmail(
       {
         to: params.to,
-        from: `"${name}" <no-reply@${FROM_DOMAIN}>`,
+        from: `"${name}" <${params.fromAddress ?? "no-reply"}@${FROM_DOMAIN}>`,
         sender_domain: SENDER_DOMAIN,
         subject: params.subject,
         html: params.html,
