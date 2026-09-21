@@ -156,7 +156,7 @@ Deno.serve(async (req) => {
 
     const result = await sendManagedEmail({
       to: recipient,
-      subject: personalise(subject, recipient),
+      subject: personalise(subject, recipient, facts),
       html,
       text,
       displayName,
