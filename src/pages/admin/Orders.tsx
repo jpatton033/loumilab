@@ -42,10 +42,229 @@ const Metric = ({ label, value, hint }: { label: string; value: string; hint?: s
   </div>
 );
 
+/** Copy-to-clipboard row used across the merchant detail panel. */
+const DetailRow = ({
+  label,
+  value,
+  href,
+  multiline,
+}: {
+  label: string;
+  value: string | null;
+  href?: string;
+  multiline?: boolean;
+}) => {
+  if (!value) {
+    return (
+      <div className="flex items-baseline justify-between gap-3 text-xs">
+        <span className="text-muted-foreground">{label}</span>
+        <span className="text-muted-foreground/70">Not provided</span>
+      </div>
+    );
+  }
+  return (
+    <div className="flex items-start justify-between gap-3 text-xs">
+      <span className="shrink-0 text-muted-foreground">{label}</span>
+      <span className="flex min-w-0 items-start gap-1.5 text-right">
+        {href ? (
+          <a href={href} className="truncate text-foreground underline-offset-2 hover:underline">
+            {value}
+          </a>
+        ) : (
+          <span className={multiline ? "whitespace-pre-line text-foreground" : "truncate text-foreground"}>{value}</span>
+        )}
+        <button
+          type="button"
+          aria-label={`Copy ${label}`}
+          className="shrink-0 text-muted-foreground transition-colors hover:text-foreground"
+          onClick={() => {
+            void navigator.clipboard.writeText(value);
+            toast({ title: `${label} copied` });
+          }}
+        >
+          <Copy size={12} />
+        </button>
+      </span>
+    </div>
+  );
+};
+
+const MerchantCard = ({ merchant: m, onEdit }: { merchant: AdminMerchantRow; onEdit: () => void }) => {
+  const [open, setOpen] = useState(false);
+  const address = formatMailingAddress(m);
+
+  return (
+    <div className="rounded-2xl border border-border p-4">
+      <div className="flex items-center gap-3">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary font-display text-xs font-bold">
+          {m.businessName.slice(0, 2).toUpperCase()}
+        </span>
+        <button type="button" onClick={() => setOpen((v) => !v)} className="min-w-0 flex-1 text-left">
+          <p className="truncate text-sm font-medium">{m.businessName}</p>
+          <p className="truncate text-xs text-muted-foreground">
+            {m.contactName ? `${m.contactName} · ` : ""}
+            {m.contactEmail || "No contact email"}
+          </p>
+        </button>
+        <Badge variant={m.isLive ? "default" : "outline"}>
+          {m.isLive ? "Live" : m.isPublished ? "Paused" : "Setting up"}
+        </Badge>
+        {m.storefrontSlug && m.isPublished && (
+          <Button variant="ghost" size="sm" asChild>
+            <Link to={`/orders/store/${m.storefrontSlug}`} aria-label={`View ${m.businessName}`}>
+              <ExternalLink size={14} />
+            </Link>
+          </Button>
+        )}
+        <Button variant="ghost" size="sm" onClick={() => setOpen((v) => !v)} aria-label={`Details for ${m.businessName}`}>
+          <ChevronDown size={14} className={open ? "rotate-180 transition-transform" : "transition-transform"} />
+        </Button>
+      </div>
+
+      {open && (
+        <div className="mt-4 space-y-2 border-t border-border pt-4">
+          <DetailRow label="Contact name" value={m.contactName} />
+          <DetailRow label="Account holder" value={m.ownerName} />
+          <DetailRow
+            label="Email"
+            value={m.contactEmail || null}
+            href={m.contactEmail ? `mailto:${m.contactEmail}` : undefined}
+          />
+          <DetailRow label="Phone" value={m.phone} href={m.phone ? `tel:${m.phone}` : undefined} />
+          <DetailRow label="Mailing address" value={address} multiline />
+          <DetailRow label="Store" value={m.storefrontName} />
+          <DetailRow label="Store location" value={m.storefrontLocation} />
+          <DetailRow label="Plan" value={`${m.planSlug}${m.subscriptionStatus ? ` · ${m.subscriptionStatus}` : ""}`} />
+          <DetailRow
+            label="Payments"
+            value={m.payoutStatus ? (PAYOUT_STATUS_LABELS[m.payoutStatus] ?? m.payoutStatus) : "Not started"}
+          />
+          <DetailRow label="Signed up" value={new Date(m.createdAt).toLocaleDateString()} />
+          <div className="pt-2">
+            <Button variant="outline" size="sm" onClick={onEdit}>
+              <Pencil size={13} /> Edit contact details
+            </Button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const FIELDS: { key: keyof MerchantContactInput; label: string; wide?: boolean }[] = [
+  { key: "contactName", label: "Contact name" },
+  { key: "contactEmail", label: "Contact email" },
+  { key: "phone", label: "Phone" },
+  { key: "country", label: "Country" },
+  { key: "addressLine1", label: "Street address", wide: true },
+  { key: "addressLine2", label: "Suite, unit or floor", wide: true },
+  { key: "city", label: "City" },
+  { key: "region", label: "State / region" },
+  { key: "postalCode", label: "ZIP / postal code" },
+];
+
+const EditContactDialog = ({
+  merchant,
+  onClose,
+}: {
+  merchant: AdminMerchantRow;
+  onClose: () => void;
+}) => {
+  const save = useSaveMerchantContact();
+  const [form, setForm] = useState<MerchantContactInput>({
+    contactName: merchant.contactName ?? "",
+    contactEmail: merchant.contactEmail ?? "",
+    phone: merchant.phone ?? "",
+    addressLine1: merchant.addressLine1 ?? "",
+    addressLine2: merchant.addressLine2 ?? "",
+    city: merchant.city ?? "",
+    region: merchant.region ?? "",
+    postalCode: merchant.postalCode ?? "",
+    country: merchant.country ?? "US",
+  });
+
+  return (
+    <Dialog open onOpenChange={(v) => !v && onClose()}>
+      <DialogContent className="max-h-[90vh] overflow-auto sm:max-w-lg">
+        <DialogHeader>
+          <DialogTitle>{merchant.businessName}</DialogTitle>
+          <DialogDescription>Correct the merchant's contact record. Changes are audit logged.</DialogDescription>
+        </DialogHeader>
+        <form
+          className="grid gap-3 sm:grid-cols-2"
+          onSubmit={(e) => {
+            e.preventDefault();
+            save.mutate(
+              { merchant, input: form },
+              {
+                onSuccess: () => {
+                  toast({ title: "Merchant details updated" });
+                  onClose();
+                },
+                onError: (err) =>
+                  toast({
+                    title: "Could not save",
+                    description: err instanceof Error ? err.message : "Please try again.",
+                    variant: "destructive",
+                  }),
+              },
+            );
+          }}
+        >
+          {FIELDS.map((f) => (
+            <div key={f.key} className={f.wide ? "space-y-1.5 sm:col-span-2" : "space-y-1.5"}>
+              <Label htmlFor={`f-${f.key}`}>{f.label}</Label>
+              <Input
+                id={`f-${f.key}`}
+                value={form[f.key]}
+                required={f.key === "contactEmail"}
+                type={f.key === "contactEmail" ? "email" : "text"}
+                onChange={(e) => setForm((prev) => ({ ...prev, [f.key]: e.target.value }))}
+              />
+            </div>
+          ))}
+          <div className="flex justify-end gap-2 sm:col-span-2">
+            <Button type="button" variant="ghost" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button type="submit" disabled={save.isPending}>
+              {save.isPending ? "Saving…" : "Save"}
+            </Button>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
 const AdminOrders = () => {
   const { data, isLoading } = useAdminOrdersSnapshot();
   const totals = data?.totals;
   const dash = "—";
+  const [search, setSearch] = useState("");
+  const [editing, setEditing] = useState<AdminMerchantRow | null>(null);
+
+  const merchants = useMemo(() => {
+    const t = search.trim().toLowerCase();
+    const rows = data?.merchants ?? [];
+    if (!t) return rows;
+    return rows.filter((m) =>
+      [
+        m.businessName,
+        m.contactName,
+        m.contactEmail,
+        m.phone,
+        m.city,
+        m.region,
+        m.postalCode,
+        m.storefrontName,
+        m.storefrontLocation,
+        m.ownerName,
+      ]
+        .filter(Boolean)
+        .some((v) => String(v).toLowerCase().includes(t)),
+    );
+  }, [data?.merchants, search]);
 
   return (
     <AdminShell
