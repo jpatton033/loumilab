@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
 /**
@@ -253,4 +253,74 @@ export const PAYOUT_STATUS_LABELS: Record<string, string> = {
   restricted: "Restricted",
   payout_enabled: "Payouts enabled",
   disabled: "Payouts disabled",
+};
+
+/** One-line mailing address, or null when nothing has been captured yet. */
+export const formatMailingAddress = (m: {
+  addressLine1: string | null;
+  addressLine2: string | null;
+  city: string | null;
+  region: string | null;
+  postalCode: string | null;
+  country: string | null;
+}): string | null => {
+  const cityLine = [m.city, [m.region, m.postalCode].filter(Boolean).join(" ")].filter(Boolean).join(", ");
+  const parts = [m.addressLine1, m.addressLine2, cityLine, m.country].map((p) => (p ?? "").trim()).filter(Boolean);
+  return parts.length ? parts.join("\n") : null;
+};
+
+/**
+ * Staff correction of a merchant's contact record. Staff already hold update
+ * rights on `merchants`; every change is written to the audit log.
+ */
+export const useSaveMerchantContact = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ merchant, input }: { merchant: AdminMerchantRow; input: MerchantContactInput }) => {
+      const trim = (v: string) => v.trim();
+      const orNull = (v: string) => (trim(v) ? trim(v) : null);
+      const email = trim(input.contactEmail);
+      if (!email) throw new Error("A contact email is required.");
+
+      const payload = {
+        contact_name: orNull(input.contactName),
+        contact_email: email,
+        phone: orNull(input.phone),
+        address_line1: orNull(input.addressLine1),
+        address_line2: orNull(input.addressLine2),
+        city: orNull(input.city),
+        region: orNull(input.region),
+        postal_code: orNull(input.postalCode),
+        country: trim(input.country) || merchant.country || "US",
+      };
+
+      const { error } = await supabase.from("merchants").update(payload).eq("id", merchant.id);
+      if (error) throw error;
+
+      const { data: auth } = await supabase.auth.getUser();
+      await supabase.from("audit_logs").insert({
+        actor_id: auth.user?.id ?? null,
+        actor_email: auth.user?.email ?? null,
+        action: "merchant.contact_updated",
+        target_type: "merchant",
+        target_id: merchant.id,
+        old_value: {
+          contact_name: merchant.contactName,
+          contact_email: merchant.contactEmail,
+          phone: merchant.phone,
+          address_line1: merchant.addressLine1,
+          address_line2: merchant.addressLine2,
+          city: merchant.city,
+          region: merchant.region,
+          postal_code: merchant.postalCode,
+          country: merchant.country,
+        },
+        new_value: payload,
+      });
+    },
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ["admin", "orders-snapshot"] });
+      void qc.invalidateQueries({ queryKey: ["admin", "mail", "contacts"] });
+    },
+  });
 };
