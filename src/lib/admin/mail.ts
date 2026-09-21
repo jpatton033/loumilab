@@ -308,10 +308,19 @@ export const useSaveSignature = () => {
 
 /* ---------------------------- recipient picker --------------------------- */
 
+export const CONTACT_GROUPS = [
+  "Inquiries",
+  "Merchants",
+  "Merchants — live",
+  "Merchants — setting up",
+  "Subscribers",
+] as const;
+
 export interface Contact {
   email: string;
   label: string;
-  group: "Inquiries" | "Merchants" | "Subscribers";
+  hint?: string;
+  group: (typeof CONTACT_GROUPS)[number];
 }
 
 export const useMailContacts = () =>
