@@ -7,15 +7,14 @@ import { websiteChangesCollector } from "./changes.ts";
 import { auditCollector, pricingChangesCollector } from "./governance.ts";
 import { securityCollector } from "./security.ts";
 import { developmentCollector, systemCollector } from "./system.ts";
+import { ordersCollector } from "./orders.ts";
+import { revenueCollector } from "./revenue.ts";
+import { payoutsCollector } from "./payouts.ts";
+import { disputesCollector, refundsCollector } from "./refunds.ts";
+import { subscriptionsCollector } from "./subscriptions.ts";
 import {
   customerExperienceCollector,
-  disputesCollector,
-  ordersCollector,
-  payoutsCollector,
-  refundsCollector,
-  revenueCollector,
   seoCollector,
-  subscriptionsCollector,
   websiteTrafficCollector,
 } from "./pending.ts";
 
