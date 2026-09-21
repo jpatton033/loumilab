@@ -19,48 +19,6 @@ const pending = (
   collect: () => Promise.resolve(unavailableSection(key, title, note)),
 });
 
-export const ordersCollector = pending(
-  "orders",
-  "Loumilab Orders",
-  "orders",
-  "Customer checkout is not live yet, so order volume, GMV, average order value, tips, taxes, delivery revenue and pickup/delivery mix have no authoritative source. Merchant onboarding and payout readiness are reported under Merchants and Payments.",
-);
-
-export const revenueCollector = pending(
-  "revenue",
-  "Revenue",
-  "orders",
-  "Platform fee revenue and subscription revenue begin accruing with the first customer checkout and the first plan subscription. Configured platform fees per plan are reported under Pricing & Policy Changes whenever they change.",
-);
-
-export const payoutsCollector = pending(
-  "payouts",
-  "Merchant Payouts",
-  "orders",
-  "No payouts exist yet because no customer payments have been processed. Payout readiness of each connected account is reported under Merchants.",
-);
-
-export const refundsCollector = pending(
-  "refunds",
-  "Refunds",
-  "orders",
-  "Refunds require processed payments, which begin with customer checkout.",
-);
-
-export const disputesCollector = pending(
-  "disputes",
-  "Disputes & Chargebacks",
-  "orders",
-  "Disputes and chargebacks require processed payments. Once live, evidence deadlines will surface in Action Required.",
-);
-
-export const subscriptionsCollector = pending(
-  "subscriptions",
-  "Subscriptions",
-  "orders",
-  "Plan subscriptions are not yet billing, so new subscriptions, renewals, upgrades, downgrades, cancellations and MRR movement have no source.",
-);
-
 export const websiteTrafficCollector = pending(
   "website",
   "Website & Growth",
