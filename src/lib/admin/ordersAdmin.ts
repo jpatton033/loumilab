@@ -133,6 +133,10 @@ export const useAdminOrdersSnapshot = () =>
       for (const res of [merchantsRes, storefrontsRes, accountsRes, subsRes, ordersRes, plansRes]) {
         if (res.error) throw res.error;
       }
+      // Display names are a nicety — never fail the whole snapshot over them.
+      const ownerNames = new Map(
+        (profilesRes.data ?? []).map((p) => [p.user_id as string, (p.display_name as string | null) ?? null]),
+      );
 
       const storefrontByMerchant = new Map<string, (typeof storefrontsRes.data)[number]>();
       (storefrontsRes.data ?? []).forEach((s) => {
