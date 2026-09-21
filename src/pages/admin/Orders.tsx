@@ -435,6 +435,8 @@ const AdminOrders = () => {
       </div>
 
       <OrderConversationsPanel />
+
+      {editing && <EditContactDialog merchant={editing} onClose={() => setEditing(null)} />
     </AdminShell>
   );
 };
