@@ -122,6 +122,25 @@ Deno.serve(async (req) => {
   }
 
   const safeBody = sanitizeEmailHtml(rawBody);
+
+  // Merge-field facts for recipients that are Loumilab Orders merchants.
+  const merchantFacts = new Map<string, MerchantFacts>();
+  {
+    const { data: merchantRows } = await supabase
+      .from("merchants")
+      .select("contact_email, contact_name, business_name")
+      .in("contact_email", to);
+    (merchantRows ?? []).forEach((m: Record<string, unknown>) => {
+      const key = String(m.contact_email ?? "").trim().toLowerCase();
+      if (key) {
+        merchantFacts.set(key, {
+          contactName: (m.contact_name as string | null) ?? null,
+          businessName: (m.business_name as string | null) ?? null,
+        });
+      }
+    });
+  }
+
   const threadId = crypto.randomUUID();
   const results: { email: string; ok: boolean; error?: string }[] = [];
   let sentCount = 0;
