@@ -147,11 +147,14 @@ function buildExecutive(sections: Section[], actions: ActionItem[], changes: Cha
     byKey.get(key)?.metrics?.find((m) => m.label === label);
 
   const metrics = [
+    pick("merchants", "Live merchants") ?? metric("Live merchants", "—"),
     pick("merchants", "New merchants") ?? metric("New merchants", "—"),
+    pick("orders", "Paid orders") ?? metric("Paid orders", "—"),
+    pick("orders", "Gross sales") ?? metric("Gross sales", "—"),
+    pick("revenue", "Platform fees") ?? metric("Platform fees", "—"),
     pick("leads", "Custom requests") ?? metric("Custom requests", "—"),
     pick("leads", "Website inquiries") ?? metric("Website inquiries", "—"),
     pick("knowledge", "Article views") ?? metric("Article views", "—"),
-    pick("payments", "Webhook events") ?? metric("Stripe events", "—"),
     { label: "Items requiring attention", value: formatInt(actions.length), positiveIsGood: false },
   ];
 
@@ -192,7 +195,7 @@ function buildExecutive(sections: Section[], actions: ActionItem[], changes: Cha
         : "nothing currently requires your attention",
   );
 
-  const summary = `${capitalize(parts.join(", "))}. Customer checkout and plan subscriptions are not live yet, so order, revenue and payout figures are reported as unavailable rather than estimated.${
+  const summary = `${capitalize(parts.join(", "))}.${
     changes.length === 0 ? " No notable changes were recorded in this period." : ""
   }`;
 
