@@ -10,9 +10,31 @@ import { supabase } from "@/integrations/supabase/client";
 
 export const ORDERS_WINDOW_DAYS = 30;
 
+export interface MerchantContactInput {
+  contactName: string;
+  contactEmail: string;
+  phone: string;
+  addressLine1: string;
+  addressLine2: string;
+  city: string;
+  region: string;
+  postalCode: string;
+  country: string;
+}
+
 export interface AdminMerchantRow {
   id: string;
   businessName: string;
+  contactName: string | null;
+  contactEmail: string;
+  phone: string | null;
+  ownerName: string | null;
+  addressLine1: string | null;
+  addressLine2: string | null;
+  city: string | null;
+  region: string | null;
+  postalCode: string | null;
+  country: string | null;
   planSlug: string;
   acceptingOrders: boolean;
   createdAt: string;
