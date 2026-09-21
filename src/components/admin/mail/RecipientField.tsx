@@ -94,7 +94,8 @@ function ContactPicker({
     const t = term.trim().toLowerCase();
     return (contacts ?? []).filter(
       (c) =>
-        (group === "all" || c.group === group) &&
+        // "Everyone" hides the merchant sub-groups so nobody is listed twice.
+        (group === "all" ? !c.group.startsWith("Merchants —") : c.group === group) &&
         (!t ||
           c.email.includes(t) ||
           c.label.toLowerCase().includes(t) ||
