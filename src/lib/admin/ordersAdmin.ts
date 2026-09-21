@@ -115,6 +115,7 @@ export const useAdminOrdersSnapshot = () =>
           .select("merchant_id, name, slug, location, is_published")
           .order("created_at", { ascending: true }),
         supabase.from("merchant_stripe_accounts").select("merchant_id, payout_status, livemode"),
+        supabase.from("profiles").select("user_id, display_name"),
         supabase.from("merchant_subscriptions").select("merchant_id, status"),
         supabase
           .from("orders")
