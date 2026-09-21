@@ -3,14 +3,29 @@ import OrderConversationsPanel from "@/components/admin/OrderConversationsPanel"
 import SEOHead from "@/components/SEOHead";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatMoney } from "@/data/orders/storefronts";
+import { toast } from "@/hooks/use-toast";
 import {
   ORDERS_WINDOW_DAYS,
   PAYOUT_STATUS_LABELS,
+  formatMailingAddress,
   useAdminOrdersSnapshot,
+  useSaveMerchantContact,
+  type AdminMerchantRow,
+  type MerchantContactInput,
 } from "@/lib/admin/ordersAdmin";
-import { ExternalLink } from "lucide-react";
+import { ChevronDown, Copy, ExternalLink, Pencil } from "lucide-react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 const MODE_LABEL: Record<string, string> = {
