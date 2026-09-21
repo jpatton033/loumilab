@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { EMAIL_RE, parseAddresses, useMailContacts, type Contact } from "@/lib/admin/mail";
+import { CONTACT_GROUPS, EMAIL_RE, parseAddresses, useMailContacts, type Contact } from "@/lib/admin/mail";
 import { cn } from "@/lib/utils";
 
 /** Address chips with a searchable picker of known Loumilab contacts. */
