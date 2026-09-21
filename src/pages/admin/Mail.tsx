@@ -373,6 +373,33 @@ const Mail = () => {
               </ul>
             </div>
           )}
+
+          <Dialog open={!!riskSignals} onOpenChange={(v) => !v && setRiskSignals(null)}>
+            <DialogContent className="max-w-md">
+              <DialogHeader>
+                <DialogTitle>This may land in junk</DialogTitle>
+              </DialogHeader>
+              <p className="text-sm text-muted-foreground">
+                Mail providers score these patterns harshly, especially Apple and Gmail:
+              </p>
+              <ul className="space-y-1.5 text-sm">
+                {(riskSignals ?? []).map((s) => (
+                  <li key={s} className="flex items-start gap-2">
+                    <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                    <span>{s}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="flex flex-wrap gap-2">
+                <Button onClick={() => setRiskSignals(null)} className="gap-1.5">
+                  <PenLine className="h-4 w-4" /> Let me edit it
+                </Button>
+                <Button variant="outline" onClick={deliver} disabled={send.isPending} className="gap-1.5">
+                  <Send className="h-4 w-4" /> Send anyway
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </TabsContent>
 
         {/* -------------------------------- SENT ------------------------------ */}
