@@ -20,6 +20,8 @@ export interface ManagedEmailParams {
   replyTo?: string;
   /** Shown before the address in the From: header. */
   displayName?: string;
+  /** Local part of the From: address on the sending domain. Defaults to "no-reply". */
+  fromAddress?: string;
   /** Short label used for delivery logs. */
   label?: string;
   /** Dedupes retries of the same logical send. */
