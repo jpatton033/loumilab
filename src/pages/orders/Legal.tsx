@@ -25,7 +25,7 @@ const LegalPage = ({ document, path, seoDescription }: Props) => {
 
   return (
     <Layout>
-      <SEOHead title={`${document.title} — Loumilab`} description={seoDescription} path={path} />
+      <SEOHead title={document.title} description={seoDescription} path={path} />
       <section className="section-padding pt-32 lg:pt-40">
         <div className="section-container mx-auto max-w-3xl">
           <Link

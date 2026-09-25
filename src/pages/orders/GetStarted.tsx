@@ -960,3 +960,12 @@ const GetStarted = () => {
 };
 
 export default GetStarted;
+
+const GET_STARTED_JSONLD = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Loumilab Orders", item: "https://loumilab.com/orders" },
+    { "@type": "ListItem", position: 2, name: "Get started", item: "https://loumilab.com/orders/get-started" },
+  ],
+};
