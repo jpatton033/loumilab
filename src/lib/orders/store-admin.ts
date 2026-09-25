@@ -244,12 +244,14 @@ export const useSaveStoreSetup = () => {
         .maybeSingle();
       if (merchantReadError) throw merchantReadError;
 
+      // Plan is never written here: paid tiers are granted only by a real
+      // subscription (billing), so new merchants start on Launch and the
+      // wizard sends them to checkout for the plan they picked.
       const merchantPayload = {
         business_name: input.businessName.trim(),
         contact_email: user.email ?? "",
         industry_slug: input.industrySlug,
         purchase_models: input.purchaseModels,
-        plan_slug: input.planSlug ?? "starter",
         business_type: input.category?.trim() || null,
       };
 
@@ -261,7 +263,7 @@ export const useSaveStoreSetup = () => {
       } else {
         const { data, error } = await supabase
           .from("merchants")
-          .insert({ ...merchantPayload, owner_id: user.id, accepting_orders: false })
+          .insert({ ...merchantPayload, plan_slug: "launch", owner_id: user.id, accepting_orders: false })
           .select("id")
           .single();
         if (error) throw error;
