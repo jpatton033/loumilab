@@ -16,7 +16,13 @@ const ScrollToTop = () => {
 
   useEffect(() => {
     if (hash) {
-      const el = document.querySelector(hash);
+      let targetId = hash.slice(1);
+      try {
+        targetId = decodeURIComponent(targetId);
+      } catch {
+        // Keep the raw fragment when a URL contains malformed encoding.
+      }
+      const el = document.getElementById(targetId);
       if (el) {
         el.scrollIntoView({ behavior: "smooth", block: "start" });
         return;

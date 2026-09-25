@@ -35,7 +35,7 @@ const LegalPage = ({ document, path, seoDescription }: Props) => {
             <ArrowLeft size={14} /> Loumilab Orders
           </Link>
 
-          <Eyebrow className="mt-8">Legal</Eyebrow>
+          <Eyebrow className="mt-8 block">Legal</Eyebrow>
           <h1 className="mt-3 font-hero text-4xl font-semibold tracking-tight sm:text-5xl">{document.title}</h1>
           <p className="mt-4 text-sm text-muted-foreground">
             Effective {AGREEMENT_EFFECTIVE_DATE} · Last updated {AGREEMENT_LAST_UPDATED}
