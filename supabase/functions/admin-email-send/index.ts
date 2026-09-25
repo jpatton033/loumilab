@@ -65,12 +65,17 @@ Deno.serve(async (req) => {
   const userId = claims.claims.sub as string;
   const userEmail = (claims.claims.email as string | undefined) ?? null;
 
-  const { data: isStaff, error: staffError } = await supabase.rpc("is_staff", { _user_id: userId });
-  if (staffError) {
-    console.error("Staff check failed", staffError.message);
+  // Sending mail from the official domain is limited to full admins
+  // (legacy admin role or super_admin), not every staff role.
+  const [appRole, superRole] = await Promise.all([
+    supabase.from("user_roles").select("role").eq("user_id", userId).eq("role", "admin").maybeSingle(),
+    supabase.from("admin_roles").select("role").eq("user_id", userId).eq("role", "super_admin").maybeSingle(),
+  ]);
+  if (appRole.error && superRole.error) {
+    console.error("Admin check failed");
     return json({ error: "Could not verify permissions" }, 500);
   }
-  if (!isStaff) return json({ error: "Forbidden" }, 403);
+  if (!appRole.data && !superRole.data) return json({ error: "Forbidden" }, 403);
 
   let payload: Record<string, unknown>;
   try {

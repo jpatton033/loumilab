@@ -1,5 +1,5 @@
 import { admin } from "./auth.ts";
-import { money, row, sendEmail, shell } from "./notify.ts";
+import { escapeHtml, money, row, sendEmail, shell } from "./notify.ts";
 import { stripe } from "./stripe.ts";
 
 /**
@@ -103,10 +103,10 @@ async function completeTip(orderId: string, session: Obj) {
       `Tip received — ${money(amount, order.currency ?? "usd")}`,
       shell(
         "Tip received",
-        `<p style="margin:0;font-size:15px;line-height:1.55">${order.customer_name} added a tip of ${money(
+        `<p style="margin:0;font-size:15px;line-height:1.55">${escapeHtml(String(order.customer_name ?? ""))} added a tip of ${money(
           amount,
           order.currency ?? "usd",
-        )}${order.reference ? ` on order ${order.reference}` : ""}. Loumilab takes no fee on tips — it pays out to you in full on your normal Stripe schedule.</p>`,
+        )}${order.reference ? ` on order ${escapeHtml(String(order.reference))}` : ""}. Loumilab takes no fee on tips — it pays out to you in full on your normal Stripe schedule.</p>`,
       ),
       `order-tip-${order.id}`,
     );
@@ -162,9 +162,9 @@ async function completeOrder(orderId: string, session: Obj, stripeAccount?: stri
     `Your order from ${merchant?.business_name ?? "Loumilab Orders"} is confirmed`,
     shell(
       "Order confirmed",
-      `<p style="margin:0 0 10px;font-size:15px;line-height:1.55">Thanks ${order.customer_name}. ${
-        merchant?.business_name ?? "The business"
-      } has your ${order.fulfilment} order.</p>${table}`,
+      `<p style="margin:0 0 10px;font-size:15px;line-height:1.55">Thanks ${escapeHtml(String(order.customer_name ?? ""))}. ${
+        escapeHtml(merchant?.business_name ?? "The business")
+      } has your ${escapeHtml(String(order.fulfilment ?? ""))} order.</p>${table}`,
     ),
     `order-confirm-${order.id}`,
   );
@@ -175,7 +175,7 @@ async function completeOrder(orderId: string, session: Obj, stripeAccount?: stri
       `New paid order — ${money(order.total_cents, cur)}`,
       shell(
         "New paid order",
-        `<p style="margin:0 0 10px;font-size:15px;line-height:1.55">${order.customer_name} placed a ${order.fulfilment} order.</p>${table}`,
+        `<p style="margin:0 0 10px;font-size:15px;line-height:1.55">${escapeHtml(String(order.customer_name ?? ""))} placed a ${escapeHtml(String(order.fulfilment ?? ""))} order.</p>${table}`,
       ),
       `order-merchant-${order.id}`,
     );
