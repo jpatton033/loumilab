@@ -32,6 +32,7 @@ import {
   PURCHASE_MODELS,
 } from "@/lib/orders/industries";
 import { toast } from "sonner";
+import { subscribeToPlan } from "@/lib/orders/billing";
 
 const DRAFT_KEY = "loumilab-orders-onboarding-draft";
 
@@ -252,6 +253,7 @@ const GetStarted = () => {
   };
 
   const selectedPlan = plans?.find((p) => p.slug === planSlug) ?? null;
+  const [subscribing, setSubscribing] = useState(false);
   const namedItems = items.filter((i) => i.name.trim());
 
   const stepCardRef = useRef<HTMLDivElement>(null);
@@ -759,6 +761,35 @@ const GetStarted = () => {
                         </p>
                       </button>
                     ))}
+                    {selectedPlan?.requires_subscription && (
+                      <div className="rounded-2xl border border-border p-5 text-sm">
+                        <p className="text-muted-foreground">
+                          Your store starts on Launch. {selectedPlan.name} takes effect once you subscribe — you can also
+                          do this later from Payments in your dashboard.
+                        </p>
+                        <Button
+                          type="button"
+                          className="mt-3"
+                          disabled={subscribing || !signedIn}
+                          onClick={async () => {
+                            setSubscribing(true);
+                            try {
+                              await persist(false);
+                              const { url } = await subscribeToPlan(selectedPlan.slug, "month");
+                              window.location.href = url;
+                            } catch (error) {
+                              toast.error("Couldn't open checkout", {
+                                description: error instanceof Error ? error.message : "Please try again in a moment.",
+                              });
+                              setSubscribing(false);
+                            }
+                          }}
+                        >
+                          {subscribing && <Loader2 className="h-4 w-4 animate-spin" />}
+                          Subscribe to {selectedPlan.name}
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 )}
 
