@@ -55,6 +55,7 @@ Deno.serve(async (req) => {
   const cronKey = req.headers.get("x-ops-cron-key");
   const isCron = Boolean(CRON_SECRET && cronKey && timingSafeEqual(cronKey, CRON_SECRET));
   let actor = "schedule";
+  let callerEmail: string | null = null;
 
   if (!isCron) {
     const token = req.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
@@ -70,6 +71,7 @@ Deno.serve(async (req) => {
       admin.from("admin_roles").select("role").eq("user_id", userData.user.id).limit(1).maybeSingle(),
     ]);
     if (!appRole && !adminRole) return json({ error: "Forbidden" }, 403);
+    callerEmail = userData.user.email?.toLowerCase() ?? null;
 
     actor = requestedMode === "preview" ? "preview" : "manual";
   }
@@ -133,7 +135,14 @@ Deno.serve(async (req) => {
 
     const requested = Array.isArray(payload.recipients) ? payload.recipients : null;
     const recipients = normaliseRecipients(
-      mode === "test" && requested?.length ? (requested as string[]) : settings.recipients,
+      mode === "test" && requested?.length
+        ? // Test sends may only go to configured recipients or the caller themself.
+          (requested as string[]).filter((r) => {
+            const e = String(r).trim().toLowerCase();
+            return e === callerEmail ||
+              (settings.recipients ?? []).some((c: string) => String(c).trim().toLowerCase() === e);
+          })
+        : settings.recipients,
     );
 
     if (recipients.length === 0) {

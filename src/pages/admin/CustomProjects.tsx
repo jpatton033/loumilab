@@ -21,6 +21,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Download, Search } from "lucide-react";
 import { toast } from "sonner";
 
+const csvCell = (v: unknown) => {
+  let s = String(v ?? "");
+  if (/^[=+\-@\t\r]/.test(s)) s = `'${s}`;
+  return `"${s.replace(/"/g, '""')}"`;
+};
+
 const STATUSES = [
   "new",
   "contacted",
@@ -137,7 +143,7 @@ const AdminCustomProjects = () => {
       l.status,
     ]);
     const csv = [header, ...rows]
-      .map((r) => r.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(","))
+      .map((r) => r.map(csvCell).join(","))
       .join("\n");
     const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
     const a = document.createElement("a");

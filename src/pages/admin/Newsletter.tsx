@@ -7,6 +7,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useSubscribers } from "@/lib/admin/queries";
 import { Download, Mail } from "lucide-react";
 
+const csvCell = (v: unknown) => {
+  let s = String(v ?? "");
+  if (/^[=+\-@\t\r]/.test(s)) s = `'${s}`;
+  return `"${s.replace(/"/g, '""')}"`;
+};
+
 const AdminNewsletter = () => {
   const { data: subscribers = [], isLoading } = useSubscribers();
   const [search, setSearch] = useState("");
@@ -18,7 +24,7 @@ const AdminNewsletter = () => {
 
   const exportCsv = () => {
     const rows = [["email", "source", "subscribed_at"], ...filtered.map((s) => [s.email, s.source ?? "", s.created_at])];
-    const csv = rows.map((r) => r.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n");
+    const csv = rows.map((r) => r.map(csvCell).join(",")).join("\n");
     const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
     const a = document.createElement("a");
     a.href = url;

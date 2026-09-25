@@ -64,7 +64,9 @@ serve(async (req) => {
       .gte("created_at", cutoff)
       .maybeSingle();
 
-    if (error || !lead) {
+    // The caller must also prove they submitted the lead by supplying its email.
+    const claimedEmail = typeof body?.email === "string" ? body.email.trim().toLowerCase() : "";
+    if (error || !lead || !claimedEmail || String(lead.email ?? "").trim().toLowerCase() !== claimedEmail) {
       return new Response(JSON.stringify({ error: "Recent lead not found" }), {
         status: 404,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
