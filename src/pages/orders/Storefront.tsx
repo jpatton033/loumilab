@@ -124,6 +124,8 @@ const Storefront = () => {
         title={`${store.name} — Order Online | Loumilab Orders`}
         description={store.description}
         path={`/orders/store/${store.slug}`}
+        noindex={isLive && !isPublic}
+        jsonLd={isLive && isPublic ? storeJsonLd(store, !!industry?.is_food) : undefined}
       />
 
       <section className="pb-32 pt-28 lg:pt-32">
