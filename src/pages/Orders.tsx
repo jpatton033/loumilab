@@ -35,7 +35,7 @@ import { useCart } from "@/hooks/use-cart";
 import { demoStorefront } from "@/data/orders/storefronts";
 import { dashboardMetrics, demoOrders, ORDER_STATUSES } from "@/data/orders/dashboard";
 import { audiences } from "@/data/orders/audiences";
-import { pricingHeading } from "@/data/orders/pricing";
+import { pricingHeading, pricingPlans } from "@/data/orders/pricing";
 import { ordersHeroSlides } from "@/data/orders/hero-slides";
 
 const steps = [
