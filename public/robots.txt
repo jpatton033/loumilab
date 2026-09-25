@@ -14,7 +14,12 @@ User-agent: *
 Allow: /
 Disallow: /admin
 Disallow: /login
-Disallow: /insights
+Disallow: /sign-out
+Disallow: /reset-password
+Disallow: /orders/dashboard
+Disallow: /orders/receipt/
+Disallow: /orders/quote/
+Disallow: /orders/invoice/
 
 
 Sitemap: https://loumilab.com/sitemap.xml
