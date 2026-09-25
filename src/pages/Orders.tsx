@@ -35,7 +35,7 @@ import { useCart } from "@/hooks/use-cart";
 import { demoStorefront } from "@/data/orders/storefronts";
 import { dashboardMetrics, demoOrders, ORDER_STATUSES } from "@/data/orders/dashboard";
 import { audiences } from "@/data/orders/audiences";
-import { pricingHeading } from "@/data/orders/pricing";
+import { pricingHeading, pricingPlans } from "@/data/orders/pricing";
 import { ordersHeroSlides } from "@/data/orders/hero-slides";
 
 const steps = [
@@ -91,17 +91,37 @@ const socialFlow = [
   { id: "f4", label: "Merchant Dashboard", detail: "Everything organized in one queue." },
 ];
 
-const ordersJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  name: "Loumilab Orders",
-  applicationCategory: "BusinessApplication",
-  operatingSystem: "Web",
-  description:
-    "Loumilab Orders lets small businesses create a simple storefront, share one link, take orders from social media, accept payments, and manage every order in one dashboard.",
-  url: "https://loumilab.com/orders",
-  publisher: { "@type": "Organization", name: "Loumilab", url: "https://loumilab.com" },
-};
+const ordersJsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "Loumilab Orders",
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+    description:
+      "Loumilab Orders lets small businesses create a simple storefront, share one link, take orders from social media, accept payments, and manage every order in one dashboard.",
+    url: "https://loumilab.com/orders",
+    publisher: { "@type": "Organization", name: "Loumilab", url: "https://loumilab.com" },
+    offers: pricingPlans
+      .filter((p) => /^\$\d/.test(p.price))
+      .map((p) => ({
+        "@type": "Offer",
+        name: `${p.name} plan`,
+        price: p.price.replace(/[^0-9.]/g, ""),
+        priceCurrency: "USD",
+        description: [p.description, p.transactionFee].filter(Boolean).join(" "),
+        url: "https://loumilab.com/orders/get-started",
+      })),
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Loumilab", item: "https://loumilab.com/" },
+      { "@type": "ListItem", position: 2, name: "Orders", item: "https://loumilab.com/orders" },
+    ],
+  },
+];
 
 const Orders = () => {
   const cart = useCart();

@@ -369,6 +369,7 @@ const GetStarted = () => {
         title="Get Started with Loumilab Orders — Create Your Storefront"
         description="Set up your Loumilab Orders storefront in a few steps: your account, industry, business details, catalog, payments, and publishing."
         path="/orders/get-started"
+        jsonLd={GET_STARTED_JSONLD}
       />
 
       <section className="section-padding pt-28 lg:pt-36">
@@ -959,3 +960,12 @@ const GetStarted = () => {
 };
 
 export default GetStarted;
+
+const GET_STARTED_JSONLD = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Loumilab Orders", item: "https://loumilab.com/orders" },
+    { "@type": "ListItem", position: 2, name: "Get started", item: "https://loumilab.com/orders/get-started" },
+  ],
+};
