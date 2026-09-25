@@ -17,6 +17,60 @@ import { usePublicStorefront, toStoreProduct } from "@/lib/orders/storefront";
 import { useIndustryExperience } from "@/lib/orders/industries";
 import { toast } from "sonner";
 
+const jsonLdCache = new Map<string, Record<string, unknown>[]>();
+
+/** Structured data for a public storefront (cached so the head effect doesn't rerun each render). */
+const storeJsonLd = (
+  store: { name: string; slug: string; description: string; location: string; products: { name: string; description: string; priceCents: number; availability: string }[] },
+  isFood: boolean,
+) => {
+  const url = `https://loumilab.com/orders/store/${store.slug}`;
+  const key = `${url}|${isFood}|${store.products.length}|${store.name}|${store.location}`;
+  const hit = jsonLdCache.get(key);
+  if (hit) return hit;
+  const business: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": isFood ? "FoodEstablishment" : "LocalBusiness",
+    name: store.name,
+    url,
+    potentialAction: { "@type": "OrderAction", target: url },
+  };
+  if (store.description) business.description = store.description;
+  if (store.location) business.address = { "@type": "PostalAddress", addressLocality: store.location };
+  const items = store.products.filter((p) => p.availability === "available").slice(0, 50);
+  if (items.length) {
+    business[isFood ? "hasMenu" : "makesOffer"] = isFood
+      ? {
+          "@type": "Menu",
+          hasMenuItem: items.map((p) => ({
+            "@type": "MenuItem",
+            name: p.name,
+            ...(p.description ? { description: p.description } : {}),
+            offers: { "@type": "Offer", price: (p.priceCents / 100).toFixed(2), priceCurrency: "USD" },
+          })),
+        }
+      : items.map((p) => ({
+          "@type": "Offer",
+          price: (p.priceCents / 100).toFixed(2),
+          priceCurrency: "USD",
+          itemOffered: { "@type": "Product", name: p.name },
+        }));
+  }
+  const value = [
+    business,
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Loumilab Orders", item: "https://loumilab.com/orders" },
+        { "@type": "ListItem", position: 2, name: store.name, item: url },
+      ],
+    },
+  ];
+  jsonLdCache.set(key, value);
+  return value;
+};
+
 /**
  * Reusable merchant storefront template. Live storefronts render from the
  * database; the seeded demo slugs still fall back to local sample data so the

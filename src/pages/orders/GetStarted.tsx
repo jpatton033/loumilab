@@ -369,6 +369,7 @@ const GetStarted = () => {
         title="Get Started with Loumilab Orders — Create Your Storefront"
         description="Set up your Loumilab Orders storefront in a few steps: your account, industry, business details, catalog, payments, and publishing."
         path="/orders/get-started"
+        jsonLd={GET_STARTED_JSONLD}
       />
 
       <section className="section-padding pt-28 lg:pt-36">
