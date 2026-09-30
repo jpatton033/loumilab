@@ -425,7 +425,7 @@ const FoodPricingCalculator = () => {
 
       {/* Mobile pinned summary */}
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 backdrop-blur lg:hidden">
-        <div className="section-container flex items-center justify-between gap-4 py-3">
+        <div className="section-container flex items-center justify-between gap-4 py-3 pr-20">
           <div>
             <p className="text-xs text-muted-foreground">Cost per {t.unit}</p>
             <p className="font-display text-lg font-semibold">{hasYield ? money(r.perItem) : "—"}</p>
