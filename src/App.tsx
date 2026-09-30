@@ -34,6 +34,8 @@ import AdminMail from "./pages/admin/Mail";
 import AdminDailyBrief from "./pages/admin/reports/DailyBrief";
 import AdminDailyBriefSettings from "./pages/admin/settings/DailyBriefSettings";
 import OrdersCustomProject from "./pages/orders/CustomProject";
+import BusinessTools from "./pages/orders/tools/Index";
+import FoodPricingCalculator from "./pages/orders/tools/FoodPricingCalculator";
 import { OrdersTerms, OrdersPrivacy } from "./pages/orders/Legal";
 
 
@@ -72,6 +74,8 @@ const App = () => (
           <Route path="/orders/quote/:token" element={<OrdersQuoteView />} />
           <Route path="/orders/invoice/:token" element={<OrdersInvoiceView />} />
           <Route path="/orders/custom" element={<OrdersCustomProject />} />
+          <Route path="/orders/tools" element={<BusinessTools />} />
+          <Route path="/orders/tools/food-pricing-calculator" element={<FoodPricingCalculator />} />
           <Route path="/orders/terms" element={<OrdersTerms />} />
           <Route path="/orders/privacy" element={<OrdersPrivacy />} />
 
