@@ -487,6 +487,10 @@ const Orders = () => {
             Orders by Loumilab
           </p>
           <p className="mt-4 text-xs text-muted-foreground">
+            <Link to="/orders/tools" className="underline underline-offset-4 hover:text-foreground">
+              Free Business Tools
+            </Link>
+            <span className="px-2">·</span>
             <Link to="/orders/terms" className="underline underline-offset-4 hover:text-foreground">
               Terms &amp; Conditions
             </Link>

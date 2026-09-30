@@ -43,6 +43,17 @@ export const productGroups: ProductGroup[] = [
         cta: "Explore Orders",
         status: "Coming Soon",
       },
+      {
+        id: "business-tools",
+        name: "Business Tools",
+        category: "Free Tools",
+        tagline: "Free tools to price, plan, and grow.",
+        description:
+          "Free tools for small food businesses, starting with a Food Pricing Calculator. No sign-up needed.",
+        href: "/orders/tools",
+        cta: "Open Business Tools",
+        status: "Live",
+      },
     ],
   },
   {
