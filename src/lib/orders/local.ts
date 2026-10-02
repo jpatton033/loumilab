@@ -126,11 +126,13 @@ export const useSetLocalFeatured = () => {
       const { error } = await table()
         .upsert({ merchant_id: merchantId, is_featured: featured, featured_rank: rank ?? 0 }, { onConflict: "merchant_id" });
       if (error) throw error;
+      const { data: u } = await supabase.auth.getUser();
       await supabase.from("audit_logs").insert({
         action: "local.featured_updated",
-        entity_type: "merchant",
-        entity_id: merchantId,
-        metadata: { featured, rank: rank ?? 0 },
+        actor_id: u.user?.id ?? null,
+        actor_email: u.user?.email ?? null,
+        target_id: merchantId,
+        new_value: { featured, rank: rank ?? 0 },
       } as never);
     },
     onSuccess: () => {

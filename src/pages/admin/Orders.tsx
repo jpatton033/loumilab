@@ -155,10 +155,11 @@ const MerchantCard = ({ merchant: m, onEdit }: { merchant: AdminMerchantRow; onE
             value={m.payoutStatus ? (PAYOUT_STATUS_LABELS[m.payoutStatus] ?? m.payoutStatus) : "Not started"}
           />
           <DetailRow label="Signed up" value={new Date(m.createdAt).toLocaleDateString()} />
-          <div className="pt-2">
+          <div className="flex flex-wrap gap-2 pt-2">
             <Button variant="outline" size="sm" onClick={onEdit}>
               <Pencil size={13} /> Edit contact details
             </Button>
+            <LocalFeatureToggle merchantId={m.id} />
           </div>
         </div>
       )}
