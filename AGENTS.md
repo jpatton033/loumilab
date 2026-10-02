@@ -1,0 +1,1 @@
+- Loumilab Local listings live in merchant_local_profiles and may exist without a storefront (Local-only merchant = merchants row, no storefront); public reads go only through security-definer RPCs search_local_businesses/get_local_business — keeps Local free of the Orders onboarding while exposing safe fields only.
