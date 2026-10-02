@@ -11,7 +11,8 @@
 - [Loumilab Orders](/orders): Order management platform. Sell anywhere, take orders in one place. Plans start free (Launch $0 + 5% platform fee), Starter $19/mo, Business $49/mo.
 - [Get started with Loumilab Orders](/orders/get-started): Create a storefront — account, industry, catalog, payments, publishing.
 - [Business Tools](/orders/tools): Free tools for small food businesses, no sign-up.
-- [Loumilab Local](/orders/local): Discover local home chefs, bakers, meal-prep businesses, caterers, food trucks and pop-ups, then order from their Loumilab Orders store.
+- [Loumilab Local](/orders/local): Discover local home chefs, bakers, meal-prep businesses, caterers, food trucks and pop-ups, free to browse; businesses with Loumilab Orders can be ordered from directly.
+- [List on Loumilab Local](/orders/local/join): Free listing for local food businesses — no store, plan or payment setup required.
 - [Food Pricing Calculator](/orders/tools/food-pricing-calculator): Free food cost and pricing calculator — ingredients with unit conversion, packaging, extra costs, cost buffer, suggested price by margin, profit analysis.
 - [Custom build](/orders/custom): Request a custom ordering or commerce project from Loumilab.
 - [Loumilab Orders Terms](/orders/terms): Terms & Conditions for merchants and customers.

@@ -59,7 +59,7 @@ const LocalIndex = () => {
     <Layout>
       <SEOHead
         title="Loumilab Local | Discover Local Food Businesses Near You"
-        description="Find local home chefs, bakers, meal-prep businesses, caterers, food trucks and pop-ups near you — then order directly from their Loumilab Orders store."
+        description="Discover local home chefs, bakers, meal-prep businesses, caterers, food trucks and pop-ups near you on Loumilab Local. Free to browse, no account needed."
         path="/orders/local"
         jsonLd={[
           {
@@ -78,7 +78,7 @@ const LocalIndex = () => {
               "@type": "ListItem",
               position: i + 1,
               name: b.name,
-              url: `https://loumilab.com/orders/store/${b.slug}`,
+              url: `https://loumilab.com/orders/local/${b.slug}`,
             })),
           },
         ] as never}
@@ -86,8 +86,11 @@ const LocalIndex = () => {
 
       {/* Hero + search */}
       <section className="section-container pt-14 pb-10 lg:pt-20">
-        <Link to="/orders" className="text-sm font-medium text-muted-foreground hover:text-foreground">Loumilab Orders</Link>
-        <Eyebrow className="mt-8 block">Loumilab Local</Eyebrow>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="font-display text-lg font-semibold tracking-tight">Loumilab <span className="text-accent">Local</span></p>
+          <Link to="/orders/local/join" className="text-sm font-medium text-muted-foreground hover:text-foreground">List your business — free</Link>
+        </div>
+        <Eyebrow className="mt-8 block">Discover local food businesses</Eyebrow>
         <h1 className="mt-4 max-w-3xl font-hero text-5xl font-semibold leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl">
           Discover what's cooking near you.
         </h1>
@@ -203,15 +206,16 @@ const LocalIndex = () => {
       <section className="section-container pb-24">
         <div className="flex flex-col items-start justify-between gap-6 rounded-3xl border border-border bg-secondary p-8 sm:flex-row sm:items-center sm:p-12">
           <div>
-            <h2 className="font-display text-2xl font-semibold sm:text-3xl">Own a food business? Create your store.</h2>
+            <h2 className="font-display text-2xl font-semibold sm:text-3xl">List your business on Loumilab Local. It's free.</h2>
             <p className="mt-2 max-w-lg text-muted-foreground">
-              Start free with Loumilab Orders and appear on Loumilab Local so neighbours can find you.
+              Get discovered by neighbours in a few minutes — no store or payment setup needed. Add online ordering with Loumilab Orders whenever you're ready.
             </p>
           </div>
           <Button asChild size="lg" className="rounded-full">
-            <Link to="/orders/get-started">Create your store <ArrowRight size={16} /></Link>
+            <Link to="/orders/local/join">List my business <ArrowRight size={16} /></Link>
           </Button>
         </div>
+        <p className="mt-6 text-center text-xs text-muted-foreground">Loumilab Local is part of <Link to="/orders" className="underline underline-offset-4">Loumilab Orders</Link>.</p>
       </section>
     </Layout>
   );
