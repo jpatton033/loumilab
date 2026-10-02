@@ -1038,48 +1038,84 @@ export type Database = {
       merchant_local_profiles: {
         Row: {
           category: string | null
+          city: string | null
           created_at: string
           cuisines: string[]
+          display_name: string | null
           featured_image_url: string | null
           featured_rank: number
+          gallery_urls: string[]
           id: string
           is_featured: boolean
           is_listed: boolean
+          logo_url: string | null
           merchant_id: string
+          offers_delivery: boolean | null
+          offers_pickup: boolean | null
           postal_code: string | null
+          public_email: string | null
+          public_phone: string | null
+          region: string | null
           service_area_label: string | null
+          slug: string | null
+          social_links: Json
           tagline: string | null
           updated_at: string
+          website_url: string | null
         }
         Insert: {
           category?: string | null
+          city?: string | null
           created_at?: string
           cuisines?: string[]
+          display_name?: string | null
           featured_image_url?: string | null
           featured_rank?: number
+          gallery_urls?: string[]
           id?: string
           is_featured?: boolean
           is_listed?: boolean
+          logo_url?: string | null
           merchant_id: string
+          offers_delivery?: boolean | null
+          offers_pickup?: boolean | null
           postal_code?: string | null
+          public_email?: string | null
+          public_phone?: string | null
+          region?: string | null
           service_area_label?: string | null
+          slug?: string | null
+          social_links?: Json
           tagline?: string | null
           updated_at?: string
+          website_url?: string | null
         }
         Update: {
           category?: string | null
+          city?: string | null
           created_at?: string
           cuisines?: string[]
+          display_name?: string | null
           featured_image_url?: string | null
           featured_rank?: number
+          gallery_urls?: string[]
           id?: string
           is_featured?: boolean
           is_listed?: boolean
+          logo_url?: string | null
           merchant_id?: string
+          offers_delivery?: boolean | null
+          offers_pickup?: boolean | null
           postal_code?: string | null
+          public_email?: string | null
+          public_phone?: string | null
+          region?: string | null
           service_area_label?: string | null
+          slug?: string | null
+          social_links?: Json
           tagline?: string | null
           updated_at?: string
+          website_url?: string | null
         }
         Relationships: [
           {
@@ -2499,6 +2535,28 @@ export type Database = {
         Returns: string
       }
       get_invoice_by_token: { Args: { _token: string }; Returns: Json }
+      get_local_business: {
+        Args: { _slug: string }
+        Returns: {
+          accepting: boolean
+          area: string
+          category: string
+          cuisines: string[]
+          delivery: boolean
+          description: string
+          gallery_urls: string[]
+          image_url: string
+          logo_url: string
+          name: string
+          pickup: boolean
+          public_email: string
+          public_phone: string
+          slug: string
+          social_links: Json
+          store_slug: string
+          website_url: string
+        }[]
+      }
       get_order_by_token: { Args: { _token: string }; Returns: Json }
       get_order_conversation: { Args: { _token: string }; Returns: Json }
       get_order_tip_context: { Args: { _token: string }; Returns: Json }
@@ -2596,6 +2654,7 @@ export type Database = {
           name: string
           pickup: boolean
           slug: string
+          store_slug: string
         }[]
       }
       send_order_message: {
