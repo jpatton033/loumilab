@@ -1,3 +1,4 @@
+import { useLocalAdminFlags, useSetLocalFeatured } from "@/lib/orders/local";
 import AdminShell from "@/components/admin/AdminShell";
 import OrderConversationsPanel from "@/components/admin/OrderConversationsPanel";
 import SEOHead from "@/components/SEOHead";
@@ -443,3 +444,21 @@ const AdminOrders = () => {
 };
 
 export default AdminOrders;
+
+function LocalFeatureToggle({ merchantId }: { merchantId: string }) {
+  const { data: flags } = useLocalAdminFlags();
+  const setFeatured = useSetLocalFeatured();
+  const row = flags?.get(merchantId);
+  const featured = !!row?.is_featured;
+  return (
+    <Button
+      variant={featured ? "default" : "outline"}
+      size="sm"
+      disabled={setFeatured.isPending}
+      onClick={() => setFeatured.mutate({ merchantId, featured: !featured, rank: row?.featured_rank ?? 0 })}
+      title={row?.is_listed ? "Listed on Loumilab Local" : "Not opted in yet — featuring takes effect once they appear on Loumilab Local"}
+    >
+      {featured ? "Featured on Local" : "Feature on Local"}
+    </Button>
+  );
+}
