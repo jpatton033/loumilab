@@ -44,6 +44,17 @@ export const productGroups: ProductGroup[] = [
         status: "Coming Soon",
       },
       {
+        id: "loumilab-local",
+        name: "Loumilab Local",
+        category: "Discovery",
+        tagline: "Discover what's cooking near you.",
+        description:
+          "Find local chefs, bakers, meal-prep businesses, caterers and food trucks, then order straight from their store.",
+        href: "/orders/local",
+        cta: "Explore Loumilab Local",
+        status: "Live",
+      },
+      {
         id: "business-tools",
         name: "Business Tools",
         category: "Free Tools",
