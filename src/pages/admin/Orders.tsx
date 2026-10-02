@@ -1,3 +1,4 @@
+import { useLocalAdminFlags, useSetLocalFeatured } from "@/lib/orders/local";
 import AdminShell from "@/components/admin/AdminShell";
 import OrderConversationsPanel from "@/components/admin/OrderConversationsPanel";
 import SEOHead from "@/components/SEOHead";
@@ -155,10 +156,11 @@ const MerchantCard = ({ merchant: m, onEdit }: { merchant: AdminMerchantRow; onE
             value={m.payoutStatus ? (PAYOUT_STATUS_LABELS[m.payoutStatus] ?? m.payoutStatus) : "Not started"}
           />
           <DetailRow label="Signed up" value={new Date(m.createdAt).toLocaleDateString()} />
-          <div className="pt-2">
+          <div className="flex flex-wrap gap-2 pt-2">
             <Button variant="outline" size="sm" onClick={onEdit}>
               <Pencil size={13} /> Edit contact details
             </Button>
+            <LocalFeatureToggle merchantId={m.id} />
           </div>
         </div>
       )}
@@ -442,3 +444,21 @@ const AdminOrders = () => {
 };
 
 export default AdminOrders;
+
+function LocalFeatureToggle({ merchantId }: { merchantId: string }) {
+  const { data: flags } = useLocalAdminFlags();
+  const setFeatured = useSetLocalFeatured();
+  const row = flags?.get(merchantId);
+  const featured = !!row?.is_featured;
+  return (
+    <Button
+      variant={featured ? "default" : "outline"}
+      size="sm"
+      disabled={setFeatured.isPending}
+      onClick={() => setFeatured.mutate({ merchantId, featured: !featured, rank: row?.featured_rank ?? 0 })}
+      title={row?.is_listed ? "Listed on Loumilab Local" : "Not opted in yet — featuring takes effect once they appear on Loumilab Local"}
+    >
+      {featured ? "Featured on Local" : "Feature on Local"}
+    </Button>
+  );
+}

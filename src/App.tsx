@@ -36,6 +36,7 @@ import AdminDailyBriefSettings from "./pages/admin/settings/DailyBriefSettings";
 import OrdersCustomProject from "./pages/orders/CustomProject";
 import BusinessTools from "./pages/orders/tools/Index";
 import FoodPricingCalculator from "./pages/orders/tools/FoodPricingCalculator";
+import LocalIndex from "./pages/orders/local/Index";
 import { OrdersTerms, OrdersPrivacy } from "./pages/orders/Legal";
 
 
@@ -76,6 +77,7 @@ const App = () => (
           <Route path="/orders/custom" element={<OrdersCustomProject />} />
           <Route path="/orders/tools" element={<BusinessTools />} />
           <Route path="/orders/tools/food-pricing-calculator" element={<FoodPricingCalculator />} />
+          <Route path="/orders/local" element={<LocalIndex />} />
           <Route path="/orders/terms" element={<OrdersTerms />} />
           <Route path="/orders/privacy" element={<OrdersPrivacy />} />
 

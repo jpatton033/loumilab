@@ -1035,6 +1035,62 @@ export type Database = {
           },
         ]
       }
+      merchant_local_profiles: {
+        Row: {
+          category: string | null
+          created_at: string
+          cuisines: string[]
+          featured_image_url: string | null
+          featured_rank: number
+          id: string
+          is_featured: boolean
+          is_listed: boolean
+          merchant_id: string
+          postal_code: string | null
+          service_area_label: string | null
+          tagline: string | null
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          cuisines?: string[]
+          featured_image_url?: string | null
+          featured_rank?: number
+          id?: string
+          is_featured?: boolean
+          is_listed?: boolean
+          merchant_id: string
+          postal_code?: string | null
+          service_area_label?: string | null
+          tagline?: string | null
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          cuisines?: string[]
+          featured_image_url?: string | null
+          featured_rank?: number
+          id?: string
+          is_featured?: boolean
+          is_listed?: boolean
+          merchant_id?: string
+          postal_code?: string | null
+          service_area_label?: string | null
+          tagline?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "merchant_local_profiles_merchant_id_fkey"
+            columns: ["merchant_id"]
+            isOneToOne: true
+            referencedRelation: "merchants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       merchant_products: {
         Row: {
           availability: string
@@ -2409,6 +2465,24 @@ export type Database = {
         }
         Relationships: []
       }
+      zip_centroids: {
+        Row: {
+          lat: number
+          lng: number
+          zip: string
+        }
+        Insert: {
+          lat: number
+          lng: number
+          zip: string
+        }
+        Update: {
+          lat?: number
+          lng?: number
+          zip?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -2495,6 +2569,34 @@ export type Database = {
       respond_to_quote: {
         Args: { _approve: boolean; _token: string }
         Returns: Json
+      }
+      search_local_businesses: {
+        Args: {
+          _accepting?: boolean
+          _category?: string
+          _delivery?: boolean
+          _featured_only?: boolean
+          _limit?: number
+          _pickup?: boolean
+          _place?: string
+          _q?: string
+          _radius_miles?: number
+        }
+        Returns: {
+          accepting: boolean
+          area: string
+          category: string
+          cuisines: string[]
+          delivery: boolean
+          description: string
+          distance_miles: number
+          image_url: string
+          is_featured: boolean
+          logo_url: string
+          name: string
+          pickup: boolean
+          slug: string
+        }[]
       }
       send_order_message: {
         Args: { _body: string; _token: string }

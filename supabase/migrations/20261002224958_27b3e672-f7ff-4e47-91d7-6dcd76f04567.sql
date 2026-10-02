@@ -1,0 +1,1 @@
+DELETE FROM public.merchant_local_profiles WHERE category = 'home-chef' AND postal_code = '21201' AND tagline IS NULL AND is_featured = false;

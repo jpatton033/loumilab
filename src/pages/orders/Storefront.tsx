@@ -184,6 +184,11 @@ const Storefront = () => {
 
       <section className="pb-32 pt-28 lg:pt-32">
         <div className="section-container max-w-3xl">
+          {params.get("from") === "local" && (
+            <Link to="/orders/local" className="mb-6 inline-block text-sm font-medium text-muted-foreground hover:text-foreground">
+              ← Found on Loumilab Local
+            </Link>
+          )}
           <Link
             to="/orders"
             className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground"
