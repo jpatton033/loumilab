@@ -720,7 +720,7 @@ const Dashboard = () => {
                 />
               ))}
 
-            {merchant && <LocalProfileCard merchantId={merchant.id} standalone={!setup?.storefront} />}
+            {merchant && <LocalProfileCard merchantId={merchant.id} standalone={!setup?.storefrontId} />}
             {merchant && <MerchantContactCard merchantId={merchant.id} />}
           </div>
         </div>
