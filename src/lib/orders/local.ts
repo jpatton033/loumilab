@@ -9,7 +9,7 @@ import dishMac from "@/assets/orders/dish-mac.jpg";
 import dishWings from "@/assets/orders/dish-wings.jpg";
 
 /**
- * Loumilab Local — discovery over existing storefronts.
+ * Loumilab Local — free discovery listings. A listing may stand alone or sit on top of an Orders storefront.
  * Listing data lives in `merchant_local_profiles`; everything else is read from
  * the store itself through the public `search_local_businesses` RPC, which only
  * returns safe fields (never a street address).
@@ -34,6 +34,8 @@ export const RADIUS_OPTIONS = [5, 10, 25, 50] as const;
 
 export interface LocalBusiness {
   slug: string;
+  /** Orders storefront slug — null for Local-only businesses. */
+  store_slug: string | null;
   name: string;
   logo_url: string | null;
   image_url: string | null;
@@ -89,7 +91,62 @@ export interface LocalProfile {
   service_area_label: string | null;
   featured_image_url: string | null;
   postal_code: string | null;
+  slug?: string | null;
+  display_name?: string | null;
+  logo_url?: string | null;
+  gallery_urls?: string[];
+  offers_pickup?: boolean | null;
+  offers_delivery?: boolean | null;
+  website_url?: string | null;
+  social_links?: Partial<Record<SocialKey, string>>;
+  public_phone?: string | null;
+  public_email?: string | null;
+  city?: string | null;
+  region?: string | null;
 }
+
+export const SOCIAL_KEYS = ["instagram", "facebook", "tiktok", "x"] as const;
+export type SocialKey = (typeof SOCIAL_KEYS)[number];
+export const SOCIAL_LABELS: Record<SocialKey, string> = { instagram: "Instagram", facebook: "Facebook", tiktok: "TikTok", x: "X" };
+
+export interface LocalBusinessDetail extends LocalBusiness {
+  gallery_urls: string[];
+  website_url: string | null;
+  social_links: Partial<Record<SocialKey, string>>;
+  public_phone: string | null;
+  public_email: string | null;
+}
+
+export const useLocalBusiness = (slug?: string) =>
+  useQuery({
+    queryKey: ["local-business", slug],
+    enabled: !!slug,
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("get_local_business" as never, { _slug: slug } as never);
+      if (error) throw error;
+      const row = ((data ?? []) as unknown as LocalBusinessDetail[])[0];
+      return row ? { ...row, is_featured: false, distance_miles: null } : null;
+    },
+  });
+
+/** Creates a Local-only merchant account (no store, no plan, no payments). */
+export const useCreateLocalMerchant = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: { businessName: string; email: string }) => {
+      const { data: u } = await supabase.auth.getUser();
+      if (!u.user) throw new Error("Please sign in first.");
+      const { data, error } = await supabase
+        .from("merchants")
+        .insert({ owner_id: u.user.id, business_name: input.businessName.trim(), contact_email: input.email.trim(), plan_slug: "launch", accepting_orders: false } as never)
+        .select("id")
+        .single();
+      if (error) throw error;
+      return (data as { id: string }).id;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["orders", "my-merchant"] }),
+  });
+};
 
 const table = () => supabase.from("merchant_local_profiles" as never) as any;
 
@@ -114,6 +171,7 @@ export const useSaveLocalProfile = () => {
     onSuccess: (_d, p) => {
       qc.invalidateQueries({ queryKey: ["local-profile", p.merchant_id] });
       qc.invalidateQueries({ queryKey: ["local-search"] });
+      qc.invalidateQueries({ queryKey: ["local-business"] });
     },
   });
 };

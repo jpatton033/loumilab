@@ -125,6 +125,7 @@ const MerchantCard = ({ merchant: m, onEdit }: { merchant: AdminMerchantRow; onE
         <Badge variant={m.isLive ? "default" : "outline"}>
           {m.isLive ? "Live" : m.isPublished ? "Paused" : "Setting up"}
         </Badge>
+        <MerchantKindBadge merchantId={m.id} hasStore={!!m.storefrontSlug} />
         {m.storefrontSlug && m.isPublished && (
           <Button variant="ghost" size="sm" asChild>
             <Link to={`/orders/store/${m.storefrontSlug}`} aria-label={`View ${m.businessName}`}>
@@ -461,4 +462,11 @@ function LocalFeatureToggle({ merchantId }: { merchantId: string }) {
       {featured ? "Featured on Local" : "Feature on Local"}
     </Button>
   );
+}
+
+function MerchantKindBadge({ merchantId, hasStore }: { merchantId: string; hasStore: boolean }) {
+  const { data: flags } = useLocalAdminFlags();
+  const listed = !!flags?.get(merchantId)?.is_listed;
+  const label = hasStore ? (listed ? "Orders + Local" : "Orders") : listed ? "Local only" : null;
+  return label ? <Badge variant="secondary" className="hidden sm:inline-flex">{label}</Badge> : null;
 }

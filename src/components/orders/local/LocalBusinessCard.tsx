@@ -40,7 +40,9 @@ const LocalBusinessCard = ({ business: b, preview, className }: Props) => {
           <div className="flex h-full items-center justify-center font-display text-3xl font-semibold text-muted-foreground">{initials}</div>
         )}
         <div className="absolute left-3 top-3">
-          <Chip tone={b.accepting ? "accent" : "muted"}>{b.accepting ? "Accepting orders" : "Not accepting orders"}</Chip>
+          {b.store_slug ? (
+            <Chip tone={b.accepting ? "accent" : "muted"}>{b.accepting ? "Order online" : "Not accepting orders"}</Chip>
+          ) : null}
         </div>
       </div>
       <div className="flex flex-1 flex-col p-5">
@@ -69,7 +71,7 @@ const LocalBusinessCard = ({ business: b, preview, className }: Props) => {
           {b.delivery && <Chip>Delivery</Chip>}
         </div>
         <span className="mt-auto inline-flex items-center gap-1.5 pt-5 text-sm font-semibold">
-          View store <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
+          View business <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
         </span>
       </div>
     </article>
@@ -77,7 +79,7 @@ const LocalBusinessCard = ({ business: b, preview, className }: Props) => {
 
   if (preview) return body;
   return (
-    <Link to={`/orders/store/${b.slug}?from=local`} className="block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-3xl">
+    <Link to={`/orders/local/${b.slug}`} className="block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-3xl">
       {body}
     </Link>
   );

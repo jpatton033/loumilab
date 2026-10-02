@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import Services from "./pages/Services";
 import HowWeWork from "./pages/HowWeWork";
@@ -37,6 +37,8 @@ import OrdersCustomProject from "./pages/orders/CustomProject";
 import BusinessTools from "./pages/orders/tools/Index";
 import FoodPricingCalculator from "./pages/orders/tools/FoodPricingCalculator";
 import LocalIndex from "./pages/orders/local/Index";
+import LocalJoin from "./pages/orders/local/Join";
+import LocalBusinessPage from "./pages/orders/local/Business";
 import { OrdersTerms, OrdersPrivacy } from "./pages/orders/Legal";
 
 
@@ -78,6 +80,9 @@ const App = () => (
           <Route path="/orders/tools" element={<BusinessTools />} />
           <Route path="/orders/tools/food-pricing-calculator" element={<FoodPricingCalculator />} />
           <Route path="/orders/local" element={<LocalIndex />} />
+          <Route path="/orders/local/join" element={<LocalJoin />} />
+          <Route path="/orders/local/:slug" element={<LocalBusinessPage />} />
+          <Route path="/local" element={<Navigate to="/orders/local" replace />} />
           <Route path="/orders/terms" element={<OrdersTerms />} />
           <Route path="/orders/privacy" element={<OrdersPrivacy />} />
 
