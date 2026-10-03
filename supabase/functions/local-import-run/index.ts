@@ -192,7 +192,8 @@ async function discover(s: Record<string, any>, marketId: string, category: stri
   const { data: market } = await admin.from("local_markets").select("*").eq("id", marketId).single();
   if (!market) return { error: "Unknown market" };
   if (remaining(s) < 0 || !canSpend(s, COST.search)) return { error: "Weekly limit reached" };
-  const query = `${category.replace(/-/g, " ")} food business ${market.name} Maryland official website`;
+  const q: Record<string, string> = { restaurant: "restaurant", baker: "bakery", caterer: "catering company", "food-truck": "food truck", "meal-prep": "meal prep service", desserts: "dessert shop" };
+  const query = `${q[category] ?? category.replace(/-/g, " ")} in ${market.name.replace(" City", "")} MD -jobs -permit -guide -blog`;
   const r = await firecrawl("/search", { query, limit: 5, country: "US" });
   await usePages(s, 1); await spend(s, COST.search);
   const results: any[] = r.data?.web ?? r.data ?? r.web ?? [];
