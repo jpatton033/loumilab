@@ -42,7 +42,7 @@ const UnclaimedPanel = ({ slug, lastChecked }: { slug: string; lastChecked: stri
         <Button variant="ghost" className="rounded-full text-muted-foreground" onClick={() => setMode("removal")}>Request removal</Button>
       </div>
 
-      <Dialog open={!!mode} onOpenChange={(o) => !o && setMode(null)}>
+      <Dialog open={!!mode} onOpenChange={(o) => { if (!o) { setMode(null); setF((p) => ({ ...p, role: "" })); } }}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{mode === "claim" ? "Claim this business" : mode === "correction" ? "Suggest an update" : "Request removal"}</DialogTitle>
@@ -50,7 +50,12 @@ const UnclaimedPanel = ({ slug, lastChecked }: { slug: string; lastChecked: stri
               {mode === "claim" ? "Free. No store, plan or payment needed. We review every claim by hand." : "Our team reviews every request."}
             </DialogDescription>
           </DialogHeader>
-          {mode === "claim" && !signedIn ? (
+          {mode === "claim" && !f.role ? (
+            <RelationshipStep bare onDone={(r) => {
+              if (r === "recommend") { toast({ title: "Thanks for the recommendation!", description: "This business is already on Loumilab Local." }); setMode(null); return; }
+              setF({ ...f, role: r });
+            }} />
+          ) : mode === "claim" && !signedIn ? (
             <div className="space-y-3 text-sm">
               <p>Sign in or create a free account first, then come back to this page.</p>
               <Button asChild className="w-full rounded-full"><Link to={`/sign-in?next=${encodeURIComponent(`/orders/local/${slug}`)}`}>Sign in to claim</Link></Button>
