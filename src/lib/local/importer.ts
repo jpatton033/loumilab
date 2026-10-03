@@ -17,6 +17,7 @@ export interface Candidate {
   match_kind: "exact" | "probable" | "suppressed" | null; match_profile_id: string | null; match_candidate_id: string | null;
   dup_decision: "distinct" | "link" | null; review_notes: string | null; is_sample: boolean;
   website_domain: string | null; created_at: string;
+  submitter_affiliation?: string | null; submitter_name?: string | null; submitter_email?: string | null; affiliation_note?: string | null;
 }
 
 export const CSV_COLUMNS = [

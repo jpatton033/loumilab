@@ -63,7 +63,7 @@ const UnclaimedPanel = ({ slug, lastChecked }: { slug: string; lastChecked: stri
                 : <Input type="email" placeholder="Your email" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} maxLength={160} />}
               <Textarea rows={4} maxLength={mode === "claim" ? 1500 : 2000} value={f.message} onChange={(e) => setF({ ...f, message: e.target.value })}
                 placeholder={mode === "claim" ? "How can we confirm you run this business? e.g. an email on the business's own domain, or a message from its official Instagram." : mode === "correction" ? "What should be updated?" : "Why should this listing be removed? If you represent the business, tell us how we can confirm it."} />
-              <Button disabled={busy || !f.name.trim() || !f.message.trim() || (mode !== "claim" && !f.email.trim())} onClick={send} className="rounded-full">Send</Button>
+              <Button disabled={busy || !f.name.trim() || !f.message.trim() || (mode === "claim" && !f.role) || (mode !== "claim" && !f.email.trim())} onClick={send} className="rounded-full">Send</Button>
             </div>
           )}
         </DialogContent>
