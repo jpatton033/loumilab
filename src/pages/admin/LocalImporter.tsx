@@ -15,7 +15,7 @@ import { LOCAL_CATEGORIES } from "@/lib/orders/local";
 import {
   CSV_COLUMNS, type Candidate, type CsvColumn, type ParsedRow, parseCsv, rowToCandidate, templateCsv,
   useCandidates, useClaimsAndRequests, useDecide, useImportRows, useImporterCounts, useImporterSettings,
-  useJobs, useMarkets, usePublishCandidates, usePublishedUnclaimed, useSaveSettings, useSaveSource,
+  useJobs, useRunImporter, useDiscover, useJobAction, useImporterSettings as useImpSettings, useMarkets, usePublishCandidates, usePublishedUnclaimed, useSaveSettings, useSaveSource,
   useSources, useSuppressProfile, useUpdateCandidate,
 } from "@/lib/local/importer";
 
@@ -404,12 +404,50 @@ const Sources = () => {
   const { data = [] } = useSources();
   const { data: jobs = [] } = useJobs();
   const save = useSaveSource();
+  const run = useRunImporter(); const disc = useDiscover(); const jobAct = useJobAction();
+  const { data: st } = useImpSettings(); const { data: mkts = [] } = useMarkets();
+  const [mkt, setMkt] = useState(""); const [cat, setCat] = useState("");
   const [domain, setDomain] = useState(""); const [notes, setNotes] = useState("");
+  const runNow = async () => {
+    try {
+      const r = await run.mutateAsync();
+      const parts = Object.entries(r.results ?? {}).map(([k, n]) => `${n} ${({ done: "read", awaiting_source: "waiting for domain approval", cooldown: "skipped (checked recently)", error: "will retry", failed: "failed", blocked: "blocked", budget: "stopped at daily limit" } as Record<string, string>)[k] ?? k}`);
+      toast({ title: r.processed ? `Processed ${r.processed} website${r.processed === 1 ? "" : "s"}` : "Nothing queued", description: `${parts.join(" · ")}${parts.length ? " · " : ""}${r.pages_used_today}/${r.daily_page_limit} pages used today · ${r.queued_left} left` });
+    } catch (e) { toast({ title: "Couldn't run", description: errMsg(e), variant: "destructive" }); }
+  };
+  const discoverNow = async () => {
+    try { const r = await disc.mutateAsync({ market_id: mkt, category: cat }); toast({ title: `${r.leads} new lead${r.leads === 1 ? "" : "s"}`, description: `${r.skipped} skipped (blocked or already known). Approve their domains below, then run.` }); }
+    catch (e) { toast({ title: "Couldn't search", description: errMsg(e), variant: "destructive" }); }
+  };
+  const STATE: Record<string, string> = { queued: "Queued", running: "Reading…", done: "Done", failed: "Failed", cancelled: "Cancelled", paused: "Paused", waiting_config: "Queued" };
   const submit = async (d: string, status: string, n?: string) => {
     try { await save.mutateAsync({ domain: d, status, notes: n }); toast({ title: `${d} → ${status}` }); } catch (e) { toast({ title: "Couldn't save", description: errMsg(e), variant: "destructive" }); }
   };
   return (
     <div className="space-y-6">
+      <Card>
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex-1">
+            <p className="font-semibold">Read business websites</p>
+            <p className="text-xs text-muted-foreground">Reads up to {st?.max_pages_per_domain ?? 4} pages (home, about, contact, hours) on approved domains only. Results go to the Review queue — nothing is published. {st ? `${st.pages_used_today}/${st.daily_page_limit} pages used today.` : ""}</p>
+          </div>
+          <Button onClick={runNow} disabled={run.isPending || st?.kill_switch || st?.dispatch_paused}>{run.isPending ? "Reading websites…" : "Run queued jobs"}</Button>
+        </div>
+        {(st?.kill_switch || st?.dispatch_paused) && <p className="mt-2 text-xs text-destructive">{st?.kill_switch ? "Kill switch is on." : "Dispatch is paused (daily limit or manual)."} Change it in Settings.</p>}
+        <div className="mt-4 border-t border-border pt-4">
+          <p className="text-sm font-medium">Find leads</p>
+          <p className="text-xs text-muted-foreground">Uses 1 page. Search results are leads only — each domain needs your approval before it's read.</p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            <select className="h-10 rounded-md border border-input bg-background px-3 text-sm" value={mkt} onChange={(e) => setMkt(e.target.value)}>
+              <option value="">Market…</option>{mkts.map((m: any) => <option key={m.id} value={m.id}>{m.name}</option>)}
+            </select>
+            <select className="h-10 rounded-md border border-input bg-background px-3 text-sm" value={cat} onChange={(e) => setCat(e.target.value)}>
+              <option value="">Category…</option>{LOCAL_CATEGORIES.map((c: any) => <option key={c.slug ?? c.value ?? c} value={c.label ?? c}>{c.label ?? c}</option>)}
+            </select>
+            <Button variant="outline" disabled={!mkt || !cat || disc.isPending || st?.kill_switch} onClick={discoverNow}>{disc.isPending ? "Searching…" : "Search"}</Button>
+          </div>
+        </div>
+      </Card>
       <Card>
         <p className="font-semibold">Add or review a domain</p>
         <p className="text-xs text-muted-foreground">Only approved domains can ever reach paid extraction. Record why the source is permitted.</p>
@@ -426,6 +464,8 @@ const Sources = () => {
             <div key={s.id} className="flex flex-wrap items-center gap-3 rounded-2xl border border-border p-3 text-sm">
               <p className="flex-1 font-medium">{s.domain} <span className="text-xs font-normal text-muted-foreground">{s.source_type} · {s.notes}</span></p>
               <Badge variant={s.status === "approved" ? "default" : s.status === "blocked" ? "destructive" : "outline"}>{s.status}</Badge>
+              {s.status === "pending" && <Button size="sm" onClick={() => submit(s.domain, "approved", s.notes ?? "Reviewed: official business website")}>Approve</Button>}
+              {s.status === "pending" && <Button size="sm" variant="outline" onClick={() => submit(s.domain, "blocked", s.notes)}>Block</Button>}
               {s.status !== "paused" && s.status !== "blocked" && <Button size="sm" variant="ghost" onClick={() => submit(s.domain, "paused", s.notes)}>Pause</Button>}
               {s.status === "paused" && <Button size="sm" variant="ghost" onClick={() => submit(s.domain, "approved", s.notes)}>Resume</Button>}
             </div>
@@ -440,7 +480,10 @@ const Sources = () => {
               <div key={j.id} className="flex flex-wrap items-center gap-3 rounded-2xl border border-border p-3 text-sm">
                 <p className="min-w-0 flex-1 truncate">{j.candidate?.website_url ?? j.candidate?.business_name ?? j.id}</p>
                 <span className="text-xs text-muted-foreground">{j.kind} · attempts {j.attempts} · up to {j.max_pages} pages</span>
-                <Badge variant="outline">{j.state === "waiting_config" ? "Waiting for crawler setup" : j.state}</Badge>
+                <Badge variant={j.state === "failed" ? "destructive" : j.state === "done" ? "default" : "outline"}>{STATE[j.state] ?? j.state}</Badge>
+                {j.last_error && <p className="basis-full text-xs text-muted-foreground">{j.last_error}</p>}
+                {["failed", "cancelled", "paused", "done"].includes(j.state) && <Button size="sm" variant="ghost" onClick={() => jobAct.mutate({ id: j.id, action: "retry" })}>Retry</Button>}
+                {["queued", "paused"].includes(j.state) && <Button size="sm" variant="ghost" onClick={() => jobAct.mutate({ id: j.id, action: "cancel" })}>Cancel</Button>}
               </div>
             ))}
           </div>

@@ -245,6 +245,45 @@ export const useSaveSource = () => {
     if (!/^[a-z0-9.-]+\.[a-z]{2,}$/.test(domain)) throw new Error("Enter a domain like example.com");
     const { error } = await t("local_sources").upsert({ domain, status: s.status, source_type: s.source_type ?? "official_website", notes: s.notes ?? null, reviewed_by: u.user?.id, reviewed_at: new Date().toISOString(), updated_at: new Date().toISOString() }, { onConflict: "domain" });
     if (error) throw error;
+    // Approving a domain releases jobs that were waiting on it.
+    if (s.status === "approved") {
+      const { data: cands } = await t("local_candidates").select("id").eq("website_domain", domain);
+      const ids = (cands ?? []).map((c: any) => c.id);
+      if (ids.length) await t("local_jobs").update({ state: "queued", last_error: null, next_attempt_at: new Date().toISOString() }).in("candidate_id", ids).eq("state", "paused");
+    }
+  }, onSuccess: inv });
+};
+
+const invokeRunner = async (body: Record<string, unknown>) => {
+  const { data, error } = await supabase.functions.invoke("local-import-run", { body });
+  if (error) {
+    const ctx = (error as any).context;
+    let msg = error.message;
+    try { const j = await ctx?.json?.(); if (j?.error) msg = j.error; } catch { /* keep */ }
+    throw new Error(msg);
+  }
+  return data as Record<string, any>;
+};
+
+/** Read queued websites (approved domains only) and fill the review queue. */
+export const useRunImporter = () => {
+  const inv = useInvalidate();
+  return useMutation({ mutationFn: () => invokeRunner({ action: "run" }), onSuccess: inv });
+};
+
+/** Search for leads in a market + category. Leads still need domain approval and review. */
+export const useDiscover = () => {
+  const inv = useInvalidate();
+  return useMutation({ mutationFn: (v: { market_id: string; category: string }) => invokeRunner({ action: "discover", ...v }), onSuccess: inv });
+};
+
+export const useJobAction = () => {
+  const inv = useInvalidate();
+  return useMutation({ mutationFn: async ({ id, action }: { id: string; action: "retry" | "cancel" }) => {
+    const patch = action === "retry"
+      ? { state: "queued", attempts: 0, last_error: null, next_attempt_at: new Date().toISOString() }
+      : { state: "cancelled" };
+    const { error } = await t("local_jobs").update(patch).eq("id", id); if (error) throw error;
   }, onSuccess: inv });
 };
 
