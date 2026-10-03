@@ -786,6 +786,587 @@ export type Database = {
         }
         Relationships: []
       }
+      local_candidates: {
+        Row: {
+          batch_id: string | null
+          business_name: string | null
+          category: string | null
+          city: string | null
+          created_at: string
+          created_by: string | null
+          cuisines: string[]
+          description: string | null
+          dup_decision: string | null
+          hours_text: string | null
+          id: string
+          idempotency_key: string | null
+          is_sample: boolean
+          market_id: string | null
+          match_candidate_id: string | null
+          match_kind: string | null
+          match_profile_id: string | null
+          name_key: string | null
+          observed_at: string | null
+          offers_delivery: boolean | null
+          offers_pickup: boolean | null
+          phone_norm: string | null
+          postal_code: string | null
+          public_email: string | null
+          public_phone: string | null
+          published_profile_id: string | null
+          region: string | null
+          review_notes: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          service_area: string | null
+          social_links: Json
+          source_type: string | null
+          source_url: string | null
+          status: string
+          updated_at: string
+          website_domain: string | null
+          website_url: string | null
+        }
+        Insert: {
+          batch_id?: string | null
+          business_name?: string | null
+          category?: string | null
+          city?: string | null
+          created_at?: string
+          created_by?: string | null
+          cuisines?: string[]
+          description?: string | null
+          dup_decision?: string | null
+          hours_text?: string | null
+          id?: string
+          idempotency_key?: string | null
+          is_sample?: boolean
+          market_id?: string | null
+          match_candidate_id?: string | null
+          match_kind?: string | null
+          match_profile_id?: string | null
+          name_key?: string | null
+          observed_at?: string | null
+          offers_delivery?: boolean | null
+          offers_pickup?: boolean | null
+          phone_norm?: string | null
+          postal_code?: string | null
+          public_email?: string | null
+          public_phone?: string | null
+          published_profile_id?: string | null
+          region?: string | null
+          review_notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          service_area?: string | null
+          social_links?: Json
+          source_type?: string | null
+          source_url?: string | null
+          status?: string
+          updated_at?: string
+          website_domain?: string | null
+          website_url?: string | null
+        }
+        Update: {
+          batch_id?: string | null
+          business_name?: string | null
+          category?: string | null
+          city?: string | null
+          created_at?: string
+          created_by?: string | null
+          cuisines?: string[]
+          description?: string | null
+          dup_decision?: string | null
+          hours_text?: string | null
+          id?: string
+          idempotency_key?: string | null
+          is_sample?: boolean
+          market_id?: string | null
+          match_candidate_id?: string | null
+          match_kind?: string | null
+          match_profile_id?: string | null
+          name_key?: string | null
+          observed_at?: string | null
+          offers_delivery?: boolean | null
+          offers_pickup?: boolean | null
+          phone_norm?: string | null
+          postal_code?: string | null
+          public_email?: string | null
+          public_phone?: string | null
+          published_profile_id?: string | null
+          region?: string | null
+          review_notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          service_area?: string | null
+          social_links?: Json
+          source_type?: string | null
+          source_url?: string | null
+          status?: string
+          updated_at?: string
+          website_domain?: string | null
+          website_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "local_candidates_batch_id_fkey"
+            columns: ["batch_id"]
+            isOneToOne: false
+            referencedRelation: "local_import_batches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "local_candidates_market_id_fkey"
+            columns: ["market_id"]
+            isOneToOne: false
+            referencedRelation: "local_markets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "local_candidates_match_candidate_id_fkey"
+            columns: ["match_candidate_id"]
+            isOneToOne: false
+            referencedRelation: "local_candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "local_candidates_match_profile_id_fkey"
+            columns: ["match_profile_id"]
+            isOneToOne: false
+            referencedRelation: "merchant_local_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "local_candidates_published_profile_id_fkey"
+            columns: ["published_profile_id"]
+            isOneToOne: false
+            referencedRelation: "merchant_local_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      local_claims: {
+        Row: {
+          contact_name: string
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_notes: string | null
+          evidence: string | null
+          id: string
+          profile_id: string
+          role: string | null
+          status: string
+          user_email: string | null
+          user_id: string
+        }
+        Insert: {
+          contact_name: string
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision_notes?: string | null
+          evidence?: string | null
+          id?: string
+          profile_id: string
+          role?: string | null
+          status?: string
+          user_email?: string | null
+          user_id: string
+        }
+        Update: {
+          contact_name?: string
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision_notes?: string | null
+          evidence?: string | null
+          id?: string
+          profile_id?: string
+          role?: string | null
+          status?: string
+          user_email?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "local_claims_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "merchant_local_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      local_field_evidence: {
+        Row: {
+          candidate_id: string
+          created_at: string
+          excerpt: string | null
+          expires_at: string | null
+          field: string
+          id: string
+          method: string
+          quality: string
+          retrieved_at: string
+          source_url: string | null
+          value: string | null
+        }
+        Insert: {
+          candidate_id: string
+          created_at?: string
+          excerpt?: string | null
+          expires_at?: string | null
+          field: string
+          id?: string
+          method?: string
+          quality?: string
+          retrieved_at?: string
+          source_url?: string | null
+          value?: string | null
+        }
+        Update: {
+          candidate_id?: string
+          created_at?: string
+          excerpt?: string | null
+          expires_at?: string | null
+          field?: string
+          id?: string
+          method?: string
+          quality?: string
+          retrieved_at?: string
+          source_url?: string | null
+          value?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "local_field_evidence_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "local_candidates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      local_import_batches: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          file_hash: string | null
+          filename: string | null
+          id: string
+          kind: string
+          market_id: string | null
+          row_count: number
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          file_hash?: string | null
+          filename?: string | null
+          id?: string
+          kind: string
+          market_id?: string | null
+          row_count?: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          file_hash?: string | null
+          filename?: string | null
+          id?: string
+          kind?: string
+          market_id?: string | null
+          row_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "local_import_batches_market_id_fkey"
+            columns: ["market_id"]
+            isOneToOne: false
+            referencedRelation: "local_markets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      local_importer_settings: {
+        Row: {
+          csv_max_rows: number
+          daily_page_limit: number
+          dispatch_paused: boolean
+          evidence_retention_days: number
+          freshness_days: number
+          freshness_enabled: boolean
+          id: number
+          kill_switch: boolean
+          max_domains_per_batch: number
+          max_pages_per_domain: number
+          min_delay_seconds: number
+          pages_used_today: number
+          provider_retention_days: number
+          recrawl_cooldown_days: number
+          updated_at: string
+          usage_date: string
+        }
+        Insert: {
+          csv_max_rows?: number
+          daily_page_limit?: number
+          dispatch_paused?: boolean
+          evidence_retention_days?: number
+          freshness_days?: number
+          freshness_enabled?: boolean
+          id?: number
+          kill_switch?: boolean
+          max_domains_per_batch?: number
+          max_pages_per_domain?: number
+          min_delay_seconds?: number
+          pages_used_today?: number
+          provider_retention_days?: number
+          recrawl_cooldown_days?: number
+          updated_at?: string
+          usage_date?: string
+        }
+        Update: {
+          csv_max_rows?: number
+          daily_page_limit?: number
+          dispatch_paused?: boolean
+          evidence_retention_days?: number
+          freshness_days?: number
+          freshness_enabled?: boolean
+          id?: number
+          kill_switch?: boolean
+          max_domains_per_batch?: number
+          max_pages_per_domain?: number
+          min_delay_seconds?: number
+          pages_used_today?: number
+          provider_retention_days?: number
+          recrawl_cooldown_days?: number
+          updated_at?: string
+          usage_date?: string
+        }
+        Relationships: []
+      }
+      local_jobs: {
+        Row: {
+          attempts: number
+          batch_id: string | null
+          candidate_id: string | null
+          created_at: string
+          id: string
+          idempotency_key: string | null
+          kind: string
+          last_error: string | null
+          lease_until: string | null
+          max_pages: number
+          next_attempt_at: string
+          state: string
+          updated_at: string
+        }
+        Insert: {
+          attempts?: number
+          batch_id?: string | null
+          candidate_id?: string | null
+          created_at?: string
+          id?: string
+          idempotency_key?: string | null
+          kind?: string
+          last_error?: string | null
+          lease_until?: string | null
+          max_pages?: number
+          next_attempt_at?: string
+          state?: string
+          updated_at?: string
+        }
+        Update: {
+          attempts?: number
+          batch_id?: string | null
+          candidate_id?: string | null
+          created_at?: string
+          id?: string
+          idempotency_key?: string | null
+          kind?: string
+          last_error?: string | null
+          lease_until?: string | null
+          max_pages?: number
+          next_attempt_at?: string
+          state?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "local_jobs_batch_id_fkey"
+            columns: ["batch_id"]
+            isOneToOne: false
+            referencedRelation: "local_import_batches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "local_jobs_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "local_candidates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      local_markets: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          name: string
+          slug: string
+          state: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          slug: string
+          state?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          slug?: string
+          state?: string
+        }
+        Relationships: []
+      }
+      local_requests: {
+        Row: {
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_notes: string | null
+          email: string
+          id: string
+          kind: string
+          message: string
+          name: string | null
+          profile_id: string | null
+          profile_slug: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision_notes?: string | null
+          email: string
+          id?: string
+          kind: string
+          message: string
+          name?: string | null
+          profile_id?: string | null
+          profile_slug?: string | null
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision_notes?: string | null
+          email?: string
+          id?: string
+          kind?: string
+          message?: string
+          name?: string | null
+          profile_id?: string | null
+          profile_slug?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "local_requests_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "merchant_local_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      local_sources: {
+        Row: {
+          allowed_paths: string[]
+          created_at: string
+          domain: string
+          excluded_paths: string[]
+          id: string
+          min_delay_seconds: number
+          notes: string | null
+          permitted_fields: string[]
+          reviewed_at: string | null
+          reviewed_by: string | null
+          source_type: string
+          status: string
+          updated_at: string
+          usage_evidence: string | null
+        }
+        Insert: {
+          allowed_paths?: string[]
+          created_at?: string
+          domain: string
+          excluded_paths?: string[]
+          id?: string
+          min_delay_seconds?: number
+          notes?: string | null
+          permitted_fields?: string[]
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          source_type?: string
+          status?: string
+          updated_at?: string
+          usage_evidence?: string | null
+        }
+        Update: {
+          allowed_paths?: string[]
+          created_at?: string
+          domain?: string
+          excluded_paths?: string[]
+          id?: string
+          min_delay_seconds?: number
+          notes?: string | null
+          permitted_fields?: string[]
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          source_type?: string
+          status?: string
+          updated_at?: string
+          usage_evidence?: string | null
+        }
+        Relationships: []
+      }
+      local_suppressions: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          key: string
+          kind: string
+          reason: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          key: string
+          kind: string
+          reason?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          key?: string
+          kind?: string
+          reason?: string | null
+        }
+        Relationships: []
+      }
       merchant_agreements: {
         Row: {
           accepted_at: string
@@ -1045,13 +1626,19 @@ export type Database = {
           featured_image_url: string | null
           featured_rank: number
           gallery_urls: string[]
+          hours_text: string | null
           id: string
           is_featured: boolean
           is_listed: boolean
+          is_sample: boolean
+          last_checked_at: string | null
           logo_url: string | null
-          merchant_id: string
+          merchant_id: string | null
+          name_key: string | null
           offers_delivery: boolean | null
           offers_pickup: boolean | null
+          ownership_status: string
+          phone_norm: string | null
           postal_code: string | null
           public_email: string | null
           public_phone: string | null
@@ -1059,8 +1646,10 @@ export type Database = {
           service_area_label: string | null
           slug: string | null
           social_links: Json
+          source_kind: string
           tagline: string | null
           updated_at: string
+          website_domain: string | null
           website_url: string | null
         }
         Insert: {
@@ -1072,13 +1661,19 @@ export type Database = {
           featured_image_url?: string | null
           featured_rank?: number
           gallery_urls?: string[]
+          hours_text?: string | null
           id?: string
           is_featured?: boolean
           is_listed?: boolean
+          is_sample?: boolean
+          last_checked_at?: string | null
           logo_url?: string | null
-          merchant_id: string
+          merchant_id?: string | null
+          name_key?: string | null
           offers_delivery?: boolean | null
           offers_pickup?: boolean | null
+          ownership_status?: string
+          phone_norm?: string | null
           postal_code?: string | null
           public_email?: string | null
           public_phone?: string | null
@@ -1086,8 +1681,10 @@ export type Database = {
           service_area_label?: string | null
           slug?: string | null
           social_links?: Json
+          source_kind?: string
           tagline?: string | null
           updated_at?: string
+          website_domain?: string | null
           website_url?: string | null
         }
         Update: {
@@ -1099,13 +1696,19 @@ export type Database = {
           featured_image_url?: string | null
           featured_rank?: number
           gallery_urls?: string[]
+          hours_text?: string | null
           id?: string
           is_featured?: boolean
           is_listed?: boolean
+          is_sample?: boolean
+          last_checked_at?: string | null
           logo_url?: string | null
-          merchant_id?: string
+          merchant_id?: string | null
+          name_key?: string | null
           offers_delivery?: boolean | null
           offers_pickup?: boolean | null
+          ownership_status?: string
+          phone_norm?: string | null
           postal_code?: string | null
           public_email?: string | null
           public_phone?: string | null
@@ -1113,8 +1716,10 @@ export type Database = {
           service_area_label?: string | null
           slug?: string | null
           social_links?: Json
+          source_kind?: string
           tagline?: string | null
           updated_at?: string
+          website_domain?: string | null
           website_url?: string | null
         }
         Relationships: [
@@ -2530,6 +3135,14 @@ export type Database = {
       }
       cleanup_old_rate_limits: { Args: never; Returns: undefined }
       create_custom_project_upload_slot: { Args: never; Returns: string }
+      decide_local_claim: {
+        Args: { _approve: boolean; _claim_id: string; _notes?: string }
+        Returns: undefined
+      }
+      decide_local_request: {
+        Args: { _approve: boolean; _notes?: string; _request_id: string }
+        Returns: undefined
+      }
       ensure_order_conversation: {
         Args: { _order_id: string }
         Returns: string
@@ -2545,9 +3158,12 @@ export type Database = {
           delivery: boolean
           description: string
           gallery_urls: string[]
+          hours_text: string
           image_url: string
+          last_checked_at: string
           logo_url: string
           name: string
+          ownership_status: string
           pickup: boolean
           public_email: string
           public_phone: string
@@ -2596,6 +3212,12 @@ export type Database = {
           section_slug: string
         }[]
       }
+      local_name_key: {
+        Args: { _city: string; _name: string }
+        Returns: string
+      }
+      local_norm_domain: { Args: { _url: string }; Returns: string }
+      local_norm_phone: { Args: { _p: string }; Returns: string }
       merchant_mark_conversation_read: {
         Args: { _conversation_id: string }
         Returns: undefined
@@ -2623,6 +3245,10 @@ export type Database = {
       owns_merchant_media_path: {
         Args: { object_name: string }
         Returns: boolean
+      }
+      publish_local_candidate: {
+        Args: { _id: string; _notes?: string }
+        Returns: string
       }
       respond_to_quote: {
         Args: { _approve: boolean; _token: string }
@@ -2652,6 +3278,7 @@ export type Database = {
           is_featured: boolean
           logo_url: string
           name: string
+          ownership_status: string
           pickup: boolean
           slug: string
           store_slug: string
@@ -2664,6 +3291,29 @@ export type Database = {
       storefront_can_publish: {
         Args: { _storefront_id: string }
         Returns: boolean
+      }
+      submit_local_claim: {
+        Args: {
+          _contact_name: string
+          _evidence: string
+          _role: string
+          _slug: string
+        }
+        Returns: string
+      }
+      submit_local_request: {
+        Args: {
+          _email: string
+          _kind: string
+          _message: string
+          _name: string
+          _slug: string
+        }
+        Returns: undefined
+      }
+      suppress_local_profile: {
+        Args: { _profile_id: string; _reason?: string }
+        Returns: undefined
       }
     }
     Enums: {
