@@ -227,7 +227,7 @@ const ReviewRow = ({ c, selected, onSelect }: { c: Candidate; selected: boolean;
           <p className="truncate font-semibold">{c.business_name ?? c.website_domain ?? "Untitled"}</p>
           <p className="truncate text-xs text-muted-foreground">{[c.city ?? c.service_area, c.category, c.website_domain].filter(Boolean).join(" · ")}</p>
         </button>
-        {c.source_type === "visitor" && <Badge variant="secondary">Submitted by visitor</Badge>}
+        {c.source_type === "visitor" && <Badge variant="secondary">{c.submitter_affiliation === "customer" ? "Suggested by visitor" : "Submitted by visitor"}</Badge>}
         {c.is_sample && <Badge variant="outline">Sample</Badge>}
         {c.match_kind && <Badge variant={c.match_kind === "exact" ? "destructive" : "secondary"}>{c.match_kind === "exact" ? "Duplicate" : c.match_kind === "probable" ? "Possible duplicate" : "Suppressed"}</Badge>}
         {c.dup_decision === "distinct" && <Badge variant="outline">Distinct branch</Badge>}

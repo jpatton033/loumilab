@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Check } from "lucide-react";
+import { Check } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import Layout from "@/components/Layout";
@@ -13,7 +13,7 @@ import { toast } from "@/hooks/use-toast";
 import LocalProfileCard from "@/components/orders/local/LocalProfileCard";
 import { useMyMerchant } from "@/lib/orders/commerce";
 import { useCreateLocalMerchant } from "@/lib/orders/local";
-import VisitorListingForm, { AffiliationPicker, type Affiliation } from "@/components/orders/local/VisitorListingForm";
+import VisitorListingForm, { RelationshipStep, SuggestBusinessForm, BackLink, type Relationship } from "@/components/orders/local/VisitorListingForm";
 
 const POINTS = ["Free for businesses and customers", "No store, plan or payment setup needed", "Add online ordering later, if you want it"];
 
@@ -29,7 +29,7 @@ const LocalJoin = () => {
   const create = useCreateLocalMerchant();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [affiliation, setAffiliation] = useState<Affiliation | "">("");
+  const [affiliation, setAffiliation] = useState<Relationship | "">("");
   useEffect(() => { if (user?.email && !email) setEmail(user.email); }, [user]);
 
   const start = async (e: React.FormEvent) => {
@@ -62,11 +62,17 @@ const LocalJoin = () => {
         <div className="mt-10">
           {user === undefined || (user && isLoading) ? (
             <div className="h-64 animate-pulse rounded-3xl bg-secondary" />
-          ) : !user || (!merchant && affiliation !== "owner" && affiliation !== "manager") ? (
-            <VisitorListingForm affiliation={affiliation} onAffiliation={setAffiliation} />
-          ) : !merchant ? (
+          ) : merchant ? (
+            <LocalProfileCard merchantId={merchant.id} standalone />
+          ) : !affiliation ? (
+            <RelationshipStep onDone={setAffiliation} />
+          ) : affiliation === "recommend" ? (
+            <SuggestBusinessForm onBack={() => setAffiliation("")} />
+          ) : !user ? (
+            <VisitorListingForm affiliation={affiliation} onBack={() => setAffiliation("")} />
+          ) : (
             <form onSubmit={start} className="grid max-w-xl gap-5 rounded-3xl border border-border bg-card p-8 shadow-[var(--shadow-soft)]">
-              <AffiliationPicker value={affiliation} onChange={setAffiliation} />
+              <BackLink onClick={() => setAffiliation("")} />
               <h2 className="font-display text-xl font-semibold">About your business</h2>
               <div className="grid gap-2">
                 <Label htmlFor="join-name">Business name</Label>
@@ -80,8 +86,6 @@ const LocalJoin = () => {
                 {create.isPending ? "Starting…" : "Next: your listing"}
               </Button>
             </form>
-          ) : (
-            <LocalProfileCard merchantId={merchant.id} standalone />
           )}
         </div>
       </section>
