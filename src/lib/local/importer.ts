@@ -168,7 +168,7 @@ export const useImportRows = () => {
       const urlOnly = records.filter((r) => r.status === "needs_extraction");
       if (urlOnly.length) {
         const { data: cs } = await t("local_candidates").select("id,idempotency_key").in("idempotency_key", urlOnly.map((r) => r.idempotency_key));
-        if (cs?.length) await t("local_jobs").upsert(cs.map((c: any) => ({ candidate_id: c.id, batch_id: batchId, kind: "extract", state: "waiting_config", idempotency_key: `extract:${c.idempotency_key}` })), { onConflict: "idempotency_key", ignoreDuplicates: true });
+        if (cs?.length) await t("local_jobs").upsert(cs.map((c: any) => ({ candidate_id: c.id, batch_id: batchId, kind: "extract", state: "queued", idempotency_key: `extract:${c.idempotency_key}` })), { onConflict: "idempotency_key", ignoreDuplicates: true });
       }
       return { created: created.length, skipped: records.length - created.length };
     },
