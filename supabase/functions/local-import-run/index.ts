@@ -180,7 +180,7 @@ async function discover(s: Record<string, any>, marketId: string, category: stri
   const { data: market } = await admin.from("local_markets").select("*").eq("id", marketId).single();
   if (!market) return { error: "Unknown market" };
   if (remaining(s) < 1) return { error: "Daily page limit reached" };
-  const query = `${category} food business ${market.name} Maryland official website`;
+  const query = `${category.replace(/-/g, " ")} food business ${market.name} Maryland official website`;
   const r = await firecrawl("/search", { query, limit: 10, country: "US" });
   await usePages(s, 1);
   const results: any[] = r.data?.web ?? r.data ?? r.web ?? [];

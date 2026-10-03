@@ -15,7 +15,7 @@ import { LOCAL_CATEGORIES } from "@/lib/orders/local";
 import {
   CSV_COLUMNS, type Candidate, type CsvColumn, type ParsedRow, parseCsv, rowToCandidate, templateCsv,
   useCandidates, useClaimsAndRequests, useDecide, useImportRows, useImporterCounts, useImporterSettings,
-  useJobs, useRunImporter, useDiscover, useJobAction, useImporterSettings as useImpSettings, useMarkets, usePublishCandidates, usePublishedUnclaimed, useSaveSettings, useSaveSource,
+  useJobs, useRunImporter, useDiscover, useJobAction, useMarkets, usePublishCandidates, usePublishedUnclaimed, useSaveSettings, useSaveSource,
   useSources, useSuppressProfile, useUpdateCandidate,
 } from "@/lib/local/importer";
 
@@ -405,7 +405,7 @@ const Sources = () => {
   const { data: jobs = [] } = useJobs();
   const save = useSaveSource();
   const run = useRunImporter(); const disc = useDiscover(); const jobAct = useJobAction();
-  const { data: st } = useImpSettings(); const { data: mkts = [] } = useMarkets();
+  const { data: st } = useImporterSettings(); const { data: mkts = [] } = useMarkets();
   const [mkt, setMkt] = useState(""); const [cat, setCat] = useState("");
   const [domain, setDomain] = useState(""); const [notes, setNotes] = useState("");
   const runNow = async () => {
@@ -442,7 +442,7 @@ const Sources = () => {
               <option value="">Market…</option>{mkts.map((m: any) => <option key={m.id} value={m.id}>{m.name}</option>)}
             </select>
             <select className="h-10 rounded-md border border-input bg-background px-3 text-sm" value={cat} onChange={(e) => setCat(e.target.value)}>
-              <option value="">Category…</option>{LOCAL_CATEGORIES.map((c: any) => <option key={c.slug ?? c.value ?? c} value={c.label ?? c}>{c.label ?? c}</option>)}
+              <option value="">Category…</option>{LOCAL_CATEGORIES.map((c: any) => <option key={c.id} value={c.id}>{c.label}</option>)}
             </select>
             <Button variant="outline" disabled={!mkt || !cat || disc.isPending || st?.kill_switch} onClick={discoverNow}>{disc.isPending ? "Searching…" : "Search"}</Button>
           </div>
