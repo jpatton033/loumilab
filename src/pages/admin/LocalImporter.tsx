@@ -412,7 +412,7 @@ const Sources = () => {
     try {
       const r = await run.mutateAsync();
       const parts = Object.entries(r.results ?? {}).map(([k, n]) => `${n} ${({ done: "read", awaiting_source: "waiting for domain approval", cooldown: "skipped (checked recently)", error: "will retry", failed: "failed", blocked: "blocked", budget: "stopped at daily limit" } as Record<string, string>)[k] ?? k}`);
-      toast({ title: r.processed ? `Processed ${r.processed} website${r.processed === 1 ? "" : "s"}` : "Nothing queued", description: `${parts.join(" · ")}${parts.length ? " · " : ""}${r.pages_used_today}/${r.daily_page_limit} pages used today · ${r.queued_left} left` });
+      toast({ title: r.processed ? `Processed ${r.processed} website${r.processed === 1 ? "" : "s"}` : "Nothing queued", description: `${parts.join(" · ")}${parts.length ? " · " : ""}${r.credits_used_week}/${r.weekly_credit_limit} credits used this week · ${r.queued_left} left` });
     } catch (e) { toast({ title: "Couldn't run", description: errMsg(e), variant: "destructive" }); }
   };
   const discoverNow = async () => {
@@ -429,7 +429,7 @@ const Sources = () => {
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex-1">
             <p className="font-semibold">Read business websites</p>
-            <p className="text-xs text-muted-foreground">Reads up to {st?.max_pages_per_domain ?? 4} pages (home, about, contact, hours) on approved domains only. Results go to the Review queue — nothing is published. {st ? `${st.pages_used_today}/${st.daily_page_limit} pages used today.` : ""}</p>
+            <p className="text-xs text-muted-foreground">Reads up to {st?.max_pages_per_domain ?? 4} pages (home, about, contact, hours) on approved domains only. Results go to the Review queue — nothing is published. {st ? `${st.credits_used_week ?? 0}/${st.weekly_credit_limit ?? 250} credits used this week${(st.credits_used_week ?? 0) >= (st.weekly_credit_limit ?? 250) - 2 ? " — Weekly limit reached" : ""}.` : ""}</p>
           </div>
           <Button onClick={runNow} disabled={run.isPending || st?.kill_switch || st?.dispatch_paused}>{run.isPending ? "Reading websites…" : "Run queued jobs"}</Button>
         </div>
@@ -496,7 +496,7 @@ const Sources = () => {
 /* ---------------- Settings ---------------- */
 const NUM_FIELDS = [
   ["max_domains_per_batch", "Domains per batch"], ["max_pages_per_domain", "Pages per domain"], ["min_delay_seconds", "Seconds between requests"],
-  ["daily_page_limit", "Page fetches per day"], ["recrawl_cooldown_days", "Re-crawl cooldown (days)"], ["evidence_retention_days", "Evidence retention (days)"],
+  ["weekly_credit_limit", "Weekly credit limit"], ["daily_page_limit", "Page fetches per day"], ["recrawl_cooldown_days", "Re-crawl cooldown (days)"], ["evidence_retention_days", "Evidence retention (days)"],
   ["provider_retention_days", "Provider output retention (days)"], ["freshness_days", "Freshness review (days)"], ["csv_max_rows", "CSV max rows"],
 ] as const;
 
@@ -518,7 +518,7 @@ const Settings = () => {
         <label className="flex items-center gap-2 text-sm font-semibold"><Switch checked={v.kill_switch} onCheckedChange={(x) => commit({ kill_switch: x })} /> Kill switch (stop all new work)</label>
         <label className="flex items-center gap-2 text-sm"><Switch checked={v.dispatch_paused} onCheckedChange={(x) => commit({ dispatch_paused: x })} /> Pause dispatch</label>
         <label className="flex items-center gap-2 text-sm"><Switch checked={v.freshness_enabled} onCheckedChange={(x) => commit({ freshness_enabled: x })} /> Scheduled freshness reviews</label>
-        <p className="text-xs text-muted-foreground">Pages used today: {v.pages_used_today} / {v.daily_page_limit}</p>
+        <p className="text-xs text-muted-foreground">Credits used this week: {v.credits_used_week ?? 0} / {v.weekly_credit_limit ?? 250} · Pages used today: {v.pages_used_today} / {v.daily_page_limit}</p>
       </Card>
       <Card>
         <div className="grid gap-4 sm:grid-cols-3">
