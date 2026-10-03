@@ -68,13 +68,25 @@ async function loadSettings() {
     await admin.from("local_importer_settings").update({ usage_date: today, pages_used_today: 0 }).eq("id", 1);
     s.usage_date = today; s.pages_used_today = 0;
   }
+  const d = new Date(); d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7));
+  const week = d.toISOString().slice(0, 10);
+  if (s.usage_week !== week) {
+    await admin.from("local_importer_settings").update({ usage_week: week, credits_used_week: 0 }).eq("id", 1);
+    s.usage_week = week; s.credits_used_week = 0;
+  }
   return s;
 }
 async function usePages(s: Record<string, any>, n: number) {
   s.pages_used_today += n;
   await admin.from("local_importer_settings").update({ pages_used_today: s.pages_used_today }).eq("id", 1);
 }
-const remaining = (s: Record<string, any>) => s.daily_page_limit - s.pages_used_today;
+const COST = { search: 2, scrape: 5, map: 1 } as const;
+const remaining = (s: Record<string, any>) => Math.min(s.daily_page_limit - s.pages_used_today, Math.floor((s.weekly_credit_limit - s.credits_used_week) / COST.scrape));
+const canSpend = (s: Record<string, any>, c: number) => s.credits_used_week + c <= s.weekly_credit_limit;
+async function spend(s: Record<string, any>, c: number) {
+  s.credits_used_week += c;
+  await admin.from("local_importer_settings").update({ credits_used_week: s.credits_used_week }).eq("id", 1);
+}
 
 async function sourceFor(domain: string) {
   const { data } = await admin.from("local_sources").select("*").or(`domain.eq.${domain}`).maybeSingle();
@@ -110,9 +122,9 @@ async function processJob(job: Record<string, any>, s: Record<string, any>) {
 
   try {
     const pages = [url.toString()];
-    if (maxPages > 1 && remaining(s) > 1) {
+    if (maxPages > 1 && remaining(s) > 1 && canSpend(s, COST.map)) {
       const map = await firecrawl("/map", { url: url.origin, search: "about contact hours location", limit: 30, includeSubdomains: false });
-      await usePages(s, 1);
+      await usePages(s, 1); await spend(s, COST.map);
       const links: string[] = (map.links ?? map.data?.links ?? []).map((l: any) => (typeof l === "string" ? l : l?.url)).filter(Boolean);
       for (const l of links) {
         const lu = safeUrl(l);
@@ -127,10 +139,10 @@ async function processJob(job: Record<string, any>, s: Record<string, any>) {
     const found: Record<string, { value: any; source: string }> = {};
     let fetched = 0;
     for (const p of pages) {
-      if (remaining(s) < 1) break;
+      if (remaining(s) < 1 || !canSpend(s, COST.scrape)) break;
       if (fetched > 0) await sleep(Math.max(src.min_delay_seconds ?? 3, s.min_delay_seconds) * 1000);
       const r = await firecrawl("/scrape", { url: p, formats: [{ type: "json", schema: SCHEMA }], onlyMainContent: true, blockAds: true, timeout: 30000 });
-      fetched++; await usePages(s, 1);
+      fetched++; await usePages(s, 1); await spend(s, COST.scrape);
       const data = r.json ?? r.data?.json ?? {};
       for (const [k, v] of Object.entries(data ?? {})) {
         if (v === null || v === undefined || v === "" || (Array.isArray(v) && !v.length)) continue;
@@ -179,10 +191,11 @@ async function processJob(job: Record<string, any>, s: Record<string, any>) {
 async function discover(s: Record<string, any>, marketId: string, category: string, userId: string) {
   const { data: market } = await admin.from("local_markets").select("*").eq("id", marketId).single();
   if (!market) return { error: "Unknown market" };
-  if (remaining(s) < 1) return { error: "Daily page limit reached" };
-  const query = `${category.replace(/-/g, " ")} food business ${market.name} Maryland official website`;
-  const r = await firecrawl("/search", { query, limit: 10, country: "US" });
-  await usePages(s, 1);
+  if (remaining(s) < 0 || !canSpend(s, COST.search)) return { error: "Weekly limit reached" };
+  const q: Record<string, string> = { restaurant: "restaurant", baker: "bakery", caterer: "catering company", "food-truck": "food truck", "meal-prep": "meal prep service", desserts: "dessert shop" };
+  const query = `${q[category] ?? category.replace(/-/g, " ")} in ${market.name.replace(" City", "")} MD -jobs -permit -guide -blog`;
+  const r = await firecrawl("/search", { query, limit: 5, country: "US" });
+  await usePages(s, 1); await spend(s, COST.search);
   const results: any[] = r.data?.web ?? r.data ?? r.web ?? [];
   const { data: blocked } = await admin.from("local_sources").select("domain").in("status", ["blocked", "paused"]);
   const bad = (d: string) => (blocked ?? []).some((b: any) => d === b.domain || d.endsWith(`.${b.domain}`));
@@ -230,7 +243,7 @@ Deno.serve(async (req) => {
     if (body.action === "discover") {
       if (typeof body.market_id !== "string" || typeof body.category !== "string" || body.category.length > 60) return json({ error: "Pick a market and category" }, 400);
       const r = await discover(s, body.market_id, body.category.trim(), userId);
-      return json({ ...r, pages_used_today: s.pages_used_today, daily_page_limit: s.daily_page_limit }, "error" in r ? 400 : 200);
+      return json({ ...r, pages_used_today: s.pages_used_today, daily_page_limit: s.daily_page_limit, credits_used_week: s.credits_used_week, weekly_credit_limit: s.weekly_credit_limit }, "error" in r ? 400 : 200);
     }
     if (s.dispatch_paused) return json({ error: "Dispatch is paused — resume it in Settings" }, 409);
     const limit = Math.min(JOBS_PER_RUN, s.max_domains_per_batch);
@@ -247,7 +260,7 @@ Deno.serve(async (req) => {
     }
     const { count } = await admin.from("local_jobs").select("id", { count: "exact", head: true }).eq("state", "queued");
     await admin.from("audit_logs").insert({ action: "local.importer_run", actor_id: userId, new_value: { results, pages_used_today: s.pages_used_today } });
-    return json({ processed: jobs?.length ?? 0, results, queued_left: count ?? 0, pages_used_today: s.pages_used_today, daily_page_limit: s.daily_page_limit });
+    return json({ processed: jobs?.length ?? 0, results, queued_left: count ?? 0, credits_used_week: s.credits_used_week, weekly_credit_limit: s.weekly_credit_limit, pages_used_today: s.pages_used_today, daily_page_limit: s.daily_page_limit });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
     console.error("local-import-run failed:", msg);
