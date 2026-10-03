@@ -62,11 +62,17 @@ const LocalJoin = () => {
         <div className="mt-10">
           {user === undefined || (user && isLoading) ? (
             <div className="h-64 animate-pulse rounded-3xl bg-secondary" />
-          ) : !user || (!merchant && affiliation !== "owner" && affiliation !== "manager") ? (
-            <VisitorListingForm affiliation={affiliation} onAffiliation={setAffiliation} />
-          ) : !merchant ? (
+          ) : merchant ? (
+            <LocalProfileCard merchantId={merchant.id} standalone />
+          ) : !affiliation ? (
+            <RelationshipStep onDone={setAffiliation} />
+          ) : affiliation === "recommend" ? (
+            <SuggestBusinessForm onBack={() => setAffiliation("")} />
+          ) : !user ? (
+            <VisitorListingForm affiliation={affiliation} onBack={() => setAffiliation("")} />
+          ) : (
             <form onSubmit={start} className="grid max-w-xl gap-5 rounded-3xl border border-border bg-card p-8 shadow-[var(--shadow-soft)]">
-              <AffiliationPicker value={affiliation} onChange={setAffiliation} />
+              <BackLink onClick={() => setAffiliation("")} />
               <h2 className="font-display text-xl font-semibold">About your business</h2>
               <div className="grid gap-2">
                 <Label htmlFor="join-name">Business name</Label>
@@ -80,8 +86,6 @@ const LocalJoin = () => {
                 {create.isPending ? "Starting…" : "Next: your listing"}
               </Button>
             </form>
-          ) : (
-            <LocalProfileCard merchantId={merchant.id} standalone />
           )}
         </div>
       </section>
