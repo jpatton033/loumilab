@@ -60,14 +60,8 @@ const LocalJoin = () => {
         <div className="mt-10">
           {user === undefined || (user && isLoading) ? (
             <div className="h-64 animate-pulse rounded-3xl bg-secondary" />
-          ) : !user ? (
-            <div className="max-w-xl rounded-3xl border border-border bg-card p-8 shadow-[var(--shadow-soft)]">
-              <h2 className="font-display text-xl font-semibold">Start your free listing</h2>
-              <p className="mt-2 text-sm text-muted-foreground">Sign in or create an account so you can edit your listing anytime. It takes a minute.</p>
-              <Button asChild size="lg" className="mt-6 rounded-full">
-                <Link to="/sign-in?next=/orders/local/join">Continue <ArrowRight size={16} /></Link>
-              </Button>
-            </div>
+          ) : !user || (!merchant && affiliation !== "owner" && affiliation !== "manager") ? (
+            <VisitorListingForm affiliation={affiliation} onAffiliation={setAffiliation} />
           ) : !merchant ? (
             <form onSubmit={start} className="grid max-w-xl gap-5 rounded-3xl border border-border bg-card p-8 shadow-[var(--shadow-soft)]">
               <h2 className="font-display text-xl font-semibold">About your business</h2>
