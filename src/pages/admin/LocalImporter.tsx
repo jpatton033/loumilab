@@ -227,6 +227,7 @@ const ReviewRow = ({ c, selected, onSelect }: { c: Candidate; selected: boolean;
           <p className="truncate font-semibold">{c.business_name ?? c.website_domain ?? "Untitled"}</p>
           <p className="truncate text-xs text-muted-foreground">{[c.city ?? c.service_area, c.category, c.website_domain].filter(Boolean).join(" · ")}</p>
         </button>
+        {c.source_type === "visitor" && <Badge variant="secondary">Submitted by visitor</Badge>}
         {c.is_sample && <Badge variant="outline">Sample</Badge>}
         {c.match_kind && <Badge variant={c.match_kind === "exact" ? "destructive" : "secondary"}>{c.match_kind === "exact" ? "Duplicate" : c.match_kind === "probable" ? "Possible duplicate" : "Suppressed"}</Badge>}
         {c.dup_decision === "distinct" && <Badge variant="outline">Distinct branch</Badge>}
@@ -243,6 +244,7 @@ const ReviewRow = ({ c, selected, onSelect }: { c: Candidate; selected: boolean;
             <div className="rounded-2xl bg-secondary p-4">
               <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Evidence</p>
               <p className="mt-2 break-all">Source: {c.source_url ? <a className="underline" href={c.source_url} target="_blank" rel="noopener noreferrer nofollow">{c.source_url}</a> : <span className="text-destructive">none</span>}</p>
+              {c.source_type === "visitor" && <p>Submitted by {c.submitter_name} ({c.submitter_email}) · Connection: {c.submitter_affiliation}{c.affiliation_note ? ` — ${c.affiliation_note}` : ""}</p>}
               <p>Type: {c.source_type ?? "—"} · Observed: {c.observed_at ? new Date(c.observed_at).toLocaleDateString() : "—"}</p>
             </div>
             <div className="rounded-2xl border border-border p-4">

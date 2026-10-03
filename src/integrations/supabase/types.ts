@@ -788,6 +788,7 @@ export type Database = {
       }
       local_candidates: {
         Row: {
+          affiliation_note: string | null
           batch_id: string | null
           business_name: string | null
           category: string | null
@@ -823,11 +824,15 @@ export type Database = {
           source_type: string | null
           source_url: string | null
           status: string
+          submitter_affiliation: string | null
+          submitter_email: string | null
+          submitter_name: string | null
           updated_at: string
           website_domain: string | null
           website_url: string | null
         }
         Insert: {
+          affiliation_note?: string | null
           batch_id?: string | null
           business_name?: string | null
           category?: string | null
@@ -863,11 +868,15 @@ export type Database = {
           source_type?: string | null
           source_url?: string | null
           status?: string
+          submitter_affiliation?: string | null
+          submitter_email?: string | null
+          submitter_name?: string | null
           updated_at?: string
           website_domain?: string | null
           website_url?: string | null
         }
         Update: {
+          affiliation_note?: string | null
           batch_id?: string | null
           business_name?: string | null
           category?: string | null
@@ -903,6 +912,9 @@ export type Database = {
           source_type?: string | null
           source_url?: string | null
           status?: string
+          submitter_affiliation?: string | null
+          submitter_email?: string | null
+          submitter_name?: string | null
           updated_at?: string
           website_domain?: string | null
           website_url?: string | null
@@ -3309,6 +3321,30 @@ export type Database = {
           _slug: string
         }
         Returns: string
+      }
+      submit_local_listing: {
+        Args: {
+          _affiliation: string
+          _affiliation_note: string
+          _business_name: string
+          _category: string
+          _city: string
+          _cuisines: string[]
+          _description: string
+          _offers_delivery: boolean
+          _offers_pickup: boolean
+          _postal_code: string
+          _public_email: string
+          _public_phone: string
+          _region: string
+          _service_area: string
+          _social_links: Json
+          _submitter_email: string
+          _submitter_name: string
+          _trap: string
+          _website_url: string
+        }
+        Returns: undefined
       }
       submit_local_request: {
         Args: {
