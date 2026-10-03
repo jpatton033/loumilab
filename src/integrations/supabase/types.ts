@@ -1091,6 +1091,7 @@ export type Database = {
       }
       local_importer_settings: {
         Row: {
+          credits_used_week: number
           csv_max_rows: number
           daily_page_limit: number
           dispatch_paused: boolean
@@ -1107,8 +1108,11 @@ export type Database = {
           recrawl_cooldown_days: number
           updated_at: string
           usage_date: string
+          usage_week: string | null
+          weekly_credit_limit: number
         }
         Insert: {
+          credits_used_week?: number
           csv_max_rows?: number
           daily_page_limit?: number
           dispatch_paused?: boolean
@@ -1125,8 +1129,11 @@ export type Database = {
           recrawl_cooldown_days?: number
           updated_at?: string
           usage_date?: string
+          usage_week?: string | null
+          weekly_credit_limit?: number
         }
         Update: {
+          credits_used_week?: number
           csv_max_rows?: number
           daily_page_limit?: number
           dispatch_paused?: boolean
@@ -1143,6 +1150,8 @@ export type Database = {
           recrawl_cooldown_days?: number
           updated_at?: string
           usage_date?: string
+          usage_week?: string | null
+          weekly_credit_limit?: number
         }
         Relationships: []
       }
