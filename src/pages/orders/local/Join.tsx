@@ -13,7 +13,7 @@ import { toast } from "@/hooks/use-toast";
 import LocalProfileCard from "@/components/orders/local/LocalProfileCard";
 import { useMyMerchant } from "@/lib/orders/commerce";
 import { useCreateLocalMerchant } from "@/lib/orders/local";
-import VisitorListingForm, { AffiliationPicker, type Affiliation } from "@/components/orders/local/VisitorListingForm";
+import VisitorListingForm, { RelationshipStep, SuggestBusinessForm, BackLink, type Relationship } from "@/components/orders/local/VisitorListingForm";
 
 const POINTS = ["Free for businesses and customers", "No store, plan or payment setup needed", "Add online ordering later, if you want it"];
 
@@ -29,7 +29,7 @@ const LocalJoin = () => {
   const create = useCreateLocalMerchant();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [affiliation, setAffiliation] = useState<Affiliation | "">("");
+  const [affiliation, setAffiliation] = useState<Relationship | "">("");
   useEffect(() => { if (user?.email && !email) setEmail(user.email); }, [user]);
 
   const start = async (e: React.FormEvent) => {
