@@ -31,6 +31,7 @@ import AdminCustomProjects from "./pages/admin/CustomProjects";
 import AdminIndustries from "./pages/admin/Industries";
 import AdminAuditLog from "./pages/admin/AuditLog";
 import AdminMail from "./pages/admin/Mail";
+import AdminLocalImporter from "./pages/admin/LocalImporter";
 import AdminDailyBrief from "./pages/admin/reports/DailyBrief";
 import AdminDailyBriefSettings from "./pages/admin/settings/DailyBriefSettings";
 import OrdersCustomProject from "./pages/orders/CustomProject";
@@ -110,6 +111,7 @@ const App = () => (
           <Route path="/admin/plans" element={<ProtectedRoute><AdminPlans /></ProtectedRoute>} />
           <Route path="/admin/industries" element={<ProtectedRoute><AdminIndustries /></ProtectedRoute>} />
           <Route path="/admin/custom-projects" element={<ProtectedRoute><AdminCustomProjects /></ProtectedRoute>} />
+          <Route path="/admin/local-importer" element={<ProtectedRoute><AdminLocalImporter /></ProtectedRoute>} />
           <Route path="/admin/audit-log" element={<ProtectedRoute><AdminAuditLog /></ProtectedRoute>} />
           <Route path="/admin/reports/daily-brief" element={<ProtectedRoute><AdminDailyBrief /></ProtectedRoute>} />
           <Route path="/admin/settings/daily-brief" element={<ProtectedRoute><AdminDailyBriefSettings /></ProtectedRoute>} />

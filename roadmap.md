@@ -20,3 +20,8 @@
 - [x] Store-created and store-published emails, each sent once.
 - [x] Owner-aware storefront banner with publish and back-to-dashboard.
 - [x] Mobile: sticky next-action bar, scrolling chip rows, full-width wizard buttons.
+
+## Loumilab Local Importer
+- [x] Pass 1: staging, CSV/manual/URL entry, duplicate + suppression checks, review queue, publishing, Unclaimed profile, claims, corrections/removals, sources registry, settings + kill switch.
+- [ ] Pass 2: website extraction worker — blocked on connecting Firecrawl.
+- [ ] Pass 3: budget dispatch, retention cleanup, freshness re-checks — depends on Pass 2.

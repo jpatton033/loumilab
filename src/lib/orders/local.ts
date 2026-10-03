@@ -48,6 +48,7 @@ export interface LocalBusiness {
   accepting: boolean;
   is_featured: boolean;
   distance_miles: number | null;
+  ownership_status?: "claimed" | "unclaimed";
 }
 
 export interface LocalSearch {
@@ -115,6 +116,8 @@ export interface LocalBusinessDetail extends LocalBusiness {
   social_links: Partial<Record<SocialKey, string>>;
   public_phone: string | null;
   public_email: string | null;
+  last_checked_at?: string | null;
+  hours_text?: string | null;
 }
 
 export const useLocalBusiness = (slug?: string) =>

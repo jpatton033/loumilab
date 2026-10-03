@@ -4,6 +4,7 @@ import {
   Inbox,
   LayoutDashboard,
   Mail,
+  MapPinned,
   ScrollText,
   Send,
   ShoppingBag,
@@ -69,6 +70,7 @@ export const adminNav: AdminNavGroup[] = [
       { title: "Plans & Fees", url: "/admin/plans", icon: Tags },
       { title: "Industries", url: "/admin/industries", icon: Store },
       { title: "Custom Projects", url: "/admin/custom-projects", icon: Wrench },
+      { title: "Local Importer", url: "/admin/local-importer", icon: MapPinned },
     ],
   },
   {
