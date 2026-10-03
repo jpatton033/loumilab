@@ -42,10 +42,10 @@ const About = () => (
           A technology partner and a product builder.
         </h1>
         <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-          Loumilab is a technology studio that designs and builds digital products for the businesses we
-          partner with, while also creating, launching, and operating products of our own. The two sides of
-          our work strengthen each other—bringing real-world experience, fresh ideas, and a product-focused
-          mindset to everything we build.
+          Loumilab is a technology studio that builds digital products, software, and business solutions
+          designed to help companies grow. As a team, we develop ideas into products and
+          ventures—bringing together creativity, technology, and experience to shape how we think,
+          build, and innovate.
         </p>
       </div>
     </section>
