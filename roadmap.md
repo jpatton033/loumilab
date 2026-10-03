@@ -23,5 +23,5 @@
 
 ## Loumilab Local Importer
 - [x] Pass 1: staging, CSV/manual/URL entry, duplicate + suppression checks, review queue, publishing, Unclaimed profile, claims, corrections/removals, sources registry, settings + kill switch.
-- [ ] Pass 2: website extraction worker — blocked on connecting Firecrawl.
+- [x] Pass 2: website extraction via Firecrawl (local-import-run) + discovery leads
 - [ ] Pass 3: budget dispatch, retention cleanup, freshness re-checks — depends on Pass 2.
