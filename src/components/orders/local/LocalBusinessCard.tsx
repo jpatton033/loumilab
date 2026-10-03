@@ -42,7 +42,7 @@ const LocalBusinessCard = ({ business: b, preview, className }: Props) => {
         <div className="absolute left-3 top-3">
           {b.store_slug ? (
             <Chip tone={b.accepting ? "accent" : "muted"}>{b.accepting ? "Order online" : "Not accepting orders"}</Chip>
-          ) : null}
+          ) : b.ownership_status === "unclaimed" ? <Chip>Unclaimed</Chip> : null}
         </div>
       </div>
       <div className="flex flex-1 flex-col p-5">

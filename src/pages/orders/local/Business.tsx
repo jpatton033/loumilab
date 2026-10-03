@@ -4,6 +4,7 @@ import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import Eyebrow from "@/components/brand/Eyebrow";
 import { Button } from "@/components/ui/button";
+import UnclaimedPanel from "@/components/orders/local/UnclaimedPanel";
 import { categoryLabel, SOCIAL_KEYS, SOCIAL_LABELS, useLocalBusiness } from "@/lib/orders/local";
 
 const LocalBusinessPage = () => {
@@ -70,6 +71,7 @@ const LocalBusinessPage = () => {
               {b.delivery && <span className="rounded-full border border-border bg-secondary px-2.5 py-0.5 text-xs font-semibold">Delivery</span>}
             </div>
 
+            {b.hours_text && <p className="mt-4 text-sm"><span className="font-semibold">Hours:</span> {b.hours_text}</p>}
             {photos.length > 0 && (
               <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3">
                 {photos.map((u) => <img key={u} src={u} alt="" loading="lazy" className="aspect-square w-full rounded-2xl object-cover" />)}
@@ -78,6 +80,7 @@ const LocalBusinessPage = () => {
           </div>
 
           <aside className="h-fit rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-soft)] lg:sticky lg:top-28">
+            {b.ownership_status === "unclaimed" && <div className="mb-6"><UnclaimedPanel slug={b.slug} lastChecked={b.last_checked_at ?? null} /></div>}
             {b.store_slug ? (
               <>
                 <Button asChild size="lg" className="w-full rounded-full">
