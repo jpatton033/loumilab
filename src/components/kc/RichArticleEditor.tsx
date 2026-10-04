@@ -6,7 +6,6 @@ import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
 import { marked } from "marked";
 import TurndownService from "turndown";
-// @ts-expect-error no types
 import { gfm } from "turndown-plugin-gfm";
 import {
   Bold, Italic, Underline as UIcon, Strikethrough, List, ListOrdered, Quote, Minus,
