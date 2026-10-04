@@ -29,6 +29,11 @@ const ArticleBody = ({ body }: ArticleBodyProps) => (
             {children}
           </h3>
         ),
+        h4: ({ children }) => (
+          <h4 className="mt-6 font-display text-lg font-semibold text-foreground">{children}</h4>
+        ),
+        u: ({ children }) => <u className="underline-offset-4">{children}</u>,
+        del: ({ children }) => <del className="text-foreground/60">{children}</del>,
         p: ({ children }) => <p className="mt-5">{children}</p>,
         ul: ({ children }) => <ul className="mt-5 space-y-2 pl-5 [&>li]:list-disc">{children}</ul>,
         ol: ({ children }) => <ol className="mt-5 space-y-2 pl-5 [&>li]:list-decimal">{children}</ol>,
