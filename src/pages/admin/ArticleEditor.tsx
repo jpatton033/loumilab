@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import RichArticleEditor from "@/components/kc/RichArticleEditor";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
@@ -246,17 +247,11 @@ const ArticleEditor = () => {
                 />
               </div>
               <div>
-                <Label htmlFor="body">Body (markdown)</Label>
-                <Textarea
-                  id="body"
-                  value={form.body}
-                  onChange={(e) => setForm({ ...form, body: e.target.value })}
-                  rows={26}
-                  className="mt-2 font-mono text-sm"
-                />
+                <Label>Body</Label>
+                <RichArticleEditor value={form.body} onChange={(body) => setForm((f) => ({ ...f, body }))} />
                 <p className="mt-2 text-xs text-muted-foreground">
-                  Estimated read time: {estimateReadMinutes(form.body)} min. Use ## for section headings — they build
-                  the on-page table of contents.
+                  Estimated read time: {estimateReadMinutes(form.body)} min. Heading 2 sections build the on-page
+                  table of contents.
                 </p>
               </div>
             </div>
