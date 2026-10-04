@@ -92,19 +92,7 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://loumilab.com/resources/orders-commerce/order-management-that-scales</loc>
-    <lastmod>2026-09-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://loumilab.com/resources/technology-ai/practical-ai-for-small-businesses</loc>
-    <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://loumilab.com/resources/web-digital/website-that-converts</loc>
     <lastmod>2026-09-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -116,14 +104,38 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://loumilab.com/resources/templates-tools/order-intake-template</loc>
+    <loc>https://loumilab.com/resources/web-digital/website-that-converts</loc>
     <lastmod>2026-09-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://loumilab.com/resources/orders-commerce/order-management-that-scales</loc>
+    <lastmod>2026-09-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://loumilab.com/resources/templates-tools/order-intake-template</loc>
+    <lastmod>2026-10-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://loumilab.com/resources/business-growth/turn-first-time-buyers-into-regulars</loc>
     <lastmod>2026-09-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://loumilab.com/resources/business-growth/is-your-business-ready-to-grow</loc>
+    <lastmod>2026-10-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://loumilab.com/resources/business-growth/are-dms-costing-your-business-sales</loc>
+    <lastmod>2026-10-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
