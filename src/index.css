@@ -311,6 +311,6 @@
 .kc-prose li p { margin: 0; }
 .kc-prose strong { font-weight: 600; color: hsl(var(--foreground)); }
 .kc-prose a { color: hsl(var(--accent)); text-decoration: underline; text-underline-offset: 4px; font-weight: 500; }
-.kc-prose blockquote { border-left: 2px solid hsl(var(--accent)); background: hsl(var(--surface-subtle, var(--secondary))); border-radius: 1rem; padding: 1rem 1.5rem; }
+.kc-prose blockquote { border-left: 2px solid hsl(var(--accent)); background: hsl(var(--surface-subtle)); border-radius: 1rem; padding: 1rem 1.5rem; }
 .kc-prose hr { margin-top: 2.5rem; border-color: hsl(var(--border)); }
 .kc-prose p.is-editor-empty:first-child::before { content: attr(data-placeholder); color: hsl(var(--muted-foreground)); float: left; height: 0; pointer-events: none; }
