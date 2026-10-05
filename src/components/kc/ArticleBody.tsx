@@ -1,5 +1,7 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
+import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import { slugify } from "@/lib/kc/types";
 
 interface ArticleBodyProps {
@@ -11,10 +13,17 @@ const headingId = (children: React.ReactNode) => {
   return slugify(text);
 };
 
+/** Allow the editor's `<u>` underline markup; everything else raw is stripped to the safe default set. */
+const sanitizeSchema = {
+  ...defaultSchema,
+  tagNames: [...(defaultSchema.tagNames ?? []), "u"],
+};
+
 const ArticleBody = ({ body }: ArticleBodyProps) => (
   <div className="max-w-none text-[1.0625rem] leading-relaxed text-foreground/85">
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
+      rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
       components={{
         h2: ({ children }) => (
           <h2
