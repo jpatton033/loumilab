@@ -12,6 +12,7 @@ import {
   Sparkles,
   Store,
   Tags,
+  Users,
   Wrench,
   type LucideIcon,
 } from "lucide-react";
@@ -67,6 +68,7 @@ export const adminNav: AdminNavGroup[] = [
     label: "Orders",
     items: [
       { title: "Overview", url: "/admin/orders", icon: ShoppingBag },
+      { title: "Merchants & Contacts", url: "/admin/merchants", icon: Users },
       { title: "Plans & Fees", url: "/admin/plans", icon: Tags },
       { title: "Industries", url: "/admin/industries", icon: Store },
       { title: "Custom Projects", url: "/admin/custom-projects", icon: Wrench },

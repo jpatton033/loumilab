@@ -136,12 +136,12 @@ export const useLocalBusiness = (slug?: string) =>
 export const useCreateLocalMerchant = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (input: { businessName: string; email: string }) => {
+    mutationFn: async (input: { businessName: string; email: string; relationship?: "owner" | "manager" }) => {
       const { data: u } = await supabase.auth.getUser();
       if (!u.user) throw new Error("Please sign in first.");
       const { data, error } = await supabase
         .from("merchants")
-        .insert({ owner_id: u.user.id, business_name: input.businessName.trim(), contact_email: input.email.trim(), plan_slug: "launch", accepting_orders: false } as never)
+        .insert({ owner_id: u.user.id, business_name: input.businessName.trim(), contact_email: input.email.trim(), plan_slug: "launch", accepting_orders: false, relationship: input.relationship ?? null } as never)
         .select("id")
         .single();
       if (error) throw error;

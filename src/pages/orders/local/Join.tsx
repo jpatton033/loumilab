@@ -36,7 +36,7 @@ const LocalJoin = () => {
     e.preventDefault();
     if (name.trim().length < 2) return toast({ title: "Enter your business name", variant: "destructive" });
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.trim())) return toast({ title: "Enter a valid email", variant: "destructive" });
-    try { await create.mutateAsync({ businessName: name, email }); }
+    try { await create.mutateAsync({ businessName: name, email, relationship: affiliation === "owner" ? "owner" : affiliation ? "manager" : undefined }); }
     catch (err) { toast({ title: "Couldn't start your listing", description: (err as Error).message, variant: "destructive" }); }
   };
 
