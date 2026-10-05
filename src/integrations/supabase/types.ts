@@ -2204,6 +2204,7 @@ export type Database = {
           postal_code: string | null
           purchase_models: string[]
           region: string | null
+          relationship: string | null
           updated_at: string
         }
         Insert: {
@@ -2226,6 +2227,7 @@ export type Database = {
           postal_code?: string | null
           purchase_models?: string[]
           region?: string | null
+          relationship?: string | null
           updated_at?: string
         }
         Update: {
@@ -2248,6 +2250,7 @@ export type Database = {
           postal_code?: string | null
           purchase_models?: string[]
           region?: string | null
+          relationship?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -3150,6 +3153,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_merchant_directory: { Args: never; Returns: Json }
       check_and_increment_rate_limit: {
         Args: { _key: string; _max_count: number; _window_seconds: number }
         Returns: boolean
