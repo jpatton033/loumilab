@@ -136,7 +136,7 @@ const Orders = () => {
       />
 
       {/* Hero */}
-      <section className="relative overflow-hidden pb-20 pt-28 lg:pb-28 lg:pt-36">
+      <section className="relative overflow-hidden pb-20 pt-14 lg:pb-28 lg:pt-20">
         <div className="pointer-events-none absolute inset-0 hero-wash" aria-hidden="true" />
         <div className="pointer-events-none absolute inset-0 hero-grid" aria-hidden="true" />
         <div className="section-container relative">

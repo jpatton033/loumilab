@@ -129,7 +129,7 @@ const ProductShowcaseHero = () => {
     <section
       ref={sectionRef}
       aria-label="Loumilab product showcase"
-      className="relative overflow-hidden pt-28 pb-16 lg:pt-36 lg:pb-24"
+      className="relative overflow-hidden pt-14 pb-16 lg:pt-20 lg:pb-24"
       style={{ ["--hero-accent" as string]: active?.accent_hsl ?? "217 91% 50%" }}
       onMouseEnter={stopAuto}
       onFocus={stopAuto}

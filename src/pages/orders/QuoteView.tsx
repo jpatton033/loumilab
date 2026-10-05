@@ -39,7 +39,7 @@ const QuoteView = () => {
         noindex
       />
 
-      <section className="pb-32 pt-28 lg:pt-32">
+      <section className="pb-32 pt-14 lg:pt-16">
         <div className="section-container max-w-2xl">
           {isLoading ? (
             <p className="text-muted-foreground">Loading your estimate…</p>

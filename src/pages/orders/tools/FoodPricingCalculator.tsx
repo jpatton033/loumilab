@@ -297,7 +297,7 @@ const FoodPricingCalculator = () => {
         ]}
       />
 
-      <div className="section-container pb-32 pt-12 lg:pb-24 lg:pt-16">
+      <div className="section-container pb-32 pt-6 lg:pb-24 lg:pt-8">
         <Link to="/orders/tools" className="text-sm font-medium text-muted-foreground hover:text-foreground">Business Tools</Link>
         <Eyebrow className="mt-8 block">Free tool</Eyebrow>
         <div className="mt-3 flex flex-wrap items-end justify-between gap-4">

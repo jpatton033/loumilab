@@ -124,7 +124,7 @@ const Storefront = () => {
     return (
       <Layout>
         <SEOHead title="Loading store — Loumilab Orders" description="Loading storefront." path="/orders" noindex />
-        <section className="section-padding pt-32 text-center">
+        <section className="section-padding pt-16 text-center">
           <div className="section-container">
             <p className="text-muted-foreground">Loading store…</p>
           </div>
@@ -137,7 +137,7 @@ const Storefront = () => {
     return (
       <Layout>
         <SEOHead title="Store Unavailable — Loumilab Orders" description="This storefront is not available right now." path="/orders" noindex />
-        <section className="section-padding pt-32 text-center">
+        <section className="section-padding pt-16 text-center">
           <div className="section-container">
             <h1 className="font-hero text-4xl font-semibold tracking-tight">This store is unavailable right now</h1>
             <p className="mt-4 text-muted-foreground">
@@ -182,7 +182,7 @@ const Storefront = () => {
         jsonLd={isLive && isPublic ? storeJsonLd(store, !!industry?.is_food) : undefined}
       />
 
-      <section className="pb-32 pt-28 lg:pt-32">
+      <section className="pb-32 pt-14 lg:pt-16">
         <div className="section-container max-w-3xl">
           {params.get("from") === "local" && (
             <Link to="/orders/local" className="mb-6 inline-block text-sm font-medium text-muted-foreground hover:text-foreground">

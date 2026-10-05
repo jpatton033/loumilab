@@ -85,7 +85,7 @@ const LocalIndex = () => {
       />
 
       {/* Hero + search */}
-      <section className="section-container pt-14 pb-10 lg:pt-20">
+      <section className="section-container pt-7 pb-10 lg:pt-10">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="font-display text-lg font-semibold tracking-tight">Loumilab <span className="text-accent">Local</span></p>
           <Link to="/orders/local/join" className="text-sm font-medium text-muted-foreground hover:text-foreground">List your business — free</Link>

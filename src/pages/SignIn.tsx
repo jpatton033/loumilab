@@ -161,7 +161,7 @@ const SignIn = () => {
     return (
       <Layout>
         <SEOHead title="Sign In — Loumilab" description="Sign in to your Loumilab account." path="/sign-in" noindex />
-        <section className="section-padding flex min-h-[70vh] items-center pt-32 lg:pt-40">
+        <section className="section-padding flex min-h-[70vh] items-center pt-16 lg:pt-20">
           <div className="section-container mx-auto w-full max-w-md text-center text-muted-foreground">
             <Loader2 className="mx-auto h-6 w-6 animate-spin" />
             <p className="mt-3 text-sm">Checking session…</p>
@@ -174,7 +174,7 @@ const SignIn = () => {
   return (
     <Layout>
       <SEOHead title="Sign In — Loumilab" description="Sign in to your Loumilab account." path="/sign-in" noindex />
-      <section className="section-padding flex min-h-[70vh] items-center pt-32 lg:pt-40">
+      <section className="section-padding flex min-h-[70vh] items-center pt-16 lg:pt-20">
         <div className="section-container mx-auto w-full max-w-md">
           <h1 className="mb-2 text-center text-3xl font-semibold">Loumilab account</h1>
           <p className="mb-8 text-center text-muted-foreground">

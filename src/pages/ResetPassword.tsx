@@ -191,7 +191,7 @@ const ResetPassword = () => {
         path="/reset-password"
         noindex
       />
-      <section className="section-padding flex min-h-[70vh] items-center pt-32 lg:pt-40">
+      <section className="section-padding flex min-h-[70vh] items-center pt-16 lg:pt-20">
         <div className="section-container mx-auto w-full max-w-md">
           {status === "checking" ? (
             <div className="text-center text-muted-foreground">

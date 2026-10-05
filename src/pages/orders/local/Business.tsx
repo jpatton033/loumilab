@@ -11,11 +11,11 @@ const LocalBusinessPage = () => {
   const { slug } = useParams();
   const { data: b, isLoading } = useLocalBusiness(slug);
 
-  if (isLoading) return <Layout><div className="section-container py-20"><div className="h-96 animate-pulse rounded-3xl bg-secondary" /></div></Layout>;
+  if (isLoading) return <Layout><div className="section-container pt-10 pb-20"><div className="h-96 animate-pulse rounded-3xl bg-secondary" /></div></Layout>;
   if (!b) {
     return (
       <Layout>
-        <section className="section-container py-24 text-center">
+        <section className="section-container pt-12 pb-24 text-center">
           <h1 className="font-display text-3xl font-semibold">This listing isn't available</h1>
           <p className="mt-3 text-muted-foreground">It may have been hidden by the business.</p>
           <Button asChild className="mt-6 rounded-full"><Link to="/orders/local">Explore Loumilab Local</Link></Button>
@@ -43,7 +43,7 @@ const LocalBusinessPage = () => {
           sameAs: [b.website_url, ...socials.map((k) => b.social_links[k])].filter(Boolean),
         } as never}
       />
-      <section className="section-container pt-10 pb-24 lg:pt-16">
+      <section className="section-container pt-5 pb-24 lg:pt-8">
         <Link to="/orders/local" className="text-sm font-medium text-muted-foreground hover:text-foreground">← Loumilab Local</Link>
 
         <div className="mt-6 overflow-hidden rounded-3xl border border-border bg-secondary">

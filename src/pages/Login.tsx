@@ -74,7 +74,7 @@ const Login = () => {
         path="/login"
         noindex
       />
-      <section className="section-padding flex min-h-[70vh] items-center pt-32 lg:pt-40">
+      <section className="section-padding flex min-h-[70vh] items-center pt-16 lg:pt-20">
         <div className="section-container mx-auto w-full max-w-md">
           <h1 className="mb-2 text-center text-3xl font-semibold">
             {mode === "signin" ? "Admin Login" : "Reset password"}

@@ -77,7 +77,7 @@ const Services = () => (
       jsonLd={servicesJsonLd}
     />
 
-    <section className="relative overflow-hidden pt-32 pb-16 lg:pt-44 lg:pb-20">
+    <section className="relative overflow-hidden pt-16 pb-16 lg:pt-24 lg:pb-20">
       <div className="pointer-events-none absolute inset-0 hero-wash" aria-hidden="true" />
       <div className="section-container relative max-w-3xl">
         <Eyebrow>Services</Eyebrow>
