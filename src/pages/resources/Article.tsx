@@ -54,7 +54,7 @@ const ResourceArticle = () => {
   if (isLoading) {
     return (
       <Layout>
-        <div className="section-container py-32">
+        <div className="section-container pt-16 pb-32">
           <div className="h-10 w-2/3 animate-pulse rounded-2xl bg-secondary" />
           <div className="mt-6 h-4 w-1/2 animate-pulse rounded-xl bg-secondary" />
         </div>
@@ -71,7 +71,7 @@ const ResourceArticle = () => {
           path="/resources"
           noindex
         />
-        <section className="section-padding pt-32 text-center">
+        <section className="section-padding pt-16 text-center">
           <div className="section-container">
             <h1 className="text-3xl font-semibold">Article not found</h1>
             <p className="mt-4 text-muted-foreground">It may have moved or been unpublished.</p>
@@ -109,7 +109,7 @@ const ResourceArticle = () => {
         }}
       />
 
-      <article className="section-padding pt-16 lg:pt-24">
+      <article className="section-padding pt-8 lg:pt-12">
         <div className="section-container">
           <Link
             to={`/resources/${canonicalSection}`}

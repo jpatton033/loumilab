@@ -47,7 +47,7 @@ const LocalJoin = () => {
         description="Get discovered locally for free. List your home kitchen, bakery, catering or food truck on Loumilab Local in a few minutes — no payment setup required."
         path="/orders/local/join"
       />
-      <section className="section-container pt-14 pb-24 lg:pt-20">
+      <section className="section-container pt-7 pb-24 lg:pt-10">
         <Link to="/orders/local" className="text-sm font-medium text-muted-foreground hover:text-foreground">← Loumilab Local</Link>
         <Eyebrow className="mt-8 block">Loumilab Local</Eyebrow>
         <h1 className="mt-4 max-w-3xl font-hero text-4xl font-semibold leading-[1.05] tracking-tight sm:text-6xl">

@@ -23,7 +23,7 @@ const BusinessTools = () => {
           ],
         }}
       />
-      <section className="section-container py-16 lg:py-24">
+      <section className="section-container pt-8 pb-16 lg:pt-12 lg:pb-24">
         <Link to="/orders" className="text-sm font-medium text-muted-foreground hover:text-foreground">
           Loumilab Orders
         </Link>

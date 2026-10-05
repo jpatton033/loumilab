@@ -374,7 +374,7 @@ const GetStarted = () => {
         jsonLd={GET_STARTED_JSONLD}
       />
 
-      <section className="section-padding pt-28 lg:pt-36">
+      <section className="section-padding pt-14 lg:pt-20">
         <div className="section-container">
           <Link
             to="/orders"

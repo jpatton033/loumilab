@@ -56,7 +56,7 @@ const ResourcesSection = () => {
     return (
       <Layout>
         <SEOHead title="Topic not found | Loumilab" description={description} path="/resources" noindex />
-        <section className="section-padding pt-32">
+        <section className="section-padding pt-16">
           <div className="section-container text-center">
             <h1 className="text-3xl font-semibold">Topic not found</h1>
             <Button asChild className="mt-8">
@@ -84,7 +84,7 @@ const ResourcesSection = () => {
       />
 
       <section className="border-b border-border bg-surface-subtle">
-        <div className="section-container py-16 lg:py-24">
+        <div className="section-container pt-8 pb-16 lg:pt-12 lg:pb-24">
           <Link
             to="/resources"
             className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-accent"

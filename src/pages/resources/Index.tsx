@@ -53,7 +53,7 @@ const ResourcesIndex = () => {
       <SEOHead title={TITLE} description={DESCRIPTION} path="/resources" jsonLd={jsonLd} />
 
       <section className="border-b border-border bg-surface-subtle">
-        <div className="section-container py-20 lg:py-28">
+        <div className="section-container pt-10 pb-20 lg:pt-14 lg:pb-28">
           <Reveal className="max-w-3xl">
             <Eyebrow>Knowledge Center</Eyebrow>
             <h1 className="mt-5 text-4xl font-semibold leading-[1.05] tracking-tight lg:text-6xl">

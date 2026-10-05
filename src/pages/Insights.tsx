@@ -21,7 +21,7 @@ const Insights = () => (
       path="/insights"
       noindex
     />
-    <section className="section-padding pt-32 lg:pt-40">
+    <section className="section-padding pt-16 lg:pt-20">
       <div className="section-container">
         <Reveal className="max-w-2xl">
           <Eyebrow>Insights</Eyebrow>

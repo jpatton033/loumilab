@@ -142,7 +142,7 @@ const CustomProject = () => {
           path="/orders/custom"
           noindex
         />
-        <section className="section-padding pt-32">
+        <section className="section-padding pt-16">
           <div className="section-container max-w-xl text-center">
             <CheckCircle2 size={44} className="mx-auto text-accent" />
             <h1 className="mt-6 font-hero text-4xl font-semibold tracking-tight">Request received</h1>
@@ -172,7 +172,7 @@ const CustomProject = () => {
         path="/orders/custom"
       />
 
-      <section className="section-padding pt-28 lg:pt-36">
+      <section className="section-padding pt-14 lg:pt-20">
         <div className="section-container max-w-3xl">
           <Link
             to="/orders"

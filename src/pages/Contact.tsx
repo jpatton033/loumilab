@@ -86,7 +86,7 @@ const Contact = () => {
         description="Tell us about your website, product, automation, or security project. Loumilab replies to every inquiry within 24 hours."
         path="/contact"
       />
-      <section className="relative overflow-hidden section-padding pt-32 lg:pt-40">
+      <section className="relative overflow-hidden section-padding pt-16 lg:pt-20">
         <div className="pointer-events-none absolute inset-0 hero-wash" aria-hidden="true" />
         <div className="section-container relative">
           <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
