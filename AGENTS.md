@@ -6,3 +6,4 @@
 - Human photography sections use the shared brand PhotoSplit component and .photo-frame utility; card hover uses .glow-hover — keeps imagery and interaction consistent across Loumilab products.
 
 - Visual breaks (immersive image, statement, sequence, transition, editorial) use the shared components in src/components/brand/story — keeps the storytelling language consistent site-wide.
+- Homepage product/grid tiles use the shared components in src/components/brand/apple/Tiles.tsx — keeps the Apple-style homepage consistent.
