@@ -20,7 +20,7 @@ const sanitizeSchema = {
 };
 
 const ArticleBody = ({ body }: ArticleBodyProps) => (
-  <div className="max-w-none text-[1.0625rem] leading-relaxed text-foreground/85">
+  <div className="max-w-none text-[1.125rem] leading-[1.75] text-foreground/88">
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
       rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}

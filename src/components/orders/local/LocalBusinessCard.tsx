@@ -29,7 +29,7 @@ const LocalBusinessCard = ({ business: b, preview, className }: Props) => {
     <article
       className={cn(
         "group flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-[var(--shadow-soft)] transition-shadow",
-        !preview && "hover:shadow-[var(--shadow-lift)]",
+        !preview && "glow-hover",
         className,
       )}
     >

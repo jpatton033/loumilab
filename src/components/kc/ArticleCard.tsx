@@ -9,7 +9,7 @@ const ArticleCard = ({ article }: { article: KcArticleWithRelations }) => {
   return (
     <Link
       to={`/resources/${sectionSlug}/${article.slug}`}
-      className="group flex h-full flex-col rounded-3xl border border-border bg-card p-7 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-[var(--shadow-lift)]"
+      className="group flex h-full flex-col rounded-3xl border border-border bg-card p-7 shadow-[var(--shadow-soft)] glow-hover"
     >
       {article.kc_sections?.title && (
         <span className="font-display text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">

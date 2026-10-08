@@ -4,6 +4,8 @@ import { ArrowRight, MapPin, Search, SlidersHorizontal } from "lucide-react";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import Eyebrow from "@/components/brand/Eyebrow";
+import PhotoSplit from "@/components/brand/PhotoSplit";
+import localPickup from "@/assets/people/local-pickup.jpg";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -201,6 +203,17 @@ const LocalIndex = () => {
           </div>
         </div>
       </section>
+
+      <PhotoSplit
+        reverse
+        image={localPickup}
+        alt="A café owner handing a customer her order across the counter of a neighborhood shop"
+        eyebrow="Neighborhood discovery"
+        title="Find the people who make your neighborhood taste better."
+        className="mb-24"
+      >
+        <p>Bakers, home chefs, caterers and corner cafés — discover who's cooking near you and order straight from them.</p>
+      </PhotoSplit>
 
       {/* Merchant CTA */}
       <section className="section-container pb-24">

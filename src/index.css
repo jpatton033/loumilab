@@ -23,7 +23,7 @@
     --secondary-foreground: 240 6% 10%;
 
     --muted: 240 10% 94%;
-    --muted-foreground: 240 5% 42%;
+    --muted-foreground: 240 5% 34%;
 
     --accent: 217 91% 50%;
     --accent-foreground: 0 0% 100%;
@@ -135,9 +135,31 @@
   }
 
   .glow-hover:hover {
-    box-shadow: var(--shadow-lift);
-    transform: translateY(-2px);
+    box-shadow: var(--shadow-lift), 0 0 0 1px hsl(var(--accent) / 0.35);
+    border-color: hsl(var(--accent) / 0.5);
+    transform: translateY(-3px);
   }
+
+  .glow-hover:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring));
+  }
+
+  .glow-hover:active { transform: translateY(-1px); }
+
+  /* Type ladder: description and metadata */
+  .text-lede { @apply text-lg leading-relaxed text-foreground/75 lg:text-xl; }
+  .text-meta { @apply text-xs font-medium tracking-wide text-muted-foreground; }
+
+  /* Brand links: blue on hover with sliding arrow */
+  .link-brand { @apply inline-flex items-center gap-2 font-display text-sm font-semibold text-foreground transition-colors hover:text-accent focus-visible:text-accent; }
+  .link-brand svg { transition: transform 0.3s var(--ease-brand); }
+  .link-brand:hover svg { transform: translateX(4px); }
+
+  /* Photo frames */
+  .photo-frame { @apply overflow-hidden rounded-3xl border border-border bg-muted shadow-[var(--shadow-soft)]; }
+  .photo-frame img { transition: transform 0.9s var(--ease-brand); }
+  .photo-frame:hover img { transform: scale(1.03); }
 
   .hero-wash {
     background-image: var(--gradient-wash);
@@ -298,7 +320,7 @@
 }
 
 /* Article editor typography — mirrors published ArticleBody */
-.kc-prose { font-size: 1.0625rem; line-height: 1.7; color: hsl(var(--foreground) / 0.85); }
+.kc-prose { font-size: 1.125rem; line-height: 1.75; color: hsl(var(--foreground) / 0.88); }
 .kc-prose > * + * { margin-top: 1.25rem; }
 .kc-prose h2 { margin-top: 3rem; font-family: theme('fontFamily.display'); font-size: 1.75rem; font-weight: 600; line-height: 1.25; color: hsl(var(--foreground)); }
 .kc-prose h3 { margin-top: 2rem; font-family: theme('fontFamily.display'); font-size: 1.25rem; font-weight: 600; color: hsl(var(--foreground)); }
