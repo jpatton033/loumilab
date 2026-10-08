@@ -85,27 +85,50 @@ const ResourceArticle = () => {
   }
 
   const canonicalSection = article.kc_sections?.slug ?? sectionSlug ?? "";
+  const a = article as typeof article & {
+    canonical_url?: string | null; og_title?: string | null; og_description?: string | null;
+    og_image_url?: string | null; noindex?: boolean | null; focus_keyword?: string | null;
+  };
   const title = article.seo_title || `${article.title} | Loumilab`;
   const description =
     article.seo_description || article.summary || "A practical guide from the Loumilab Knowledge Center.";
+  const articlePath = `/resources/${canonicalSection}/${article.slug}`;
+  const articleUrl = a.canonical_url || `https://loumilab.com${articlePath}`;
+  const shareImage = a.og_image_url || article.hero_image_url || undefined;
 
   return (
     <Layout>
       <SEOHead
         title={title}
         description={description}
-        path={`/resources/${canonicalSection}/${article.slug}`}
-        noindex={article.status !== "published"}
+        path={articlePath}
+        canonicalUrl={a.canonical_url || undefined}
+        noindex={article.status !== "published" || !!a.noindex}
+        ogType="article"
+        ogTitle={a.og_title || article.title}
+        ogDescription={a.og_description || undefined}
+        image={shareImage}
+        imageAlt={article.title}
+        publishedTime={article.published_at ?? article.created_at}
+        modifiedTime={article.updated_at}
+        breadcrumbs={[
+          { name: "Home", path: "/" },
+          { name: "Resources", path: "/resources" },
+          { name: article.kc_sections?.title ?? "Topic", path: `/resources/${canonicalSection}` },
+          { name: article.title, path: articlePath },
+        ]}
         jsonLd={{
           "@context": "https://schema.org",
           "@type": "Article",
           headline: article.title,
           description,
+          ...(shareImage ? { image: shareImage } : {}),
+          ...(a.focus_keyword ? { keywords: a.focus_keyword } : {}),
           datePublished: article.published_at ?? article.created_at,
           dateModified: article.updated_at,
           author: { "@type": "Organization", name: article.author || "Loumilab" },
           publisher: { "@type": "Organization", name: "Loumilab", url: "https://loumilab.com" },
-          mainEntityOfPage: `https://loumilab.com/resources/${canonicalSection}/${article.slug}`,
+          mainEntityOfPage: articleUrl,
         }}
       />
 
