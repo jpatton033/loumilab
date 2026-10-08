@@ -236,6 +236,13 @@ const ResourceArticle = () => {
                 </div>
               )}
 
+              <p className="mt-8 text-sm text-muted-foreground">
+                Want help putting this into practice?{" "}
+                <Link to="/services" className="link-brand font-medium text-foreground">Explore Loumilab services</Link>
+                {" "}or{" "}
+                <Link to="/contact" className="link-brand font-medium text-foreground">start a project</Link>.
+              </p>
+
               {tags.length > 0 && (
                 <div className="mt-8 flex flex-wrap gap-2">
                   {tags.map((tag) => (
