@@ -280,7 +280,7 @@ const Orders = () => {
           </Reveal>
 
           <Reveal className="mt-12 rounded-[2rem] border border-border bg-card p-6 shadow-[var(--shadow-soft)] lg:p-10">
-            <StorefrontHeader store={demoStorefront} />
+            <StorefrontHeader store={demoStorefront} demo />
             <div className="mt-8 grid gap-5 md:grid-cols-3">
               {demoStorefront.products.map((p) => (
                 <StoreProductCard
