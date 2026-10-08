@@ -1,4 +1,6 @@
 import Layout from "@/components/Layout";
+import { Link } from "react-router-dom";
+import { VurttiLogo } from "@/components/brand/VurttiLogo";
 import SEOHead from "@/components/SEOHead";
 import Reveal from "@/components/Reveal";
 import ArticleCard from "@/components/kc/ArticleCard";
@@ -116,13 +118,13 @@ const Index = () => {
         <div className="section-container grid gap-4 md:grid-cols-2">
           <GridTile eyebrow="A Loumilab company" title="Vurtti" line="Compliance technology for documentation-heavy teams." links={{ primary: { label: "Visit Vurtti", to: "https://www.vurttidocs.com", external: true } }}>
             <div className="mb-10 grid aspect-[4/3] place-items-center rounded-2xl border border-border bg-background">
-              <span className="font-hero text-5xl font-semibold tracking-tight">Vurtti</span>
+              <VurttiLogo size="xl" />
             </div>
           </GridTile>
           <GridTile eyebrow="What's next" title="We're always building." line="New products are in the lab. Have an idea worth building with us?" links={{ primary: { label: "Start a project", to: "/contact" }, secondary: { label: "All products", to: "/products" } }}>
-            <div className="mb-10 grid aspect-[4/3] place-items-center rounded-2xl border border-dashed border-accent/40 bg-accent-soft">
-              <span className="font-hero text-6xl font-semibold text-accent">+</span>
-            </div>
+            <Link to="/contact" aria-label="Start a project" className="mb-10 grid aspect-[4/3] place-items-center rounded-2xl border border-dashed border-accent/40 bg-accent-soft transition-all duration-300 hover:-translate-y-0.5 hover:border-accent hover:shadow-[var(--shadow-accent-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+              <span aria-hidden="true" className="font-hero text-6xl font-semibold text-accent">+</span>
+            </Link>
           </GridTile>
         </div>
       </section>
