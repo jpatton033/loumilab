@@ -4,6 +4,7 @@ import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import Eyebrow from "@/components/brand/Eyebrow";
 import Reveal from "@/components/Reveal";
+import resourcesReading from "@/assets/people/resources-reading.jpg";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import SectionIcon from "@/components/kc/SectionIcon";
@@ -63,6 +64,9 @@ const ResourcesIndex = () => {
               Plain-language playbooks, checklists, and templates from the Loumilab team — covering growth, order
               operations, technology and AI, digital presence, and security.
             </p>
+          </Reveal>
+          <Reveal delay={120} className="photo-frame mt-12 aspect-[16/7]">
+            <img src={resourcesReading} alt="An entrepreneur taking notes from a guide at her kitchen table" width={1600} height={912} decoding="async" className="h-full w-full object-cover" />
           </Reveal>
 
           <Reveal delay={80} className="mt-10 max-w-xl">

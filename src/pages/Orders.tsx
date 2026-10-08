@@ -17,6 +17,8 @@ import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import Reveal from "@/components/Reveal";
 import Eyebrow from "@/components/brand/Eyebrow";
+import PhotoSplit from "@/components/brand/PhotoSplit";
+import bakerOrders from "@/assets/people/baker-orders.jpg";
 import { Button } from "@/components/ui/button";
 import PhoneFrame from "@/components/orders/PhoneFrame";
 import StorefrontScreen from "@/components/orders/StorefrontScreen";
@@ -207,6 +209,15 @@ const Orders = () => {
           <FlowDiagram steps={socialFlow} className="mt-6" />
         </div>
       </section>
+
+      <PhotoSplit
+        image={bakerOrders}
+        alt="A baker boxing a fresh pastry order, with incoming orders on a tablet beside her"
+        eyebrow="Built for real merchants"
+        title="Spend the morning baking, not answering DMs."
+      >
+        <p>Orders arrive in one place with pickup times, notes and payment already handled — so you can get back to the work you love.</p>
+      </PhotoSplit>
 
       {/* How it works */}
       <section id="how-it-works" className="section-padding scroll-mt-24">
