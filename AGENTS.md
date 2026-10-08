@@ -7,3 +7,4 @@
 
 - Visual breaks (immersive image, statement, sequence, transition, editorial) use the shared components in src/components/brand/story — keeps the storytelling language consistent site-wide.
 - Homepage product/grid tiles use the shared components in src/components/brand/apple/Tiles.tsx — keeps the Apple-style homepage consistent.
+- Per-page SEO (title, description, canonical, og/twitter, WebPage + BreadcrumbList JSON-LD) goes only through SEOHead props; article overrides live on kc_articles SEO columns with automatic fallbacks — one place for head tags.
