@@ -115,7 +115,7 @@ const Index = () => {
       {/* Ecosystem */}
       <section className="pb-16 lg:pb-24">
         <div className="section-container grid gap-4 md:grid-cols-2">
-          <GridTile eyebrow="A Loumilab company" title="Vurtti" line="Compliance technology for documentation-heavy teams." links={{ primary: { label: "Visit Vurtti", to: "https://www.vurttidocs.com", external: true } }}>
+          <GridTile eyebrow="A Loumilab company" title="Compliance, simplified." line="Vurtti is compliance technology for documentation-heavy teams." links={{ primary: { label: "Visit Vurtti", to: "https://www.vurttidocs.com", external: true } }}>
             <div className="mb-10 grid aspect-[4/3] place-items-center rounded-2xl border border-border bg-background">
               <VurttiLogo size="xl" />
             </div>
