@@ -76,7 +76,7 @@ export const PeopleSequence = ({ eyebrow, title, items, className }: { eyebrow?:
         ref={ref}
         tabIndex={0}
         onKeyDown={(e) => { if (e.key === "ArrowRight") go(1); if (e.key === "ArrowLeft") go(-1); }}
-        className="mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-4 pb-4 [scrollbar-width:none] focus-visible:outline-none sm:px-[max(1.5rem,calc((100vw-80rem)/2+2rem))] [&::-webkit-scrollbar]:hidden"
+        className="mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-4 pb-4 [scrollbar-width:none] focus-visible:outline-none scroll-px-4 sm:px-8 sm:scroll-px-8 lg:px-[max(2rem,calc((100vw_-_80rem)/2_+_2rem))] lg:scroll-px-[max(2rem,calc((100vw_-_80rem)/2_+_2rem))] [&::-webkit-scrollbar]:hidden"
       >
         {items.map((it, i) => (
           <figure key={i} role="group" aria-roledescription="slide" aria-label={`${i + 1} of ${items.length}: ${it.label}`} className="w-[78vw] shrink-0 snap-start sm:w-[340px] lg:w-[380px]">
