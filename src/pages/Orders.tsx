@@ -473,7 +473,7 @@ const Orders = () => {
       <CategoryTransition
         image={{ src: reviewingOrders, alt: "A food business owner smiling while checking the day's orders on a tablet", width: 1200, height: 1504, position: "50% 30%" }}
         label="Pricing"
-        title="Start free. Grow when the orders do."
+        title="Grow when the orders do."
       />
 
       {/* Pricing */}
