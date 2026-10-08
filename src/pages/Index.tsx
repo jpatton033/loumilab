@@ -1,52 +1,20 @@
-import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import Reveal from "@/components/Reveal";
-import ProductShowcaseHero from "@/components/hero/ProductShowcaseHero";
-import Eyebrow from "@/components/brand/Eyebrow";
-import CapabilityCard from "@/components/brand/CapabilityCard";
-import ProductCard from "@/components/brand/ProductCard";
-import PhotoSplit from "@/components/brand/PhotoSplit";
+import ArticleCard from "@/components/kc/ArticleCard";
+import { PeopleSequence } from "@/components/brand/story";
+import { GridTile, MoreLink, ProductTile, Statement, TileActions } from "@/components/brand/apple/Tiles";
+import { usePublishedArticles } from "@/lib/kc/queries";
+import heroBuild from "@/assets/people/studio/hero-build.jpg";
+import designer from "@/assets/people/studio/designer.jpg";
+import engineer from "@/assets/people/studio/engineer.jpg";
+import collaboration from "@/assets/people/studio/collaboration.jpg";
 import studioTeam from "@/assets/people/studio-team.jpg";
 import bakerOrders from "@/assets/people/baker-orders.jpg";
-import collaboration from "@/assets/people/studio/collaboration.jpg";
-import { EditorialMoment } from "@/components/brand/story";
-import { Button } from "@/components/ui/button";
-import { productGroups } from "@/data/products";
-import { ArrowRight, PenTool, Code2, Sparkles, ShieldCheck } from "lucide-react";
-
-const capabilities = [
-  {
-    icon: PenTool,
-    label: "Design",
-    title: "Interfaces with intent",
-    description:
-      "Brand-led websites and product interfaces designed around clarity, trust, and the outcome the business actually needs.",
-  },
-  {
-    icon: Code2,
-    label: "Build",
-    title: "Software that holds up",
-    description:
-      "Websites, web apps, and SaaS platforms engineered to be fast, maintainable, and ready for the next stage of growth.",
-  },
-  {
-    icon: Sparkles,
-    label: "Innovate",
-    title: "Automation and AI, applied",
-    description:
-      "We use modern tooling and AI where it removes real work — shortening delivery and simplifying how teams operate.",
-  },
-  {
-    icon: ShieldCheck,
-    label: "Secure",
-    title: "Security from the start",
-    description:
-      "Secure architecture, reviews, and consulting so what we ship protects the business instead of exposing it.",
-  },
-];
-
-const sequence = ["Design.", "Build.", "Launch.", "Secure."];
+import market from "@/assets/people/local/market.jpg";
+import homeChef from "@/assets/people/orders/home-chef.jpg";
+import reviewingOrders from "@/assets/people/orders/reviewing-orders.jpg";
+import handoff from "@/assets/people/orders/handoff.jpg";
 
 const homeJsonLd = {
   "@context": "https://schema.org",
@@ -56,202 +24,131 @@ const homeJsonLd = {
   email: "hello@loumilab.com",
   description:
     "Loumilab designs, builds, launches, and secures digital products and technology businesses. Websites, software, AI automation, and cybersecurity.",
-  subOrganization: [
-    { "@type": "Organization", name: "Vurtti", url: "https://www.vurttidocs.com" },
+  subOrganization: [{ "@type": "Organization", name: "Vurtti", url: "https://www.vurttidocs.com" }],
+  owns: [
+    { "@type": "Product", name: "Loumilab Orders", url: "https://loumilab.com/orders" },
+    { "@type": "Product", name: "Loumilab Local", url: "https://loumilab.com/orders/local" },
   ],
-  owns: [{ "@type": "Product", name: "Loumilab Orders", url: "https://loumilab.com/orders" }],
 };
 
-const Index = () => (
-  <Layout>
-    <SEOHead
-      title="Loumilab | Technology Studio for Digital Products"
-      description="Loumilab designs, builds, launches, and secures digital products and technology businesses. Websites, software, AI automation, and cybersecurity."
-      path="/"
-      jsonLd={homeJsonLd}
-    />
+const Index = () => {
+  const { data: articles = [] } = usePublishedArticles({ limit: 3 });
 
-    <ProductShowcaseHero />
+  return (
+    <Layout>
+      <SEOHead
+        title="Loumilab | Technology Studio for Digital Products"
+        description="Loumilab designs, builds, launches, and secures digital products and technology businesses. Websites, software, AI automation, and cybersecurity."
+        path="/"
+        jsonLd={homeJsonLd}
+      />
 
-    {/* Brand statement */}
-    <section className="section-padding border-t border-border">
-      <div className="section-container">
-        <div className="grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-20">
-          <Reveal>
-            <Eyebrow>Who we are</Eyebrow>
-            <h2 className="mt-5 text-3xl font-semibold leading-tight lg:text-5xl">
-              More than a digital agency.
-            </h2>
-          </Reveal>
-          <Reveal delay={80} className="space-y-6 text-lg leading-relaxed text-muted-foreground">
-            <p>
-              Loumilab is a technology studio. We work with businesses to design and build the digital
-              products they need — and we build and operate our own products alongside them.
-            </p>
-            <p>
-              That combination changes how we work. We make the same decisions our clients make, live with
-              the consequences, and bring that judgment to every engagement.
-            </p>
-          </Reveal>
-        </div>
-
-        <div className="mt-16 grid grid-cols-2 gap-6 border-t border-border pt-12 lg:grid-cols-4">
-          {sequence.map((word, i) => (
-            <Reveal key={word} delay={i * 120}>
-              <span className="font-hero text-3xl font-semibold tracking-tight lg:text-5xl">{word}</span>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <PhotoSplit
-      image={studioTeam}
-      alt="A small Loumilab-style team reviewing a product design together on a laptop"
-      eyebrow="People first"
-      title="Technology, built around real people."
-    >
-      <p>Every product starts with the people who will use it — the owner, the team, the customer at the counter.</p>
-      <p><strong className="font-semibold text-foreground">Technology + people + business + creativity</strong> — that's the work.</p>
-    </PhotoSplit>
-
-    {/* What Loumilab does */}
-    <section className="section-padding border-t border-border bg-surface-subtle">
-      <div className="section-container">
-        <Reveal className="max-w-2xl">
-          <Eyebrow>What we do</Eyebrow>
-          <h2 className="mt-5 text-3xl font-semibold leading-tight lg:text-5xl">
-            Four disciplines, one team.
-          </h2>
-          <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
-            Strategy through security — handled by the same senior team, without hand-offs between agencies.
+      {/* Hero */}
+      <section className="overflow-hidden pt-12 lg:pt-16">
+        <div className="section-container text-center">
+          <p className="font-display text-sm font-semibold tracking-wide text-accent">Loumilab — a technology studio</p>
+          <h1 className="mx-auto mt-4 max-w-5xl font-hero text-[clamp(3rem,9vw,7.5rem)] font-semibold leading-[0.95] tracking-[-0.04em]">
+            We build what&apos;s next.
+          </h1>
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-foreground/70 lg:text-2xl">
+            Loumilab designs, builds, launches and secures digital products — for clients and for ourselves.
           </p>
-        </Reveal>
-
-        <div className="mt-14 grid gap-6 md:grid-cols-2">
-          {capabilities.map((c, i) => (
-            <Reveal key={c.label} delay={i * 90}>
-              <CapabilityCard {...c} />
-            </Reveal>
-          ))}
+          <TileActions primary={{ label: "Start a project", to: "/contact" }} secondary={{ label: "Explore products", to: "/products" }} className="mt-8" />
         </div>
-
-        <Reveal delay={120} className="mt-12">
-          <Link to="/services" className="link-brand">
-            See all services <ArrowRight size={16} />
-          </Link>
-        </Reveal>
-      </div>
-    </section>
-
-    {/* Built by Loumilab */}
-    <section className="section-padding border-t border-border">
-      <div className="section-container">
-        <Reveal className="max-w-2xl">
-          <Eyebrow>Ecosystem</Eyebrow>
-          <h2 className="mt-5 text-3xl font-semibold leading-tight lg:text-5xl">
-            We don&apos;t just build technology for clients. We build our own.
-          </h2>
-        </Reveal>
-
-        <div className="mt-14 grid gap-6 lg:grid-cols-2">
-          {productGroups.flatMap((g) => g.items).map((p, i) => (
-            <Reveal key={p.id} delay={i * 90}>
-              <ProductCard product={p} className="h-full" />
-            </Reveal>
-          ))}
-          <Reveal delay={180} className="lg:col-span-2">
-            <div className="rounded-3xl border border-dashed border-border bg-surface-subtle p-8 lg:p-12">
-              <span className="font-display text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-                What&apos;s next
-              </span>
-              <p className="mt-3 font-display text-xl font-semibold lg:text-2xl">We&apos;re always building.</p>
-              <p className="mt-3 max-w-xl leading-relaxed text-muted-foreground">
-                New Loumilab products and companies are in development. When they&apos;re ready, they&apos;ll show up here.
-              </p>
-            </div>
-          </Reveal>
-        </div>
-      </div>
-    </section>
-
-    <PhotoSplit
-      reverse
-      image={bakerOrders}
-      alt="A bakery owner boxing fresh pastries for an online order, with a tablet on the counter"
-      eyebrow="Built for real businesses"
-      title="From the studio to the shop counter."
-      className="bg-surface-subtle"
-    >
-      <p>Loumilab Orders and Loumilab Local help bakers, home chefs and neighborhood shops sell online and get discovered — without the overhead.</p>
-      <Link to="/orders" className="link-brand">Explore Loumilab Orders <ArrowRight size={16} /></Link>
-    </PhotoSplit>
-
-    {/* Technology philosophy */}
-    <section className="section-padding border-t border-border bg-primary text-primary-foreground">
-      <div className="section-container">
-        <Reveal className="mx-auto max-w-3xl text-center">
-          <h2 className="font-hero text-4xl font-semibold leading-tight tracking-[-0.03em] lg:text-6xl">
-            Technology should solve something.
-          </h2>
-          <p className="mx-auto mt-7 max-w-xl text-lg leading-relaxed text-primary-foreground/70">
-            Not impress in a deck. Every product we design, build, and secure exists to remove friction,
-            protect value, or unlock growth — otherwise it shouldn&apos;t be built.
-          </p>
-        </Reveal>
-      </div>
-    </section>
-
-    <EditorialMoment
-      image={{ src: collaboration, alt: "A founder and a designer working through product sketches together at a laptop" }}
-      quote="Technology built around people — not shown in isolation."
-      attribution="How Loumilab works with founders and teams"
-    />
-
-    {/* About teaser */}
-    <section className="section-padding border-t border-border">
-      <div className="section-container">
-        <div className="grid gap-12 lg:grid-cols-2 lg:gap-20">
-          <Reveal>
-            <Eyebrow>About Loumilab</Eyebrow>
-            <h2 className="mt-5 text-3xl font-semibold leading-tight lg:text-4xl">
-              A technology partner and a product builder.
-            </h2>
-          </Reveal>
-          <Reveal delay={80}>
-            <p className="text-lg leading-relaxed text-muted-foreground">
-              A small, senior team working across design, engineering, automation, and security. We take on
-              client work we believe in and build products we want to exist — with the same standard applied
-              to both.
-            </p>
-            <Link to="/about" className="link-brand mt-8">
-              More about us <ArrowRight size={16} />
-            </Link>
-          </Reveal>
-        </div>
-      </div>
-    </section>
-
-    {/* Conversion */}
-    <section className="section-padding border-t border-border bg-surface-subtle">
-      <div className="section-container">
-        <Reveal className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-semibold leading-tight lg:text-5xl">Have something worth building?</h2>
-          <p className="mt-5 text-lg text-muted-foreground">Let&apos;s turn the idea into something real.</p>
-          <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Button size="lg" asChild>
-              <Link to="/contact">
-                Start a Project <ArrowRight size={18} />
-              </Link>
-            </Button>
-            <Button size="lg" variant="outline" asChild>
-              <a href="mailto:hello@loumilab.com">Contact Loumilab</a>
-            </Button>
+        <div className="section-container mt-12 lg:mt-16">
+          <div className="photo-frame aspect-[4/5] sm:aspect-[16/8]">
+            <img src={heroBuild} alt="A small product team building something together around a table of laptops and sketches" width={1600} height={900} fetchPriority="high" decoding="async" sizes="(min-width: 1280px) 1200px, 100vw" className="h-full w-full object-cover" />
           </div>
-        </Reveal>
+        </div>
+      </section>
+
+      {/* Products */}
+      <ProductTile
+        className="mt-16 lg:mt-24"
+        tone="subtle"
+        eyebrow="Loumilab Orders"
+        title="Sell anywhere. Take orders in one place."
+        line="Your storefront, your orders, your customers — free to start."
+        primary={{ label: "Explore Orders", to: "/orders" }}
+        secondary={{ label: "See pricing", to: "/orders#pricing" }}
+        image={bakerOrders}
+        alt="A baker boxing a fresh pastry order with incoming orders on a tablet beside her"
+      />
+      <ProductTile
+        eyebrow="Loumilab Local"
+        title="Discover what's cooking near you."
+        line="Home chefs, bakers and neighborhood favorites, all in one place."
+        primary={{ label: "Explore Local", to: "/orders/local" }}
+        secondary={{ label: "List your business", to: "/orders/local/join" }}
+        image={market}
+        alt="Neighbors shopping at a busy outdoor farmers' market"
+      />
+
+      <Statement line="Every product we design, build and secure exists to remove friction, protect value or unlock growth.">
+        Technology should move businesses <span className="text-accent">forward.</span>
+      </Statement>
+
+      {/* Capabilities grid */}
+      <section className="pb-16 lg:pb-24">
+        <div className="section-container grid gap-4 md:grid-cols-2">
+          <GridTile eyebrow="Design" title="Products people enjoy using." line="Brand-led websites and interfaces built around clarity." image={designer} alt="A designer sketching app screens on a tablet" links={{ primary: { label: "Learn more", to: "/services" } }} />
+          <GridTile eyebrow="Build" title="Software that holds up." line="Web apps and platforms that are fast and ready to grow." image={engineer} alt="An engineer reviewing code on two monitors" links={{ primary: { label: "Learn more", to: "/services" } }} />
+          <GridTile eyebrow="Innovate" title="New ideas, shipped." line="Automation and AI where it removes real work." image={collaboration} alt="A founder and designer working through ideas at a laptop" links={{ primary: { label: "Learn more", to: "/services" } }} />
+          <GridTile eyebrow="Secure" title="Security from day one." line="Secure architecture and reviews, built in — not bolted on." image={studioTeam} alt="The Loumilab team reviewing work together" links={{ primary: { label: "Learn more", to: "/services" }, secondary: { label: "How we work", to: "/how-we-work" } }} />
+        </div>
+      </section>
+
+      <PeopleSequence
+        className="border-t border-border"
+        eyebrow="Built around people"
+        title="Made for the people who make things."
+        items={[
+          { src: homeChef, alt: "A home chef cooking in a sunlit kitchen", label: "Makers", note: "Turning a craft into a business." },
+          { src: reviewingOrders, alt: "A business owner checking orders on a tablet", label: "Owners", note: "Running the day from one screen." },
+          { src: designer, alt: "A designer sketching on a tablet", label: "Creators", note: "Shaping how products feel.", width: 1200, height: 1200 },
+          { src: engineer, alt: "An engineer reviewing code", label: "Builders", note: "Making it work, and keeping it safe.", width: 1200, height: 1200 },
+          { src: handoff, alt: "A merchant handing an order to a customer", label: "Communities", note: "Where it all comes together." },
+        ]}
+      />
+
+      {/* Ecosystem */}
+      <section className="pb-16 lg:pb-24">
+        <div className="section-container grid gap-4 md:grid-cols-2">
+          <GridTile eyebrow="A Loumilab company" title="Vurtti" line="Compliance technology for documentation-heavy teams." links={{ primary: { label: "Visit Vurtti", to: "https://www.vurttidocs.com", external: true } }}>
+            <div className="mb-10 grid aspect-[4/3] place-items-center rounded-2xl border border-border bg-background">
+              <span className="font-hero text-5xl font-semibold tracking-tight">Vurtti</span>
+            </div>
+          </GridTile>
+          <GridTile eyebrow="What's next" title="We're always building." line="New products are in the lab. Have an idea worth building with us?" links={{ primary: { label: "Start a project", to: "/contact" }, secondary: { label: "All products", to: "/products" } }}>
+            <div className="mb-10 grid aspect-[4/3] place-items-center rounded-2xl border border-dashed border-accent/40 bg-accent-soft">
+              <span className="font-hero text-6xl font-semibold text-accent">+</span>
+            </div>
+          </GridTile>
+        </div>
+      </section>
+
+      {/* Resources */}
+      {articles.length > 0 && (
+        <section className="section-padding border-t border-border bg-surface-subtle">
+          <div className="section-container">
+            <Reveal className="flex flex-wrap items-end justify-between gap-4">
+              <h2 className="font-hero text-4xl font-semibold tracking-[-0.03em] lg:text-6xl">From Resources.</h2>
+              <MoreLink to="/resources">Visit Resources</MoreLink>
+            </Reveal>
+            <div className="mt-10 grid gap-5 md:grid-cols-3">
+              {articles.map((a) => <ArticleCard key={a.id} article={a} />)}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Closing */}
+      <Statement line="Let's turn the idea into something real.">Have something worth building?</Statement>
+      <div className="-mt-10 pb-24 lg:-mt-16">
+        <TileActions primary={{ label: "Start a project", to: "/contact" }} secondary={{ label: "Contact Loumilab", to: "/contact" }} />
       </div>
-    </section>
-  </Layout>
-);
+    </Layout>
+  );
+};
 
 export default Index;
