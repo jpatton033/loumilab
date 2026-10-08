@@ -48,8 +48,7 @@ const Index = () => {
       {/* Hero */}
       <section className="overflow-hidden pt-12 lg:pt-16">
         <div className="section-container text-center">
-          <p className="font-display text-sm font-semibold tracking-wide text-accent">Loumilab — a technology studio</p>
-          <h1 className="mx-auto mt-4 max-w-5xl font-hero text-[clamp(3rem,9vw,7.5rem)] font-semibold leading-[0.95] tracking-[-0.04em]">
+          <h1 className="mx-auto max-w-5xl font-hero text-[clamp(3rem,9vw,7.5rem)] font-semibold leading-[0.95] tracking-[-0.04em]">
             We build what&apos;s next.
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-foreground/70 lg:text-2xl">
