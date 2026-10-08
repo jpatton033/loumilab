@@ -958,7 +958,7 @@ const GetStarted = () => {
               </p>
               <PhoneFrame className="mt-5" label="Storefront preview">
                 <div className="px-5 pb-6 pt-3">
-                  <StorefrontHeader store={previewStore} compact />
+                  <StorefrontHeader store={previewStore} compact demo />
                   <div className="mt-5 space-y-2.5">
                     {namedItems.map((i, idx) => (
                       <div key={idx} className="flex items-center justify-between rounded-2xl border border-border p-3">
