@@ -19,6 +19,13 @@ import Reveal from "@/components/Reveal";
 import Eyebrow from "@/components/brand/Eyebrow";
 import PhotoSplit from "@/components/brand/PhotoSplit";
 import bakerOrders from "@/assets/people/baker-orders.jpg";
+import homeChef from "@/assets/people/orders/home-chef.jpg";
+import bakerDecorating from "@/assets/people/orders/baker-decorating.jpg";
+import packing from "@/assets/people/orders/packing.jpg";
+import reviewingOrders from "@/assets/people/orders/reviewing-orders.jpg";
+import handoff from "@/assets/people/orders/handoff.jpg";
+import teamKitchen from "@/assets/people/orders/team-kitchen.jpg";
+import { CategoryTransition, ImmersiveImage, PeopleSequence } from "@/components/brand/story";
 import { Button } from "@/components/ui/button";
 import PhoneFrame from "@/components/orders/PhoneFrame";
 import StorefrontScreen from "@/components/orders/StorefrontScreen";
@@ -218,6 +225,18 @@ const Orders = () => {
       >
         <p>Orders arrive in one place with pickup times, notes and payment already handled — so you can get back to the work you love.</p>
       </PhotoSplit>
+
+      <PeopleSequence
+        eyebrow="From kitchen to customer"
+        title="You create it. Loumilab Orders helps you sell it."
+        items={[
+          { src: homeChef, alt: "A home chef cooking at the stove in a sunlit kitchen", label: "Prepare", note: "Cook, bake and create on your schedule." },
+          { src: bakerDecorating, alt: "A baker piping frosting onto a cake", label: "Sell", note: "Your menu lives on your own storefront." },
+          { src: reviewingOrders, alt: "An owner reviewing orders on a tablet", label: "Receive orders", note: "Every order lands in one queue." },
+          { src: packing, alt: "A meal-prep owner packing labeled orders into bags", label: "Pack", note: "Notes and pickup times right in front of you." },
+          { src: handoff, alt: "A merchant handing a paper bag order to a customer", label: "Hand off", note: "Pickup or delivery, already paid." },
+        ]}
+      />
 
       {/* How it works */}
       <section id="how-it-works" className="section-padding scroll-mt-24">
@@ -450,6 +469,12 @@ const Orders = () => {
         </div>
       </section>
 
+      <CategoryTransition
+        image={{ src: reviewingOrders, alt: "A food business owner smiling while checking the day's orders on a tablet", width: 1200, height: 1504, position: "50% 30%" }}
+        label="Pricing"
+        title="Start free. Grow when the orders do."
+      />
+
       {/* Pricing */}
       <section id="pricing" className="section-padding surface-subtle border-y border-border">
         <div className="section-container">
@@ -465,6 +490,11 @@ const Orders = () => {
           <p className="mt-6 text-sm text-muted-foreground">{pricingHeading.footnote}</p>
         </div>
       </section>
+
+      <ImmersiveImage
+        image={{ src: teamKitchen, alt: "A small catering team preparing trays of food together in a shared kitchen" }}
+        caption="Small teams, big orders — all in one place."
+      />
 
       {/* Final CTA */}
       <section className="section-padding">

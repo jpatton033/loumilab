@@ -2,6 +2,8 @@ import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import Reveal from "@/components/Reveal";
 import Eyebrow from "@/components/brand/Eyebrow";
+import { ImageStatement } from "@/components/brand/story";
+import studioTeam from "@/assets/people/studio-team.jpg";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Search, PenTool, Hammer, ShieldCheck, Rocket, TrendingUp } from "lucide-react";
@@ -87,6 +89,12 @@ const HowWeWork = () => (
         </div>
       </div>
     </section>
+
+    <ImageStatement
+      image={{ src: studioTeam, alt: "The Loumilab team collaborating around a table", width: 1600, height: 1072 }}
+      title="Small team. Close collaboration."
+      line="You work directly with the people building your product."
+    />
 
     <section className="section-padding border-t border-border bg-surface-subtle">
       <div className="section-container text-center">

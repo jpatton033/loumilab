@@ -4,3 +4,5 @@
 - Anonymous Local listing submissions go only through the `submit_local_listing` RPC into `local_candidates` (source_type visitor) for staff review; sign-in is required only to claim — keeps approval the only path to public.
 - Admin people/merchant directory data (account email, verification, last sign-in) comes only through the staff-gated `admin_merchant_directory` RPC — auth tables are never exposed to the client.
 - Human photography sections use the shared brand PhotoSplit component and .photo-frame utility; card hover uses .glow-hover — keeps imagery and interaction consistent across Loumilab products.
+
+- Visual breaks (immersive image, statement, sequence, transition, editorial) use the shared components in src/components/brand/story — keeps the storytelling language consistent site-wide.
