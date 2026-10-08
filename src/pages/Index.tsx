@@ -6,6 +6,9 @@ import ProductShowcaseHero from "@/components/hero/ProductShowcaseHero";
 import Eyebrow from "@/components/brand/Eyebrow";
 import CapabilityCard from "@/components/brand/CapabilityCard";
 import ProductCard from "@/components/brand/ProductCard";
+import PhotoSplit from "@/components/brand/PhotoSplit";
+import studioTeam from "@/assets/people/studio-team.jpg";
+import bakerOrders from "@/assets/people/baker-orders.jpg";
 import { Button } from "@/components/ui/button";
 import { productGroups } from "@/data/products";
 import { ArrowRight, PenTool, Code2, Sparkles, ShieldCheck } from "lucide-react";
@@ -100,6 +103,16 @@ const Index = () => (
       </div>
     </section>
 
+    <PhotoSplit
+      image={studioTeam}
+      alt="A small Loumilab-style team reviewing a product design together on a laptop"
+      eyebrow="People first"
+      title="Technology, built around real people."
+    >
+      <p>Every product starts with the people who will use it — the owner, the team, the customer at the counter.</p>
+      <p><strong className="font-semibold text-foreground">Technology + people + business + creativity</strong> — that's the work.</p>
+    </PhotoSplit>
+
     {/* What Loumilab does */}
     <section className="section-padding border-t border-border bg-surface-subtle">
       <div className="section-container">
@@ -122,7 +135,7 @@ const Index = () => (
         </div>
 
         <Reveal delay={120} className="mt-12">
-          <Link to="/services" className="inline-flex items-center gap-2 font-display text-sm font-semibold hover:text-accent">
+          <Link to="/services" className="link-brand">
             See all services <ArrowRight size={16} />
           </Link>
         </Reveal>
@@ -160,6 +173,18 @@ const Index = () => (
       </div>
     </section>
 
+    <PhotoSplit
+      reverse
+      image={bakerOrders}
+      alt="A bakery owner boxing fresh pastries for an online order, with a tablet on the counter"
+      eyebrow="Built for real businesses"
+      title="From the studio to the shop counter."
+      className="bg-surface-subtle"
+    >
+      <p>Loumilab Orders and Loumilab Local help bakers, home chefs and neighborhood shops sell online and get discovered — without the overhead.</p>
+      <Link to="/orders" className="link-brand">Explore Loumilab Orders <ArrowRight size={16} /></Link>
+    </PhotoSplit>
+
     {/* Technology philosophy */}
     <section className="section-padding border-t border-border bg-primary text-primary-foreground">
       <div className="section-container">
@@ -191,7 +216,7 @@ const Index = () => (
               client work we believe in and build products we want to exist — with the same standard applied
               to both.
             </p>
-            <Link to="/about" className="mt-8 inline-flex items-center gap-2 font-display text-sm font-semibold hover:text-accent">
+            <Link to="/about" className="link-brand mt-8">
               More about us <ArrowRight size={16} />
             </Link>
           </Reveal>
