@@ -176,7 +176,7 @@ const Storefront = () => {
     <Layout>
       <SEOHead
         title={`${store.name} — Order Online | Loumilab Orders`}
-        description={store.description}
+        description={(store.description || `Order online from ${store.name} on Loumilab Orders.`).slice(0, 160)}
         path={`/orders/store/${store.slug}`}
         noindex={isLive && !isPublic}
         jsonLd={isLive && isPublic ? storeJsonLd(store, !!industry?.is_food) : undefined}

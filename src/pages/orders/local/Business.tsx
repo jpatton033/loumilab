@@ -35,6 +35,9 @@ const LocalBusinessPage = () => {
         title={`${b.name} | Loumilab Local`}
         description={(b.description ?? `${b.name} on Loumilab Local${b.area ? ` — ${b.area}` : ""}.`).slice(0, 155)}
         path={`/orders/local/${b.slug}`}
+        image={b.image_url ?? undefined}
+        imageAlt={b.name}
+        breadcrumbs={[{ name: "Home", path: "/" }, { name: "Loumilab Local", path: "/orders/local" }, { name: b.name, path: `/orders/local/${b.slug}` }]}
         jsonLd={{
           "@context": "https://schema.org", "@type": "FoodEstablishment", name: b.name,
           description: b.description ?? undefined, image: b.image_url ?? undefined,

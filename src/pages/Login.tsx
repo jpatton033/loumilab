@@ -69,7 +69,7 @@ const Login = () => {
   return (
     <Layout>
       <SEOHead
-        title="Admin Login — Loumilab | Technology Studio for Digital Products"
+        title="Admin Login | Loumilab"
         description="Sign in to the Loumilab admin dashboard."
         path="/login"
         noindex

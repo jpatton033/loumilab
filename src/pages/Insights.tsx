@@ -16,7 +16,7 @@ const topics = [
 const Insights = () => (
   <Layout>
     <SEOHead
-      title="Insights — Loumilab | Technology Studio for Digital Products"
+      title="Insights | Loumilab"
       description="Notes on product, engineering, security, and building technology companies. Coming soon from the Loumilab team."
       path="/insights"
       noindex
