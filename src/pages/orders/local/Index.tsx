@@ -6,6 +6,12 @@ import SEOHead from "@/components/SEOHead";
 import Eyebrow from "@/components/brand/Eyebrow";
 import PhotoSplit from "@/components/brand/PhotoSplit";
 import localPickup from "@/assets/people/local-pickup.jpg";
+import market from "@/assets/people/local/market.jpg";
+import storefront from "@/assets/people/local/storefront.jpg";
+import foodTruck from "@/assets/people/local/food-truck.jpg";
+import sharing from "@/assets/people/local/sharing.jpg";
+import homeChef from "@/assets/people/orders/home-chef.jpg";
+import { ImmersiveImage, PeopleSequence } from "@/components/brand/story";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -141,6 +147,28 @@ const LocalIndex = () => {
           })}
         </div>
       </section>
+
+      {!searching && (
+        <>
+          <ImmersiveImage
+            className="pt-0"
+            image={{ src: market, alt: "Neighbors shopping at a busy outdoor farmers' market in afternoon light" }}
+            caption="There's more cooking around you than you think."
+          />
+          <PeopleSequence
+            className="pt-4"
+            eyebrow="Support local"
+            title="Discover, visit, and order from the people next door."
+            items={[
+              { src: storefront, alt: "People walking past a neighborhood bakery storefront", label: "Discover", note: "Corner bakeries and cafés." },
+              { src: foodTruck, alt: "Two friends ordering from a colorful food truck", label: "Explore", note: "Food trucks and pop-ups." },
+              { src: homeChef, alt: "A home chef cooking in her kitchen", label: "Meet the makers", note: "Home chefs and caterers." },
+              { src: localPickup, alt: "A café owner handing a customer her order", label: "Order & pick up", note: "Straight from the business." },
+              { src: sharing, alt: "Friends laughing over shared local food at an outdoor table", label: "Enjoy", note: "Good food, shared." },
+            ]}
+          />
+        </>
+      )}
 
       {/* Featured */}
       {!searching && featured.length > 0 && (

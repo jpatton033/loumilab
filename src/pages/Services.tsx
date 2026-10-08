@@ -2,6 +2,8 @@ import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import Reveal from "@/components/Reveal";
 import Eyebrow from "@/components/brand/Eyebrow";
+import { CategoryTransition } from "@/components/brand/story";
+import collaboration from "@/assets/people/studio/collaboration.jpg";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, PenTool, Code2, Sparkles, ShieldCheck, RefreshCw } from "lucide-react";
@@ -121,6 +123,12 @@ const Services = () => (
         ))}
       </div>
     </section>
+
+    <CategoryTransition
+      image={{ src: collaboration, alt: "Two people reviewing a product design together" }}
+      label="After launch"
+      title="The work keeps going with the people who use it."
+    />
 
     {/* Ongoing partnership */}
     <section className="section-padding border-t border-border bg-surface-subtle">

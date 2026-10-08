@@ -9,6 +9,8 @@ import ProductCard from "@/components/brand/ProductCard";
 import PhotoSplit from "@/components/brand/PhotoSplit";
 import studioTeam from "@/assets/people/studio-team.jpg";
 import bakerOrders from "@/assets/people/baker-orders.jpg";
+import collaboration from "@/assets/people/studio/collaboration.jpg";
+import { EditorialMoment } from "@/components/brand/story";
 import { Button } from "@/components/ui/button";
 import { productGroups } from "@/data/products";
 import { ArrowRight, PenTool, Code2, Sparkles, ShieldCheck } from "lucide-react";
@@ -199,6 +201,12 @@ const Index = () => (
         </Reveal>
       </div>
     </section>
+
+    <EditorialMoment
+      image={{ src: collaboration, alt: "A founder and a designer working through product sketches together at a laptop" }}
+      quote="Technology built around people — not shown in isolation."
+      attribution="How Loumilab works with founders and teams"
+    />
 
     {/* About teaser */}
     <section className="section-padding border-t border-border">
