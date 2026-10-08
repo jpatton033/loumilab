@@ -13,7 +13,7 @@ interface Props {
 const StorefrontScreen = ({ store, cart, highlightIndex }: Props) => (
   <div className="flex h-full flex-col bg-background">
     <div className="px-5 pb-4 pt-3">
-      <StorefrontHeader store={store} compact />
+      <StorefrontHeader store={store} compact demo />
     </div>
 
     <div className="space-y-3 px-5">

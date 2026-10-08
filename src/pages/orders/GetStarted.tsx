@@ -368,8 +368,8 @@ const GetStarted = () => {
   return (
     <Layout>
       <SEOHead
-        title="Get Started with Loumilab Orders — Create Your Storefront"
-        description="Set up your Loumilab Orders storefront in a few steps: your account, industry, business details, catalog, payments, and publishing."
+        title="Get Started with Loumilab Orders | Create Your Storefront"
+        description="Set up your Loumilab Orders storefront in a few guided steps: create your account, add business details and your menu, connect payments, and publish your store."
         path="/orders/get-started"
         jsonLd={GET_STARTED_JSONLD}
       />
@@ -958,7 +958,7 @@ const GetStarted = () => {
               </p>
               <PhoneFrame className="mt-5" label="Storefront preview">
                 <div className="px-5 pb-6 pt-3">
-                  <StorefrontHeader store={previewStore} compact />
+                  <StorefrontHeader store={previewStore} compact demo />
                   <div className="mt-5 space-y-2.5">
                     {namedItems.map((i, idx) => (
                       <div key={idx} className="flex items-center justify-between rounded-2xl border border-border p-3">

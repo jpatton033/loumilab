@@ -43,8 +43,8 @@ const LocalJoin = () => {
   return (
     <Layout>
       <SEOHead
-        title="List Your Food Business on Loumilab Local — Free"
-        description="Get discovered locally for free. List your home kitchen, bakery, catering or food truck on Loumilab Local in a few minutes — no payment setup required."
+        title="List Your Food Business Free | Loumilab Local"
+        description="Get discovered by nearby customers for free. List your home kitchen, bakery, catering business or food truck on Loumilab Local in minutes, with no payment setup needed."
         path="/orders/local/join"
       />
       <section className="section-container pt-7 pb-24 lg:pt-10">

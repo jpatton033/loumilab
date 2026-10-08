@@ -618,11 +618,17 @@ export type Database = {
         Row: {
           author: string | null
           body: string
+          canonical_url: string | null
           created_at: string
           document_url: string | null
+          focus_keyword: string | null
           hero_image_url: string | null
           id: string
           is_featured: boolean
+          noindex: boolean
+          og_description: string | null
+          og_image_url: string | null
+          og_title: string | null
           published_at: string | null
           read_minutes: number
           related_link_href: string | null
@@ -640,11 +646,17 @@ export type Database = {
         Insert: {
           author?: string | null
           body?: string
+          canonical_url?: string | null
           created_at?: string
           document_url?: string | null
+          focus_keyword?: string | null
           hero_image_url?: string | null
           id?: string
           is_featured?: boolean
+          noindex?: boolean
+          og_description?: string | null
+          og_image_url?: string | null
+          og_title?: string | null
           published_at?: string | null
           read_minutes?: number
           related_link_href?: string | null
@@ -662,11 +674,17 @@ export type Database = {
         Update: {
           author?: string | null
           body?: string
+          canonical_url?: string | null
           created_at?: string
           document_url?: string | null
+          focus_keyword?: string | null
           hero_image_url?: string | null
           id?: string
           is_featured?: boolean
+          noindex?: boolean
+          og_description?: string | null
+          og_image_url?: string | null
+          og_title?: string | null
           published_at?: string | null
           read_minutes?: number
           related_link_href?: string | null

@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -9,7 +10,7 @@ import HowWeWork from "./pages/HowWeWork";
 import Products from "./pages/Products";
 import Orders from "./pages/Orders";
 import OrdersGetStarted from "./pages/orders/GetStarted";
-import OrdersDashboard from "./pages/orders/Dashboard";
+const OrdersDashboard = lazy(() => import("./pages/orders/Dashboard"));
 import OrdersStorefront from "./pages/orders/Storefront";
 import OrdersReceipt from "./pages/orders/Receipt";
 import OrdersQuoteView from "./pages/orders/QuoteView";
@@ -19,22 +20,22 @@ import Insights from "./pages/Insights";
 import Resources from "./pages/resources/Index";
 import ResourcesSection from "./pages/resources/Section";
 import ResourceArticle from "./pages/resources/Article";
-import AdminKnowledgeCenter from "./pages/admin/KnowledgeCenter";
-import AdminArticleEditor from "./pages/admin/ArticleEditor";
-import AdminHeroShowcase from "./pages/admin/HeroShowcase";
-import AdminOverview from "./pages/admin/Overview";
-import AdminInquiries from "./pages/admin/Inquiries";
-import AdminNewsletter from "./pages/admin/Newsletter";
-import AdminOrdersPanel from "./pages/admin/Orders";
-import AdminMerchantsDirectory from "./pages/admin/MerchantsDirectory";
-import AdminPlans from "./pages/admin/Plans";
-import AdminCustomProjects from "./pages/admin/CustomProjects";
-import AdminIndustries from "./pages/admin/Industries";
-import AdminAuditLog from "./pages/admin/AuditLog";
-import AdminMail from "./pages/admin/Mail";
-import AdminLocalImporter from "./pages/admin/LocalImporter";
-import AdminDailyBrief from "./pages/admin/reports/DailyBrief";
-import AdminDailyBriefSettings from "./pages/admin/settings/DailyBriefSettings";
+const AdminKnowledgeCenter = lazy(() => import("./pages/admin/KnowledgeCenter"));
+const AdminArticleEditor = lazy(() => import("./pages/admin/ArticleEditor"));
+const AdminHeroShowcase = lazy(() => import("./pages/admin/HeroShowcase"));
+const AdminOverview = lazy(() => import("./pages/admin/Overview"));
+const AdminInquiries = lazy(() => import("./pages/admin/Inquiries"));
+const AdminNewsletter = lazy(() => import("./pages/admin/Newsletter"));
+const AdminOrdersPanel = lazy(() => import("./pages/admin/Orders"));
+const AdminMerchantsDirectory = lazy(() => import("./pages/admin/MerchantsDirectory"));
+const AdminPlans = lazy(() => import("./pages/admin/Plans"));
+const AdminCustomProjects = lazy(() => import("./pages/admin/CustomProjects"));
+const AdminIndustries = lazy(() => import("./pages/admin/Industries"));
+const AdminAuditLog = lazy(() => import("./pages/admin/AuditLog"));
+const AdminMail = lazy(() => import("./pages/admin/Mail"));
+const AdminLocalImporter = lazy(() => import("./pages/admin/LocalImporter"));
+const AdminDailyBrief = lazy(() => import("./pages/admin/reports/DailyBrief"));
+const AdminDailyBriefSettings = lazy(() => import("./pages/admin/settings/DailyBriefSettings"));
 import OrdersCustomProject from "./pages/orders/CustomProject";
 import BusinessTools from "./pages/orders/tools/Index";
 import FoodPricingCalculator from "./pages/orders/tools/FoodPricingCalculator";
@@ -51,7 +52,7 @@ import Login from "./pages/Login";
 import SignIn from "./pages/SignIn";
 import SignOut from "./pages/SignOut";
 import ResetPassword from "./pages/ResetPassword";
-import Admin from "./pages/Admin";
+const Admin = lazy(() => import("./pages/Admin"));
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ScrollToTop from "./components/ScrollToTop";
@@ -66,6 +67,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <ScrollToTop />
+        <Suspense fallback={null}>
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/services" element={<Services />} />
@@ -123,6 +125,7 @@ const App = () => (
           <Route path="/admin/knowledge/:id" element={<ProtectedRoute><AdminArticleEditor /></ProtectedRoute>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </Suspense>
         <BackToTop />
       </BrowserRouter>
     </TooltipProvider>

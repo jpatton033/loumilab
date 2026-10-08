@@ -74,7 +74,7 @@ async function dynamicEntries(): Promise<Entry[]> {
     rest<{ slug: string; updated_at?: string; kc_sections: { slug: string } | null }>(
       url,
       key,
-      "kc_articles?select=slug,updated_at,kc_sections(slug)&status=eq.published",
+      "kc_articles?select=slug,updated_at,kc_sections(slug)&status=eq.published&noindex=eq.false&canonical_url=is.null",
     ),
   ]);
 

@@ -186,7 +186,7 @@ const ResetPassword = () => {
   return (
     <Layout>
       <SEOHead
-        title="Set your password — Loumilab | Technology Studio for Digital Products"
+        title="Set your password | Loumilab"
         description="Set a new password for your Loumilab account."
         path="/reset-password"
         noindex

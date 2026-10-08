@@ -12,7 +12,7 @@ interface Props {
 }
 
 /** Shared storefront header — used by the live template, the demo, and onboarding preview. */
-const StorefrontHeader = ({ store, compact = false, className }: Props) => (
+const StorefrontHeader = ({ store, compact = false, className, demo = false }: Props & { demo?: boolean }) => (
   <div className={cn("flex flex-col gap-4", className)}>
     <div className="flex items-center gap-4">
       {store.logoUrl ? (
@@ -36,9 +36,9 @@ const StorefrontHeader = ({ store, compact = false, className }: Props) => (
         </div>
       )}
       <div className="min-w-0">
-        <h1 className={cn("truncate font-display font-semibold", compact ? "text-base" : "text-2xl")}>
+        {(() => { const H = demo ? "p" : "h1"; return (<H className={cn("truncate font-display font-semibold", compact ? "text-base" : "text-2xl")}>
           {store.name}
-        </h1>
+        </H>); })()}
         <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
           <MapPin size={13} /> {store.location}
         </p>

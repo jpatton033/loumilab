@@ -168,7 +168,7 @@ const CustomProject = () => {
     <Layout>
       <SEOHead
         title="Build With Loumilab — Custom Project Intake | Loumilab Orders"
-        description="Tell Loumilab what you want built: a custom website, e-commerce store, ordering system, application, integrations or automation."
+        description="Tell Loumilab what you want built — a custom website, e-commerce store, ordering system, web application, integrations or automation — and get a tailored plan back."
         path="/orders/custom"
       />
 

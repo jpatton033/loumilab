@@ -138,8 +138,9 @@ const Orders = () => {
   return (
     <Layout>
       <SEOHead
-        title="Loumilab Orders — Turn Social Traffic Into Organized Orders"
-        description="Create a simple storefront, share your link, accept orders and payments, and manage everything in one dashboard. Built for food sellers, pop-ups, creators, and small businesses."
+        title="Loumilab Orders | Online Ordering for Small Food Businesses"
+        description="Create a free storefront, share one link, take orders and payments, and manage everything in one dashboard. Built for home chefs, bakers, pop-ups and small sellers."
+        breadcrumbs={[{ name: "Home", path: "/" }, { name: "Products", path: "/products" }, { name: "Loumilab Orders", path: "/orders" }]}
         path="/orders"
         jsonLd={ordersJsonLd}
       />
@@ -279,7 +280,7 @@ const Orders = () => {
           </Reveal>
 
           <Reveal className="mt-12 rounded-[2rem] border border-border bg-card p-6 shadow-[var(--shadow-soft)] lg:p-10">
-            <StorefrontHeader store={demoStorefront} />
+            <StorefrontHeader store={demoStorefront} demo />
             <div className="mt-8 grid gap-5 md:grid-cols-3">
               {demoStorefront.products.map((p) => (
                 <StoreProductCard

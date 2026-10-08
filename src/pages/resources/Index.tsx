@@ -13,7 +13,7 @@ import NewsletterSignup from "@/components/kc/NewsletterSignup";
 import { usePublishedArticles, useSectionCounts, useSections } from "@/lib/kc/queries";
 import { ArrowRight, Search, Flame } from "lucide-react";
 
-const TITLE = "Knowledge Center | Loumilab";
+const TITLE = "Technology, Business & Security Resources | Loumilab";
 const DESCRIPTION =
   "Practical guides on business growth, orders and commerce, technology and AI, web, and security — written for owners and operators by the Loumilab team.";
 
@@ -51,7 +51,7 @@ const ResourcesIndex = () => {
 
   return (
     <Layout>
-      <SEOHead title={TITLE} description={DESCRIPTION} path="/resources" jsonLd={jsonLd} />
+      <SEOHead title={TITLE} description={DESCRIPTION} path="/resources" jsonLd={jsonLd} breadcrumbs={[{ name: "Home", path: "/" }, { name: "Resources", path: "/resources" }]} />
 
       <section className="border-b border-border bg-surface-subtle">
         <div className="section-container pt-10 pb-20 lg:pt-14 lg:pb-28">

@@ -48,6 +48,12 @@ const ArticleEditor = () => {
     hero_image_url: "",
     seo_title: "",
     seo_description: "",
+    focus_keyword: "",
+    canonical_url: "",
+    og_title: "",
+    og_description: "",
+    og_image_url: "",
+    noindex: false,
     document_url: "",
     related_link_label: "",
     related_link_href: "",
@@ -70,6 +76,12 @@ const ArticleEditor = () => {
       hero_image_url: article.hero_image_url ?? "",
       seo_title: article.seo_title ?? "",
       seo_description: article.seo_description ?? "",
+      focus_keyword: (article as any).focus_keyword ?? "",
+      canonical_url: (article as any).canonical_url ?? "",
+      og_title: (article as any).og_title ?? "",
+      og_description: (article as any).og_description ?? "",
+      og_image_url: (article as any).og_image_url ?? "",
+      noindex: !!(article as any).noindex,
       document_url: article.document_url ?? "",
       related_link_label: article.related_link_label ?? "",
       related_link_href: article.related_link_href ?? "",
@@ -100,6 +112,12 @@ const ArticleEditor = () => {
         hero_image_url: form.hero_image_url.trim() || null,
         seo_title: form.seo_title.trim() || null,
         seo_description: form.seo_description.trim() || null,
+        focus_keyword: form.focus_keyword.trim() || null,
+        canonical_url: form.canonical_url.trim() || null,
+        og_title: form.og_title.trim() || null,
+        og_description: form.og_description.trim() || null,
+        og_image_url: form.og_image_url.trim() || null,
+        noindex: form.noindex,
         document_url: form.document_url.trim() || null,
         related_link_label: form.related_link_label.trim() || null,
         related_link_href: form.related_link_href.trim() || null,
@@ -400,7 +418,32 @@ const ArticleEditor = () => {
                     rows={3}
                     className="mt-2"
                   />
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {form.seo_description.length} characters · aim for 140–160. Blank uses the summary.
+                  </p>
                 </div>
+                {([
+                  ["focus_keyword", "Focus keyword or topic", "e.g. food pricing"],
+                  ["canonical_url", "Canonical URL", "Blank uses this article's own address"],
+                  ["og_title", "Sharing title", "Blank uses the article title"],
+                  ["og_image_url", "Sharing image URL", "Blank uses the cover photo"],
+                ] as const).map(([key, label, ph]) => (
+                  <div className="mt-4" key={key}>
+                    <Label htmlFor={key}>{label}</Label>
+                    <Input id={key} value={form[key]} placeholder={ph}
+                      onChange={(e) => setForm({ ...form, [key]: e.target.value })} className="mt-2" />
+                  </div>
+                ))}
+                <div className="mt-4">
+                  <Label htmlFor="og_description">Sharing description</Label>
+                  <Textarea id="og_description" value={form.og_description} rows={2} placeholder="Blank uses the SEO description"
+                    onChange={(e) => setForm({ ...form, og_description: e.target.value })} className="mt-2" />
+                </div>
+                <label className="mt-4 flex items-center gap-2 text-sm">
+                  <input type="checkbox" checked={form.noindex}
+                    onChange={(e) => setForm({ ...form, noindex: e.target.checked })} />
+                  Hide from search engines
+                </label>
               </div>
             </aside>
           </div>

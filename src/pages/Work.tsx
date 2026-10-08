@@ -61,8 +61,9 @@ const Work = () => {
   return (
     <Layout>
       <SEOHead
-        title="Selected Work — Case Studies — Loumilab | Technology Studio for Digital Products"
-        description="Websites, software, and digital products built by Loumilab. Real projects and the outcomes they delivered."
+        title="Selected Work & Digital Products | Loumilab"
+        description="Selected websites, software platforms and digital products designed, built and secured by Loumilab — real projects, the problems they solved, and their results."
+        breadcrumbs={[{ name: "Home", path: "/" }, { name: "Work", path: "/work" }]}
         path="/work"
         jsonLd={workJsonLd}
       />
