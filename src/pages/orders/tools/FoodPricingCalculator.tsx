@@ -272,7 +272,8 @@ const FoodPricingCalculator = () => {
     <Layout>
       <SEOHead
         title="Free Food Pricing Calculator for Small Food Businesses | Loumilab Orders"
-        description="Price plates, trays, baked goods and meal prep with confidence. Free food cost calculator with unit conversion, packaging, cost buffer and profit margin — no sign-up."
+        description="Price plates, trays, baked goods and meal prep with confidence. Free food cost calculator with unit conversion, packaging, buffers and profit margin. No sign-up."
+        breadcrumbs={[{ name: "Home", path: "/" }, { name: "Loumilab Orders", path: "/orders" }, { name: "Business Tools", path: "/orders/tools" }, { name: "Food Pricing Calculator", path: "/orders/tools/food-pricing-calculator" }]}
         path="/orders/tools/food-pricing-calculator"
         jsonLd={[
           {

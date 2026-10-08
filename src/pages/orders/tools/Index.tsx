@@ -12,7 +12,8 @@ const BusinessTools = () => {
     <Layout>
       <SEOHead
         title="Free Business Tools for Food Sellers | Loumilab Orders"
-        description="Free tools to help you price, plan, and grow your business — starting with a Food Pricing Calculator for home chefs, caterers, bakers, and food trucks."
+        description="Free business tools from Loumilab Orders to help you price, plan and grow — starting with a food pricing calculator for home chefs, caterers, bakers and food trucks."
+        breadcrumbs={[{ name: "Home", path: "/" }, { name: "Loumilab Orders", path: "/orders" }, { name: "Business Tools", path: "/orders/tools" }]}
         path="/orders/tools"
         jsonLd={{
           "@context": "https://schema.org",

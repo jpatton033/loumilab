@@ -73,8 +73,9 @@ const servicesJsonLd = {
 const Services = () => (
   <Layout>
     <SEOHead
-      title="Services — Design, Build, Innovate, Secure — Loumilab | Technology Studio for Digital Products"
-      description="Website and product design, SaaS and web development, automation and AI, plus cybersecurity consulting — delivered by one senior team."
+      title="Technology & Software Development Services | Loumilab"
+      description="Website and product design, SaaS and web app development, workflow automation, AI and cybersecurity consulting — delivered end to end by one senior Loumilab team."
+      breadcrumbs={[{ name: "Home", path: "/" }, { name: "Services", path: "/services" }]}
       path="/services"
       jsonLd={servicesJsonLd}
     />

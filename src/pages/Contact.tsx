@@ -82,8 +82,9 @@ const Contact = () => {
   return (
     <Layout>
       <SEOHead
-        title="Contact Loumilab — Start a Project"
-        description="Tell us about your website, product, automation, or security project. Loumilab replies to every inquiry within 24 hours."
+        title="Contact Loumilab | Start a Technology Project"
+        description="Tell Loumilab about your website, software product, automation or cybersecurity project. Share your goals and timeline — we reply to every inquiry within 24 hours."
+        breadcrumbs={[{ name: "Home", path: "/" }, { name: "Contact", path: "/contact" }]}
         path="/contact"
       />
       <section className="relative overflow-hidden section-padding pt-16 lg:pt-20">

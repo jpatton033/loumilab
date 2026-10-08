@@ -67,7 +67,8 @@ const LocalIndex = () => {
     <Layout>
       <SEOHead
         title="Loumilab Local | Discover Local Food Businesses Near You"
-        description="Discover local home chefs, bakers, meal-prep businesses, caterers, food trucks and pop-ups near you on Loumilab Local. Free to browse, no account needed."
+        description="Discover home chefs, bakers, meal-prep cooks, caterers, food trucks and pop-ups near you on Loumilab Local. Free to browse, no account needed, order in a few taps."
+        breadcrumbs={[{ name: "Home", path: "/" }, { name: "Loumilab Local", path: "/orders/local" }]}
         path="/orders/local"
         jsonLd={[
           {

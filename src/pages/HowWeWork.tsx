@@ -50,8 +50,9 @@ const steps = [
 const HowWeWork = () => (
   <Layout>
     <SEOHead
-      title="How We Work — From Idea to Launch — Loumilab | Technology Studio for Digital Products"
-      description="Discovery, design, build, secure, launch, and scale. How Loumilab delivers digital products with speed and precision."
+      title="How We Work: From Idea to Launch | Loumilab"
+      description="Discovery, design, build, security, launch and growth — how Loumilab takes digital products from first idea to a secure, maintainable launch and beyond."
+      breadcrumbs={[{ name: "Home", path: "/" }, { name: "How We Work", path: "/how-we-work" }]}
       path="/how-we-work"
     />
 

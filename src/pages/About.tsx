@@ -29,8 +29,9 @@ const values = [
 const About = () => (
   <Layout>
     <SEOHead
-      title="About Loumilab — Technology Partner and Product Builder"
-      description="Loumilab is a senior technology studio that designs, builds, launches, and secures digital products — for clients and for itself."
+      title="About Loumilab | Technology Studio"
+      description="Loumilab is a senior technology studio that designs, builds, launches and secures digital products for businesses — and builds its own products, like Orders."
+      breadcrumbs={[{ name: "Home", path: "/" }, { name: "About", path: "/about" }]}
       path="/about"
     />
 

@@ -40,7 +40,7 @@ const Index = () => {
     <Layout>
       <SEOHead
         title="Loumilab | Technology Studio for Digital Products"
-        description="Loumilab designs, builds, launches, and secures digital products and technology businesses. Websites, software, AI automation, and cybersecurity."
+        description="Loumilab is a technology studio that designs, builds, launches and secures digital products for businesses: websites, software, AI automation and cybersecurity."
         path="/"
         jsonLd={homeJsonLd}
       />

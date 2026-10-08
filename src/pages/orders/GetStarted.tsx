@@ -368,8 +368,8 @@ const GetStarted = () => {
   return (
     <Layout>
       <SEOHead
-        title="Get Started with Loumilab Orders — Create Your Storefront"
-        description="Set up your Loumilab Orders storefront in a few steps: your account, industry, business details, catalog, payments, and publishing."
+        title="Get Started with Loumilab Orders | Create Your Storefront"
+        description="Set up your Loumilab Orders storefront in a few guided steps: create your account, add business details and your menu, connect payments, and publish your store."
         path="/orders/get-started"
         jsonLd={GET_STARTED_JSONLD}
       />

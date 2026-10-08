@@ -138,8 +138,9 @@ const Orders = () => {
   return (
     <Layout>
       <SEOHead
-        title="Loumilab Orders — Turn Social Traffic Into Organized Orders"
-        description="Create a simple storefront, share your link, accept orders and payments, and manage everything in one dashboard. Built for food sellers, pop-ups, creators, and small businesses."
+        title="Loumilab Orders | Online Ordering for Small Food Businesses"
+        description="Create a free storefront, share one link, take orders and payments, and manage everything in one dashboard. Built for home chefs, bakers, pop-ups and small sellers."
+        breadcrumbs={[{ name: "Home", path: "/" }, { name: "Products", path: "/products" }, { name: "Loumilab Orders", path: "/orders" }]}
         path="/orders"
         jsonLd={ordersJsonLd}
       />

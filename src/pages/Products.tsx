@@ -28,8 +28,9 @@ const productsJsonLd = {
 const Products = () => (
   <Layout>
     <SEOHead
-      title="The Loumilab Ecosystem — Products & Companies"
-      description="Explore the Loumilab ecosystem: Loumilab Orders, built in house, and Vurtti, a Loumilab compliance technology company."
+      title="Digital Products Built by Loumilab | Loumilab"
+      description="Explore the products and companies built by Loumilab: Loumilab Orders for online ordering, Loumilab Local for food discovery, and Vurtti for compliance teams."
+      breadcrumbs={[{ name: "Home", path: "/" }, { name: "Products", path: "/products" }]}
       path="/products"
       jsonLd={productsJsonLd}
     />
