@@ -123,7 +123,7 @@ const Storefront = () => {
   if (isLoading && !demo) {
     return (
       <Layout>
-        <SEOHead title="Loading store — Loumilab Orders" description="Loading storefront." path="/orders" noindex />
+        <SEOHead title="Loumilab Orders Storefront" description="Order online from a local business on Loumilab Orders." path={`/orders/store/${slug ?? ""}`} />
         <section className="section-padding pt-16 text-center">
           <div className="section-container">
             <p className="text-muted-foreground">Loading store…</p>

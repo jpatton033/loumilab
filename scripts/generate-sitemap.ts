@@ -57,6 +57,20 @@ async function rest<T>(url: string, key: string, query: string): Promise<T[]> {
   }
 }
 
+async function localBusinesses(url: string, key: string): Promise<{ slug: string }[]> {
+  try {
+    const res = await fetch(`${url}/rest/v1/rpc/search_local_businesses`, {
+      method: "POST",
+      headers: { apikey: key, Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ _q: null, _place: null, _radius_miles: 25, _category: null, _pickup: false, _delivery: false, _accepting: false, _featured_only: false, _limit: 500 }),
+    });
+    if (!res.ok) return [];
+    return ((await res.json()) as { slug?: string }[]).filter((r): r is { slug: string } => !!r.slug);
+  } catch {
+    return [];
+  }
+}
+
 const day = (iso?: string | null) => (iso ? iso.slice(0, 10) : undefined);
 
 async function dynamicEntries(): Promise<Entry[]> {
@@ -65,7 +79,7 @@ async function dynamicEntries(): Promise<Entry[]> {
   const key = env.VITE_SUPABASE_PUBLISHABLE_KEY;
   if (!url || !key) return [];
 
-  const [stores, articles] = await Promise.all([
+  const [stores, articles, sections, local] = await Promise.all([
     rest<{ slug: string; updated_at?: string }>(
       url,
       key,
@@ -76,9 +90,13 @@ async function dynamicEntries(): Promise<Entry[]> {
       key,
       "kc_articles?select=slug,updated_at,kc_sections(slug)&status=eq.published&noindex=eq.false&canonical_url=is.null",
     ),
+    rest<{ slug: string }>(url, key, "kc_sections?select=slug&is_visible=eq.true"),
+    localBusinesses(url, key),
   ]);
 
   return [
+    ...sections.map((s) => ({ path: `/resources/${encodeURIComponent(s.slug)}`, changefreq: "weekly", priority: "0.7" })),
+    ...local.map((l) => ({ path: `/orders/local/${encodeURIComponent(l.slug)}`, changefreq: "weekly", priority: "0.5" })),
     ...stores.map((s) => ({
       path: `/orders/store/${encodeURIComponent(s.slug)}`,
       lastmod: day(s.updated_at),
