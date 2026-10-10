@@ -264,25 +264,37 @@
 @keyframes brandWordmarkResolve {
   0% {
     opacity: 0;
-    transform: translate3d(-5px, 2px, 0);
+    transform: translate3d(-6px, 7px, 0);
+    filter: blur(3px);
   }
-  65% {
+  55% {
     opacity: 1;
+    filter: blur(0);
+  }
+  78% {
+    transform: translate3d(0.5px, -1.5px, 0);
   }
   100% {
     opacity: 1;
     transform: translate3d(0, 0, 0);
+    filter: blur(0);
   }
 }
 
 @keyframes brandWordmarkDot {
   0% {
     opacity: 0;
-    transform: translate3d(-10px, -8px, 0) scale(0.55);
+    transform: translate3d(1px, -10px, 0) scale(2.4);
   }
-  55% {
+  38% {
     opacity: 1;
-    transform: translate3d(2px, 1px, 0) scale(1.08);
+    transform: translate3d(0, 0, 0) scale(2.15);
+  }
+  66% {
+    transform: translate3d(0, 0, 0) scale(1.35);
+  }
+  86% {
+    transform: translate3d(0, 0, 0) scale(0.97);
   }
   100% {
     opacity: 1;
