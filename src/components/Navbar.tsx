@@ -26,25 +26,14 @@ const Navbar = () => {
   const menuRef = useRef<HTMLDivElement | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
+  // Plays on every full page load (reload), not on in-app navigation.
   const [animateLogo] = useState(() => {
     if (typeof window === "undefined") return false;
-
-    try {
-      return window.sessionStorage.getItem("loumilab-logo-animated") !== "true";
-    } catch {
-      return true;
-    }
+    const w = window as unknown as { __loumilabLogoPlayed?: boolean };
+    if (w.__loumilabLogoPlayed) return false;
+    w.__loumilabLogoPlayed = true;
+    return true;
   });
-
-  useEffect(() => {
-    if (!animateLogo) return;
-
-    try {
-      window.sessionStorage.setItem("loumilab-logo-animated", "true");
-    } catch {
-      // The animation can still play when browser storage is unavailable.
-    }
-  }, [animateLogo]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);

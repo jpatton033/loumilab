@@ -198,23 +198,43 @@
   }
 
   .brand-wordmark-animated .brand-wordmark-letter {
-    animation: brandWordmarkResolve 0.85s var(--ease-brand) both;
+    display: inline-block;
+    animation: brandWordmarkResolve 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+    will-change: transform, opacity, filter;
   }
+  .brand-wordmark-animated .brand-wordmark-letter-1 { animation-delay: 0.45s; }
+  .brand-wordmark-animated .brand-wordmark-letter-2 { animation-delay: 0.53s; }
+  .brand-wordmark-animated .brand-wordmark-letter-3 { animation-delay: 0.61s; }
+  .brand-wordmark-animated .brand-wordmark-letter-4 { animation-delay: 0.69s; }
+  .brand-wordmark-animated .brand-wordmark-letter-5 { animation-delay: 0.77s; }
+  .brand-wordmark-animated .brand-wordmark-letter-6 { animation-delay: 0.85s; }
+  .brand-wordmark-animated .brand-wordmark-letter-7 { animation-delay: 0.93s; }
+  .brand-wordmark-animated .brand-wordmark-letter-8 { animation-delay: 1.01s; }
 
-  .brand-wordmark-animated .brand-wordmark-letter-1 { animation-delay: 0.30s; }
-  .brand-wordmark-animated .brand-wordmark-letter-2 { animation-delay: 0.39s; }
-  .brand-wordmark-animated .brand-wordmark-letter-3 { animation-delay: 0.48s; }
-  .brand-wordmark-animated .brand-wordmark-letter-4 { animation-delay: 0.57s; }
-  .brand-wordmark-animated .brand-wordmark-letter-5 { animation-delay: 0.66s; }
-  .brand-wordmark-animated .brand-wordmark-letter-6 { animation-delay: 0.75s; }
-  .brand-wordmark-animated .brand-wordmark-letter-7 { animation-delay: 0.84s; }
-  .brand-wordmark-animated .brand-wordmark-letter-8 { animation-delay: 0.93s; }
-
+  /* Disney-style arch: X travels steadily, Y rises then falls (true parabola). */
+  .brand-wordmark-animated .brand-wordmark-dot-x {
+    animation: brandDotX 1.5s cubic-bezier(0.37, 0, 0.25, 1) 1.1s both;
+  }
   .brand-wordmark-animated .brand-wordmark-dot {
-    animation: brandWordmarkDot 0.95s var(--ease-brand) 1.08s both;
-    transform-origin: center bottom;
+    transform-origin: center 80%;
+    animation:
+      brandDotArc 1.5s linear 1.1s both,
+      brandDotSettle 0.9s cubic-bezier(0.22, 1, 0.36, 1) 2.6s both;
   }
-
+  .brand-wordmark-ripple {
+    position: absolute; left: 50%; bottom: 0.14em;
+    width: 0.24em; height: 0.24em; margin-left: -0.12em;
+    border-radius: 9999px; border: 1.5px solid hsl(var(--accent));
+    opacity: 0; pointer-events: none;
+    animation: brandDotRipple 1.1s cubic-bezier(0.22, 1, 0.36, 1) 2.6s both;
+  }
+  .brand-wordmark-shine {
+    position: absolute; inset: -0.2em -0.1em; pointer-events: none;
+    background: linear-gradient(105deg, transparent 35%, hsl(var(--background) / 0.85) 50%, transparent 65%);
+    background-size: 250% 100%; background-position: 130% 0;
+    opacity: 0;
+    animation: brandShine 1.2s cubic-bezier(0.45, 0, 0.2, 1) 2.85s both;
+  }
 
   .video-overlay {
     background: linear-gradient(180deg, hsl(0 0% 100% / 0.55) 0%, hsl(0 0% 100% / 0.35) 50%, hsl(0 0% 100% / 0.75) 100%);
@@ -262,44 +282,39 @@
 }
 
 @keyframes brandWordmarkResolve {
-  0% {
-    opacity: 0;
-    transform: translate3d(-6px, 7px, 0);
-    filter: blur(3px);
-  }
-  55% {
-    opacity: 1;
-    filter: blur(0);
-  }
-  78% {
-    transform: translate3d(0.5px, -1.5px, 0);
-  }
-  100% {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-    filter: blur(0);
-  }
+  0%   { opacity: 0; transform: translate3d(0, 0.45em, 0) scale(0.96); filter: blur(4px); }
+  60%  { opacity: 1; filter: blur(0); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); filter: blur(0); }
 }
 
-@keyframes brandWordmarkDot {
-  0% {
-    opacity: 0;
-    transform: translate3d(1px, -10px, 0) scale(2.4);
-  }
-  38% {
-    opacity: 1;
-    transform: translate3d(0, 0, 0) scale(2.15);
-  }
-  66% {
-    transform: translate3d(0, 0, 0) scale(1.35);
-  }
-  86% {
-    transform: translate3d(0, 0, 0) scale(0.97);
-  }
-  100% {
-    opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1);
-  }
+@keyframes brandDotX {
+  0%   { transform: translate3d(-5.2em, 0, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+
+@keyframes brandDotArc {
+  0%   { opacity: 0; transform: translate3d(0, 0, 0) scale(1.4); animation-timing-function: cubic-bezier(0.33, 0, 0.67, 0.5); }
+  10%  { opacity: 1; }
+  50%  { transform: translate3d(0, -1.35em, 0) scale(2.4); animation-timing-function: cubic-bezier(0.33, 0.5, 0.67, 1); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0) scale(2.2); }
+}
+
+@keyframes brandDotSettle {
+  0%   { transform: scale(2.2, 1.7); }
+  30%  { transform: scale(1.6, 1.9); }
+  65%  { transform: scale(0.94); }
+  100% { transform: scale(1); }
+}
+
+@keyframes brandDotRipple {
+  0%   { opacity: 0.7; transform: scale(1); }
+  100% { opacity: 0; transform: scale(4.5); }
+}
+
+@keyframes brandShine {
+  0%   { opacity: 1; background-position: 130% 0; }
+  90%  { opacity: 1; }
+  100% { opacity: 0; background-position: -30% 0; }
 }
 
 
@@ -331,11 +346,13 @@
   }
 
   .brand-wordmark-animated .brand-wordmark-letter,
-  .brand-wordmark-animated .brand-wordmark-dot {
+  .brand-wordmark-animated .brand-wordmark-dot,
+  .brand-wordmark-animated .brand-wordmark-dot-x {
     animation: none;
     opacity: 1;
     transform: none;
   }
+  .brand-wordmark-ripple, .brand-wordmark-shine { display: none; }
 }
 
 /* Clean print sheet for the merchant preparation summary.
