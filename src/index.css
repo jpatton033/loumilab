@@ -198,21 +198,21 @@
   }
 
   .brand-wordmark-animated .brand-wordmark-letter {
-    animation: brandWordmarkResolve 0.62s var(--ease-brand) both;
+    animation: brandWordmarkResolve 0.85s var(--ease-brand) both;
   }
 
-  .brand-wordmark-animated .brand-wordmark-letter-1 { animation-delay: 0.04s; }
-  .brand-wordmark-animated .brand-wordmark-letter-2 { animation-delay: 0.07s; }
-  .brand-wordmark-animated .brand-wordmark-letter-3 { animation-delay: 0.10s; }
-  .brand-wordmark-animated .brand-wordmark-letter-4 { animation-delay: 0.13s; }
-  .brand-wordmark-animated .brand-wordmark-letter-5 { animation-delay: 0.16s; }
-  .brand-wordmark-animated .brand-wordmark-letter-6 { animation-delay: 0.19s; }
-  .brand-wordmark-animated .brand-wordmark-letter-7 { animation-delay: 0.22s; }
-  .brand-wordmark-animated .brand-wordmark-letter-8 { animation-delay: 0.25s; }
+  .brand-wordmark-animated .brand-wordmark-letter-1 { animation-delay: 0.30s; }
+  .brand-wordmark-animated .brand-wordmark-letter-2 { animation-delay: 0.39s; }
+  .brand-wordmark-animated .brand-wordmark-letter-3 { animation-delay: 0.48s; }
+  .brand-wordmark-animated .brand-wordmark-letter-4 { animation-delay: 0.57s; }
+  .brand-wordmark-animated .brand-wordmark-letter-5 { animation-delay: 0.66s; }
+  .brand-wordmark-animated .brand-wordmark-letter-6 { animation-delay: 0.75s; }
+  .brand-wordmark-animated .brand-wordmark-letter-7 { animation-delay: 0.84s; }
+  .brand-wordmark-animated .brand-wordmark-letter-8 { animation-delay: 0.93s; }
 
   .brand-wordmark-animated .brand-wordmark-dot {
-    animation: brandWordmarkDot 0.7s var(--ease-brand) 0.36s both;
-    transform-origin: center;
+    animation: brandWordmarkDot 0.95s var(--ease-brand) 1.08s both;
+    transform-origin: center bottom;
   }
 
 
