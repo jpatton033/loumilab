@@ -4,6 +4,7 @@ type WordmarkSize = "sm" | "md";
 
 interface WordmarkProps {
   size?: WordmarkSize;
+  animated?: boolean;
   className?: string;
 }
 
@@ -12,20 +13,34 @@ const sizeMap: Record<WordmarkSize, { root: string; lead: string; dot: string }>
   md: { root: "text-xl", lead: "text-[1.4rem]", dot: "text-[1.4rem]" },
 };
 
-const Wordmark = ({ size = "sm", className }: WordmarkProps) => {
+const letters = ["L", "o", "u", "m", "i", "l", "a", "b"];
+
+const Wordmark = ({ size = "sm", animated = false, className }: WordmarkProps) => {
   const s = sizeMap[size];
 
   return (
     <span
       className={cn(
         "inline-flex select-none items-baseline font-display font-bold uppercase leading-none tracking-[-0.03em] text-current",
+        animated && "brand-wordmark-animated",
         s.root,
         className,
       )}
+      aria-hidden="true"
     >
-      <span className={cn("leading-none", s.lead)}>L</span>
-      <span className="leading-none">oumilab</span>
-      <span className={cn("-ml-[0.02em] leading-none text-accent", s.dot)}>.</span>
+      {letters.map((letter, index) => (
+        <span
+          key={`${letter}-${index}`}
+          className={cn(
+            "brand-wordmark-letter leading-none",
+            `brand-wordmark-letter-${index + 1}`,
+            index === 0 && s.lead,
+          )}
+        >
+          {letter}
+        </span>
+      ))}
+      <span className={cn("brand-wordmark-dot -ml-[0.02em] leading-none text-accent", s.dot)}>.</span>
     </span>
   );
 };

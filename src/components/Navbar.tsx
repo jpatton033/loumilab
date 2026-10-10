@@ -26,6 +26,25 @@ const Navbar = () => {
   const menuRef = useRef<HTMLDivElement | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
+  const [animateLogo] = useState(() => {
+    if (typeof window === "undefined") return false;
+
+    try {
+      return window.sessionStorage.getItem("loumilab-logo-animated") !== "true";
+    } catch {
+      return true;
+    }
+  });
+
+  useEffect(() => {
+    if (!animateLogo) return;
+
+    try {
+      window.sessionStorage.setItem("loumilab-logo-animated", "true");
+    } catch {
+      // The animation can still play when browser storage is unavailable.
+    }
+  }, [animateLogo]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -96,7 +115,7 @@ const Navbar = () => {
     >
       <div className="section-container flex h-16 items-center justify-between lg:h-20">
         <Link to="/" onClick={handleLogoClick} className="flex items-center" aria-label="Loumilab home">
-          <Wordmark size="sm" />
+          <Wordmark size="sm" animated={animateLogo} />
         </Link>
 
 

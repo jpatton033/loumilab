@@ -9,3 +9,4 @@
 - Homepage product/grid tiles use the shared components in src/components/brand/apple/Tiles.tsx — keeps the Apple-style homepage consistent.
 - Per-page SEO (title, description, canonical, og/twitter, WebPage + BreadcrumbList JSON-LD) goes only through SEOHead props; article overrides live on kc_articles SEO columns with automatic fallbacks — one place for head tags.
 - Raw-HTML SEO for public routes comes from scripts/prerender-heads.ts (postbuild), which writes dist/<route>/index.html with per-route head tags and an sr-only H1; add new public routes to its staticMeta and to generate-sitemap — crawlers that skip JS otherwise see only the homepage head.
+- Header logo motion is an optional `Wordmark` state that plays once per browser session and respects reduced motion — keeps the canonical logo reusable and avoids a loading-screen dependency.
