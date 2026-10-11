@@ -240,7 +240,7 @@ const ResourceArticle = () => {
                 Want help putting this into practice?{" "}
                 <Link to="/services" className="link-brand font-medium text-foreground">Explore Loumilab services</Link>
                 {" "}or{" "}
-                <Link to="/contact" className="link-brand font-medium text-foreground">start a project</Link>.
+                <Link to="/contact" className="link-brand font-medium text-foreground">start a store</Link>.
               </p>
 
               {tags.length > 0 && (

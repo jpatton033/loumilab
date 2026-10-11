@@ -54,7 +54,7 @@ const Index = () => {
           <p className="mx-auto mt-6 max-w-2xl text-lg text-foreground/70 lg:text-2xl">
             Loumilab designs, builds, launches and secures digital products — for clients and for ourselves.
           </p>
-          <TileActions primary={{ label: "Start a project", to: "/contact" }} secondary={{ label: "Explore products", to: "/products" }} className="mt-8" />
+          <TileActions primary={{ label: "Start a store", to: "/contact" }} secondary={{ label: "Explore products", to: "/products" }} className="mt-8" />
         </div>
         <div className="section-container mt-12 lg:mt-16">
           <div className="photo-frame aspect-[4/5] sm:aspect-[16/8]">
@@ -120,8 +120,8 @@ const Index = () => {
               <VurttiLogo size="xl" />
             </div>
           </GridTile>
-          <GridTile eyebrow="What's next" title="We're always building." line="New products are in the lab. Have an idea worth building with us?" links={{ primary: { label: "Start a project", to: "/contact" }, secondary: { label: "All products", to: "/products" } }}>
-            <Link to="/contact" aria-label="Start a project" className="mb-10 grid aspect-[4/3] place-items-center rounded-2xl border border-dashed border-accent/40 bg-accent-soft transition-all duration-300 hover:-translate-y-0.5 hover:border-accent hover:shadow-[var(--shadow-accent-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+          <GridTile eyebrow="What's next" title="We're always building." line="New products are in the lab. Have an idea worth building with us?" links={{ primary: { label: "Start a store", to: "/contact" }, secondary: { label: "All products", to: "/products" } }}>
+            <Link to="/contact" aria-label="Start a store" className="mb-10 grid aspect-[4/3] place-items-center rounded-2xl border border-dashed border-accent/40 bg-accent-soft transition-all duration-300 hover:-translate-y-0.5 hover:border-accent hover:shadow-[var(--shadow-accent-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
               <span aria-hidden="true" className="font-hero text-6xl font-semibold text-accent">+</span>
             </Link>
           </GridTile>
@@ -146,7 +146,7 @@ const Index = () => {
       {/* Closing */}
       <Statement line="Let's turn the idea into something real.">Have something worth building?</Statement>
       <div className="-mt-10 pb-24 lg:-mt-16">
-        <TileActions primary={{ label: "Start a project", to: "/contact" }} secondary={{ label: "Contact Loumilab", to: "/contact" }} />
+        <TileActions primary={{ label: "Start a store", to: "/contact" }} secondary={{ label: "Contact Loumilab", to: "/contact" }} />
       </div>
     </Layout>
   );
