@@ -7,6 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { productGroups, allProducts } from "@/data/products";
+import { DotMarker, DotThread } from "@/components/brand/dot";
+import { ImmersiveImage } from "@/components/brand/story";
+import collaboration from "@/assets/people/studio/collaboration.jpg";
 
 const productsJsonLd = {
   "@context": "https://schema.org",
@@ -38,6 +41,7 @@ const Products = () => (
     <section className="relative overflow-hidden pt-16 pb-16 lg:pt-24 lg:pb-20">
       <div className="pointer-events-none absolute inset-0 hero-wash" aria-hidden="true" />
       <div className="section-container relative max-w-3xl">
+        <DotMarker />
         <Eyebrow>Ecosystem</Eyebrow>
         <h1 className="mt-5 text-4xl font-semibold leading-tight lg:text-6xl">
           Products and companies built by Loumilab.
@@ -48,6 +52,15 @@ const Products = () => (
         </p>
       </div>
     </section>
+
+    <DotThread />
+
+    <ImmersiveImage
+      className="pt-2"
+      image={{ src: collaboration, alt: "A product team shaping a new digital idea together" }}
+      caption="Ideas become products through careful design, engineering, and iteration."
+      dotLens
+    />
 
     <section className="section-padding pt-8">
       <div className="section-container space-y-16">
@@ -88,7 +101,7 @@ const Products = () => (
           We&apos;ve done it for ourselves. We can do it with you.
         </p>
         <Button size="lg" asChild className="mt-8">
-          <Link to="/contact">
+          <Link to="/contact" className="dot-action">
             Start a Project <ArrowRight size={18} />
           </Link>
         </Button>

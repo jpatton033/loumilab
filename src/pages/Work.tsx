@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import fintrackImg from "@/assets/work/fintrack.jpg";
 import bloomImg from "@/assets/work/bloom.jpg";
 import careconnectImg from "@/assets/work/careconnect.jpg";
+import { DotLens, DotMarker, DotThread } from "@/components/brand/dot";
 
 const caseStudies = [
   {
@@ -71,6 +72,7 @@ const Work = () => {
       <section className="relative overflow-hidden pt-16 pb-12 lg:pt-24 lg:pb-16">
         <div className="pointer-events-none absolute inset-0 hero-wash" aria-hidden="true" />
         <div className="section-container relative max-w-3xl">
+          <DotMarker />
           <Eyebrow>Selected work</Eyebrow>
           <h1 className="mt-5 text-4xl font-semibold leading-tight lg:text-6xl">
             Work that had to hold up.
@@ -120,6 +122,7 @@ const Work = () => {
                       className="pointer-events-none absolute inset-0 bg-gradient-to-t from-foreground/10 to-transparent"
                       aria-hidden="true"
                     />
+                    {i === 0 && <DotLens />}
                   </div>
 
                   <div className="p-8 lg:p-10">
@@ -146,11 +149,13 @@ const Work = () => {
         </div>
       </section>
 
+      <DotThread reverse />
+
       <section className="section-padding border-t border-border bg-surface-subtle">
         <div className="section-container text-center">
           <h2 className="text-3xl font-semibold lg:text-4xl">Let&apos;s make yours the next one.</h2>
           <Button size="lg" asChild className="mt-8">
-            <Link to="/contact">
+            <Link to="/contact" className="dot-action">
               Work With Us <ArrowRight size={18} />
             </Link>
           </Button>

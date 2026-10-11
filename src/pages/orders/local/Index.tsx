@@ -18,6 +18,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import LocalBusinessCard from "@/components/orders/local/LocalBusinessCard";
 import LocalFilters from "@/components/orders/local/LocalFilters";
 import { LOCAL_CATEGORIES, useLocalFeatured, useLocalSearch, type LocalSearch } from "@/lib/orders/local";
+import { DotMarker, DotThread } from "@/components/brand/dot";
 
 const fromParams = (p: URLSearchParams): LocalSearch => ({
   q: p.get("q") ?? "",
@@ -99,6 +100,7 @@ const LocalIndex = () => {
           <p className="font-display text-lg font-semibold tracking-tight">Loumilab <span className="text-accent">Local</span></p>
           <Link to="/orders/local/join" className="text-sm font-medium text-muted-foreground hover:text-foreground">List your business — free</Link>
         </div>
+        <DotMarker className="mt-8" />
         <Eyebrow className="mt-8 block">Discover local food businesses</Eyebrow>
         <h1 className="mt-4 max-w-3xl font-hero text-5xl font-semibold leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl">
           Discover what's cooking near you.
@@ -155,7 +157,9 @@ const LocalIndex = () => {
             className="pt-0"
             image={{ src: market, alt: "Neighbors shopping at a busy outdoor farmers' market in afternoon light" }}
             caption="There's more cooking around you than you think."
+            dotLens
           />
+          <DotThread />
           <PeopleSequence
             className="pt-4"
             eyebrow="Support local"
@@ -254,7 +258,7 @@ const LocalIndex = () => {
             </p>
           </div>
           <Button asChild size="lg" className="rounded-full">
-            <Link to="/orders/local/join">List my business <ArrowRight size={16} /></Link>
+            <Link to="/orders/local/join" className="dot-action">List my business <ArrowRight size={16} /></Link>
           </Button>
         </div>
         <p className="mt-6 text-center text-xs text-muted-foreground">Loumilab Local is part of <Link to="/orders" className="underline underline-offset-4">Loumilab Orders</Link>.</p>

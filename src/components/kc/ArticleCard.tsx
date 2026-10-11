@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Clock, Eye } from "lucide-react";
 import type { KcArticleWithRelations } from "@/lib/kc/types";
+import { cn } from "@/lib/utils";
 
-const ArticleCard = ({ article }: { article: KcArticleWithRelations }) => {
+const ArticleCard = ({ article, actionMarker = false }: { article: KcArticleWithRelations; actionMarker?: boolean }) => {
   const sectionSlug = article.kc_sections?.slug ?? "";
   const tags = (article.kc_article_tags ?? []).map((t) => t.kc_tags).filter(Boolean).slice(0, 2);
 
@@ -30,7 +31,9 @@ const ArticleCard = ({ article }: { article: KcArticleWithRelations }) => {
             <Eye size={13} /> {article.view_count}
           </span>
         )}
-        <ArrowRight size={15} className="ml-auto text-accent transition-transform group-hover:translate-x-1" />
+        <span className={cn("ml-auto inline-flex items-center text-accent", actionMarker && "dot-action")}>
+          <ArrowRight size={15} />
+        </span>
       </div>
 
       {tags.length > 0 && (

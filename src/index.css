@@ -421,6 +421,49 @@
 .kc-prose p.is-editor-empty:first-child::before { content: attr(data-placeholder); color: hsl(var(--muted-foreground)); float: left; height: 0; pointer-events: none; }
 
 /* ===== Loumilab Dot Motion System ===== */
+:root { --dot-page: 12px; --dot-section: 9px; --dot-action: 6px; --dot-travel: 5rem; }
+
+/* Identity anchor: one recognizable arrival shared by public page openings. */
+.dot-marker { position: relative; width: 5.5rem; height: 1.25rem; margin-bottom: 1.25rem; overflow: hidden; }
+.dot-marker-thread { position: absolute; top: calc(50% - .5px); left: 0; width: 100%; height: 1px; background: hsl(var(--accent) / .28); opacity: 0; transform: scaleX(0); transform-origin: left; }
+.dot-marker-core { position: absolute; top: calc(50% - var(--dot-page) / 2); left: 0; width: var(--dot-page); height: var(--dot-page); border-radius: 9999px; background: hsl(var(--accent)); opacity: 0; }
+.dot-marker.ldot-in .dot-marker-thread { animation: dotMarkerThread 1.25s var(--ease-brand) both; }
+.dot-marker.ldot-in .dot-marker-core { animation: dotMarkerCore 1.25s var(--ease-brand) both; }
+@keyframes dotMarkerThread { 0% { opacity: 0; transform: scaleX(0); } 25%,72% { opacity: 1; } 78% { transform: scaleX(1); } 100% { opacity: 0; transform: scaleX(1); } }
+@keyframes dotMarkerCore { 0% { opacity: 0; transform: scale(.35); } 18% { opacity: 1; transform: none; } 78%,100% { opacity: 1; transform: translateX(calc(5.5rem - var(--dot-page))); } }
+
+/* Thread: a short handoff between related sections. */
+.dot-thread { position: relative; width: min(11rem, 42vw); height: 2.5rem; margin: 0 auto; overflow: hidden; }
+.dot-thread-line { position: absolute; top: 50%; left: 0; width: 100%; height: 1px; background: hsl(var(--accent) / .22); opacity: 0; transform: scaleX(0); transform-origin: left; }
+.dot-thread-core { position: absolute; top: calc(50% - var(--dot-section) / 2); left: 0; width: var(--dot-section); height: var(--dot-section); border-radius: 9999px; background: hsl(var(--accent)); opacity: 0; }
+.dot-thread-reverse .dot-thread-line { transform-origin: right; }
+.dot-thread-reverse .dot-thread-core { left: auto; right: 0; }
+.dot-thread.ldot-in .dot-thread-line { animation: dotThreadLine 1.5s var(--ease-brand) both; }
+.dot-thread.ldot-in .dot-thread-core { animation: dotThreadCore 1.5s var(--ease-brand) both; }
+.dot-thread-reverse.ldot-in .dot-thread-core { animation-name: dotThreadCoreReverse; }
+@keyframes dotThreadLine { 0% { opacity: 0; transform: scaleX(0); } 25%,80% { opacity: 1; } 100% { opacity: 0; transform: scaleX(1); } }
+@keyframes dotThreadCore { 0% { opacity: 0; transform: scale(.4); } 18% { opacity: 1; } 82% { opacity: 1; transform: translateX(calc(min(11rem, 42vw) - var(--dot-section))); } 100% { opacity: 0; transform: translateX(calc(min(11rem, 42vw) - var(--dot-section))) scale(.65); } }
+@keyframes dotThreadCoreReverse { 0% { opacity: 0; transform: scale(.4); } 18% { opacity: 1; } 82% { opacity: 1; transform: translateX(calc(-1 * (min(11rem, 42vw) - var(--dot-section)))); } 100% { opacity: 0; transform: translateX(calc(-1 * (min(11rem, 42vw) - var(--dot-section)))) scale(.65); } }
+
+/* Lens: the identity dot becomes a focus frame, then exits as itself. */
+.dot-lens { position: absolute; inset: 0; z-index: 2; overflow: hidden; border-radius: inherit; }
+.dot-lens-core, .dot-lens-exit { position: absolute; left: 12%; top: 70%; width: var(--dot-page); height: var(--dot-page); border-radius: 9999px; background: hsl(var(--accent)); opacity: 0; }
+.dot-lens-ring { position: absolute; left: calc(50% - 3.75rem); top: calc(50% - 3.75rem); width: 7.5rem; height: 7.5rem; border: 2px solid hsl(var(--accent) / .82); border-radius: 9999px; opacity: 0; }
+.dot-lens-exit { left: auto; right: 12%; top: 28%; }
+.dot-lens.ldot-in .dot-lens-core { animation: dotLensCore 2.15s var(--ease-brand) both; }
+.dot-lens.ldot-in .dot-lens-ring { animation: dotLensRing 2.15s var(--ease-brand) both; }
+.dot-lens.ldot-in .dot-lens-exit { animation: dotLensExit 2.15s var(--ease-brand) both; }
+@keyframes dotLensCore { 0% { opacity: 0; transform: scale(.3); } 14%,28% { opacity: 1; transform: none; } 48%,100% { opacity: 0; transform: translate(38vw,-18vh) scale(8); } }
+@keyframes dotLensRing { 0%,30% { opacity: 0; transform: scale(.08); } 50%,72% { opacity: 1; transform: scale(1); } 90%,100% { opacity: 0; transform: scale(1.18); } }
+@keyframes dotLensExit { 0%,72% { opacity: 0; transform: scale(.4); } 84% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateX(1.5rem); } }
+
+/* Action marker: reserved for selected forward actions. */
+.dot-action { position: relative; }
+.dot-action::before { content: ""; width: var(--dot-action); height: var(--dot-action); border-radius: 9999px; background: currentColor; opacity: 0; transform: translateX(-.45rem) scale(.3); transition: opacity .35s var(--ease-brand), transform .35s var(--ease-brand); }
+.dot-action:hover::before, .dot-action:focus-visible::before { opacity: .9; transform: none; }
+.dot-action svg { transition: transform .35s var(--ease-brand); }
+.dot-action:hover svg, .dot-action:focus-visible svg { transform: translateX(.2rem); }
+
 /* Signature transition: one studio becomes two products. */
 .dot-split { position: relative; width: min(18rem, 70vw); height: 5rem; margin-inline: auto; overflow: hidden; }
 .dot-split > span { position: absolute; display: block; }
@@ -449,17 +492,16 @@
 @keyframes imageTraveler { 0% { opacity: 0; transform: scale(.4); } 16% { opacity: 1; transform: none; } 78% { opacity: 1; transform: translateX(calc(84vw - 7rem)); } 100% { opacity: 0; transform: translateX(calc(84vw - 7rem)) scale(.65); } }
 @keyframes imageImpact { 0% { opacity: 0; transform: scale(.3); } 45% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(2.8); } }
 
-/* One directional interaction, reserved for the Resources handoff. */
-.dot-direction { position: relative; }
-.dot-direction svg { position: relative; z-index: 1; }
-.dot-direction::before { content: ""; position: absolute; right: 2px; top: 50%; width: 18px; height: 18px; margin-top: -9px; border-radius: 9999px; background: hsl(var(--accent) / .12); transform: scale(0); transition: transform .35s var(--ease-brand); pointer-events: none; }
-.dot-direction:hover::before, .dot-direction:focus-visible::before { transform: scale(1.4); }
-
 @media (min-width: 80rem) {
   @keyframes imageTraveler { 0% { opacity: 0; transform: scale(.4); } 16% { opacity: 1; transform: none; } 78% { opacity: 1; transform: translateX(61rem); } 100% { opacity: 0; transform: translateX(61rem) scale(.65); } }
 }
 
 @media (max-width: 640px) {
+  :root { --dot-page: 10px; --dot-section: 8px; }
+  .dot-marker { width: 4.25rem; }
+  @keyframes dotMarkerCore { 0% { opacity: 0; transform: scale(.35); } 18% { opacity: 1; transform: none; } 78%,100% { opacity: 1; transform: translateX(calc(4.25rem - var(--dot-page))); } }
+  .dot-lens-ring { left: calc(50% - 2.75rem); top: calc(50% - 2.75rem); width: 5.5rem; height: 5.5rem; }
+  @keyframes dotLensCore { 0% { opacity: 0; transform: scale(.3); } 14%,28% { opacity: 1; transform: none; } 48%,100% { opacity: 0; transform: translate(30vw,-10vh) scale(6); } }
   .dot-split { width: 12rem; }
   @keyframes dotBranchLeft { 0%,45% { opacity: 0; transform: none; } 58% { opacity: 1; } 82% { opacity: 1; transform: translate(-5.5rem, 2.2rem); } 100% { opacity: 0; transform: translate(-5.5rem, 2.2rem) scale(.7); } }
   @keyframes dotBranchRight { 0%,45% { opacity: 0; transform: none; } 58% { opacity: 1; } 82% { opacity: 1; transform: translate(5.5rem, 2.2rem); } 100% { opacity: 0; transform: translate(5.5rem, 2.2rem) scale(.7); } }
@@ -468,8 +510,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .dot-split *, .dot-image-journey * { animation: none !important; }
+  .dot-marker *, .dot-thread *, .dot-lens *, .dot-split *, .dot-image-journey * { animation: none !important; }
+  .dot-marker-core { opacity: 1; transform: none; }
+  .dot-thread-core { opacity: 1; transform: none; }
+  .dot-lens { display: none; }
   .dot-split-source { opacity: 1; transform: none; }
   .dot-image-journey { display: none; }
-  .dot-direction::before { transition: none; }
+  .dot-action::before, .dot-action svg { transition: none; }
 }
