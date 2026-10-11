@@ -48,7 +48,7 @@ const Index = () => {
       {/* Hero */}
       <section className="overflow-hidden pt-12 lg:pt-16">
         <div className="section-container text-center">
-          <h1 className="mx-auto max-w-5xl font-hero text-[clamp(1.75rem,3.6vw,3.25rem)] font-semibold leading-[1.12] tracking-[-0.03em] text-balance">
+          <h1 className="mx-auto max-w-4xl text-[1.375rem] font-normal leading-[1.5] tracking-normal text-foreground/70 text-balance lg:text-[1.875rem]">
             Loumilab is a technology studio creating websites, custom software, and secure digital solutions that help businesses operate, connect, and grow.
           </h1>
           <TileActions primary={{ label: "Start a store", to: "/contact" }} secondary={{ label: "Explore products", to: "/products" }} className="mt-8" />
