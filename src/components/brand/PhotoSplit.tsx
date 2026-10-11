@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import Reveal from "@/components/Reveal";
 import Eyebrow from "@/components/brand/Eyebrow";
 import { cn } from "@/lib/utils";
+import { DotLens } from "@/components/brand/dot";
 
 interface PhotoSplitProps {
   image: string;
@@ -11,14 +12,16 @@ interface PhotoSplitProps {
   children: ReactNode;
   reverse?: boolean;
   className?: string;
+  dotLens?: boolean;
 }
 
 /** Shared human-photography section: large rounded photo beside copy. */
-const PhotoSplit = ({ image, alt, eyebrow, title, children, reverse, className }: PhotoSplitProps) => (
+const PhotoSplit = ({ image, alt, eyebrow, title, children, reverse, className, dotLens = false }: PhotoSplitProps) => (
   <section className={cn("section-padding border-t border-border", className)}>
     <div className="section-container grid items-center gap-10 lg:grid-cols-2 lg:gap-20">
-      <Reveal className={cn("photo-frame aspect-[3/2]", reverse && "lg:order-2")}>
+      <Reveal className={cn("photo-frame relative aspect-[3/2]", reverse && "lg:order-2")}>
         <img src={image} alt={alt} width={1600} height={1072} loading="lazy" decoding="async" className="h-full w-full object-cover" />
+        {dotLens && <DotLens />}
       </Reveal>
       <Reveal delay={80}>
         <Eyebrow>{eyebrow}</Eyebrow>

@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import Reveal from "@/components/Reveal";
 import Eyebrow from "@/components/brand/Eyebrow";
 import { cn } from "@/lib/utils";
+import { DotLens } from "@/components/brand/dot";
 
 type Img = { src: string; alt: string; width?: number; height?: number; position?: string };
 
@@ -21,10 +22,11 @@ const Photo = ({ img, className }: { img: Img; className?: string }) => (
 );
 
 /** Wide photo with at most one line of copy beneath. */
-export const ImmersiveImage = ({ image, caption, className }: { image: Img; caption?: string; className?: string }) => (
+export const ImmersiveImage = ({ image, caption, className, dotLens = false }: { image: Img; caption?: string; className?: string; dotLens?: boolean }) => (
   <section className={cn("section-container py-10 lg:py-16", className)}>
-    <Reveal className="photo-frame aspect-[4/5] sm:aspect-[16/9] lg:aspect-[21/9]">
+    <Reveal className="photo-frame relative aspect-[4/5] sm:aspect-[16/9] lg:aspect-[21/9]">
       <Photo img={image} />
+      {dotLens && <DotLens />}
     </Reveal>
     {caption && <p className="mt-4 text-meta text-muted-foreground">{caption}</p>}
   </section>
@@ -97,11 +99,12 @@ export const PeopleSequence = ({ eyebrow, title, items, className }: { eyebrow?:
 };
 
 /** Short photo band that opens a new topic. */
-export const CategoryTransition = ({ image, label, title, className }: { image: Img; label: string; title: string; className?: string }) => (
+export const CategoryTransition = ({ image, label, title, className, dotLens = false }: { image: Img; label: string; title: string; className?: string; dotLens?: boolean }) => (
   <section className={cn("section-container py-8 lg:py-12", className)}>
     <Reveal className="grid items-center gap-6 sm:grid-cols-[1fr_1.4fr] lg:gap-12">
-      <div className="photo-frame aspect-[16/9] sm:order-2 sm:aspect-[21/9]">
+      <div className="photo-frame relative aspect-[16/9] sm:order-2 sm:aspect-[21/9]">
         <Photo img={image} />
+        {dotLens && <DotLens />}
       </div>
       <div>
         <Eyebrow>{label}</Eyebrow>

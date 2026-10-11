@@ -18,6 +18,40 @@ export const useInView = <T extends Element>(rootMargin = "0px 0px -15% 0px") =>
   return { ref, inView };
 };
 
+/** Page-level identity cue: a dot arrives, draws a short thread, then settles. */
+export const DotMarker = ({ className }: { className?: string }) => {
+  const { ref, inView } = useInView<HTMLDivElement>("0px 0px -5% 0px");
+  return (
+    <div ref={ref} aria-hidden="true" className={cn("dot-marker pointer-events-none", inView && "ldot-in", className)}>
+      <span className="dot-marker-thread" />
+      <span className="dot-marker-core" />
+    </div>
+  );
+};
+
+/** A short section handoff that gives the dot continuity without becoming a divider. */
+export const DotThread = ({ className, reverse = false }: { className?: string; reverse?: boolean }) => {
+  const { ref, inView } = useInView<HTMLDivElement>();
+  return (
+    <div ref={ref} aria-hidden="true" className={cn("dot-thread pointer-events-none", reverse && "dot-thread-reverse", inView && "ldot-in", className)}>
+      <span className="dot-thread-line" />
+      <span className="dot-thread-core" />
+    </div>
+  );
+};
+
+/** The dot expands into a focus ring over selected photography, then resolves. */
+export const DotLens = ({ className }: { className?: string }) => {
+  const { ref, inView } = useInView<HTMLDivElement>();
+  return (
+    <div ref={ref} aria-hidden="true" className={cn("dot-lens pointer-events-none", inView && "ldot-in", className)}>
+      <span className="dot-lens-core" />
+      <span className="dot-lens-ring" />
+      <span className="dot-lens-exit" />
+    </div>
+  );
+};
+
 /** One studio becoming two products: the homepage's signature dot transition. */
 export const DotSplit = ({ className }: { className?: string }) => {
   const { ref, inView } = useInView<HTMLDivElement>();
