@@ -36,6 +36,28 @@ const Navbar = () => {
   });
 
   useEffect(() => {
+    const w = window as unknown as { __loumilabLogoAnimationComplete?: boolean };
+    if (!animateLogo || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      w.__loumilabLogoAnimationComplete = true;
+      window.dispatchEvent(new Event("loumilab:logo-complete"));
+      return;
+    }
+    w.__loumilabLogoAnimationComplete = false;
+    const fallback = window.setTimeout(() => {
+      w.__loumilabLogoAnimationComplete = true;
+      window.dispatchEvent(new Event("loumilab:logo-complete"));
+    }, 4300);
+    return () => window.clearTimeout(fallback);
+  }, [animateLogo]);
+
+  const completeLogoAnimation = () => {
+    const w = window as unknown as { __loumilabLogoAnimationComplete?: boolean };
+    if (w.__loumilabLogoAnimationComplete) return;
+    w.__loumilabLogoAnimationComplete = true;
+    window.dispatchEvent(new Event("loumilab:logo-complete"));
+  };
+
+  useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -104,7 +126,7 @@ const Navbar = () => {
     >
       <div className="section-container flex h-16 items-center justify-between lg:h-20">
         <Link to="/" onClick={handleLogoClick} className="flex items-center" aria-label="Loumilab home">
-          <Wordmark size="sm" animated={animateLogo} />
+          <Wordmark size="sm" animated={animateLogo} onAnimationComplete={completeLogoAnimation} />
         </Link>
 
 

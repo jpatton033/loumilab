@@ -6,6 +6,7 @@ interface WordmarkProps {
   size?: WordmarkSize;
   animated?: boolean;
   className?: string;
+  onAnimationComplete?: () => void;
 }
 
 const sizeMap: Record<WordmarkSize, { root: string; lead: string; dot: string }> = {
@@ -15,7 +16,7 @@ const sizeMap: Record<WordmarkSize, { root: string; lead: string; dot: string }>
 
 const letters = ["L", "o", "u", "m", "i", "l", "a", "b"];
 
-const Wordmark = ({ size = "sm", animated = false, className }: WordmarkProps) => {
+const Wordmark = ({ size = "sm", animated = false, className, onAnimationComplete }: WordmarkProps) => {
   const s = sizeMap[size];
 
   return (
@@ -27,6 +28,9 @@ const Wordmark = ({ size = "sm", animated = false, className }: WordmarkProps) =
         className,
       )}
       aria-hidden="true"
+      onAnimationEnd={(event) => {
+        if (event.animationName === "brandShine") onAnimationComplete?.();
+      }}
     >
       {letters.map((letter, index) => (
         <span

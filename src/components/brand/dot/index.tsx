@@ -19,10 +19,22 @@ export const useInView = <T extends Element>(rootMargin = "0px 0px -15% 0px") =>
 };
 
 /** Page-level identity cue: a dot arrives, draws a short thread, then settles. */
-export const DotMarker = ({ className }: { className?: string }) => {
+export const DotMarker = ({ className, synchronized = false }: { className?: string; synchronized?: boolean }) => {
   const { ref, inView } = useInView<HTMLDivElement>("0px 0px -5% 0px");
+  const [logoComplete, setLogoComplete] = useState(() => {
+    if (!synchronized || typeof window === "undefined") return !synchronized;
+    const w = window as unknown as { __loumilabLogoAnimationComplete?: boolean };
+    return w.__loumilabLogoAnimationComplete === true;
+  });
+  useEffect(() => {
+    if (!synchronized || logoComplete) return;
+    const onComplete = () => setLogoComplete(true);
+    window.addEventListener("loumilab:logo-complete", onComplete);
+    return () => window.removeEventListener("loumilab:logo-complete", onComplete);
+  }, [logoComplete, synchronized]);
+  const active = inView && logoComplete;
   return (
-    <div ref={ref} aria-hidden="true" className={cn("dot-marker pointer-events-none", inView && "ldot-in", className)}>
+    <div ref={ref} aria-hidden="true" className={cn("dot-marker pointer-events-none", synchronized && "dot-marker-synchronized", active && "ldot-in", className)}>
       <span className="dot-marker-thread" />
       <span className="dot-marker-core" />
     </div>
