@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
 import { productGroups } from "@/data/products";
 import Wordmark from "@/components/brand/Wordmark";
+import { DotReveal } from "@/components/brand/dot";
 
 
 const Footer = () => (
@@ -10,7 +11,7 @@ const Footer = () => (
       <div className="grid grid-cols-1 gap-12 md:grid-cols-4">
         <div>
           <Link to="/" className="mb-4 flex items-center" aria-label="Loumilab home">
-            <Wordmark size="md" />
+            <DotReveal><Wordmark size="md" /></DotReveal>
           </Link>
 
           <p className="max-w-xs leading-relaxed text-muted-foreground">

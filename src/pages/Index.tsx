@@ -5,6 +5,7 @@ import SEOHead from "@/components/SEOHead";
 import Reveal from "@/components/Reveal";
 import ArticleCard from "@/components/kc/ArticleCard";
 import { PeopleSequence } from "@/components/brand/story";
+import { BrandDot, DotSplit, DotThread } from "@/components/brand/dot";
 import { GridTile, MoreLink, ProductTile, Statement, TileActions } from "@/components/brand/apple/Tiles";
 import { usePublishedArticles } from "@/lib/kc/queries";
 import heroBuild from "@/assets/people/studio/hero-build.jpg";
@@ -49,7 +50,7 @@ const Index = () => {
       <section className="overflow-hidden pt-12 lg:pt-16">
         <div className="section-container text-center">
           <h1 className="mx-auto max-w-4xl text-[1.375rem] font-normal leading-[1.5] tracking-normal text-foreground/70 text-balance lg:text-[1.875rem]">
-            Loumilab is a technology studio creating websites, custom software, and secure digital solutions that help businesses operate, connect, and grow.
+            Loumilab is a technology studio creating websites, custom software, and secure digital solutions that help businesses operate, connect, and grow<span className="sr-only">.</span><BrandDot variant="hero" />
           </h1>
           <TileActions primary={{ label: "Start a Project", to: "/contact" }} secondary={{ label: "Explore products", to: "/products" }} className="mt-8" />
         </div>
@@ -61,8 +62,9 @@ const Index = () => {
       </section>
 
       {/* Products */}
+      <DotSplit className="mt-16 lg:mt-24" />
       <ProductTile
-        className="mt-16 lg:mt-24"
+        className="mt-6"
         tone="subtle"
         eyebrow="Loumilab Orders"
         title="Sell anywhere. Take orders in one place."
@@ -87,12 +89,13 @@ const Index = () => {
       </Statement>
 
       {/* Capabilities grid */}
+      <DotThread className="mb-8" />
       <section className="pb-16 lg:pb-24">
         <div className="section-container grid gap-4 md:grid-cols-2">
-          <GridTile eyebrow="Design" title="Products people enjoy using." line="Brand-led websites and interfaces built around clarity." image={designer} alt="A designer sketching app screens on a tablet" links={{ primary: { label: "Learn more", to: "/services" } }} />
-          <GridTile eyebrow="Build" title="Software that holds up." line="Web apps and platforms that are fast and ready to grow." image={engineer} alt="An engineer reviewing code on two monitors" links={{ primary: { label: "Learn more", to: "/services" } }} />
-          <GridTile eyebrow="Innovate" title="New ideas, shipped." line="Automation and AI where it removes real work." image={collaboration} alt="A founder and designer working through ideas at a laptop" links={{ primary: { label: "Learn more", to: "/services" } }} />
-          <GridTile eyebrow="Secure" title="Security from day one." line="Secure architecture and reviews, built in — not bolted on." image={studioTeam} alt="The Loumilab team reviewing work together" links={{ primary: { label: "Learn more", to: "/services" }, secondary: { label: "How we work", to: "/how-we-work" } }} />
+          <GridTile eyebrow="Design" eyebrowDot="design" title="Products people enjoy using." line="Brand-led websites and interfaces built around clarity." image={designer} alt="A designer sketching app screens on a tablet" links={{ primary: { label: "Learn more", to: "/services" } }} />
+          <GridTile eyebrow="Build" eyebrowDot="build" title="Software that holds up." line="Web apps and platforms that are fast and ready to grow." image={engineer} alt="An engineer reviewing code on two monitors" links={{ primary: { label: "Learn more", to: "/services" } }} />
+          <GridTile eyebrow="Innovate" eyebrowDot="innovate" title="New ideas, shipped." line="Automation and AI where it removes real work." image={collaboration} alt="A founder and designer working through ideas at a laptop" links={{ primary: { label: "Learn more", to: "/services" } }} />
+          <GridTile eyebrow="Secure" eyebrowDot="secure" title="Security from day one." line="Secure architecture and reviews, built in — not bolted on." image={studioTeam} alt="The Loumilab team reviewing work together" links={{ primary: { label: "Learn more", to: "/services" }, secondary: { label: "How we work", to: "/how-we-work" } }} />
         </div>
       </section>
 
