@@ -212,7 +212,7 @@ const ResourcesIndex = () => {
             <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {latest.map((a, i) => (
                 <Reveal key={a.id} delay={i * 50} className="h-full">
-                  <ArticleCard article={a} />
+                  <ArticleCard article={a} actionMarker={i === 0} />
                 </Reveal>
               ))}
             </div>

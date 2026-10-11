@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 export type TileLink = { label: string; to: string; external?: boolean };
 
 /** Apple-style pair of actions: filled pill + outlined pill. */
-export const TileActions = ({ primary, secondary, className }: { primary: TileLink; secondary?: TileLink; className?: string }) => {
+export const TileActions = ({ primary, secondary, className, actionMarker = false }: { primary: TileLink; secondary?: TileLink; className?: string; actionMarker?: boolean }) => {
   const base = "inline-flex items-center gap-1 rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.97]";
   const render = (l: TileLink, cls: string) =>
     l.external ? (
@@ -17,7 +17,7 @@ export const TileActions = ({ primary, secondary, className }: { primary: TileLi
     );
   return (
     <div className={cn("flex flex-wrap items-center justify-center gap-3", className)}>
-      {render(primary, "bg-accent text-accent-foreground hover:brightness-110 hover:shadow-[var(--shadow-accent-hover)]")}
+      {render(primary, cn("bg-accent text-accent-foreground hover:brightness-110 hover:shadow-[var(--shadow-accent-hover)]", actionMarker && "dot-action"))}
       {secondary && render(secondary, "border border-accent text-accent hover:bg-accent-soft")}
     </div>
   );

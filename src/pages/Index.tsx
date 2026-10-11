@@ -148,7 +148,7 @@ const Index = () => {
       <Statement line="Let's turn the idea into something real.">Have something worth building?</Statement>
       <DotThread reverse className="-mt-10 mb-6 lg:-mt-14" />
       <div className="-mt-10 pb-24 lg:-mt-16">
-        <TileActions primary={{ label: "Start a Project", to: "/contact" }} secondary={{ label: "Contact Loumilab", to: "/contact" }} />
+        <TileActions primary={{ label: "Start a Project", to: "/contact" }} secondary={{ label: "Contact Loumilab", to: "/contact" }} actionMarker />
       </div>
     </Layout>
   );
