@@ -19,7 +19,7 @@ const ProductCard = ({ product, className }: { product: ProductEntry; className?
       <h3 className="mt-5 font-display text-2xl font-semibold lg:text-3xl">{product.name}</h3>
       <p className="mt-2 font-display text-lg text-foreground/80">{product.tagline}</p>
       <p className="mt-4 max-w-xl leading-relaxed text-muted-foreground">{product.description}</p>
-      <span className="mt-8 inline-flex items-center gap-2 font-display text-sm font-semibold text-foreground">
+      <span className="dot-action mt-8 inline-flex items-center gap-2 font-display text-sm font-semibold text-foreground">
         {product.cta}
         {product.external ? (
           <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />

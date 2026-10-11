@@ -30,7 +30,9 @@ const ArticleCard = ({ article }: { article: KcArticleWithRelations }) => {
             <Eye size={13} /> {article.view_count}
           </span>
         )}
-        <ArrowRight size={15} className="ml-auto text-accent transition-transform group-hover:translate-x-1" />
+        <span className="dot-action ml-auto inline-flex items-center text-accent">
+          <ArrowRight size={15} />
+        </span>
       </div>
 
       {tags.length > 0 && (

@@ -84,7 +84,7 @@ export const Statement = ({ children, line }: { children: ReactNode; line?: stri
 );
 
 export const MoreLink = ({ to, children }: { to: string; children: ReactNode }) => (
-  <Link to={to} className="dot-direction inline-flex items-center gap-1 font-display text-base font-semibold text-accent hover:underline underline-offset-4">
+  <Link to={to} className="dot-action inline-flex items-center gap-1 font-display text-base font-semibold text-accent hover:underline underline-offset-4">
     {children} <ChevronRight size={18} />
   </Link>
 );

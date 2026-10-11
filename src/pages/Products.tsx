@@ -8,6 +8,8 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { productGroups, allProducts } from "@/data/products";
 import { DotMarker, DotThread } from "@/components/brand/dot";
+import { ImmersiveImage } from "@/components/brand/story";
+import collaboration from "@/assets/people/studio/collaboration.jpg";
 
 const productsJsonLd = {
   "@context": "https://schema.org",
@@ -52,6 +54,13 @@ const Products = () => (
     </section>
 
     <DotThread />
+
+    <ImmersiveImage
+      className="pt-2"
+      image={{ src: collaboration, alt: "A product team shaping a new digital idea together" }}
+      caption="Ideas become products through careful design, engineering, and iteration."
+      dotLens
+    />
 
     <section className="section-padding pt-8">
       <div className="section-container space-y-16">

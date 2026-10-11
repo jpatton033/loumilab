@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { productGroups } from "@/data/products";
 import { DotMarker, DotThread } from "@/components/brand/dot";
+import { ImmersiveImage } from "@/components/brand/story";
+import studioTeam from "@/assets/people/studio-team.jpg";
 
 const values = [
   {
@@ -54,6 +56,13 @@ const About = () => (
     </section>
 
     <DotThread />
+
+    <ImmersiveImage
+      className="pt-2"
+      image={{ src: studioTeam, alt: "The Loumilab team reviewing digital product work together" }}
+      caption="One team, from the first decision through what comes next."
+      dotLens
+    />
 
     <section className="section-padding pt-8">
       <div className="section-container">
