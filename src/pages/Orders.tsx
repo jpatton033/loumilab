@@ -46,6 +46,7 @@ import { dashboardMetrics, demoOrders, ORDER_STATUSES } from "@/data/orders/dash
 import { audiences } from "@/data/orders/audiences";
 import { pricingHeading, pricingPlans } from "@/data/orders/pricing";
 import { ordersHeroSlides } from "@/data/orders/hero-slides";
+import { DotMarker, DotThread } from "@/components/brand/dot";
 
 const steps = [
   {
@@ -152,6 +153,7 @@ const Orders = () => {
         <div className="section-container relative">
           <div className="grid items-center gap-14 lg:grid-cols-2 lg:gap-16">
             <div>
+              <DotMarker />
               <Eyebrow>Loumilab Orders</Eyebrow>
               <h1 className="mt-5 font-hero text-[clamp(2.5rem,7vw,4.75rem)] font-semibold leading-[0.98] tracking-[-0.03em]">
                 Your business.
@@ -223,9 +225,12 @@ const Orders = () => {
         alt="A baker boxing a fresh pastry order, with incoming orders on a tablet beside her"
         eyebrow="Built for real merchants"
         title="Spend the morning baking, not answering DMs."
+        dotLens
       >
         <p>Orders arrive in one place with pickup times, notes and payment already handled — so you can get back to the work you love.</p>
       </PhotoSplit>
+
+      <DotThread reverse />
 
       <PeopleSequence
         eyebrow="From kitchen to customer"
@@ -517,7 +522,7 @@ const Orders = () => {
           </Reveal>
           <Reveal delay={340} className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
             <Button size="lg" asChild className="rounded-full">
-              <Link to="/orders/get-started">
+              <Link to="/orders/get-started" className="dot-action">
                 Create Your Store <ArrowRight size={18} />
               </Link>
             </Button>

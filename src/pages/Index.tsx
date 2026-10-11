@@ -5,7 +5,7 @@ import SEOHead from "@/components/SEOHead";
 import Reveal from "@/components/Reveal";
 import ArticleCard from "@/components/kc/ArticleCard";
 import { PeopleSequence } from "@/components/brand/story";
-import { DotImageJourney, DotSplit } from "@/components/brand/dot";
+import { DotImageJourney, DotMarker, DotSplit, DotThread } from "@/components/brand/dot";
 import { GridTile, MoreLink, ProductTile, Statement, TileActions } from "@/components/brand/apple/Tiles";
 import { usePublishedArticles } from "@/lib/kc/queries";
 import heroBuild from "@/assets/people/studio/hero-build.jpg";
@@ -49,6 +49,7 @@ const Index = () => {
       {/* Hero */}
       <section className="overflow-hidden pt-12 lg:pt-16">
         <div className="section-container text-center">
+          <DotMarker className="mx-auto" />
           <h1 className="mx-auto max-w-4xl text-[1.375rem] font-normal leading-[1.5] tracking-normal text-foreground/70 text-balance lg:text-[1.875rem]">
             Loumilab is a technology studio creating websites, custom software, and secure digital solutions that help businesses operate, connect, and grow.
           </h1>
@@ -145,6 +146,7 @@ const Index = () => {
 
       {/* Closing */}
       <Statement line="Let's turn the idea into something real.">Have something worth building?</Statement>
+      <DotThread reverse className="-mt-10 mb-6 lg:-mt-14" />
       <div className="-mt-10 pb-24 lg:-mt-16">
         <TileActions primary={{ label: "Start a Project", to: "/contact" }} secondary={{ label: "Contact Loumilab", to: "/contact" }} />
       </div>

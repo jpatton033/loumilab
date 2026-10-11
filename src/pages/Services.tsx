@@ -7,6 +7,7 @@ import collaboration from "@/assets/people/studio/collaboration.jpg";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, PenTool, Code2, Sparkles, ShieldCheck, RefreshCw } from "lucide-react";
+import { DotMarker, DotThread } from "@/components/brand/dot";
 
 const pillars = [
   {
@@ -83,6 +84,7 @@ const Services = () => (
     <section className="relative overflow-hidden pt-16 pb-16 lg:pt-24 lg:pb-20">
       <div className="pointer-events-none absolute inset-0 hero-wash" aria-hidden="true" />
       <div className="section-container relative max-w-3xl">
+        <DotMarker />
         <Eyebrow>Services</Eyebrow>
         <h1 className="mt-5 text-4xl font-semibold leading-tight lg:text-6xl">
           Everything it takes to design, build, and secure it.
@@ -129,7 +131,9 @@ const Services = () => (
       image={{ src: collaboration, alt: "Two people reviewing a product design together" }}
       label="After launch"
       title="The work keeps going with the people who use it."
+      dotLens
     />
+    <DotThread reverse />
 
     {/* Ongoing partnership */}
     <section className="section-padding border-t border-border bg-surface-subtle">
@@ -150,7 +154,7 @@ const Services = () => (
               features, tightening performance, and keeping security current. We stay available as a
               long-term technology partner rather than handing over files and disappearing.
             </p>
-            <Link to="/how-we-work" className="mt-8 inline-flex items-center gap-2 font-display text-sm font-semibold hover:text-accent">
+            <Link to="/how-we-work" className="dot-action mt-8 inline-flex items-center gap-2 font-display text-sm font-semibold hover:text-accent">
               See how we work <ArrowRight size={16} />
             </Link>
           </Reveal>

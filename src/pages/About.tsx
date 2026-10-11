@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { productGroups } from "@/data/products";
+import { DotMarker, DotThread } from "@/components/brand/dot";
 
 const values = [
   {
@@ -38,6 +39,7 @@ const About = () => (
     <section className="relative overflow-hidden pt-16 pb-16 lg:pt-24 lg:pb-20">
       <div className="pointer-events-none absolute inset-0 hero-wash" aria-hidden="true" />
       <div className="section-container relative max-w-3xl">
+        <DotMarker />
         <Eyebrow>About</Eyebrow>
         <h1 className="mt-5 text-4xl font-semibold leading-tight lg:text-6xl">
           A technology partner and a product builder.
@@ -50,6 +52,8 @@ const About = () => (
         </p>
       </div>
     </section>
+
+    <DotThread />
 
     <section className="section-padding pt-8">
       <div className="section-container">
@@ -89,7 +93,7 @@ const About = () => (
             </div>
           ))}
         </div>
-        <Link to="/products" className="mt-10 inline-flex items-center gap-2 font-display text-sm font-semibold hover:text-accent">
+        <Link to="/products" className="dot-action mt-10 inline-flex items-center gap-2 font-display text-sm font-semibold hover:text-accent">
           Explore the ecosystem <ArrowRight size={16} />
         </Link>
       </div>
@@ -103,7 +107,7 @@ const About = () => (
             Whether you&apos;re hiring a studio or joining one, we&apos;d like to hear from you.
           </p>
           <Button size="lg" asChild className="mt-8">
-            <Link to="/contact">
+            <Link to="/contact" className="dot-action">
               Get in Touch <ArrowRight size={18} />
             </Link>
           </Button>

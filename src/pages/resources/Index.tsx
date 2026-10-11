@@ -12,6 +12,7 @@ import ArticleCard from "@/components/kc/ArticleCard";
 import NewsletterSignup from "@/components/kc/NewsletterSignup";
 import { usePublishedArticles, useSectionCounts, useSections } from "@/lib/kc/queries";
 import { ArrowRight, Search, Flame } from "lucide-react";
+import { DotLens, DotMarker, DotThread } from "@/components/brand/dot";
 
 const TITLE = "Technology, Business & Security Resources | Loumilab";
 const DESCRIPTION =
@@ -56,6 +57,7 @@ const ResourcesIndex = () => {
       <section className="border-b border-border bg-surface-subtle">
         <div className="section-container pt-10 pb-20 lg:pt-14 lg:pb-28">
           <Reveal className="max-w-3xl">
+            <DotMarker />
             <Eyebrow>Knowledge Center</Eyebrow>
             <h1 className="mt-5 text-4xl font-semibold leading-[1.05] tracking-tight lg:text-6xl">
               Guides for building, selling, and securing a modern business.
@@ -65,8 +67,9 @@ const ResourcesIndex = () => {
               operations, technology and AI, digital presence, and security.
             </p>
           </Reveal>
-          <Reveal delay={120} className="photo-frame mt-12 aspect-[16/7]">
+          <Reveal delay={120} className="photo-frame relative mt-12 aspect-[16/7]">
             <img src={resourcesReading} alt="An entrepreneur taking notes from a guide at her kitchen table" width={1600} height={912} decoding="async" className="h-full w-full object-cover" />
+            <DotLens />
           </Reveal>
 
           <Reveal delay={80} className="mt-10 max-w-xl">
@@ -83,6 +86,8 @@ const ResourcesIndex = () => {
           </Reveal>
         </div>
       </section>
+
+      <DotThread />
 
       {query.trim() && (
         <section className="section-padding">
@@ -198,7 +203,7 @@ const ResourcesIndex = () => {
                 right direction in the meantime.
               </p>
               <Button asChild className="mt-6">
-                <Link to="/contact">
+                  <Link to="/contact" className="dot-action">
                   Get in touch <ArrowRight size={16} />
                 </Link>
               </Button>
