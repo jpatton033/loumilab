@@ -48,12 +48,9 @@ const Index = () => {
       {/* Hero */}
       <section className="overflow-hidden pt-12 lg:pt-16">
         <div className="section-container text-center">
-          <h1 className="mx-auto max-w-5xl font-hero text-[clamp(3rem,9vw,7.5rem)] font-semibold leading-[0.95] tracking-[-0.04em]">
-            We build what&apos;s next.
+          <h1 className="mx-auto max-w-5xl font-hero text-[clamp(1.75rem,3.6vw,3.25rem)] font-semibold leading-[1.12] tracking-[-0.03em] text-balance">
+            Loumilab is a technology studio creating websites, custom software, and secure digital solutions that help businesses operate, connect, and grow.
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-foreground/70 lg:text-2xl">
-            Loumilab designs, builds, launches and secures digital products — for clients and for ourselves.
-          </p>
           <TileActions primary={{ label: "Start a store", to: "/contact" }} secondary={{ label: "Explore products", to: "/products" }} className="mt-8" />
         </div>
         <div className="section-container mt-12 lg:mt-16">
