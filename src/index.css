@@ -429,8 +429,8 @@
 .dot-marker-core { position: absolute; top: calc(50% - var(--dot-page) / 2); left: 0; width: var(--dot-page); height: var(--dot-page); border-radius: 9999px; background: hsl(var(--accent)); opacity: 0; }
 .dot-marker.ldot-in .dot-marker-thread { animation: dotMarkerThread 1.25s var(--ease-brand) both; }
 .dot-marker.ldot-in .dot-marker-core { animation: dotMarkerCore 1.25s var(--ease-brand) both; }
-@keyframes dotMarkerThread { 0% { opacity: 0; transform: scaleX(0); } 25%,72% { opacity: 1; } 78% { transform: scaleX(1); } 100% { opacity: 0; transform: scaleX(1); } }
-@keyframes dotMarkerCore { 0% { opacity: 0; transform: scale(.35); } 18% { opacity: 1; transform: none; } 78%,100% { opacity: 1; transform: translateX(calc(5.5rem - var(--dot-page))); } }
+@keyframes dotMarkerThread { 0% { opacity: 0; transform: scaleX(0); } 25%,68% { opacity: 1; } 76% { transform: scaleX(1); } 100% { opacity: 0; transform: scaleX(1); } }
+@keyframes dotMarkerCore { 0% { opacity: 0; transform: translateX(0) scale(.35); } 18% { opacity: 1; transform: translateX(0) scale(1); } 72% { opacity: 1; transform: translateX(calc((5.5rem - var(--dot-page)) / 2)) scale(1); } 100% { opacity: 0; transform: translateX(calc((5.5rem - var(--dot-page)) / 2)) scale(.72); } }
 
 /* Thread: a short handoff between related sections. */
 .dot-thread { position: relative; width: min(11rem, 42vw); height: 2.5rem; margin: 0 auto; overflow: hidden; }
@@ -499,7 +499,7 @@
 @media (max-width: 640px) {
   :root { --dot-page: 10px; --dot-section: 8px; }
   .dot-marker { width: 4.25rem; }
-  @keyframes dotMarkerCore { 0% { opacity: 0; transform: scale(.35); } 18% { opacity: 1; transform: none; } 78%,100% { opacity: 1; transform: translateX(calc(4.25rem - var(--dot-page))); } }
+  @keyframes dotMarkerCore { 0% { opacity: 0; transform: translateX(0) scale(.35); } 18% { opacity: 1; transform: translateX(0) scale(1); } 72% { opacity: 1; transform: translateX(calc((4.25rem - var(--dot-page)) / 2)) scale(1); } 100% { opacity: 0; transform: translateX(calc((4.25rem - var(--dot-page)) / 2)) scale(.72); } }
   .dot-lens-ring { left: calc(50% - 2.75rem); top: calc(50% - 2.75rem); width: 5.5rem; height: 5.5rem; }
   @keyframes dotLensCore { 0% { opacity: 0; transform: scale(.3); } 14%,28% { opacity: 1; transform: none; } 48%,100% { opacity: 0; transform: translate(30vw,-10vh) scale(6); } }
   .dot-split { width: 12rem; }
@@ -512,6 +512,7 @@
 @media (prefers-reduced-motion: reduce) {
   .dot-marker *, .dot-thread *, .dot-lens *, .dot-split *, .dot-image-journey * { animation: none !important; }
   .dot-marker-core { opacity: 1; transform: none; }
+  .dot-marker-synchronized .dot-marker-core { opacity: 0; }
   .dot-thread-core { opacity: 1; transform: none; }
   .dot-lens { display: none; }
   .dot-split-source { opacity: 1; transform: none; }
