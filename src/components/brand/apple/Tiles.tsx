@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { ArrowUpRight, ChevronRight } from "lucide-react";
 import Reveal from "@/components/Reveal";
 import { cn } from "@/lib/utils";
-import { BrandDot, DotText, type DotVariant } from "@/components/brand/dot";
 
 export type TileLink = { label: string; to: string; external?: boolean };
 
@@ -14,7 +13,7 @@ export const TileActions = ({ primary, secondary, className }: { primary: TileLi
     l.external ? (
       <a href={l.to} target="_blank" rel="noopener noreferrer" className={cn(base, cls)}>{l.label} <ArrowUpRight size={15} /></a>
     ) : (
-      <Link to={l.to} className={cn(base, "dot-hover", cls)}>{l.label}</Link>
+      <Link to={l.to} className={cn(base, cls)}>{l.label}</Link>
     );
   return (
     <div className={cn("flex flex-wrap items-center justify-center gap-3", className)}>
@@ -34,7 +33,7 @@ export const ProductTile = ({
   <section className={cn("overflow-hidden pt-14 lg:pt-20", tone === "subtle" ? "bg-surface-subtle" : "bg-background", className)}>
     <Reveal className="section-container text-center">
       <p className="font-display text-sm font-semibold tracking-wide text-accent">{eyebrow}</p>
-      <h2 className="mx-auto mt-3 max-w-4xl font-hero text-[clamp(2.25rem,6vw,4.5rem)] font-semibold leading-[1.02] tracking-[-0.03em]"><DotText>{title}</DotText></h2>
+      <h2 className="mx-auto mt-3 max-w-4xl font-hero text-[clamp(2.25rem,6vw,4.5rem)] font-semibold leading-[1.02] tracking-[-0.03em]">{title}</h2>
       <p className="mx-auto mt-4 max-w-xl text-lg text-foreground/70 lg:text-2xl">{line}</p>
       <TileActions primary={primary} secondary={secondary} className="mt-7" />
     </Reveal>
@@ -52,14 +51,14 @@ export const ProductTile = ({
 
 /** Half-width tile used in the 2×2 grid. */
 export const GridTile = ({
-  eyebrow, eyebrowDot, title, line, image, alt, links, children, className,
+  eyebrow, title, line, image, alt, links, children, className,
 }: {
-  eyebrow: string; eyebrowDot?: DotVariant; title: string; line?: string; image?: string; alt?: string;
+  eyebrow: string; title: string; line?: string; image?: string; alt?: string;
   links: { primary: TileLink; secondary?: TileLink }; children?: ReactNode; className?: string;
 }) => (
-  <Reveal className={cn("dot-card group flex flex-col overflow-hidden rounded-3xl border border-border bg-surface-subtle text-center transition-shadow duration-500 hover:shadow-[var(--shadow-accent-hover)]", className)}>
+  <Reveal className={cn("group flex flex-col overflow-hidden rounded-3xl border border-border bg-surface-subtle text-center transition-shadow duration-500 hover:shadow-[var(--shadow-accent-hover)]", className)}>
     <div className="px-6 pt-10 lg:pt-14">
-      <p className="font-display text-sm font-semibold tracking-wide text-accent">{eyebrow}{eyebrowDot && <><span className="sr-only">.</span><BrandDot variant={eyebrowDot} /></>}</p>
+      <p className="font-display text-sm font-semibold tracking-wide text-accent">{eyebrow}</p>
       <h3 className="mx-auto mt-2 max-w-md font-hero text-3xl font-semibold leading-tight tracking-[-0.02em] lg:text-4xl">{title}</h3>
       {line && <p className="mx-auto mt-3 max-w-sm text-base text-foreground/70 lg:text-lg">{line}</p>}
       <TileActions {...links} className="mt-6" />
@@ -85,7 +84,7 @@ export const Statement = ({ children, line }: { children: ReactNode; line?: stri
 );
 
 export const MoreLink = ({ to, children }: { to: string; children: ReactNode }) => (
-  <Link to={to} className="dot-link inline-flex items-center gap-1 font-display text-base font-semibold text-accent hover:underline underline-offset-4">
+  <Link to={to} className="dot-direction inline-flex items-center gap-1 font-display text-base font-semibold text-accent hover:underline underline-offset-4">
     {children} <ChevronRight size={18} />
   </Link>
 );

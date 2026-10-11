@@ -10,4 +10,4 @@
 - Per-page SEO (title, description, canonical, og/twitter, WebPage + BreadcrumbList JSON-LD) goes only through SEOHead props; article overrides live on kc_articles SEO columns with automatic fallbacks — one place for head tags.
 - Raw-HTML SEO for public routes comes from scripts/prerender-heads.ts (postbuild), which writes dist/<route>/index.html with per-route head tags and an sr-only H1; add new public routes to its staticMeta and to generate-sitemap — crawlers that skip JS otherwise see only the homepage head.
 - Header logo motion is an optional `Wordmark` state that plays once per browser session and respects reduced motion — keeps the canonical logo reusable and avoids a loading-screen dependency.
-- The brand dot motion system (BrandDot, DotText, DotSplit, DotThread, DotReveal) lives in src/components/brand/dot with styles in index.css under "Loumilab Dot Motion System" — one reusable, reduced-motion-safe signature instead of ad-hoc dot effects.
+- The brand dot motion system lives in src/components/brand/dot and is limited to 2–3 meaningful motion moments per page; never replace ordinary punctuation with it — rarity keeps the logo element distinctive.
