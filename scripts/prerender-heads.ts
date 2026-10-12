@@ -66,7 +66,7 @@ async function dynamicMeta(): Promise<Meta[]> {
   const key = env.VITE_SUPABASE_PUBLISHABLE_KEY;
   if (!url || !key) return [];
   type Art = { slug: string; title: string; excerpt?: string | null; seo_title?: string | null; seo_description?: string | null; og_image_url?: string | null; cover_image_url?: string | null; kc_sections: { slug: string } | null };
-  const [sections, articles, stores, local] = await Promise.all([
+  const [sections, articles, stores, local, issues] = await Promise.all([
     rest<{ slug: string; title: string; description?: string | null }>(url, key, "kc_sections?select=slug,title,description&is_visible=eq.true"),
     rest<Art>(url, key, "kc_articles?select=*,kc_sections(slug)&status=eq.published&noindex=eq.false&canonical_url=is.null"),
     rest<{ slug: string; name?: string | null; tagline?: string | null; description?: string | null }>(url, key, "merchant_storefronts?select=*&is_published=eq.true&status=eq.published"),

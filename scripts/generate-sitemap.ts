@@ -80,7 +80,7 @@ async function dynamicEntries(): Promise<Entry[]> {
   const key = env.VITE_SUPABASE_PUBLISHABLE_KEY;
   if (!url || !key) return [];
 
-  const [stores, articles, sections, local] = await Promise.all([
+  const [stores, articles, sections, local, dotIssues] = await Promise.all([
     rest<{ slug: string; updated_at?: string }>(
       url,
       key,
