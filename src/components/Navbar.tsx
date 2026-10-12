@@ -7,12 +7,15 @@ import { productGroups } from "@/data/products";
 import Wordmark from "@/components/brand/Wordmark";
 
 
-const navLinks = [
+type NavItem = { label: string; to: string; prefix?: boolean };
+
+const navLinks: NavItem[] = [
   { label: "Services", to: "/services" },
   { label: "Orders", to: "/orders" },
   { label: "Work", to: "/work" },
   { label: "About", to: "/about" },
   { label: "Resources", to: "/resources" },
+  { label: "The Dot.", to: "/the-dot", prefix: true },
   { label: "Contact", to: "/contact" },
 ];
 
@@ -224,17 +227,22 @@ const Navbar = () => {
             )}
           </div>
 
-          {navLinks.slice(1).map((link) => (
-            <Link
-              key={link.to}
-              to={link.to}
-              className={`text-sm font-medium transition-colors ${
-                location.pathname === link.to ? "text-accent" : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.slice(1).map((link) => {
+            const active = link.prefix
+              ? location.pathname.startsWith(link.to)
+              : location.pathname === link.to;
+            return (
+              <Link
+                key={link.to}
+                to={link.to}
+                className={`text-sm font-medium transition-colors ${
+                  active ? "text-accent" : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
