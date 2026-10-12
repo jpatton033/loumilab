@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { FunctionsHttpError } from "@supabase/supabase-js";
 import { uploadKcMedia } from "@/lib/kc/queries";
 import { slugify } from "@/lib/kc/types";
 import { issueMonthLabel, useAdminIssues, type DotIssue } from "@/lib/thedot/queries";
@@ -154,9 +155,24 @@ const TheDotEditor = () => {
     }
 
     setForm((f) => ({ ...f, status, slug }));
+    toast({ title: status === "published" ? "Published" : "Saved" });
+
+    // Automatic email to all active subscribers, once per issue.
+    const issueId = data?.id ?? id;
+    if (status === "published" && issueId && !existing?.emailed_at) {
+      const { data: blast, error: blastErr } = await supabase.functions.invoke("dot-issue-blast", {
+        body: { issue_id: issueId },
+      });
+      if (blastErr) {
+        const details = blastErr instanceof FunctionsHttpError ? await blastErr.context.text() : blastErr.message;
+        toast({ title: "Published, but the email didn't send", description: details.slice(0, 240), variant: "destructive" });
+      } else if (blast?.sent !== undefined) {
+        toast({ title: `Emailed to ${blast.sent} subscriber${blast.sent === 1 ? "" : "s"}` });
+      }
+    }
+
     setSaving(false);
     qc.invalidateQueries({ queryKey: ["dot"] });
-    toast({ title: status === "published" ? "Published" : "Saved" });
     if (isNew && data?.id) navigate(`/admin/the-dot/${data.id}`, { replace: true });
   };
 
