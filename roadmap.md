@@ -3,7 +3,7 @@
 ## The Dot. email refinements
 - [x] Shorten issue emails to title, subtitle and full-issue link while preserving the brand frame.
 - [x] Add the permanent subscription invitation to Mail preview and outgoing emails.
-- [ ] Verify rendered emails and send the two admin-only tests.
+- [x] Verify rendered emails and send the two admin-only tests.
 
 ## Payments
 - [ ] Complete the Stripe Connect platform profile (loss liability) in the Stripe dashboard — owner action, blocks merchant onboarding.
