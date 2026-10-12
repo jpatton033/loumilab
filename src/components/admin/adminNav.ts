@@ -1,5 +1,6 @@
 import {
   BookOpen,
+  Dot,
   FileClock,
   Inbox,
   LayoutDashboard,
@@ -60,6 +61,7 @@ export const adminNav: AdminNavGroup[] = [
         icon: BookOpen,
         match: ["/admin/knowledge"],
       },
+      { title: "The Dot.", url: "/admin/the-dot", icon: Dot, match: ["/admin/the-dot"] },
       { title: "Hero Showcase", url: "/admin/hero", icon: Sparkles },
       { title: "Newsletter", url: "/admin/newsletter", icon: Mail },
     ],

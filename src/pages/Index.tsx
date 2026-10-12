@@ -8,6 +8,7 @@ import { PeopleSequence } from "@/components/brand/story";
 import { DotImageJourney, DotMarker, DotSplit, DotThread } from "@/components/brand/dot";
 import { GridTile, MoreLink, ProductTile, Statement, TileActions } from "@/components/brand/apple/Tiles";
 import { usePublishedArticles } from "@/lib/kc/queries";
+import TheDotSignup from "@/components/thedot/TheDotSignup";
 import heroBuild from "@/assets/people/studio/hero-build.jpg";
 import designer from "@/assets/people/studio/designer.jpg";
 import engineer from "@/assets/people/studio/engineer.jpg";
@@ -146,6 +147,23 @@ const Index = () => {
           </div>
         </section>
       )}
+
+      {/* The Dot. */}
+      <section className="section-padding border-t border-border">
+        <div className="section-container">
+          <Reveal className="max-w-2xl">
+            <TheDotSignup
+              source="home"
+              variant="inline"
+              heading="Ideas, technology, and what's next."
+              description="The Dot. is our brief on the ideas, technology, and shifts shaping how businesses work, build, and grow."
+            />
+          </Reveal>
+          <Reveal delay={100} className="mt-5">
+            <MoreLink to="/the-dot">Visit The Dot.</MoreLink>
+          </Reveal>
+        </div>
+      </section>
 
       {/* Closing */}
       <Statement line="Let's turn the idea into something real.">Have something worth building?</Statement>

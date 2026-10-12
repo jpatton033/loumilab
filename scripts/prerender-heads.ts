@@ -20,6 +20,7 @@ const staticMeta: Meta[] = [
   S("/about", "About Loumilab | Technology Studio", "Loumilab is a senior technology studio that designs, builds, launches and secures digital products for businesses — and builds its own products, like Orders."),
   S("/contact", "Contact Loumilab | Start a Technology Project", "Tell Loumilab about your website, software product, automation or cybersecurity project. Share your goals and timeline — we reply to every inquiry within 24 hours."),
   S("/resources", "Technology, Business & Security Resources | Loumilab", "Practical guides from Loumilab on websites, AI, cybersecurity, online ordering and business growth — written for owners and teams building with technology."),
+  S("/the-dot", "The Dot. | A Loumilab Brief", "The Dot. is a brief from Loumilab exploring the ideas, technology, and shifts shaping how businesses work, build, and grow — what matters, why it matters, and what's worth watching next."),
   S("/orders", "Loumilab Orders | Online Ordering for Small Food Businesses", "Create a free storefront, share one link, take orders and payments, and manage everything in one dashboard. Built for home chefs, bakers, pop-ups and small sellers."),
   S("/orders/get-started", "Get Started with Loumilab Orders | Create Your Storefront", "Set up your Loumilab Orders storefront in a few guided steps: create your account, add business details and your menu, connect payments, and publish your store."),
   S("/orders/custom", "Build With Loumilab — Custom Project Intake | Loumilab Orders", "Tell Loumilab what you want built — a custom website, e-commerce store, ordering system, web application, integrations or automation — and get a tailored plan back."),
@@ -70,6 +71,7 @@ async function dynamicMeta(): Promise<Meta[]> {
     rest<Art>(url, key, "kc_articles?select=*,kc_sections(slug)&status=eq.published&noindex=eq.false&canonical_url=is.null"),
     rest<{ slug: string; name?: string | null; tagline?: string | null; description?: string | null }>(url, key, "merchant_storefronts?select=*&is_published=eq.true&status=eq.published"),
     rest<{ slug: string; display_name?: string | null; name?: string | null; tagline?: string | null; description?: string | null; city?: string | null }>(url, key, "rpc/search_local_businesses", { _q: null, _place: null, _radius_miles: 25, _category: null, _pickup: false, _delivery: false, _accepting: false, _featured_only: false, _limit: 500 }),
+    rest<{ slug: string; title: string; subtitle?: string | null; story_title?: string | null }>(url, key, "dot_issues?select=slug,title,subtitle,story_title&status=eq.published"),
   ]);
   return [
     ...sections.map((s) => S(`/resources/${s.slug}`, `${s.title} Resources | Loumilab`, clip(s.description || `Loumilab guides on ${s.title.toLowerCase()} for business owners and teams.`))),
@@ -88,6 +90,14 @@ async function dynamicMeta(): Promise<Meta[]> {
       const n = l.display_name || l.name || "Local business";
       return S(`/orders/local/${encodeURIComponent(l.slug)}`, `${n}${l.city ? ` in ${l.city}` : ""} | Loumilab Local`, clip(l.tagline || l.description || `Discover and order from ${n} on Loumilab Local.`));
     }),
+    ...issues
+      .filter((i) => i.slug)
+      .map((i) => ({
+        path: `/the-dot/issue/${encodeURIComponent(i.slug)}`,
+        title: `${i.title} — The Dot. | Loumilab`,
+        description: clip(i.subtitle || i.story_title || `${i.title} — A brief from Loumilab.`),
+        ogType: "article",
+      })),
   ];
 }
 

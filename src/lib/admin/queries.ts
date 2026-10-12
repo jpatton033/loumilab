@@ -149,6 +149,8 @@ export interface Subscriber {
   id: string;
   email: string;
   source: string | null;
+  status: string;
+  interests: string[];
   created_at: string;
 }
 
@@ -158,7 +160,7 @@ export const useSubscribers = () =>
     queryFn: async (): Promise<Subscriber[]> => {
       const { data, error } = await supabase
         .from("newsletter_subscribers")
-        .select("id, email, source, created_at")
+        .select("id, email, source, status, interests, created_at")
         .order("created_at", { ascending: false });
       if (error) throw error;
       return (data ?? []) as Subscriber[];

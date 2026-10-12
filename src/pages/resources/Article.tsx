@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import ArticleBody from "@/components/kc/ArticleBody";
 import ArticleCard from "@/components/kc/ArticleCard";
-import NewsletterSignup from "@/components/kc/NewsletterSignup";
+import TheDotSignup from "@/components/thedot/TheDotSignup";
+import EngagementPrompt from "@/components/thedot/EngagementPrompt";
 import { recordArticleView, useArticle, usePublishedArticles } from "@/lib/kc/queries";
 import { slugify } from "@/lib/kc/types";
 import { ArrowLeft, ArrowRight, Clock, Download, Eye, ExternalLink, Link2 } from "lucide-react";
@@ -132,7 +133,7 @@ const ResourceArticle = () => {
         }}
       />
 
-      <article className="section-padding pt-8 lg:pt-12">
+      <article id="kc-article" className="section-padding pt-8 lg:pt-12">
         <div className="section-container">
           <Link
             to={`/resources/${canonicalSection}`}
@@ -290,8 +291,13 @@ const ResourceArticle = () => {
           )}
 
           <div className="mt-16">
-            <NewsletterSignup source={`article-${article.slug}`} compact />
+            <TheDotSignup
+              source={`article-${article.slug}`}
+              heading="Like what you just read? There's more in The Dot."
+              description="A concise brief from Loumilab — ideas, technology, and shifts worth watching. Twice a month. No noise."
+            />
           </div>
+          <EngagementPrompt />
         </div>
       </article>
     </Layout>

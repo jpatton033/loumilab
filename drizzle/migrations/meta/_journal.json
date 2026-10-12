@@ -15,6 +15,13 @@
       "when": 1791793433426,
       "tag": "0001_the_dot_newsletter",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791793560648,
+      "tag": "0002_the_dot_admin_unsubscribe",
+      "breakpoints": true
     }
   ]
 }
