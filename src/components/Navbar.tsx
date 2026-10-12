@@ -143,7 +143,7 @@ const Navbar = () => {
 
 
         {/* Desktop */}
-        <nav className="hidden items-center gap-8 lg:flex" aria-label="Main">
+        <nav className="hidden items-center gap-5 lg:flex xl:gap-8" aria-label="Main">
           <Link
             to="/services"
             className={`text-sm font-medium transition-colors ${
@@ -235,7 +235,7 @@ const Navbar = () => {
               <Link
                 key={link.to}
                 to={link.to}
-                className={`text-sm font-medium transition-colors ${
+                className={`whitespace-nowrap text-sm font-medium transition-colors ${
                   active ? "text-accent" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
