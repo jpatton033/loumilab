@@ -49,10 +49,13 @@ const Index = () => {
       {/* Hero */}
       <section className="overflow-hidden pt-12 lg:pt-16">
         <div className="section-container text-center">
-          <DotMarker className="mx-auto" synchronized />
-          <h1 className="mx-auto max-w-4xl text-[1.375rem] font-normal leading-[1.5] tracking-normal text-foreground/70 text-balance lg:text-[1.875rem]">
-            Loumilab is a technology studio creating websites, custom software, and secure digital solutions that help businesses operate, connect, and grow.
+          <h1 className="mx-auto max-w-5xl font-hero text-5xl font-semibold leading-[1.02] tracking-normal text-foreground text-balance sm:text-6xl lg:text-8xl">
+            We build what's next.
           </h1>
+          <DotMarker className="mx-auto" synchronized />
+          <p className="mx-auto max-w-4xl text-[1.375rem] font-normal leading-[1.5] tracking-normal text-foreground/70 text-balance lg:text-[1.875rem]">
+            Loumilab is a technology studio creating websites, custom software, and secure digital solutions that help businesses operate, connect, and grow.
+          </p>
           <TileActions primary={{ label: "Start a Project", to: "/contact" }} secondary={{ label: "Explore products", to: "/products" }} className="mt-8" />
         </div>
         <div className="section-container mt-12 lg:mt-16">
