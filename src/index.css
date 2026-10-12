@@ -236,6 +236,20 @@
     animation: brandShine 1.2s cubic-bezier(0.45, 0, 0.2, 1) 2.85s both;
   }
 
+  /* Always leave the identity visible if an animation end event is delayed or interrupted. */
+  .brand-wordmark-animated.brand-wordmark-complete .brand-wordmark-letter,
+  .brand-wordmark-animated.brand-wordmark-complete .brand-wordmark-dot,
+  .brand-wordmark-animated.brand-wordmark-complete .brand-wordmark-dot-x {
+    animation: none;
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+  .brand-wordmark-animated.brand-wordmark-complete .brand-wordmark-ripple,
+  .brand-wordmark-animated.brand-wordmark-complete .brand-wordmark-shine {
+    display: none;
+  }
+
   .video-overlay {
     background: linear-gradient(180deg, hsl(0 0% 100% / 0.55) 0%, hsl(0 0% 100% / 0.35) 50%, hsl(0 0% 100% / 0.75) 100%);
   }

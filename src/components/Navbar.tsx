@@ -34,16 +34,19 @@ const Navbar = () => {
     w.__loumilabLogoPlayed = true;
     return true;
   });
+  const [logoAnimationComplete, setLogoAnimationComplete] = useState(!animateLogo);
 
   useEffect(() => {
     const w = window as unknown as { __loumilabLogoAnimationComplete?: boolean };
     if (!animateLogo || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setLogoAnimationComplete(true);
       w.__loumilabLogoAnimationComplete = true;
       window.dispatchEvent(new Event("loumilab:logo-complete"));
       return;
     }
     w.__loumilabLogoAnimationComplete = false;
     const fallback = window.setTimeout(() => {
+      setLogoAnimationComplete(true);
       w.__loumilabLogoAnimationComplete = true;
       window.dispatchEvent(new Event("loumilab:logo-complete"));
     }, 4300);
@@ -52,6 +55,7 @@ const Navbar = () => {
 
   const completeLogoAnimation = () => {
     const w = window as unknown as { __loumilabLogoAnimationComplete?: boolean };
+    setLogoAnimationComplete(true);
     if (w.__loumilabLogoAnimationComplete) return;
     w.__loumilabLogoAnimationComplete = true;
     window.dispatchEvent(new Event("loumilab:logo-complete"));
@@ -126,7 +130,12 @@ const Navbar = () => {
     >
       <div className="section-container flex h-16 items-center justify-between lg:h-20">
         <Link to="/" onClick={handleLogoClick} className="flex items-center" aria-label="Loumilab home">
-          <Wordmark size="sm" animated={animateLogo} onAnimationComplete={completeLogoAnimation} />
+          <Wordmark
+            size="sm"
+            animated={animateLogo}
+            className={logoAnimationComplete ? "brand-wordmark-complete" : undefined}
+            onAnimationComplete={completeLogoAnimation}
+          />
         </Link>
 
 
