@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import ArticleCard from "@/components/kc/ArticleCard";
 import SectionIcon from "@/components/kc/SectionIcon";
-import NewsletterSignup from "@/components/kc/NewsletterSignup";
+import TheDotSignup from "@/components/thedot/TheDotSignup";
 import { usePublishedArticles, useSection } from "@/lib/kc/queries";
 import { ArrowLeft, ArrowRight, Search } from "lucide-react";
 
@@ -212,7 +212,11 @@ const ResourcesSection = () => {
           )}
 
           <div className="mt-16">
-            <NewsletterSignup source={`resources-${sectionSlug}`} compact />
+            <TheDotSignup
+              source={`resources-${sectionSlug}`}
+              heading="Like what you're reading? There's more in The Dot."
+              description="A concise brief from Loumilab — ideas, technology, and shifts worth watching. Twice a month. No noise."
+            />
           </div>
         </div>
       </section>
