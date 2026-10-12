@@ -98,6 +98,22 @@ const TheDotEditor = () => {
     }
   }, [isNew, existing, issues]);
 
+  const sendTest = async () => {
+    if (!existing) return;
+    const { data: u } = await supabase.auth.getUser();
+    const to = window.prompt("Send a test of this issue to:", u.user?.email ?? "");
+    if (!to) return;
+    setSaving(true);
+    const { data, error } = await supabase.functions.invoke("dot-issue-blast", {
+      body: { issue_id: existing.id, test_to: to.trim() },
+    });
+    setSaving(false);
+    if (error) {
+      const details = error instanceof FunctionsHttpError ? await error.context.text() : error.message;
+      toast({ title: "Test didn't send", description: details.slice(0, 240), variant: "destructive" });
+    } else toast({ title: `Test sent to ${data?.to ?? to}`, description: "Uses the last saved version." });
+  };
+
   const set = <K extends keyof IssueForm>(key: K, value: IssueForm[K]) => setForm((f) => ({ ...f, [key]: value }));
 
   const save = async (statusOverride?: "draft" | "published") => {
@@ -220,6 +236,11 @@ const TheDotEditor = () => {
               <Link to={`/the-dot/issue/${form.slug}`} target="_blank">
                 Preview <ExternalLink size={15} />
               </Link>
+            </Button>
+          )}
+          {existing && (
+            <Button variant="ghost" disabled={saving} onClick={sendTest}>
+              Send test
             </Button>
           )}
           <Button variant="outline" disabled={saving} onClick={() => save("draft")}>
