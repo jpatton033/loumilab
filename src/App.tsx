@@ -38,6 +38,7 @@ const AdminDailyBrief = lazy(() => import("./pages/admin/reports/DailyBrief"));
 const AdminDailyBriefSettings = lazy(() => import("./pages/admin/settings/DailyBriefSettings"));
 const TheDotIndex = lazy(() => import("./pages/thedot/Index"));
 const TheDotIssue = lazy(() => import("./pages/thedot/Issue"));
+const TheDotUnsubscribe = lazy(() => import("./pages/thedot/Unsubscribe"));
 const AdminTheDot = lazy(() => import("./pages/admin/TheDot"));
 const AdminTheDotEditor = lazy(() => import("./pages/admin/TheDotEditor"));
 import OrdersCustomProject from "./pages/orders/CustomProject";
@@ -102,6 +103,7 @@ const App = () => (
           <Route path="/resources/:section/:slug" element={<ResourceArticle />} />
           <Route path="/the-dot" element={<TheDotIndex />} />
           <Route path="/the-dot/issue/:slug" element={<TheDotIssue />} />
+          <Route path="/the-dot/unsubscribe" element={<TheDotUnsubscribe />} />
 
 
           <Route path="/work" element={<Work />} />
