@@ -390,6 +390,8 @@ export type Database = {
           cover_image_url: string | null
           created_at: string
           editors_note: string | null
+          emailed_at: string | null
+          emailed_count: number
           id: string
           issue_month: string | null
           issue_number: number
@@ -410,6 +412,8 @@ export type Database = {
           cover_image_url?: string | null
           created_at?: string
           editors_note?: string | null
+          emailed_at?: string | null
+          emailed_count?: number
           id?: string
           issue_month?: string | null
           issue_number: number
@@ -430,6 +434,8 @@ export type Database = {
           cover_image_url?: string | null
           created_at?: string
           editors_note?: string | null
+          emailed_at?: string | null
+          emailed_count?: number
           id?: string
           issue_month?: string | null
           issue_number?: number
