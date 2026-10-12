@@ -94,7 +94,7 @@ Deno.serve(async (req) => {
   const { data: subs, error: subErr } = await admin
     .from("newsletter_subscribers")
     .select("email, unsubscribe_token")
-    .eq("status", "active");
+    .in("status", ["subscribed", "active"]);
   if (subErr) {
     await admin.from("dot_issues").update({ emailed_at: null }).eq("id", issueId);
     return json({ error: subErr.message }, 500);
