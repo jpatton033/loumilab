@@ -37,10 +37,13 @@ export interface DotIssue {
   status: "draft" | "published";
   published_at: string | null;
   updated_at: string;
+  emailed_at?: string | null;
+  emailed_count?: number;
 }
 
 const ISSUE_SELECT =
   "id, issue_number, slug, title, subtitle, issue_month, editors_note, story_title, story_body, short_stories, resource_links, product_update, closing_thought, cover_image_url, status, published_at, updated_at";
+const ADMIN_ISSUE_SELECT = `${ISSUE_SELECT}, emailed_at, emailed_count`;
 
 const asIssues = (data: unknown) => {
   const rows = (data ?? []) as DotIssue[];
@@ -103,7 +106,7 @@ export const useAdminIssues = () =>
     queryFn: async (): Promise<DotIssue[]> => {
       const { data, error } = await supabase
         .from("dot_issues")
-        .select(ISSUE_SELECT)
+        .select(ADMIN_ISSUE_SELECT)
         .order("issue_number", { ascending: false });
       if (error) throw error;
       return asIssues(data);

@@ -210,6 +210,11 @@ const TheDotEditor = () => {
           <ArrowLeft size={15} /> The Dot.
         </Link>
         <div className="flex flex-wrap items-center gap-2">
+          <span className="text-sm text-muted-foreground">
+            {existing?.emailed_at
+              ? `Emailed ${new Date(existing.emailed_at).toLocaleDateString()}${existing.emailed_count ? ` to ${existing.emailed_count}` : ""}`
+              : "Publishing emails all active subscribers"}
+          </span>
           {form.slug && (
             <Button variant="ghost" asChild>
               <Link to={`/the-dot/issue/${form.slug}`} target="_blank">
