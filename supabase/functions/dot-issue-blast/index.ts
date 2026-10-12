@@ -70,14 +70,47 @@ Deno.serve(async (req) => {
   if (!appRole.data && !superRole.data) return json({ error: "Forbidden" }, 403);
 
   let issueId = "";
+  let testTo = "";
   try {
-    issueId = String((await req.json())?.issue_id ?? "");
+    const body = await req.json();
+    issueId = String(body?.issue_id ?? "");
+    testTo = String(body?.test_to ?? "").trim().toLowerCase();
   } catch { /* fallthrough */ }
   if (!UUID_RE.test(issueId)) return json({ error: "issue_id is required" }, 400);
+  if (testTo && (testTo.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(testTo)))
+    return json({ error: "Enter a valid test email address." }, 400);
 
   const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
   const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
   if (!LOVABLE_API_KEY || !RESEND_API_KEY) return json({ error: "Email service is not configured" }, 500);
+
+  // Test send: one recipient, no sent marker, drafts allowed.
+  if (testTo) {
+    const { data: t, error: tErr } = await admin.from("dot_issues").select("*").eq("id", issueId).maybeSingle();
+    if (tErr) return json({ error: tErr.message }, 500);
+    if (!t) return json({ error: "Issue not found" }, 404);
+    const res = await fetch(`${GATEWAY_URL}/emails`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        "X-Connection-Api-Key": RESEND_API_KEY,
+      },
+      body: JSON.stringify({
+        from: FROM,
+        to: [testTo],
+        reply_to: "hello@loumilab.com",
+        subject: `[Test] The Dot. ${String(t.issue_number).padStart(3, "0")} — ${t.title}`,
+        html: buildHtml(t, `${SITE}/the-dot`),
+      }),
+    });
+    if (!res.ok) {
+      const body = await res.text();
+      console.error(`Resend test failed [${res.status}]: ${body}`);
+      return json({ error: "Test send failed", details: `[${res.status}] ${body}`.slice(0, 400) }, 502);
+    }
+    return json({ test: true, sent: 1, to: testTo });
+  }
 
   // Atomic claim: only one caller can move emailed_at from NULL.
   const { data: issue, error: claimIssueErr } = await admin
