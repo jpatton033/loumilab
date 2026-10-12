@@ -27,6 +27,7 @@ const staticEntries: Entry[] = [
   { path: "/orders/terms", changefreq: "yearly", priority: "0.3" },
   { path: "/orders/privacy", changefreq: "yearly", priority: "0.3" },
   { path: "/resources", changefreq: "weekly", priority: "0.8" },
+  { path: "/the-dot", changefreq: "weekly", priority: "0.7" },
   { path: "/work", changefreq: "monthly", priority: "0.8" },
   { path: "/about", changefreq: "monthly", priority: "0.6" },
   { path: "/contact", changefreq: "monthly", priority: "0.7" },
@@ -79,7 +80,7 @@ async function dynamicEntries(): Promise<Entry[]> {
   const key = env.VITE_SUPABASE_PUBLISHABLE_KEY;
   if (!url || !key) return [];
 
-  const [stores, articles, sections, local] = await Promise.all([
+  const [stores, articles, sections, local, dotIssues] = await Promise.all([
     rest<{ slug: string; updated_at?: string }>(
       url,
       key,
@@ -90,12 +91,19 @@ async function dynamicEntries(): Promise<Entry[]> {
       key,
       "kc_articles?select=slug,updated_at,kc_sections(slug)&status=eq.published&noindex=eq.false&canonical_url=is.null",
     ),
+    rest<{ slug: string; updated_at?: string }>(url, key, "dot_issues?select=slug,updated_at&status=eq.published"),
     rest<{ slug: string }>(url, key, "kc_sections?select=slug&is_visible=eq.true"),
     localBusinesses(url, key),
   ]);
 
   return [
     ...sections.map((s) => ({ path: `/resources/${encodeURIComponent(s.slug)}`, changefreq: "weekly", priority: "0.7" })),
+    ...dotIssues.map((i) => ({
+      path: `/the-dot/issue/${encodeURIComponent(i.slug)}`,
+      lastmod: day(i.updated_at),
+      changefreq: "monthly",
+      priority: "0.6",
+    })),
     ...local.map((l) => ({ path: `/orders/local/${encodeURIComponent(l.slug)}`, changefreq: "weekly", priority: "0.5" })),
     ...stores.map((s) => ({
       path: `/orders/store/${encodeURIComponent(s.slug)}`,

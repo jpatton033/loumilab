@@ -132,10 +132,6 @@ export const recordArticleView = async (slug: string) => {
   await supabase.rpc("kc_increment_view", { _slug: slug, _viewer_hash: viewerHash() });
 };
 
-export const subscribeToNewsletter = async (email: string, source = "resources") => {
-  const { error } = await supabase.rpc("newsletter_subscribe", { _email: email, _source: source });
-  if (error) throw error;
-};
 
 /* ---------------- admin reads ---------------- */
 

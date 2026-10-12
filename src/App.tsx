@@ -36,6 +36,10 @@ const AdminMail = lazy(() => import("./pages/admin/Mail"));
 const AdminLocalImporter = lazy(() => import("./pages/admin/LocalImporter"));
 const AdminDailyBrief = lazy(() => import("./pages/admin/reports/DailyBrief"));
 const AdminDailyBriefSettings = lazy(() => import("./pages/admin/settings/DailyBriefSettings"));
+const TheDotIndex = lazy(() => import("./pages/thedot/Index"));
+const TheDotIssue = lazy(() => import("./pages/thedot/Issue"));
+const AdminTheDot = lazy(() => import("./pages/admin/TheDot"));
+const AdminTheDotEditor = lazy(() => import("./pages/admin/TheDotEditor"));
 import OrdersCustomProject from "./pages/orders/CustomProject";
 import BusinessTools from "./pages/orders/tools/Index";
 import FoodPricingCalculator from "./pages/orders/tools/FoodPricingCalculator";
@@ -96,6 +100,8 @@ const App = () => (
           <Route path="/resources" element={<Resources />} />
           <Route path="/resources/:section" element={<ResourcesSection />} />
           <Route path="/resources/:section/:slug" element={<ResourceArticle />} />
+          <Route path="/the-dot" element={<TheDotIndex />} />
+          <Route path="/the-dot/issue/:slug" element={<TheDotIssue />} />
 
 
           <Route path="/work" element={<Work />} />
@@ -116,6 +122,8 @@ const App = () => (
           <Route path="/admin/industries" element={<ProtectedRoute><AdminIndustries /></ProtectedRoute>} />
           <Route path="/admin/custom-projects" element={<ProtectedRoute><AdminCustomProjects /></ProtectedRoute>} />
           <Route path="/admin/local-importer" element={<ProtectedRoute><AdminLocalImporter /></ProtectedRoute>} />
+          <Route path="/admin/the-dot" element={<ProtectedRoute><AdminTheDot /></ProtectedRoute>} />
+          <Route path="/admin/the-dot/:id" element={<ProtectedRoute><AdminTheDotEditor /></ProtectedRoute>} />
           <Route path="/admin/audit-log" element={<ProtectedRoute><AdminAuditLog /></ProtectedRoute>} />
           <Route path="/admin/reports/daily-brief" element={<ProtectedRoute><AdminDailyBrief /></ProtectedRoute>} />
           <Route path="/admin/settings/daily-brief" element={<ProtectedRoute><AdminDailyBriefSettings /></ProtectedRoute>} />

@@ -384,6 +384,69 @@ export type Database = {
         }
         Relationships: []
       }
+      dot_issues: {
+        Row: {
+          closing_thought: string | null
+          cover_image_url: string | null
+          created_at: string
+          editors_note: string | null
+          id: string
+          issue_month: string | null
+          issue_number: number
+          product_update: string | null
+          published_at: string | null
+          resource_links: Json
+          short_stories: Json
+          slug: string
+          status: string
+          story_body: string | null
+          story_title: string | null
+          subtitle: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          closing_thought?: string | null
+          cover_image_url?: string | null
+          created_at?: string
+          editors_note?: string | null
+          id?: string
+          issue_month?: string | null
+          issue_number: number
+          product_update?: string | null
+          published_at?: string | null
+          resource_links?: Json
+          short_stories?: Json
+          slug: string
+          status?: string
+          story_body?: string | null
+          story_title?: string | null
+          subtitle?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          closing_thought?: string | null
+          cover_image_url?: string | null
+          created_at?: string
+          editors_note?: string | null
+          id?: string
+          issue_month?: string | null
+          issue_number?: number
+          product_update?: string | null
+          published_at?: string | null
+          resource_links?: Json
+          short_stories?: Json
+          slug?: string
+          status?: string
+          story_body?: string | null
+          story_title?: string | null
+          subtitle?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       email_send_log: {
         Row: {
           created_at: string
@@ -2278,19 +2341,34 @@ export type Database = {
           created_at: string
           email: string
           id: string
+          interests: string[]
           source: string | null
+          status: string
+          unsubscribe_token: string
+          unsubscribed_at: string | null
+          updated_at: string
         }
         Insert: {
           created_at?: string
           email: string
           id?: string
+          interests?: string[]
           source?: string | null
+          status?: string
+          unsubscribe_token?: string
+          unsubscribed_at?: string | null
+          updated_at?: string
         }
         Update: {
           created_at?: string
           email?: string
           id?: string
+          interests?: string[]
           source?: string | null
+          status?: string
+          unsubscribe_token?: string
+          unsubscribed_at?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -3273,10 +3351,15 @@ export type Database = {
         Args: { _body: string; _order_id: string }
         Returns: Json
       }
-      newsletter_subscribe: {
-        Args: { _email: string; _source: string }
+      newsletter_set_interests: {
+        Args: { _email: string; _interests: string[] }
         Returns: boolean
       }
+      newsletter_subscribe: {
+        Args: { _email: string; _source: string }
+        Returns: Json
+      }
+      newsletter_unsubscribe: { Args: { _token: string }; Returns: boolean }
       ops_acquire_job_lease: {
         Args: { _job: string; _lease_seconds?: number }
         Returns: string

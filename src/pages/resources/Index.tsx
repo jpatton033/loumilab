@@ -9,8 +9,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import SectionIcon from "@/components/kc/SectionIcon";
 import ArticleCard from "@/components/kc/ArticleCard";
-import NewsletterSignup from "@/components/kc/NewsletterSignup";
+import TheDotSignup from "@/components/thedot/TheDotSignup";
 import { usePublishedArticles, useSectionCounts, useSections } from "@/lib/kc/queries";
+import { useLatestIssue } from "@/lib/thedot/queries";
 import { ArrowRight, Search, Flame } from "lucide-react";
 import { DotLens, DotMarker, DotThread } from "@/components/brand/dot";
 
@@ -24,6 +25,7 @@ const ResourcesIndex = () => {
   const { data: counts = {} } = useSectionCounts();
   const { data: latest = [] } = usePublishedArticles({ limit: 9 });
   const { data: popular = [] } = usePublishedArticles({ limit: 4, orderBy: "view_count" });
+  const { data: latestIssue } = useLatestIssue();
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -223,8 +225,22 @@ const ResourcesIndex = () => {
       <section className="pb-24 lg:pb-32">
         <div className="section-container">
           <Reveal>
-            <NewsletterSignup source="resources-hub" />
+            <TheDotSignup
+              source="resources-hub"
+              heading="Stay connected to what's next."
+              description="A concise brief from Loumilab exploring the ideas, technology, and shifts shaping how businesses work, build, and grow. Twice a month. No noise."
+            />
           </Reveal>
+          {latestIssue && (
+            <Reveal delay={100} className="mt-4">
+              <Link
+                to={`/the-dot/issue/${latestIssue.slug}`}
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-accent hover:underline"
+              >
+                Read the latest issue — Issue {String(latestIssue.issue_number).padStart(3, "0")} <ArrowRight size={15} />
+              </Link>
+            </Reveal>
+          )}
         </div>
       </section>
     </Layout>
