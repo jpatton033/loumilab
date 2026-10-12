@@ -56,6 +56,11 @@ export const buildBrandedEmail = ({ bodyHtml, signatureHtml, attachments }: Fram
         Loumilab · Design. Build. Innovate. Secure.<br />
         Reply to this email or write to <a href="mailto:hello@loumilab.com" style="color:${BLUE};text-decoration:none">hello@loumilab.com</a>.
       </p>
+      <p style="font-size:13px;line-height:1.6;color:${MUTED};margin:18px 0 0">
+        <strong style="color:${CHARCOAL}">The Dot<span style="color:${BLUE}">.</span> — A Loumilab Brief</strong><br />
+        Ideas, technology, and what's next.<br />
+        <a href="https://loumilab.com/the-dot" style="color:${BLUE};text-decoration:none">Subscribe to The Dot.</a>
+      </p>
     </div>
   </div>
 </body></html>`;

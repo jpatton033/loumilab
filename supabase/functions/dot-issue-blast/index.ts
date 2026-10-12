@@ -17,18 +17,9 @@ const json = (body: unknown, status = 200) =>
 const esc = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
-const paras = (s: string | null) =>
-  (s ?? "")
-    .split(/\n{2,}/)
-    .map((p) => p.trim())
-    .filter(Boolean)
-    .map((p) => `<p style="margin:0 0 16px;font-size:16px;line-height:1.65;color:#3f3f46">${esc(p).replace(/\n/g, "<br>")}</p>`)
-    .join("");
-
 // deno-lint-ignore no-explicit-any
 const buildHtml = (issue: any, unsubUrl: string) => {
   const url = `${SITE}/the-dot/issue/${issue.slug}`;
-  const firstPara = (issue.story_body ?? "").split(/\n{2,}/).slice(0, 2).join("\n\n");
   return `<!doctype html><html><body style="margin:0;background:#f7f7f8;font-family:'Space Grotesk',Helvetica,Arial,sans-serif">
 <table width="100%" cellpadding="0" cellspacing="0" style="background:#f7f7f8;padding:32px 12px"><tr><td align="center">
 <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border:1px solid #e4e4e7;border-radius:24px;padding:40px">
@@ -38,11 +29,7 @@ const buildHtml = (issue: any, unsubUrl: string) => {
 ${issue.cover_image_url ? `<img src="${esc(issue.cover_image_url)}" alt="" width="520" style="width:100%;border-radius:16px;margin:0 0 24px">` : ""}
 <h1 style="margin:0 0 12px;font-size:28px;line-height:1.2;color:#18181b">${esc(issue.title)}</h1>
 ${issue.subtitle ? `<p style="margin:0 0 24px;font-size:18px;line-height:1.5;color:#52525b">${esc(issue.subtitle)}</p>` : ""}
-${paras(issue.editors_note)}
-${issue.story_title ? `<h2 style="margin:24px 0 12px;font-size:20px;color:#18181b">${esc(issue.story_title)}</h2>` : ""}
-${paras(firstPara)}
 <p style="margin:28px 0"><a href="${url}" style="display:inline-block;background:#1d6ff2;color:#ffffff;text-decoration:none;font-weight:600;padding:12px 22px;border-radius:999px">Read the full issue</a></p>
-${issue.closing_thought ? `<p style="margin:24px 0 0;font-style:italic;color:#52525b">${esc(issue.closing_thought)}</p>` : ""}
 </td></tr></table>
 <p style="max-width:600px;margin:20px auto 0;font-size:12px;line-height:1.6;color:#a1a1aa">You're receiving this because you subscribed to The Dot. at loumilab.com.<br>
 Loumilab · hello@loumilab.com · <a href="${unsubUrl}" style="color:#71717a">Unsubscribe</a></p>
