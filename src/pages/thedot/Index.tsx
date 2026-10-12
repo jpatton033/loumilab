@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
+import { Button } from "@/components/ui/button";
 import Reveal from "@/components/Reveal";
 import { DotMarker, DotThread } from "@/components/brand/dot";
 import TheDotSignup from "@/components/thedot/TheDotSignup";
