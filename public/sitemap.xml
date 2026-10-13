@@ -223,7 +223,7 @@
   </url>
   <url>
     <loc>https://loumilab.com/resources/web-digital/website-that-converts</loc>
-    <lastmod>2026-09-26</lastmod>
+    <lastmod>2026-10-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -252,12 +252,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://loumilab.com/resources/web-digital/does-your-business-still-need-a-website</loc>
-    <lastmod>2026-10-09</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://loumilab.com/resources/orders-commerce/from-instagram-to-checkout</loc>
     <lastmod>2026-10-05</lastmod>
     <changefreq>monthly</changefreq>
@@ -265,7 +259,13 @@
   </url>
   <url>
     <loc>https://loumilab.com/resources/technology-ai/should-your-business-be-using-ai</loc>
-    <lastmod>2026-10-09</lastmod>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://loumilab.com/resources/web-digital/does-your-business-still-need-a-website</loc>
+    <lastmod>2026-10-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
