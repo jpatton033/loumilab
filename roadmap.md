@@ -1,5 +1,10 @@
 # Roadmap
 
+## The Dot. editorial workspace
+- [ ] Mail-style issue desk, filters and persistent writing templates.
+- [ ] Shared rich text editing, safe legacy-compatible display and explicit save states.
+- [ ] Verify authenticated draft/template flows without broadcasting.
+
 ## The Dot. email refinements
 - [x] Shorten issue emails to title, subtitle and full-issue link while preserving the brand frame.
 - [x] Add the permanent subscription invitation to Mail preview and outgoing emails.

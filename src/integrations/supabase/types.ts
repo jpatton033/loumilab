@@ -384,9 +384,31 @@ export type Database = {
         }
         Relationships: []
       }
+      dot_issue_templates: {
+        Row: {
+          content: Json
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          content?: Json
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          content?: Json
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
       dot_issues: {
         Row: {
           closing_thought: string | null
+          content_format: string
           cover_image_url: string | null
           created_at: string
           editors_note: string | null
@@ -409,6 +431,7 @@ export type Database = {
         }
         Insert: {
           closing_thought?: string | null
+          content_format?: string
           cover_image_url?: string | null
           created_at?: string
           editors_note?: string | null
@@ -431,6 +454,7 @@ export type Database = {
         }
         Update: {
           closing_thought?: string | null
+          content_format?: string
           cover_image_url?: string | null
           created_at?: string
           editors_note?: string | null

@@ -29,6 +29,13 @@
       "when": 1791831609906,
       "tag": "0003_the_dot_email_blast",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1791855590129,
+      "tag": "0004_dot_editorial_workspace",
+      "breakpoints": true
     }
   ]
 }

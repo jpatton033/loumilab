@@ -4,6 +4,7 @@ import SEOHead from "@/components/SEOHead";
 import Reveal from "@/components/Reveal";
 import { Button } from "@/components/ui/button";
 import { DotThread } from "@/components/brand/dot";
+import IssueRichContent from "@/components/thedot/IssueRichContent";
 import TheDotSignup from "@/components/thedot/TheDotSignup";
 import { issueMonthLabel, useDotIssue, type DotShortStory } from "@/lib/thedot/queries";
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
@@ -58,6 +59,7 @@ const IssuePage = () => {
     issue.subtitle ||
     (issue.story_title ? `${issue.story_title} — A brief from Loumilab on ideas, technology, and what's next.` : "A brief from Loumilab.");
   const storyParas = paragraphs(issue.story_body);
+  const rich = issue.content_format === "html";
 
   return (
     <Layout>
@@ -113,7 +115,7 @@ const IssuePage = () => {
                 <p className="font-display text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
                   Editor's note
                 </p>
-                {paragraphs(issue.editors_note).map((p, i) => (
+                {rich ? <IssueRichContent body={issue.editors_note} className="mt-3 leading-relaxed text-foreground/80" /> : paragraphs(issue.editors_note).map((p, i) => (
                   <p key={i} className="mt-3 leading-relaxed text-foreground/80">
                     {p}
                   </p>
@@ -128,7 +130,7 @@ const IssuePage = () => {
             <Reveal className="mt-12">
               <h2 className="text-2xl font-semibold leading-snug lg:text-3xl">{issue.story_title}</h2>
               <div className="mt-6 space-y-5 text-lg leading-relaxed text-foreground/90">
-                {storyParas.map((p, i) => (
+                {rich ? <IssueRichContent body={issue.story_body ?? ""} /> : storyParas.map((p, i) => (
                   <p key={i}>{p}</p>
                 ))}
               </div>
@@ -144,7 +146,7 @@ const IssuePage = () => {
                       {String(i + 1).padStart(2, "0")} · Also in this issue
                     </p>
                     <h3 className="mt-3 font-display text-xl font-semibold">{story.title}</h3>
-                    {paragraphs(story.body).map((p, j) => (
+                    {rich ? <IssueRichContent body={story.body} className="mt-3 leading-relaxed text-muted-foreground" /> : paragraphs(story.body).map((p, j) => (
                       <p key={j} className="mt-3 leading-relaxed text-muted-foreground">
                         {p}
                       </p>
@@ -194,7 +196,7 @@ const IssuePage = () => {
                 <p className="font-display text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
                   From Loumilab
                 </p>
-                {paragraphs(issue.product_update).map((p, i) => (
+                {rich ? <IssueRichContent body={issue.product_update} className="mt-3 leading-relaxed text-muted-foreground" /> : paragraphs(issue.product_update).map((p, i) => (
                   <p key={i} className="mt-3 leading-relaxed text-muted-foreground">
                     {p}
                   </p>
@@ -205,9 +207,7 @@ const IssuePage = () => {
 
           {issue.closing_thought && (
             <Reveal className="mt-16">
-              <p className="font-display text-xl font-medium leading-relaxed text-foreground lg:text-2xl">
-                {issue.closing_thought}
-              </p>
+              {rich ? <IssueRichContent body={issue.closing_thought} className="font-display text-xl font-medium leading-relaxed text-foreground lg:text-2xl" /> : <p className="font-display text-xl font-medium leading-relaxed text-foreground lg:text-2xl">{issue.closing_thought}</p>}
             </Reveal>
           )}
 
