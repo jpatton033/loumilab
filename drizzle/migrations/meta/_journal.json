@@ -36,6 +36,13 @@
       "when": 1791855590129,
       "tag": "0004_dot_editorial_workspace",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1791892473438,
+      "tag": "0005_fix_newsletter_subscribe_already_flag",
+      "breakpoints": true
     }
   ]
 }
