@@ -34,6 +34,7 @@ export interface DotIssue {
   product_update: string | null;
   closing_thought: string | null;
   cover_image_url: string | null;
+  content_format?: "plain" | "html";
   status: "draft" | "published";
   published_at: string | null;
   updated_at: string;
@@ -42,7 +43,7 @@ export interface DotIssue {
 }
 
 const ISSUE_SELECT =
-  "id, issue_number, slug, title, subtitle, issue_month, editors_note, story_title, story_body, short_stories, resource_links, product_update, closing_thought, cover_image_url, status, published_at, updated_at";
+  "id, issue_number, slug, title, subtitle, issue_month, editors_note, story_title, story_body, short_stories, resource_links, product_update, closing_thought, cover_image_url, content_format, status, published_at, updated_at";
 const ADMIN_ISSUE_SELECT = `${ISSUE_SELECT}, emailed_at, emailed_count`;
 
 const asIssues = (data: unknown) => {
@@ -90,10 +91,11 @@ export const useDotIssue = (slug?: string) =>
     queryKey: ["dot", "issue", slug],
     enabled: Boolean(slug),
     queryFn: async (): Promise<DotIssue | null> => {
+      if (!slug) return null;
       const { data, error } = await supabase
         .from("dot_issues")
         .select(ISSUE_SELECT)
-        .eq("slug", slug!)
+        .eq("slug", slug)
         .maybeSingle();
       if (error) throw error;
       return asIssues(data ? [data] : [])[0] ?? null;
