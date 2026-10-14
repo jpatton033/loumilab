@@ -1,3 +1,4 @@
+import { track } from "@/lib/tracking";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, CheckCircle2, Heart, Store, Users } from "lucide-react";
@@ -59,7 +60,10 @@ export const RelationshipStep = ({ onDone, bare }: { onDone: (r: Relationship) =
 const submit = (p: Record<string, unknown>) => supabase.rpc("submit_local_listing" as never, {
   _affiliation_note: null, _cuisines: [], _city: null, _region: null, _postal_code: null, _service_area: null,
   _description: null, _social_links: {}, _offers_pickup: null, _offers_delivery: null, _public_phone: null, _public_email: null, _trap: "", ...p,
-} as never);
+} as never).then((r) => {
+  if (!(r as { error?: unknown }).error) track("Lead", { content_name: "Local listing" });
+  return r;
+});
 
 /** Lightweight recommendation — goes to the review queue. */
 export const SuggestBusinessForm = ({ onBack }: { onBack: () => void }) => {

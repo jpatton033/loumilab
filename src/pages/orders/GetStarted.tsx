@@ -1,3 +1,4 @@
+import { track } from "@/lib/tracking";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Check, ExternalLink, Loader2, ShieldCheck } from "lucide-react";
@@ -111,6 +112,10 @@ const GetStarted = () => {
   const { data: setup } = useMerchantSetup(terms.catalog);
 
   const signedIn = !!email;
+
+  useEffect(() => {
+    track("StartOnboarding");
+  }, []);
   const merchantId = setup?.merchantId ?? undefined;
 
   // Session — the wizard saves progress the moment a merchant is signed in.

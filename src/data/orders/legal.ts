@@ -597,6 +597,11 @@ export const ORDERS_PRIVACY: LegalDocument = {
         "- Understanding usage; and",
         "- Improving the Services.",
         "Where legally required, Users will be provided appropriate choices regarding non-essential technologies.",
+        "Advertising Measurement",
+        "Loumilab may use the Meta Pixel (Meta Platforms, Inc.) and the Google tag (Google LLC) on Loumilab websites to measure which advertisements lead to visits and actions such as account sign-ups, store publication, inquiries, listing submissions, and newsletter subscriptions, and to help those platforms optimize ad delivery.",
+        "These tools may receive device and browser information, pages visited, the actions listed above, and cookie identifiers. Loumilab does not send names, email addresses, phone numbers, order contents, or payment information to these platforms.",
+        "Visitors in regions that require consent (including the EEA, United Kingdom, and Switzerland) are asked before these tools load, and they remain off unless the visitor accepts. Loumilab keeps a record of the choice, its time, and the notice version shown.",
+        "Any visitor may accept or withdraw at any time using “Cookie settings” in the site footer. A withdrawal takes effect immediately and is kept as a refusal. You may also use Meta and Google ad settings or your browser's controls to limit advertising cookies.",
       ],
     },
     {
