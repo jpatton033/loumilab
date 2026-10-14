@@ -27,7 +27,13 @@ const ConsentAndTracking = () => {
       if (req && !readConsent()) setShow(true);
     });
     const open = () => setShow(true);
-    const close = () => readConsent() && setShow(false);
+    const close = () => {
+      const c = readConsent();
+      if (!c) return;
+      setShow(false);
+      // Count the current page once the visitor accepts (earlier view was blocked, not replayed).
+      if (c.choice === "granted" && !window.location.pathname.startsWith("/admin")) track("PageView");
+    };
     window.addEventListener(OPEN_COOKIE_SETTINGS, open);
     window.addEventListener(CONSENT_EVENT, close);
     return () => {

@@ -8,7 +8,7 @@
  */
 
 /** Meta Pixel ID — paste from Meta Events Manager. Empty = Pixel off. */
-export const META_PIXEL_ID = "";
+export const META_PIXEL_ID = "1096079062830163";
 /** Google tag ID (G-… or AW-…). Empty = Google tag off. */
 export const GOOGLE_TAG_ID = "";
 
@@ -43,8 +43,8 @@ export const writeConsent = (choice: "granted" | "denied") => {
   const history = prev ? [...(prev.history ?? []), { choice: prev.choice, at: prev.at, notice: prev.notice }] : [];
   const rec: ConsentRecord = { choice, at: new Date().toISOString(), notice: CONSENT_NOTICE_VERSION, history };
   localStorage.setItem(CONSENT_KEY, JSON.stringify(rec));
-  window.dispatchEvent(new Event(CONSENT_EVENT));
   applyConsent();
+  window.dispatchEvent(new Event(CONSENT_EVENT));
 };
 
 let regionPromise: Promise<boolean> | null = null;
