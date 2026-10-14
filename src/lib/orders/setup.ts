@@ -25,11 +25,11 @@ export const storeUrl = (slug: string) => `${STORE_ORIGIN}${storePath(slug)}`;
 
 /** Wizard step index for each setup task, so "Finish" lands in the right place. */
 export const SETUP_STEP_INDEX: Record<SetupStepId, number> = {
-  account: 0,
-  business: 4,
-  branding: 4,
-  catalog: 5,
-  fulfilment: 6,
+  account: 6,
+  business: 3,
+  branding: 3,
+  catalog: 4,
+  fulfilment: 5,
   payments: 7,
   publish: 9,
 };
@@ -127,7 +127,7 @@ export const buildSnapshot = (source: SetupSource, catalogLabel = "items"): Setu
       label: "Merchant account",
       detail: merchant ? merchant.business_name : "Register your business with Loumilab Orders.",
       done: !!merchant,
-      href: "/orders/get-started?step=0",
+      href: "/orders/get-started?step=6",
       required: true,
     },
     {
@@ -137,7 +137,7 @@ export const buildSnapshot = (source: SetupSource, catalogLabel = "items"): Setu
         ? "Name, city and description are set."
         : "Tell customers who you are and what you offer.",
       done: !!storefront && !!storefront.description?.trim(),
-      href: "/orders/get-started?step=4",
+      href: "/orders/get-started?step=3",
       required: true,
     },
     {
@@ -145,7 +145,7 @@ export const buildSnapshot = (source: SetupSource, catalogLabel = "items"): Setu
       label: "Store branding",
       detail: storefront?.logo_url ? "Your logo is in place." : "Add a logo so your store looks like you.",
       done: !!storefront?.logo_url,
-      href: "/orders/get-started?step=4",
+      href: "/orders/get-started?step=3",
       required: false,
     },
     {
@@ -167,7 +167,7 @@ export const buildSnapshot = (source: SetupSource, catalogLabel = "items"): Setu
           ? "Pickup and delivery preferences are set."
           : "Choose pickup, delivery or both.",
       done: !!(storefront?.pickup_enabled || storefront?.delivery_enabled),
-      href: "/orders/get-started?step=6",
+      href: "/orders/get-started?step=5",
       required: true,
     },
     {
