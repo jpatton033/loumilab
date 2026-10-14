@@ -1,8 +1,8 @@
 # Roadmap
 
 ## The Dot. monitoring fixes
-- [ ] Restore confirmed unpublishing without sending emails or clearing send history.
-- [ ] Preserve safe editor formatting in public issues and verify both fixes.
+- [x] Restore confirmed unpublishing without sending emails or clearing send history.
+- [x] Preserve safe editor formatting in public issues and verify both fixes.
 
 ## The Dot. editorial workspace
 - [x] Mail-style issue desk, filters and persistent writing templates.
