@@ -8,7 +8,7 @@
  */
 
 /** Meta Pixel ID — paste from Meta Events Manager. Empty = Pixel off. */
-export const META_PIXEL_ID = "";
+export const META_PIXEL_ID = "1096079062830163";
 /** Google tag ID (G-… or AW-…). Empty = Google tag off. */
 export const GOOGLE_TAG_ID = "";
 
