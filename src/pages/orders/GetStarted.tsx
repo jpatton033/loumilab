@@ -35,7 +35,7 @@ import {
 import { toast } from "sonner";
 import { subscribeToPlan } from "@/lib/orders/billing";
 
-const DRAFT_KEY = "loumilab-orders-onboarding-draft";
+const DRAFT_KEY = "loumilab-orders-onboarding-draft-v2";
 
 const slugify = (value: string) =>
   value
@@ -65,7 +65,7 @@ interface OnboardingDraft {
 
 const readDraft = (): OnboardingDraft | null => {
   try {
-    const raw = sessionStorage.getItem(DRAFT_KEY);
+    const raw = localStorage.getItem(DRAFT_KEY);
     return raw ? (JSON.parse(raw) as OnboardingDraft) : null;
   } catch {
     return null;
@@ -113,9 +113,6 @@ const GetStarted = () => {
 
   const signedIn = !!email;
 
-  useEffect(() => {
-    track("StartOnboarding");
-  }, []);
   const merchantId = setup?.merchantId ?? undefined;
 
   // Session — the wizard saves progress the moment a merchant is signed in.
@@ -176,13 +173,13 @@ const GetStarted = () => {
 
 
   const stepTitles = [
-    "Merchant account",
     "Your industry",
     "How customers buy",
     "Business information",
     "Store details & branding",
     `Add your ${terms.catalog.toLowerCase()}`,
     industry?.is_food ? "Fulfilment & hours" : "Availability",
+    "Save your store",
     "Payments & payouts",
     "Choose your plan",
     "Preview & publish",
@@ -230,13 +227,13 @@ const GetStarted = () => {
   );
 
   const canContinue =
-    (step === 0 && signedIn && agreed) ||
-    (step === 1 && !!industrySlug) ||
-    (step === 2 && purchaseModels.length > 0) ||
-    (step === 3 && name.trim().length > 1) ||
-    (step === 4 && description.trim().length > 4) ||
-    (step === 6 && (pickupEnabled || deliveryEnabled)) ||
-    step === 5 ||
+    (step === 6 && signedIn && agreed) ||
+    (step === 0 && !!industrySlug) ||
+    (step === 1 && purchaseModels.length > 0) ||
+    (step === 2 && name.trim().length > 1) ||
+    (step === 3 && description.trim().length > 4) ||
+    (step === 5 && (pickupEnabled || deliveryEnabled)) ||
+    step === 4 ||
     step === 7 ||
     step === 8;
 
@@ -298,7 +295,7 @@ const GetStarted = () => {
   // Answers survive a sign-in round trip and an accidental refresh.
   useEffect(() => {
     try {
-      sessionStorage.setItem(DRAFT_KEY, JSON.stringify(snapshot()));
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(snapshot()));
     } catch {
       // Storage unavailable — progress still saves to the merchant record.
     }
@@ -341,10 +338,10 @@ const GetStarted = () => {
   };
 
   const goToSignIn = (mode: "signup" | "signin") =>
-    navigate(`/sign-in?${mode === "signup" ? "mode=signup&" : ""}next=${encodeURIComponent("/orders/get-started")}`);
+    navigate(`/sign-in?${mode === "signup" ? "mode=signup&" : ""}next=${encodeURIComponent("/orders/get-started?step=6")}`);
 
   const advance = async () => {
-    if (step === 0 && agreed && !agreementStatus?.accepted) {
+    if (step === 6 && agreed && !agreementStatus?.accepted) {
       acceptAgreements.mutate(undefined, {
         onError: (error) =>
           toast.error("Couldn't record your agreement", {
@@ -352,7 +349,8 @@ const GetStarted = () => {
           }),
       });
     }
-    if (step >= 3) void persist();
+    if (step >= 2) void persist();
+    if (step === 0) track("StartOnboarding");
     setStep((s) => Math.min(lastStep, s + 1));
   };
 
@@ -394,8 +392,8 @@ const GetStarted = () => {
               Let&apos;s build your storefront.
             </h1>
             <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
-              A few short steps, shaped around your kind of business. Everything saves as you go, and your store
-              stays private until you publish it.
+              No account needed to start — about 5 minutes. Build your store first, then save it with a free
+              account. It stays private until you publish.
             </p>
           </div>
 
@@ -441,12 +439,20 @@ const GetStarted = () => {
 
 
               <div className="mt-7 space-y-5">
-                {step === 0 && (
+                {step === 6 && (
                   <div className="space-y-5">
-                    <p className="text-sm text-muted-foreground">
-                      Your Loumilab account keeps your store, catalog and payouts together — and saves your
-                      progress from here on.
-                    </p>
+                    <div className="rounded-2xl border border-border bg-secondary p-4">
+                      <p className="font-display text-sm font-semibold">
+                        {name.trim() || "Your store"} · {namedItems.length} {terms.catalog.toLowerCase()} ·{" "}
+                        {[pickupEnabled && (industry?.is_food ? "Pickup" : "On-site"), deliveryEnabled && (industry?.is_food ? "Delivery" : "Travel")]
+                          .filter(Boolean)
+                          .join(" & ") || "No fulfilment yet"}
+                      </p>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        Looking good. Create a free account to save it — you'll come right back here with
+                        everything filled in.
+                      </p>
+                    </div>
                     {!authChecked ? (
                       <p className="flex items-center gap-2 text-sm text-muted-foreground">
                         <Loader2 size={15} className="animate-spin" /> Checking your account…
@@ -488,7 +494,7 @@ const GetStarted = () => {
                   </div>
                 )}
 
-                {step === 1 && (
+                {step === 0 && (
                   <div className="space-y-6">
                     <p className="text-sm text-muted-foreground">
                       Pick what you do. Loumilab Orders adjusts the wording, the workflow and the tools you see.
@@ -524,7 +530,7 @@ const GetStarted = () => {
                   </div>
                 )}
 
-                {step === 2 && (
+                {step === 1 && (
                   <>
                     <p className="text-sm text-muted-foreground">
                       Choose everything that applies — many businesses do more than one.
@@ -552,7 +558,7 @@ const GetStarted = () => {
                   </>
                 )}
 
-                {step === 3 && (
+                {step === 2 && (
                   <>
                     <div className="space-y-2">
                       <Label htmlFor="biz-name">Business name</Label>
@@ -574,7 +580,7 @@ const GetStarted = () => {
                   </>
                 )}
 
-                {step === 4 && (
+                {step === 3 && (
                   <>
                     <div className="space-y-2">
                       <Label htmlFor="biz-desc">Store description</Label>
@@ -597,7 +603,7 @@ const GetStarted = () => {
                       hint={
                         merchantId
                           ? "Optional. Shown on your storefront and order updates."
-                          : "Available as soon as your business name is saved — you can add it here or later."
+                          : "You can add your logo after you save your store."
                       }
                       value={logoUrl}
                       onChange={setLogoUrl}
@@ -611,7 +617,7 @@ const GetStarted = () => {
                   </>
                 )}
 
-                {step === 5 && (
+                {step === 4 && (
                   <>
                     {items.map((item, i) => (
                       <div key={i} className="space-y-3 rounded-2xl border border-border p-4">
@@ -664,7 +670,7 @@ const GetStarted = () => {
                   </>
                 )}
 
-                {step === 6 && (
+                {step === 5 && (
                   <>
                     <div className="space-y-2">
                       <Label htmlFor="hours">{industry?.is_food ? "Ordering hours" : "Working hours"}</Label>
@@ -727,7 +733,7 @@ const GetStarted = () => {
                       </div>
                     ) : (
                       <p className="text-sm text-muted-foreground">
-                        Create your account on the first step to connect payments.
+                        Save your store with an account first to connect payments.
                       </p>
                     )}
                     <p className="text-sm text-muted-foreground">
@@ -910,7 +916,8 @@ const GetStarted = () => {
                     disabled={!canContinue}
                     onClick={advance}
                   >
-                    Continue <ArrowRight size={16} />
+                    {step === 6 && !signedIn ? "Create an account above" : `Continue to ${stepTitles[step + 1].toLowerCase()}`}{" "}
+                    <ArrowRight size={16} />
                   </Button>
                 ) : setup?.isPublic ? (
                   <Button asChild className="w-full rounded-full sm:w-auto">
@@ -936,7 +943,7 @@ const GetStarted = () => {
                         size="default"
                         onPublished={() => {
                           try {
-                            sessionStorage.removeItem(DRAFT_KEY);
+                            localStorage.removeItem(DRAFT_KEY);
                           } catch {
                             // Ignore storage errors.
                           }
