@@ -1,3 +1,4 @@
+import { track } from "@/lib/tracking";
 import { useState } from "react";
 import { z } from "zod";
 import Layout from "@/components/Layout";
@@ -65,6 +66,7 @@ const Contact = () => {
     } else {
       toast({ title: "Message sent!", description: "We'll get back to you within 24 hours." });
       setForm({ name: "", email: "", company: "", message: "" });
+      track("Lead", { content_name: "Contact inquiry" });
       localStorage.setItem("last_contact_submission", Date.now().toString());
 
       // Send email notifications (best-effort, don't block on failure)

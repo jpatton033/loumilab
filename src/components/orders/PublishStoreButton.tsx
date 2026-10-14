@@ -1,3 +1,4 @@
+import { track } from "@/lib/tracking";
 import { useState } from "react";
 import { Loader2, Rocket } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -44,6 +45,7 @@ const PublishStoreButton = ({ snapshot, catalogLabel = "items", size = "sm", cla
         onSuccess: () => {
           setConfirming(false);
           if (status === "published") {
+            track("StorePublished");
             toast.success("Your store is live", {
               description: "We've emailed your store link — share it and start taking orders.",
             });

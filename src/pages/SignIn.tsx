@@ -1,3 +1,4 @@
+import { track } from "@/lib/tracking";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -108,6 +109,8 @@ const SignIn = () => {
       toast({ title: "Sign up failed", description: error.message, variant: "destructive" });
       return;
     }
+
+    track("CompleteRegistration", { method: "email" });
 
     if (data.session) {
       // Auto-confirmed or already signed in.

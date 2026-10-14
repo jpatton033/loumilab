@@ -1,3 +1,4 @@
+import { track } from "@/lib/tracking";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -125,7 +126,9 @@ export interface SubscribeResult {
 export const subscribeToTheDot = async (email: string, source: string): Promise<SubscribeResult> => {
   const { data, error } = await supabase.rpc("newsletter_subscribe", { _email: email, _source: source });
   if (error) throw error;
-  return (data ?? {}) as SubscribeResult;
+  const result = (data ?? {}) as SubscribeResult;
+  if (!result.already) track("Subscribe", { content_name: "The Dot." });
+  return result;
 };
 
 export const saveDotInterests = async (email: string, interests: string[]) => {

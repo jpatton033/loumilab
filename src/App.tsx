@@ -1,3 +1,4 @@
+import ConsentAndTracking from "./components/tracking/ConsentAndTracking";
 import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -72,6 +73,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <ScrollToTop />
+        <ConsentAndTracking />
         <Suspense fallback={null}>
         <Routes>
           <Route path="/" element={<Index />} />
