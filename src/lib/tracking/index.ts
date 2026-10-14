@@ -43,8 +43,8 @@ export const writeConsent = (choice: "granted" | "denied") => {
   const history = prev ? [...(prev.history ?? []), { choice: prev.choice, at: prev.at, notice: prev.notice }] : [];
   const rec: ConsentRecord = { choice, at: new Date().toISOString(), notice: CONSENT_NOTICE_VERSION, history };
   localStorage.setItem(CONSENT_KEY, JSON.stringify(rec));
-  window.dispatchEvent(new Event(CONSENT_EVENT));
   applyConsent();
+  window.dispatchEvent(new Event(CONSENT_EVENT));
 };
 
 let regionPromise: Promise<boolean> | null = null;
