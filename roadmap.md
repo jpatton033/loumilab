@@ -5,3 +5,6 @@
 - [ ] Confirm Meta receives events on the live site — waits on publishing
 - [ ] Restructure Orders onboarding: build store before account; sign-in only at launch step
 - [ ] Add Google tag ID (G-/AW-) — blocked: user to provide
+
+- [x] Store setup: build store first, account at step 7; draft survives sign-in
+- [x] Count Google sign-ups

@@ -99,7 +99,7 @@ const SignIn = () => {
       email,
       password,
       options: {
-        emailRedirectTo: window.location.origin,
+        emailRedirectTo: `${window.location.origin}${nextPath ?? ""}`,
         data: { display_name: displayName.trim() || email.split("@")[0] },
       },
     });

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
 import {
   CONSENT_EVENT,
   GOOGLE_TAG_ID,
@@ -40,6 +41,20 @@ const ConsentAndTracking = () => {
       window.removeEventListener(OPEN_COOKIE_SETTINGS, open);
       window.removeEventListener(CONSENT_EVENT, close);
     };
+  }, []);
+
+  // Google sign-ups: count once, on the first sign-in right after the account was created.
+  useEffect(() => {
+    if (!enabled) return;
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      const u = session?.user;
+      if (event !== "SIGNED_IN" || !u || u.app_metadata?.provider !== "google") return;
+      const key = `loumilab-reg-tracked-${u.id}`;
+      if (localStorage.getItem(key)) return;
+      localStorage.setItem(key, "1");
+      if (Date.now() - new Date(u.created_at).getTime() < 10 * 60 * 1000) track("CompleteRegistration", { method: "google" });
+    });
+    return () => sub.subscription.unsubscribe();
   }, []);
 
   useEffect(() => {
