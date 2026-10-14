@@ -12,6 +12,7 @@ import {
   track,
   writeConsent,
 } from "@/lib/tracking";
+import { recordSiteView } from "@/lib/tracking/siteViews";
 
 const enabled = !!(META_PIXEL_ID || GOOGLE_TAG_ID);
 export const OPEN_COOKIE_SETTINGS = "loumilab:open-cookie-settings";
@@ -56,6 +57,11 @@ const ConsentAndTracking = () => {
     });
     return () => sub.subscription.unsubscribe();
   }, []);
+
+  useEffect(() => {
+    const t = setTimeout(() => recordSiteView(pathname), 300);
+    return () => clearTimeout(t);
+  }, [pathname]);
 
   useEffect(() => {
     if (!enabled || pathname.startsWith("/admin")) return;
