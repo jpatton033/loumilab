@@ -19,13 +19,6 @@ const pending = (
   collect: () => Promise.resolve(unavailableSection(key, title, note)),
 });
 
-export const websiteTrafficCollector = pending(
-  "website",
-  "Website & Growth",
-  "website",
-  "No web analytics integration is connected, so visitors, sessions, page views, engagement, referral sources and landing-page performance are unavailable. Conversion events that land in the database — contact submissions and custom project requests — are reported under Leads & Opportunities.",
-);
-
 export const seoCollector = pending(
   "seo",
   "SEO & Discoverability",
