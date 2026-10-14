@@ -50,6 +50,13 @@
       "when": 1792022285263,
       "tag": "0006_site_page_views",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1792022352078,
+      "tag": "0007_fix_record_page_view_rate_limit",
+      "breakpoints": true
     }
   ]
 }
