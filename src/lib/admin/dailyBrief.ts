@@ -265,7 +265,7 @@ export const SECTION_GROUPS: { label: string; items: { key: string; label: strin
       { key: "leads", label: "Leads & opportunities" },
       { key: "knowledge", label: "Knowledge Center" },
       { key: "website_changes", label: "Content & site changes" },
-      { key: "website", label: "Traffic & growth", note: "Needs a web analytics integration" },
+      { key: "website", label: "Traffic & growth" },
       { key: "seo", label: "SEO & discoverability", note: "Needs Search Console reporting" },
     ],
   },

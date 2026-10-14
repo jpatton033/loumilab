@@ -3175,6 +3175,33 @@ export type Database = {
         }
         Relationships: []
       }
+      site_page_views: {
+        Row: {
+          created_at: string
+          device: string
+          id: number
+          path: string
+          referrer_source: string
+          session_id: string
+        }
+        Insert: {
+          created_at?: string
+          device?: string
+          id?: number
+          path: string
+          referrer_source?: string
+          session_id: string
+        }
+        Update: {
+          created_at?: string
+          device?: string
+          id?: number
+          path?: string
+          referrer_source?: string
+          session_id?: string
+        }
+        Relationships: []
+      }
       stripe_webhook_events: {
         Row: {
           account_id: string | null
@@ -3405,6 +3432,15 @@ export type Database = {
       publish_local_candidate: {
         Args: { _id: string; _notes?: string }
         Returns: string
+      }
+      record_page_view: {
+        Args: {
+          _device: string
+          _path: string
+          _referrer: string
+          _session: string
+        }
+        Returns: undefined
       }
       respond_to_quote: {
         Args: { _approve: boolean; _token: string }

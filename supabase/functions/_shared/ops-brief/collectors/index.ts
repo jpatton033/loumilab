@@ -15,8 +15,8 @@ import { subscriptionsCollector } from "./subscriptions.ts";
 import {
   customerExperienceCollector,
   seoCollector,
-  websiteTrafficCollector,
 } from "./pending.ts";
+import { websiteTrafficCollector } from "./traffic.ts";
 
 /**
  * The brief is assembled by walking this ordered registry. Adding a future
