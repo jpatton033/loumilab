@@ -13,3 +13,4 @@
 - The brand dot motion system lives in src/components/brand/dot and uses 3–5 meaningful thread, lens, or action moments on core public pages; never replace ordinary punctuation with it — consistent roles make the logo element recognizable without decoration overload.
 - The Dot. issue emails go only through the admin-only `dot-issue-blast` function (Resend), claimed once per issue via `dot_issues.emailed_at` — prevents duplicate blasts and keeps newsletter mail off the transactional sender.
 - The Dot. editorial sections reuse MailEditor; content_format explicitly separates legacy plain text from sanitized rich HTML, and dot_issue_templates stores admin-only content without issue/send metadata — preserves legacy rendering and keeps templates from triggering broadcasts.
+- The Dot. rich HTML runs through an editor-typography CSS allowlist before HTML sanitization; never allow unfiltered inline styles — preserves writing tools without enabling arbitrary CSS.

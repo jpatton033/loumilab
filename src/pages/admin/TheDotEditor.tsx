@@ -187,6 +187,7 @@ const TheDotEditor = () => {
       return;
     }
     if (!isNew && !id) return;
+    if (existing?.status === "published" && status === "draft" && !window.confirm("Unpublish this issue? It will be removed from the public archive. Emails already sent cannot be recalled.")) return;
     if (publish && !existing?.emailed_at && !window.confirm("Publish this issue and email all active subscribers?")) return;
     if (form.resource_links.some((l) => l.href.trim() && !safeResourceUrl(l.href.trim()))) {
       toast({ title: "Use an https:// link or a local page path", variant: "destructive" }); return;
@@ -307,6 +308,11 @@ const TheDotEditor = () => {
           {existing && (
             <Button variant="ghost" disabled={saving} onClick={sendTest}>
               Send test
+            </Button>
+          )}
+          {existing?.status === "published" && (
+            <Button variant="outline" disabled={saving} onClick={() => save("draft")}>
+              Unpublish
             </Button>
           )}
           <Button variant="outline" disabled={saving} onClick={() => save(existing?.status === "published" ? "published" : "draft")}>

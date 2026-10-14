@@ -23,4 +23,20 @@ describe("The Dot. editorial content", () => {
     expect(safeResourceUrl("//evil.example")).toBe(false);
     expect(safeResourceUrl("/resources")).toBe(true);
   });
+  it("preserves editor typography, alignment and highlights", () => {
+    const markup = renderToStaticMarkup(<IssueRichContent body={'<p style="text-align: center; line-height: 2"><span style="color: rgb(11, 114, 243); font-size: 24px; font-family: Arial, Helvetica, sans-serif">Styled</span><mark style="background-color: #fef08a">Highlighted</mark></p>'} />);
+    expect(markup).toContain("text-align:center");
+    expect(markup).toContain("line-height:2");
+    expect(markup).toContain("color:rgb(11, 114, 243)");
+    expect(markup).toContain("font-size:24px");
+    expect(markup).toContain("font-family:Arial, Helvetica, sans-serif");
+    expect(markup).toContain('<mark style="background-color:#fef08a">Highlighted</mark>');
+  });
+  it("rejects arbitrary CSS and unsafe values without losing valid formatting", () => {
+    const markup = renderToStaticMarkup(<IssueRichContent body={'<p style="text-align: right; position: fixed; background-image: url(https://evil.example); color: expression(alert(1)); line-height: 999"><span style="font-size: 999px; font-family: evil; color: #0b72f3">Safe</span></p><div style="color: #0b72f3">No styles</div><mark style="background-color: url(javascript:bad)">No highlight</mark>'} />);
+    expect(markup).toContain("text-align:right");
+    expect(markup).toContain("color:#0b72f3");
+    expect(markup).not.toMatch(/position|url\(|expression|999|evil|javascript/);
+    expect(markup).toContain("<div>No styles</div>");
+  });
 });
