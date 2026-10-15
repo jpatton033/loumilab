@@ -63,10 +63,19 @@ interface OnboardingDraft {
   planSlug: string | null;
 }
 
+const DRAFT_MAX_AGE_MS = 24 * 60 * 60 * 1000;
+
 const readDraft = (): OnboardingDraft | null => {
   try {
     const raw = localStorage.getItem(DRAFT_KEY);
-    return raw ? (JSON.parse(raw) as OnboardingDraft) : null;
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as OnboardingDraft & { savedAt?: number };
+    // Drafts only bridge a sign-in round trip; stale ones are discarded.
+    if (!parsed.savedAt || Date.now() - parsed.savedAt > DRAFT_MAX_AGE_MS) {
+      localStorage.removeItem(DRAFT_KEY);
+      return null;
+    }
+    return parsed;
   } catch {
     return null;
   }
@@ -150,9 +159,12 @@ const GetStarted = () => {
   // A merchant who already has a store sees their saved details, not a blank
   // form — otherwise the auto-save would overwrite real data with defaults.
   const { data: prefill, isFetched: prefillReady } = useOnboardingPrefill();
-  const hydrated = useRef(!!saved);
+  // A browser draft only fills in for visitors without a saved store: once a
+  // store exists on file, it always wins over whatever this browser kept.
+  const hydrated = useRef(false);
   useEffect(() => {
     if (hydrated.current || !prefill) return;
+    if (saved && !prefill.businessName) return;
     hydrated.current = true;
     keepRestoredModels.current = true;
     setIndustrySlug(prefill.industrySlug);
@@ -199,7 +211,7 @@ const GetStarted = () => {
       setStep(Math.min(lastStep, Math.max(0, Number(stepParam))));
       return;
     }
-    if (saved || !setup?.merchantId) return;
+    if (!setup?.merchantId) return;
     jumped.current = true;
     const outstanding = setup.tasks.find((t) => t.required && t.id !== "publish" && !t.done);
     const next = outstanding ? SETUP_STEP_INDEX[outstanding.id] : lastStep;
@@ -295,7 +307,7 @@ const GetStarted = () => {
   // Answers survive a sign-in round trip and an accidental refresh.
   useEffect(() => {
     try {
-      localStorage.setItem(DRAFT_KEY, JSON.stringify(snapshot()));
+      localStorage.setItem(DRAFT_KEY, JSON.stringify({ ...snapshot(), savedAt: Date.now() }));
     } catch {
       // Storage unavailable — progress still saves to the merchant record.
     }
