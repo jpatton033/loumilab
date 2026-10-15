@@ -9,8 +9,8 @@
 
 /** Meta Pixel ID — paste from Meta Events Manager. Empty = Pixel off. */
 export const META_PIXEL_ID = "1096079062830163";
-/** Google tag ID (G-… or AW-…). Empty = Google tag off. */
-export const GOOGLE_TAG_ID = "";
+/** Google Tag Manager container ID (GTM-…). Empty = Google tag off. */
+export const GOOGLE_TAG_ID = "GTM-M69KVPPK";
 
 export const CONSENT_KEY = "loumilab-ad-consent";
 export const CONSENT_NOTICE_VERSION = "2026-10-14";
@@ -120,13 +120,23 @@ const loadGoogle = () => {
     window.dataLayer!.push(arguments);
   };
   window.gtag("consent", "default", { ad_storage: "granted", ad_user_data: "granted", ad_personalization: "granted", analytics_storage: "granted" });
-  window.gtag("set", "developer_id.dZjgwMW", true);
-  window.gtag("js", new Date());
-  window.gtag("config", GOOGLE_TAG_ID, { send_page_view: false });
-  const s = document.createElement("script");
-  s.async = true;
-  s.src = `https://www.googletagmanager.com/gtag/js?id=${GOOGLE_TAG_ID}`;
-  document.head.appendChild(s);
+  if (GOOGLE_TAG_ID.startsWith("GTM-")) {
+    // Google Tag Manager container: tags inside GTM decide what is measured.
+    window.dataLayer.push({ "gtm.start": Date.now(), event: "gtm.js" });
+    const s = document.createElement("script");
+    s.async = true;
+    s.src = `https://www.googletagmanager.com/gtm.js?id=${GOOGLE_TAG_ID}`;
+    document.head.appendChild(s);
+  } else {
+    // Direct Google tag (G-… or AW-…).
+    window.gtag("set", "developer_id.dZjgwMW", true);
+    window.gtag("js", new Date());
+    window.gtag("config", GOOGLE_TAG_ID, { send_page_view: false });
+    const s = document.createElement("script");
+    s.async = true;
+    s.src = `https://www.googletagmanager.com/gtag/js?id=${GOOGLE_TAG_ID}`;
+    document.head.appendChild(s);
+  }
 };
 
 export const applyConsent = () => {
@@ -163,6 +173,7 @@ export const track = (name: ConversionName, params: Record<string, string | numb
   const m = MAP[name];
   if (metaLoaded) window.fbq?.("track", m.meta, params);
   if (googleLoaded) {
-    window.gtag?.("event", m.google, name === "PageView" ? { page_path: location.pathname, ...params } : params);
+    // GTM custom-event triggers read the `event` key from dataLayer.
+    window.dataLayer?.push({ event: m.google, ...(name === "PageView" ? { page_path: location.pathname } : {}), ...params });
   }
 };
