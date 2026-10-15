@@ -177,3 +177,9 @@ export const track = (name: ConversionName, params: Record<string, string | numb
     window.dataLayer?.push({ event: m.google, ...(name === "PageView" ? { page_path: location.pathname } : {}), ...params });
   }
 };
+
+/** Store creation conversion: GTM custom event `store_created` (no identifiers). */
+export const trackStoreCreated = (params: Record<string, string | number> = {}) => {
+  if (!allowed() || !googleLoaded) return;
+  window.dataLayer?.push({ event: "store_created", ...params });
+};
