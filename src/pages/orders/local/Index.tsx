@@ -18,7 +18,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import LocalBusinessCard from "@/components/orders/local/LocalBusinessCard";
 import LocalFilters from "@/components/orders/local/LocalFilters";
 import { LOCAL_CATEGORIES, useLocalFeatured, useLocalSearch, type LocalSearch } from "@/lib/orders/local";
-import { DotMarker, DotThread } from "@/components/brand/dot";
+import { DotMarker, DotPin, DotThread } from "@/components/brand/dot";
 
 const fromParams = (p: URLSearchParams): LocalSearch => ({
   q: p.get("q") ?? "",
@@ -101,7 +101,7 @@ const LocalIndex = () => {
           <Link to="/orders/local/join" className="text-sm font-medium text-muted-foreground hover:text-foreground">List your business — free</Link>
         </div>
         <DotMarker className="mt-8" />
-        <Eyebrow className="mt-8 block">Discover local food businesses</Eyebrow>
+        <Eyebrow className="mt-8 flex items-center gap-2"><DotPin />Discover local food businesses</Eyebrow>
         <h1 className="mt-4 max-w-3xl font-hero text-5xl font-semibold leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl">
           Discover what's cooking near you.
         </h1>

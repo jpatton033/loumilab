@@ -5,7 +5,7 @@ import SEOHead from "@/components/SEOHead";
 import Reveal from "@/components/Reveal";
 import ArticleCard from "@/components/kc/ArticleCard";
 import { PeopleSequence } from "@/components/brand/story";
-import { DotImageJourney, DotMarker, DotSplit, DotThread } from "@/components/brand/dot";
+import { DotImageJourney, DotMarker, DotReveal, DotSplit, DotThread } from "@/components/brand/dot";
 import { GridTile, MoreLink, ProductTile, Statement, TileActions } from "@/components/brand/apple/Tiles";
 import { usePublishedArticles } from "@/lib/kc/queries";
 import TheDotSignup from "@/components/thedot/TheDotSignup";
@@ -69,6 +69,7 @@ const Index = () => {
 
       {/* Products */}
       <DotSplit className="mt-16 lg:mt-24" />
+      <DotReveal />
       <ProductTile
         className="mt-6"
         tone="subtle"
