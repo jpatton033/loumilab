@@ -91,7 +91,14 @@ const GetStarted = () => {
   const [authChecked, setAuthChecked] = useState(false);
   const [industrySlug, setIndustrySlug] = useState(saved?.industrySlug ?? "food-catering");
   const [purchaseModels, setPurchaseModels] = useState<string[]>(saved?.purchaseModels ?? ["products"]);
-  const [name, setName] = useState(saved?.name ?? "");
+  // A name typed on the Orders homepage ("Try it here") carries in via ?name=,
+  // but only for fresh visitors — a draft or a saved store always wins.
+  const [name, setName] = useState(() => {
+    if (saved?.name) return saved.name;
+    if (typeof window === "undefined") return "";
+    const n = new URLSearchParams(window.location.search).get("name");
+    return n ? n.trim().slice(0, 60) : "";
+  });
   const [category, setCategory] = useState(saved?.category ?? "");
   const [location, setLocation] = useState(saved?.location ?? "");
   const [description, setDescription] = useState(saved?.description ?? "");
