@@ -47,6 +47,9 @@ import { audiences } from "@/data/orders/audiences";
 import { pricingHeading, pricingPlans } from "@/data/orders/pricing";
 import { ordersHeroSlides } from "@/data/orders/hero-slides";
 import { DotMarker, DotThread } from "@/components/brand/dot";
+import StartBuildingStatement from "@/components/orders/creative/StartBuildingStatement";
+import StorefrontAssembly from "@/components/orders/creative/StorefrontAssembly";
+import TryItInvitation from "@/components/orders/creative/TryItInvitation";
 
 const steps = [
   {
@@ -169,7 +172,7 @@ const Orders = () => {
               <div className="mt-9 flex flex-col gap-3 sm:flex-row">
                 <Button size="lg" asChild className="rounded-full">
                   <Link to="/orders/get-started">
-                    Create Your Store <ArrowRight size={18} />
+                    Build your store — no sign-up required <ArrowRight size={18} />
                   </Link>
                 </Button>
                 <Button size="lg" variant="outline" asChild className="rounded-full">
@@ -194,6 +197,8 @@ const Orders = () => {
           </div>
         </div>
       </section>
+
+      <StartBuildingStatement />
 
       <OrdersHeroSlideshow slides={ordersHeroSlides} />
 
@@ -244,6 +249,8 @@ const Orders = () => {
         ]}
       />
 
+      <StorefrontAssembly />
+
       {/* How it works */}
       <section id="how-it-works" className="section-padding scroll-mt-24">
         <div className="section-container">
@@ -269,6 +276,8 @@ const Orders = () => {
           </div>
         </div>
       </section>
+
+      <TryItInvitation />
 
       {/* Interactive storefront demo */}
       <section className="section-padding surface-subtle border-y border-border">
@@ -494,6 +503,16 @@ const Orders = () => {
             <PricingTable />
           </div>
           <p className="mt-6 text-sm text-muted-foreground">{pricingHeading.footnote}</p>
+          <ol className="mt-10 flex flex-col gap-3 font-display text-sm sm:flex-row sm:items-center sm:gap-6" aria-label="How a store goes live">
+            <li><span className="font-semibold text-foreground">Build</span> <span className="text-muted-foreground">— free, no account</span></li>
+            <li aria-hidden="true" className="hidden text-muted-foreground sm:block">→</li>
+            <li><span className="font-semibold text-foreground">Save</span> <span className="text-muted-foreground">— create an account</span></li>
+            <li aria-hidden="true" className="hidden text-muted-foreground sm:block">→</li>
+            <li><span className="font-semibold text-foreground">Publish</span> <span className="text-muted-foreground">— finish payout setup</span></li>
+          </ol>
+          <Button size="lg" asChild className="mt-8 rounded-full">
+            <Link to="/orders/get-started">Build your store — no sign-up required <ArrowRight size={18} /></Link>
+          </Button>
         </div>
       </section>
 
@@ -523,7 +542,7 @@ const Orders = () => {
           <Reveal delay={340} className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
             <Button size="lg" asChild className="rounded-full">
               <Link to="/orders/get-started" className="dot-action">
-                Create Your Store <ArrowRight size={18} />
+                Build your store — no sign-up required <ArrowRight size={18} />
               </Link>
             </Button>
             <Button size="lg" variant="outline" asChild className="rounded-full">
