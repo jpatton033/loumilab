@@ -16,3 +16,4 @@
 - The Dot. rich HTML runs through an editor-typography CSS allowlist before HTML sanitization; never allow unfiltered inline styles — preserves writing tools without enabling arbitrary CSS.
 - Ad conversion tracking (Meta Pixel, Google tag) goes only through src/lib/tracking (`track()`), loads only when an ID is set there and ad consent allows (regional banner via /cdn-cgi/trace, EEA/UK/CH), and never sends customer identifiers — one consent gate and one event map for every ad platform.
 - Website traffic for the ops brief comes only from first-party anonymous page views via the `record_page_view` RPC into staff-read `site_page_views` (no IP/identity; admin, login and preview hosts skipped) — keeps analytics free of external APIs and personal data.
+- Orders setup uses numbered, non-scrolling mobile progress and locally expanded touch targets with existing UI controls — keeps every step discoverable without changing shared controls or store-saving behavior.
