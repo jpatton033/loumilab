@@ -79,7 +79,7 @@ const storeJsonLd = (
 const Storefront = () => {
   const { slug } = useParams<{ slug: string }>();
   const [params] = useSearchParams();
-  const { data: live, isLoading } = usePublicStorefront(slug);
+  const { data: live, isLoading, isError } = usePublicStorefront(slug);
   const demo = getStorefront(slug);
   const cart = useCart();
   const [checkoutOpen, setCheckoutOpen] = useState(false);
@@ -136,7 +136,13 @@ const Storefront = () => {
   if (!store) {
     return (
       <Layout>
-        <SEOHead title="Store Unavailable — Loumilab Orders" description="This storefront is not available right now." path="/orders" noindex />
+        {/* A failed load (e.g. a crawler timeout) must not tell search engines the store is gone. */}
+        <SEOHead
+          title="Store Unavailable — Loumilab Orders"
+          description="This storefront is not available right now."
+          path={isError ? `/orders/store/${slug ?? ""}` : "/orders"}
+          noindex={!isError}
+        />
         <section className="section-padding pt-16 text-center">
           <div className="section-container">
             <h1 className="font-hero text-4xl font-semibold tracking-tight">This store is unavailable right now</h1>
