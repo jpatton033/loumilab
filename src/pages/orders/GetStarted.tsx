@@ -410,13 +410,17 @@ const GetStarted = () => {
           </div>
 
           {/* Progress */}
-          <div className="-mx-6 mt-12 flex gap-2 overflow-x-auto px-6 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
+          <nav aria-label="Store setup progress" className="mt-12 grid grid-cols-5 gap-2 sm:flex sm:flex-wrap">
             {stepTitles.map((title, i) => (
-              <button
+              <Button
                 key={title}
                 type="button"
+                variant="outline"
+                aria-label={`Step ${i + 1} of ${stepTitles.length}: ${title}`}
+                aria-current={i === step ? "step" : undefined}
+                disabled={i > step}
                 onClick={() => i <= step && setStep(i)}
-                className={`shrink-0 whitespace-nowrap rounded-full border px-4 py-2 text-xs font-semibold transition-colors ${
+                className={`h-11 min-w-0 rounded-full px-0 text-xs font-semibold disabled:opacity-100 sm:h-auto sm:px-4 sm:py-2 ${
                   i === step
                     ? "border-transparent bg-foreground text-background"
                     : i < step
@@ -424,17 +428,20 @@ const GetStarted = () => {
                       : "border-border text-muted-foreground"
                 }`}
               >
-                {i < step ? <Check size={12} className="mr-1 inline" /> : `${i + 1}. `}
-                {title}
-              </button>
+                <span aria-hidden="true" className="sm:hidden">{i + 1}</span>
+                <span aria-hidden="true" className="hidden sm:inline">
+                  {i < step ? <Check size={12} className="mr-1 inline" /> : `${i + 1}. `}
+                  {title}
+                </span>
+              </Button>
             ))}
-          </div>
+          </nav>
 
-          <div className="mt-10 grid gap-10 lg:grid-cols-[1.15fr_0.85fr]">
+          <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-[1.15fr_0.85fr]">
             {/* Form */}
             <div
               ref={stepCardRef}
-              className="rounded-3xl border border-border bg-card p-7 shadow-[var(--shadow-soft)] lg:p-9"
+              className="min-w-0 break-words rounded-3xl border border-border bg-card p-5 shadow-[var(--shadow-soft)] sm:p-7 lg:p-9"
             >
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <h2 className="font-display text-xl font-semibold">
@@ -480,13 +487,13 @@ const GetStarted = () => {
                       </div>
                     ) : (
                       <div className="flex flex-wrap gap-3">
-                        <Button type="button" className="rounded-full" onClick={() => goToSignIn("signup")}>
+                        <Button type="button" className="h-auto min-h-11 max-w-full whitespace-normal rounded-full sm:min-h-0" onClick={() => goToSignIn("signup")}>
                           Create your account <ArrowRight size={16} />
                         </Button>
                         <Button
                           type="button"
                           variant="outline"
-                          className="rounded-full"
+                          className="h-auto min-h-11 max-w-full whitespace-normal rounded-full sm:min-h-0"
                           onClick={() => goToSignIn("signin")}
                         >
                           I already have one
@@ -549,11 +556,13 @@ const GetStarted = () => {
                     </p>
                     <div className="grid gap-3 sm:grid-cols-2">
                       {PURCHASE_MODELS.map((model) => (
-                        <button
+                        <Button
                           key={model.id}
                           type="button"
+                          variant="outline"
+                          aria-pressed={purchaseModels.includes(model.id)}
                           onClick={() => toggleModel(model.id)}
-                          className={`rounded-2xl border p-4 text-left transition-colors ${
+                          className={`block h-auto whitespace-normal rounded-2xl border p-4 text-left transition-colors ${
                             purchaseModels.includes(model.id)
                               ? "border-accent bg-accent/5"
                               : "border-border hover:border-foreground/20"
@@ -561,7 +570,7 @@ const GetStarted = () => {
                         >
                           <span className="font-display text-sm font-semibold">{model.label}</span>
                           <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{model.description}</p>
-                        </button>
+                        </Button>
                       ))}
                     </div>
                     <div className="rounded-2xl border border-border bg-secondary p-4 text-sm text-muted-foreground">
@@ -574,12 +583,13 @@ const GetStarted = () => {
                   <>
                     <div className="space-y-2">
                       <Label htmlFor="biz-name">Business name</Label>
-                      <Input id="biz-name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Sunday Kitchen" />
+                      <Input id="biz-name" name="business-name" autoComplete="organization" value={name} onChange={(e) => setName(e.target.value)} placeholder="Sunday Kitchen" />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="biz-category">What do you offer?</Label>
                       <Input
                         id="biz-category"
+                        name="business-category"
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
                         placeholder={industry?.is_food ? "Home-cooked meals, baked goods, catering…" : "Repairs, installs, service calls…"}
@@ -587,7 +597,7 @@ const GetStarted = () => {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="biz-location">City</Label>
-                      <Input id="biz-location" value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Atlanta, GA" />
+                      <Input id="biz-location" name="business-city" autoComplete="address-level2" value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Atlanta, GA" />
                     </div>
                   </>
                 )}
@@ -674,7 +684,7 @@ const GetStarted = () => {
                     <Button
                       type="button"
                       variant="outline"
-                      className="rounded-full"
+                      className="min-h-11 rounded-full sm:min-h-0"
                       onClick={() => setItems((prev) => [...prev, { name: "", price: "" }])}
                     >
                       Add another {terms.catalogItem.toLowerCase()}
@@ -693,26 +703,26 @@ const GetStarted = () => {
                       <Input id="pickup" value={pickupInfo} onChange={(e) => setPickupInfo(e.target.value)} />
                     </div>
                     <div className="space-y-4 rounded-2xl border border-border p-4">
-                      <div className="flex items-center justify-between gap-4">
-                        <div>
-                          <p className="text-sm font-semibold">
+                      <Label htmlFor="pickup-enabled" className="flex min-h-11 cursor-pointer items-center justify-between gap-4">
+                        <span>
+                          <span className="block text-sm font-semibold">
                             {industry?.is_food ? "Pickup" : "On-site or in-store"}
-                          </p>
-                          <p className="text-xs text-muted-foreground">
+                          </span>
+                          <span id="pickup-help" className="block text-xs font-normal text-muted-foreground">
                             Customers come to you at the details above.
-                          </p>
-                        </div>
-                        <Switch checked={pickupEnabled} onCheckedChange={setPickupEnabled} />
-                      </div>
-                      <div className="flex items-center justify-between gap-4">
-                        <div>
-                          <p className="text-sm font-semibold">
+                          </span>
+                        </span>
+                        <Switch id="pickup-enabled" aria-label={industry?.is_food ? "Pickup" : "On-site or in-store"} aria-describedby="pickup-help" className="relative after:absolute after:-inset-y-2.5 after:inset-x-0 after:content-['']" checked={pickupEnabled} onCheckedChange={setPickupEnabled} />
+                      </Label>
+                      <Label htmlFor="delivery-enabled" className="flex min-h-11 cursor-pointer items-center justify-between gap-4">
+                        <span>
+                          <span className="block text-sm font-semibold">
                             {industry?.is_food ? "Delivery" : "We travel to the customer"}
-                          </p>
-                          <p className="text-xs text-muted-foreground">Add a flat fee if you charge for travel.</p>
-                        </div>
-                        <Switch checked={deliveryEnabled} onCheckedChange={setDeliveryEnabled} />
-                      </div>
+                          </span>
+                          <span id="delivery-help" className="block text-xs font-normal text-muted-foreground">Add a flat fee if you charge for travel.</span>
+                        </span>
+                        <Switch id="delivery-enabled" aria-label={industry?.is_food ? "Delivery" : "We travel to the customer"} aria-describedby="delivery-help" className="relative after:absolute after:-inset-y-2.5 after:inset-x-0 after:content-['']" checked={deliveryEnabled} onCheckedChange={setDeliveryEnabled} />
+                      </Label>
                       {deliveryEnabled && (
                         <div className="space-y-2">
                           <Label htmlFor="delivery-fee">Fee</Label>
@@ -792,7 +802,7 @@ const GetStarted = () => {
                         </p>
                         <Button
                           type="button"
-                          className="mt-3"
+                          className="mt-3 min-h-11 sm:min-h-0"
                           disabled={subscribing || !signedIn}
                           onClick={async () => {
                             setSubscribing(true);
@@ -829,12 +839,12 @@ const GetStarted = () => {
                     </div>
                     <StoreLink slug={setup.slug} isPublic />
                     <div className="flex flex-wrap gap-3">
-                      <Button asChild className="rounded-full">
+                      <Button asChild className="min-h-11 rounded-full sm:min-h-0">
                         <Link to="/orders/dashboard">
                           Manage orders <ArrowRight size={16} />
                         </Link>
                       </Button>
-                      <Button asChild variant="outline" className="rounded-full">
+                      <Button asChild variant="outline" className="min-h-11 rounded-full sm:min-h-0">
                         <Link to="/orders/dashboard">Manage store</Link>
                       </Button>
                     </div>
@@ -894,7 +904,7 @@ const GetStarted = () => {
                                     type="button"
                                     size="sm"
                                     variant="ghost"
-                                    className="h-auto rounded-full px-2 py-1 text-xs text-accent"
+                                    className="h-auto min-h-11 rounded-full px-2 py-1 text-xs text-accent sm:min-h-0"
                                     onClick={() => setStep(SETUP_STEP_INDEX[task.id])}
                                   >
                                     Finish
@@ -914,7 +924,7 @@ const GetStarted = () => {
                 <Button
                   type="button"
                   variant="ghost"
-                  className="rounded-full"
+                  className="min-h-11 rounded-full sm:min-h-0"
                   disabled={step === 0}
                   onClick={() => setStep((s) => Math.max(0, s - 1))}
                 >
@@ -924,7 +934,7 @@ const GetStarted = () => {
                 {step < lastStep ? (
                   <Button
                     type="button"
-                    className="w-full rounded-full sm:w-auto"
+                    className="h-auto min-h-11 w-full whitespace-normal rounded-full sm:min-h-0 sm:w-auto"
                     disabled={!canContinue}
                     onClick={advance}
                   >
@@ -932,7 +942,7 @@ const GetStarted = () => {
                     <ArrowRight size={16} />
                   </Button>
                 ) : setup?.isPublic ? (
-                  <Button asChild className="w-full rounded-full sm:w-auto">
+                  <Button asChild className="min-h-11 w-full rounded-full sm:min-h-0 sm:w-auto">
                     <Link to="/orders/dashboard">
                       Go to dashboard <ArrowRight size={16} />
                     </Link>
@@ -942,7 +952,7 @@ const GetStarted = () => {
                     <Button
                       type="button"
                       variant="outline"
-                      className="rounded-full"
+                      className="min-h-11 rounded-full sm:min-h-0"
                       onClick={() => void finishSaving()}
                       disabled={busy || name.trim().length < 2}
                     >
@@ -953,6 +963,7 @@ const GetStarted = () => {
                         snapshot={setup}
                         catalogLabel={terms.catalog}
                         size="default"
+                        className="min-h-11 sm:min-h-0"
                         onPublished={() => {
                           try {
                             localStorage.removeItem(DRAFT_KEY);
