@@ -1,5 +1,6 @@
 import { track } from "@/lib/tracking";
 import { useState } from "react";
+import { DotCheck } from "@/components/brand/dot";
 import { z } from "zod";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
@@ -24,6 +25,7 @@ const Contact = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const [submitting, setSubmitting] = useState(false);
+  const [sent, setSent] = useState(false);
 
   const [honeypot, setHoneypot] = useState("");
 
@@ -66,6 +68,7 @@ const Contact = () => {
     } else {
       toast({ title: "Message sent!", description: "We'll get back to you within 24 hours." });
       setForm({ name: "", email: "", company: "", message: "" });
+      setSent(true);
       track("Lead", { content_name: "Contact inquiry" });
       localStorage.setItem("last_contact_submission", Date.now().toString());
 
@@ -180,6 +183,7 @@ const Contact = () => {
               <Button size="lg" type="submit" className="w-full sm:w-auto" disabled={submitting}>
                 {submitting ? "Sending..." : "Send Message"} <Send size={16} />
               </Button>
+              {sent ? <DotCheck className="mt-5" label="Message sent — we'll reply within 24 hours." /> : null}
             </form>
             </Reveal>
           </div>

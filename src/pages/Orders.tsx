@@ -171,7 +171,7 @@ const Orders = () => {
               </p>
               <div className="mt-9 flex flex-col gap-3 sm:flex-row">
                 <Button size="lg" asChild className="rounded-full">
-                  <Link to="/orders/get-started">
+                  <Link to="/orders/get-started" className="dot-action">
                     Build your store — no sign-up required <ArrowRight size={18} />
                   </Link>
                 </Button>
@@ -511,7 +511,7 @@ const Orders = () => {
             <li><span className="font-semibold text-foreground">Publish</span> <span className="text-muted-foreground">— finish payout setup</span></li>
           </ol>
           <Button size="lg" asChild className="mt-8 rounded-full">
-            <Link to="/orders/get-started">Build your store — no sign-up required <ArrowRight size={18} /></Link>
+            <Link to="/orders/get-started" className="dot-action">Build your store — no sign-up required <ArrowRight size={18} /></Link>
           </Button>
         </div>
       </section>

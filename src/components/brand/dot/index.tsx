@@ -89,3 +89,6 @@ export const DotImageJourney = ({ className }: { className?: string }) => {
     </div>
   );
 };
+
+export { DotReveal, DotPin, DotProgress, DotCheck, RouteDot } from "./experience";
+export { DOT_EASE, DOT_SPEED, DOT_SIZE, useDotMotion } from "./tokens";

@@ -1,4 +1,5 @@
 import { useEffect, useMemo } from "react";
+import { DotProgress } from "@/components/brand/dot";
 import { Link, useParams } from "react-router-dom";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
@@ -133,6 +134,7 @@ const ResourceArticle = () => {
         }}
       />
 
+      <DotProgress targetId="kc-article" />
       <article id="kc-article" className="section-padding pt-8 lg:pt-12">
         <div className="section-container">
           <Link
