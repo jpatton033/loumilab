@@ -70,12 +70,20 @@ serve(async (req) => {
     const cutoff = new Date(Date.now() - 60 * 1000).toISOString();
     const { data: submission, error: fetchError } = await supabaseAdmin
       .from('contact_submissions')
-      .select('name, email, company, message, created_at')
+      .select('id, name, email, company, message, created_at')
       .ilike('email', emailInput)
       .gte('created_at', cutoff)
       .order('created_at', { ascending: false })
       .limit(1)
       .maybeSingle();
+
+    if (!fetchError && submission && !submission.id) {
+      console.error("Contact submission missing id; refusing to send with a shared idempotency key");
+      return new Response(
+        JSON.stringify({ error: "An error occurred" }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
     if (fetchError || !submission) {
       return new Response(
