@@ -139,6 +139,18 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://loumilab.com/the-dot/issue/ai-is-getting-easier-good-technology-isnt</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://loumilab.com/the-dot/issue/your-business-has-a-tech-stack-even-if-youve-never-built-one</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://loumilab.com/orders/local/taste-this</loc>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -253,7 +265,7 @@
   </url>
   <url>
     <loc>https://loumilab.com/resources/web-digital/what-a-modern-business-website-should-do</loc>
-    <lastmod>2026-10-08</lastmod>
+    <lastmod>2026-10-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
