@@ -548,3 +548,54 @@
   .sb-statement .sb-line-1,.sb-statement .sb-line-2,.sb-statement .sb-sub,.sb-statement .sb-cta{opacity:1;transform:none;transition:none}
   .sb-strike-line{transform:scaleX(1);transition:none}.sb-statement .sb-dot{animation:none!important}
 }
+
+/* ===== The Blue Dot Experience — shared vocabulary ===== */
+:root { --ldot-ease: cubic-bezier(.2,.8,.2,1); --ldot-fast: 240ms; --ldot-base: 600ms; --ldot-sig: 1100ms; }
+
+/* Act: the dot waits at the button edge; press pushes it in and fills briefly (touch + keyboard, no hover dependency) */
+.dot-action { overflow: hidden; isolation: isolate; }
+.dot-action::after { content: ""; position: absolute; left: 1.1rem; top: 50%; width: 6px; height: 6px; margin-top: -3px; border-radius: 9999px; background: hsl(var(--accent)); z-index: -1; transform: scale(0); transition: transform var(--ldot-base) var(--ldot-ease), opacity var(--ldot-base) var(--ldot-ease); opacity: 0; }
+.dot-action:active::after { opacity: 1; transform: scale(70); transition-duration: var(--ldot-fast); }
+
+/* Reveal */
+.ldot-reveal { position: relative; height: 0; z-index: 1; }
+.ldot-reveal-fill { position: absolute; left: 50%; top: 0; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 9999px; background: hsl(var(--accent)); opacity: 0; }
+.ldot-reveal-park { position: absolute; right: 1.5rem; top: 1.5rem; width: 9px; height: 9px; border-radius: 9999px; background: hsl(var(--accent)); opacity: 0; }
+.ldot-reveal.ldot-in .ldot-reveal-fill { animation: ldotRevealFill 1.4s var(--ldot-ease) both; }
+.ldot-reveal.ldot-in .ldot-reveal-park { animation: ldotRevealPark 2.6s var(--ldot-ease) 1.1s both; }
+@keyframes ldotRevealFill { 0% { opacity: 0; transform: scale(.3); } 15% { opacity: 1; transform: scale(1); } 60% { opacity: .14; transform: scale(160); } 100% { opacity: 0; transform: scale(200); } }
+@keyframes ldotRevealPark { 0% { opacity: 0; transform: translate(-40vw, 0) scale(2); } 35% { opacity: 1; transform: none; } 80% { opacity: 1; } 100% { opacity: 0; } }
+
+/* Pin */
+.ldot-pin { position: relative; display: inline-block; width: 12px; height: 18px; vertical-align: middle; }
+.ldot-pin-core { position: absolute; left: 0; top: 0; width: 12px; height: 12px; border-radius: 9999px; background: hsl(var(--accent)); opacity: 0; }
+.ldot-pin-shadow { position: absolute; left: 2px; bottom: 0; width: 8px; height: 2px; border-radius: 9999px; background: hsl(var(--foreground) / .18); opacity: 0; }
+.ldot-pin.ldot-in .ldot-pin-core { animation: ldotPinDrop .9s var(--ldot-ease) both; }
+.ldot-pin.ldot-in .ldot-pin-shadow { animation: ldotPinShadow .9s var(--ldot-ease) both; }
+@keyframes ldotPinDrop { 0% { opacity: 0; transform: translateY(-28px); } 60% { opacity: 1; transform: translateY(2px) scaleY(.85); } 100% { opacity: 1; transform: none; } }
+@keyframes ldotPinShadow { 0%,40% { opacity: 0; transform: scaleX(.3); } 100% { opacity: 1; transform: none; } }
+
+/* Reading progress */
+.ldot-progress { position: fixed; left: 0; right: 0; top: 4rem; height: 8px; z-index: 40; transition: opacity var(--ldot-base) var(--ldot-ease); }
+@media (min-width: 1024px) { .ldot-progress { top: 5rem; } }
+.ldot-progress-line { position: absolute; left: 0; right: 0; top: 3.5px; height: 1px; background: hsl(var(--accent) / .5); transform-origin: left; }
+.ldot-progress-tip { position: absolute; top: 0; width: 8px; height: 8px; border-radius: 9999px; background: hsl(var(--accent)); }
+
+/* Check */
+.ldot-check-dot { fill: hsl(var(--accent)); transform-origin: center; animation: ldotCheckDot .6s var(--ldot-ease) both; }
+.ldot-check-mark { stroke: hsl(var(--accent-foreground)); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 20; stroke-dashoffset: 20; animation: ldotCheckMark .5s var(--ldot-ease) .45s forwards; }
+@keyframes ldotCheckDot { 0% { transform: scale(.25); } 70% { transform: scale(1.08); } 100% { transform: none; } }
+@keyframes ldotCheckMark { to { stroke-dashoffset: 0; } }
+
+/* Page dot */
+.ldot-route { position: fixed; top: 4rem; left: 0; width: 6px; height: 6px; margin-top: -3px; border-radius: 9999px; background: hsl(var(--accent)); z-index: 60; animation: ldotRoute .7s var(--ldot-ease) both; }
+@media (min-width: 1024px) { .ldot-route { top: 5rem; } }
+@keyframes ldotRoute { 0% { opacity: 0; transform: translateX(100vw); } 20% { opacity: 1; } 85% { opacity: 1; transform: translateX(2rem); } 100% { opacity: 0; transform: translateX(2rem) scale(.4); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ldot-reveal, .ldot-route { display: none; }
+  .ldot-pin-core, .ldot-pin-shadow { animation: none !important; opacity: 1; }
+  .ldot-check-dot, .ldot-check-mark { animation: none !important; stroke-dashoffset: 0; }
+  .dot-action::after { display: none; }
+  .ldot-progress-tip, .ldot-progress { transition: none; }
+}
