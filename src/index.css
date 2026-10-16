@@ -441,8 +441,8 @@
 .dot-marker { position: relative; width: 5.5rem; height: 1.25rem; margin-bottom: 1.25rem; overflow: hidden; }
 .dot-marker-thread { position: absolute; top: calc(50% - .5px); left: 0; width: 100%; height: 1px; background: hsl(var(--accent) / .28); opacity: 0; transform: scaleX(0); transform-origin: left; }
 .dot-marker-core { position: absolute; top: calc(50% - var(--dot-page) / 2); left: 0; width: var(--dot-page); height: var(--dot-page); border-radius: 9999px; background: hsl(var(--accent)); opacity: 0; }
-.dot-marker.ldot-in .dot-marker-thread { animation: dotMarkerThread 1.25s var(--ease-brand) both; }
-.dot-marker.ldot-in .dot-marker-core { animation: dotMarkerCore 1.25s var(--ease-brand) both; }
+.dot-marker.ldot-in .dot-marker-thread { animation: dotMarkerThread 1.6s var(--ldot-ease) both; }
+.dot-marker.ldot-in .dot-marker-core { animation: dotMarkerCore 1.6s var(--ldot-ease) both; }
 @keyframes dotMarkerThread { 0% { opacity: 0; transform: scaleX(0); } 25%,68% { opacity: 1; } 76% { transform: scaleX(1); } 100% { opacity: 0; transform: scaleX(1); } }
 @keyframes dotMarkerCore { 0% { opacity: 0; transform: translateX(0) scale(.35); } 18% { opacity: 1; transform: translateX(0) scale(1); } 72% { opacity: 1; transform: translateX(calc((5.5rem - var(--dot-page)) / 2)) scale(1); } 100% { opacity: 0; transform: translateX(calc((5.5rem - var(--dot-page)) / 2)) scale(.72); } }
 
@@ -452,8 +452,8 @@
 .dot-thread-core { position: absolute; top: calc(50% - var(--dot-section) / 2); left: 0; width: var(--dot-section); height: var(--dot-section); border-radius: 9999px; background: hsl(var(--accent)); opacity: 0; }
 .dot-thread-reverse .dot-thread-line { transform-origin: right; }
 .dot-thread-reverse .dot-thread-core { left: auto; right: 0; }
-.dot-thread.ldot-in .dot-thread-line { animation: dotThreadLine 1.5s var(--ease-brand) both; }
-.dot-thread.ldot-in .dot-thread-core { animation: dotThreadCore 1.5s var(--ease-brand) both; }
+.dot-thread.ldot-in .dot-thread-line { animation: dotThreadLine 1.5s var(--ldot-ease) both; }
+.dot-thread.ldot-in .dot-thread-core { animation: dotThreadCore 1.5s var(--ldot-ease) both; }
 .dot-thread-reverse.ldot-in .dot-thread-core { animation-name: dotThreadCoreReverse; }
 @keyframes dotThreadLine { 0% { opacity: 0; transform: scaleX(0); } 25%,80% { opacity: 1; } 100% { opacity: 0; transform: scaleX(1); } }
 @keyframes dotThreadCore { 0% { opacity: 0; transform: scale(.4); } 18% { opacity: 1; } 82% { opacity: 1; transform: translateX(calc(min(11rem, 42vw) - var(--dot-section))); } 100% { opacity: 0; transform: translateX(calc(min(11rem, 42vw) - var(--dot-section))) scale(.65); } }
@@ -464,9 +464,9 @@
 .dot-lens-core, .dot-lens-exit { position: absolute; left: 12%; top: 70%; width: var(--dot-page); height: var(--dot-page); border-radius: 9999px; background: hsl(var(--accent)); opacity: 0; }
 .dot-lens-ring { position: absolute; left: calc(50% - 3.75rem); top: calc(50% - 3.75rem); width: 7.5rem; height: 7.5rem; border: 2px solid hsl(var(--accent) / .82); border-radius: 9999px; opacity: 0; }
 .dot-lens-exit { left: auto; right: 12%; top: 28%; }
-.dot-lens.ldot-in .dot-lens-core { animation: dotLensCore 2.15s var(--ease-brand) both; }
-.dot-lens.ldot-in .dot-lens-ring { animation: dotLensRing 2.15s var(--ease-brand) both; }
-.dot-lens.ldot-in .dot-lens-exit { animation: dotLensExit 2.15s var(--ease-brand) both; }
+.dot-lens.ldot-in .dot-lens-core { animation: dotLensCore 2.15s var(--ldot-ease) both; }
+.dot-lens.ldot-in .dot-lens-ring { animation: dotLensRing 2.15s var(--ldot-ease) both; }
+.dot-lens.ldot-in .dot-lens-exit { animation: dotLensExit 2.15s var(--ldot-ease) both; }
 @keyframes dotLensCore { 0% { opacity: 0; transform: scale(.3); } 14%,28% { opacity: 1; transform: none; } 48%,100% { opacity: 0; transform: translate(38vw,-18vh) scale(8); } }
 @keyframes dotLensRing { 0%,30% { opacity: 0; transform: scale(.08); } 50%,72% { opacity: 1; transform: scale(1); } 90%,100% { opacity: 0; transform: scale(1.18); } }
 @keyframes dotLensExit { 0%,72% { opacity: 0; transform: scale(.4); } 84% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateX(1.5rem); } }
@@ -485,10 +485,10 @@
 .dot-split-path { top: 50%; width: 50%; height: 2.25rem; border-top: 1px solid hsl(var(--accent) / .25); opacity: 0; }
 .dot-split-path-left { right: 50%; border-radius: 100% 0 0 0; transform-origin: right top; }
 .dot-split-path-right { left: 50%; border-radius: 0 100% 0 0; transform-origin: left top; }
-.dot-split.ldot-in .dot-split-source { animation: dotSource 2.4s var(--ease-brand) both; }
-.dot-split.ldot-in .dot-split-path-left, .dot-split.ldot-in .dot-split-path-right { animation: dotPath 2.4s var(--ease-brand) both; }
-.dot-split.ldot-in .dot-split-branch-left { animation: dotBranchLeft 2.4s var(--ease-brand) both; }
-.dot-split.ldot-in .dot-split-branch-right { animation: dotBranchRight 2.4s var(--ease-brand) both; }
+.dot-split.ldot-in .dot-split-source { animation: dotSource 2.4s var(--ldot-ease) both; }
+.dot-split.ldot-in .dot-split-path-left, .dot-split.ldot-in .dot-split-path-right { animation: dotPath 2.4s var(--ldot-ease) both; }
+.dot-split.ldot-in .dot-split-branch-left { animation: dotBranchLeft 2.4s var(--ldot-ease) both; }
+.dot-split.ldot-in .dot-split-branch-right { animation: dotBranchRight 2.4s var(--ldot-ease) both; }
 @keyframes dotSource { 0% { opacity: 0; transform: translateY(-1.25rem) scale(.3); } 18%,42% { opacity: 1; transform: none; } 58%,100% { opacity: 0; transform: scale(.65); } }
 @keyframes dotPath { 0%,36% { opacity: 0; transform: scaleX(0); } 58%,78% { opacity: 1; transform: scaleX(1); } 100% { opacity: 0; transform: scaleX(1); } }
 @keyframes dotBranchLeft { 0%,45% { opacity: 0; transform: none; } 58% { opacity: 1; transform: none; } 82% { opacity: 1; transform: translate(-8.5rem, 2.2rem); } 100% { opacity: 0; transform: translate(-8.5rem, 2.2rem) scale(.7); } }
@@ -550,12 +550,12 @@
 }
 
 /* ===== The Blue Dot Experience — shared vocabulary ===== */
-:root { --ldot-ease: cubic-bezier(.2,.8,.2,1); --ldot-fast: 240ms; --ldot-base: 600ms; --ldot-sig: 1100ms; }
+:root { --ldot-ease: cubic-bezier(.22,.61,.36,1); --ldot-fast: 240ms; --ldot-base: 800ms; --ldot-sig: 1200ms; }
 
 /* Act: the dot waits at the button edge; press pushes it in and fills briefly (touch + keyboard, no hover dependency) */
 .dot-action { overflow: hidden; isolation: isolate; }
 .dot-action::after { content: ""; position: absolute; left: 1.1rem; top: 50%; width: 6px; height: 6px; margin-top: -3px; border-radius: 9999px; background: hsl(var(--accent)); z-index: -1; transform: scale(0); transition: transform var(--ldot-base) var(--ldot-ease), opacity var(--ldot-base) var(--ldot-ease); opacity: 0; }
-.dot-action:active::after { opacity: 1; transform: scale(70); transition-duration: var(--ldot-fast); }
+.dot-action:active::after { opacity: .9; transform: scale(1.4); transition-duration: var(--ldot-fast); }
 
 /* Reveal */
 .ldot-reveal { position: relative; height: 0; z-index: 1; overflow-x: clip; }
@@ -598,4 +598,15 @@
   .ldot-check-dot, .ldot-check-mark { animation: none !important; stroke-dashoffset: 0; }
   .dot-action::after { display: none; }
   .ldot-progress-tip, .ldot-progress { transition: none; }
+}
+
+/* Calm refinement: no bursts, no bounce, small movements */
+@keyframes dotLensCore { 0% { opacity: 0; transform: scale(.6); } 20%,40% { opacity: .9; transform: none; } 60%,100% { opacity: 0; transform: none; } }
+@keyframes dotSource { 0% { opacity: 0; transform: translateY(-.5rem); } 20%,42% { opacity: .9; transform: none; } 60%,100% { opacity: 0; transform: none; } }
+@keyframes ldotPinDrop { 0% { opacity: 0; transform: translateY(-10px); } 100% { opacity: 1; transform: none; } }
+@keyframes ldotRoute { 0% { opacity: 0; transform: translateX(40vw); } 25% { opacity: .55; } 85% { opacity: .55; transform: translateX(2rem); } 100% { opacity: 0; transform: translateX(2rem); } }
+.ldot-route { width: 5px; height: 5px; }
+@media (min-width: 640px) {
+  @keyframes dotBranchLeft { 0%,45% { opacity: 0; transform: none; } 58% { opacity: .9; transform: none; } 82% { opacity: .9; transform: translate(-6rem, 1.5rem); } 100% { opacity: 0; transform: translate(-6rem, 1.5rem); } }
+  @keyframes dotBranchRight { 0%,45% { opacity: 0; transform: none; } 58% { opacity: .9; transform: none; } 82% { opacity: .9; transform: translate(6rem, 1.5rem); } 100% { opacity: 0; transform: translate(6rem, 1.5rem); } }
 }

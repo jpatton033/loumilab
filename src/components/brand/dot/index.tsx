@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 /** Fires once when the element enters the viewport. */
-export const useInView = <T extends Element>(rootMargin = "0px 0px -15% 0px") => {
+export const useInView = <T extends Element>(rootMargin = "0px 0px -35% 0px") => {
   const ref = useRef<T>(null);
   const [inView, setInView] = useState(false);
   useEffect(() => {

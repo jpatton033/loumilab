@@ -5,7 +5,7 @@ import SEOHead from "@/components/SEOHead";
 import Reveal from "@/components/Reveal";
 import ArticleCard from "@/components/kc/ArticleCard";
 import { PeopleSequence } from "@/components/brand/story";
-import { DotImageJourney, DotMarker, DotReveal, DotSplit, DotThread } from "@/components/brand/dot";
+import { DotMarker, DotSplit, DotThread } from "@/components/brand/dot";
 import { GridTile, MoreLink, ProductTile, Statement, TileActions } from "@/components/brand/apple/Tiles";
 import { usePublishedArticles } from "@/lib/kc/queries";
 import TheDotSignup from "@/components/thedot/TheDotSignup";
@@ -62,14 +62,12 @@ const Index = () => {
         <div className="section-container mt-12 lg:mt-16">
           <div className="photo-frame relative aspect-[4/5] sm:aspect-[16/8]">
             <img src={heroBuild} alt="A small product team building something together around a table of laptops and sketches" width={1600} height={900} fetchPriority="high" decoding="async" sizes="(min-width: 1280px) 1200px, 100vw" className="h-full w-full object-cover" />
-            <DotImageJourney />
           </div>
         </div>
       </section>
 
       {/* Products */}
       <DotSplit className="mt-16 lg:mt-24" />
-      <DotReveal />
       <ProductTile
         className="mt-6"
         tone="subtle"
