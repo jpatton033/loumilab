@@ -437,11 +437,11 @@ const GetStarted = () => {
             ))}
           </nav>
 
-          <div className="mt-10 grid gap-10 lg:grid-cols-[1.15fr_0.85fr]">
+          <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-[1.15fr_0.85fr]">
             {/* Form */}
             <div
               ref={stepCardRef}
-              className="rounded-3xl border border-border bg-card p-7 shadow-[var(--shadow-soft)] lg:p-9"
+              className="min-w-0 break-words rounded-3xl border border-border bg-card p-5 shadow-[var(--shadow-soft)] sm:p-7 lg:p-9"
             >
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <h2 className="font-display text-xl font-semibold">
@@ -487,13 +487,13 @@ const GetStarted = () => {
                       </div>
                     ) : (
                       <div className="flex flex-wrap gap-3">
-                        <Button type="button" className="min-h-11 rounded-full sm:min-h-0" onClick={() => goToSignIn("signup")}>
+                        <Button type="button" className="h-auto min-h-11 max-w-full whitespace-normal rounded-full sm:min-h-0" onClick={() => goToSignIn("signup")}>
                           Create your account <ArrowRight size={16} />
                         </Button>
                         <Button
                           type="button"
                           variant="outline"
-                          className="min-h-11 rounded-full sm:min-h-0"
+                          className="h-auto min-h-11 max-w-full whitespace-normal rounded-full sm:min-h-0"
                           onClick={() => goToSignIn("signin")}
                         >
                           I already have one
@@ -934,7 +934,7 @@ const GetStarted = () => {
                 {step < lastStep ? (
                   <Button
                     type="button"
-                    className="min-h-11 w-full rounded-full sm:min-h-0 sm:w-auto"
+                    className="h-auto min-h-11 w-full whitespace-normal rounded-full sm:min-h-0 sm:w-auto"
                     disabled={!canContinue}
                     onClick={advance}
                   >
