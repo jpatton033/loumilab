@@ -9,9 +9,9 @@ interface WordmarkProps {
   onAnimationComplete?: () => void;
 }
 
-const sizeMap: Record<WordmarkSize, { root: string; lead: string; dot: string }> = {
-  sm: { root: "text-[1.0625rem]", lead: "text-[1.1875rem]", dot: "text-[1.1875rem]" },
-  md: { root: "text-xl", lead: "text-[1.4rem]", dot: "text-[1.4rem]" },
+const sizeMap: Record<WordmarkSize, { root: string }> = {
+  sm: { root: "text-[1rem]" },
+  md: { root: "text-[1.1875rem]" },
 };
 
 const letters = ["L", "o", "u", "m", "i", "l", "a", "b"];
@@ -22,7 +22,7 @@ const Wordmark = ({ size = "sm", animated = false, className, onAnimationComplet
   return (
     <span
       className={cn(
-        "relative inline-flex select-none items-baseline font-display font-bold uppercase leading-none tracking-[-0.03em] text-current",
+        "relative inline-flex select-none items-baseline font-display font-bold uppercase leading-none tracking-[0.2em] text-current",
         animated && "brand-wordmark-animated",
         s.root,
         className,
@@ -35,17 +35,13 @@ const Wordmark = ({ size = "sm", animated = false, className, onAnimationComplet
       {letters.map((letter, index) => (
         <span
           key={`${letter}-${index}`}
-          className={cn(
-            "brand-wordmark-letter leading-none",
-            `brand-wordmark-letter-${index + 1}`,
-            index === 0 && s.lead,
-          )}
+          className={cn("brand-wordmark-letter leading-none", `brand-wordmark-letter-${index + 1}`)}
         >
           {letter}
         </span>
       ))}
-      <span className={cn("brand-wordmark-dot-x relative -ml-[0.02em] inline-block leading-none text-accent", s.dot)}>
-        <span className="brand-wordmark-dot inline-block leading-none">.</span>
+      <span className="brand-wordmark-dot-x relative ml-[0.08em] inline-block leading-none">
+        <span className="brand-wordmark-dot inline-block h-[0.42em] w-[0.42em] rounded-full bg-accent align-baseline" />
         {animated && <span className="brand-wordmark-ripple" />}
       </span>
       {animated && <span className="brand-wordmark-shine" />}
