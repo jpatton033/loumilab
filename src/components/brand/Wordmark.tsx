@@ -22,7 +22,7 @@ const Wordmark = ({ size = "sm", animated = false, className, onAnimationComplet
   return (
     <span
       className={cn(
-        "relative inline-flex select-none items-baseline font-display font-semibold uppercase leading-none tracking-[0.2em] text-current",
+        "relative inline-flex select-none items-baseline font-display font-bold uppercase leading-none tracking-[0.2em] text-current",
         animated && "brand-wordmark-animated",
         s.root,
         className,
@@ -40,8 +40,8 @@ const Wordmark = ({ size = "sm", animated = false, className, onAnimationComplet
           {letter}
         </span>
       ))}
-      <span className="brand-wordmark-dot-x relative ml-[0.02em] inline-block leading-none">
-        <span className="brand-wordmark-dot inline-block h-[0.4em] w-[0.4em] rounded-full bg-accent align-baseline" />
+      <span className="brand-wordmark-dot-x relative ml-[0.08em] inline-block leading-none">
+        <span className="brand-wordmark-dot inline-block h-[0.42em] w-[0.42em] rounded-full bg-accent align-baseline" />
         {animated && <span className="brand-wordmark-ripple" />}
       </span>
       {animated && <span className="brand-wordmark-shine" />}
