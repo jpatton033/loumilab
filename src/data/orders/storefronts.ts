@@ -1,6 +1,12 @@
 import dishAlfredo from "@/assets/orders/dish-alfredo.jpg";
 import dishMac from "@/assets/orders/dish-mac.jpg";
 import dishWings from "@/assets/orders/dish-wings.jpg";
+import bakeCake from "@/assets/orders/bake-cake.jpg";
+import bakeCupcakes from "@/assets/orders/bake-cupcakes.jpg";
+import bakeCookies from "@/assets/orders/bake-cookies.jpg";
+import flowerBouquet from "@/assets/orders/flower-bouquet.jpg";
+import flowerArrangement from "@/assets/orders/flower-arrangement.jpg";
+import flowerGift from "@/assets/orders/flower-gift.jpg";
 
 /**
  * Storefront data model. Today these records are local mock data; the same shapes
@@ -104,6 +110,71 @@ export const storefronts: Storefront[] = [
         priceCents: 14500,
         availability: "available",
       },
+    ],
+  },
+];
+
+
+/* Homepage-only demo stores. Never written to the database. */
+const svc = (id: string, name: string, description: string, priceCents: number): StoreProduct => ({
+  id, name, description, priceCents, availability: "available",
+});
+
+export const demoShowcaseStores: Storefront[] = [
+  {
+    id: "store_sweet_crumb", slug: "sweet-crumb-bakery", name: "Sweet Crumb Bakery", location: "Columbus, OH",
+    description: "Made-to-order cakes and weekend bakes. Order ahead for pickup.", monogram: "SC",
+    acceptingOrders: true, hours: "Wed – Sat · 9:00 AM – 5:00 PM", pickupInfo: "Pickup or local delivery",
+    industrySlug: "bakery",
+    products: [
+      { id: "b_cake", name: "Celebration Cake", description: '8" vanilla bean, buttercream florals', priceCents: 6500, image: bakeCake, availability: "available" },
+      { id: "b_cupcakes", name: "Cupcake Box (6)", description: "Assorted pastel buttercream cupcakes", priceCents: 2200, image: bakeCupcakes, availability: "available" },
+      { id: "b_cookies", name: "Chocolate Chip Dozen", description: "Brown-butter cookies, baked same day", priceCents: 1800, image: bakeCookies, availability: "available" },
+    ],
+  },
+  {
+    id: "store_petal_stem", slug: "petal-and-stem", name: "Petal & Stem Florist", location: "Richmond, VA",
+    description: "Seasonal bouquets and gifts, hand-tied every morning.", monogram: "PS",
+    acceptingOrders: true, hours: "Mon – Sat · 8:00 AM – 6:00 PM", pickupInfo: "Same-day delivery before 2 PM",
+    industrySlug: "retail",
+    products: [
+      { id: "f_bouquet", name: "Peony & Rose Bouquet", description: "Hand-tied, wrapped in kraft paper", priceCents: 7500, image: flowerBouquet, availability: "available" },
+      { id: "f_arrangement", name: "Garden Centerpiece", description: "Seasonal blooms in a ceramic vase", priceCents: 9000, image: flowerArrangement, availability: "available" },
+      { id: "f_gift", name: "Little Something Gift Box", description: "Posy, soy candle and artisan chocolates", priceCents: 6000, image: flowerGift, availability: "available" },
+    ],
+  },
+  storefronts[1],
+  {
+    id: "store_fixit", slug: "fix-it-handyman", name: "Fix-It Handyman Co.", location: "Charlotte, NC",
+    description: "Small jobs done right. Request a visit and get a firm quote.", monogram: "FH",
+    acceptingOrders: true, hours: "Mon – Fri · 8:00 AM – 5:00 PM", pickupInfo: "On-site service across Charlotte",
+    industrySlug: "handyman",
+    products: [
+      svc("h_hour", "Handyman Hour", "General repairs, patching and odd jobs", 8500),
+      svc("h_tv", "TV Mounting", "Up to 75\", wall mount and cable tidy", 12900),
+      svc("h_furniture", "Furniture Assembly", "Beds, desks, shelving and more", 9500),
+    ],
+  },
+  {
+    id: "store_luxe", slug: "studio-luxe-hair", name: "Studio Luxe Hair Salon", location: "Houston, TX",
+    description: "Healthy hair, beautifully done. Book your chair online.", monogram: "SL",
+    acceptingOrders: true, hours: "Tue – Sat · 10:00 AM – 7:00 PM", pickupInfo: "Appointments at the studio",
+    industrySlug: "beauty",
+    products: [
+      svc("s_silk", "Silk Press", "Wash, treatment and silk press", 9500),
+      svc("s_braids", "Knotless Braids", "Medium, mid-back length", 22000),
+      svc("s_cut", "Cut & Style", "Consultation, cut and blowout", 6500),
+    ],
+  },
+  {
+    id: "store_fresh_nest", slug: "fresh-nest-cleaning", name: "Fresh Nest Cleaning", location: "Philadelphia, PA",
+    description: "Insured, eco-friendly home cleaning. Book a visit in minutes.", monogram: "FN",
+    acceptingOrders: true, hours: "Mon – Sat · 8:00 AM – 6:00 PM", pickupInfo: "In-home service across Philadelphia",
+    industrySlug: "cleaning",
+    products: [
+      svc("c_standard", "Standard Clean", "Up to 2 bedrooms, kitchen and baths", 13000),
+      svc("c_deep", "Deep Clean", "Baseboards, appliances and detail work", 24000),
+      svc("c_move", "Move-Out Clean", "Empty home, inside cabinets included", 29000),
     ],
   },
 ];

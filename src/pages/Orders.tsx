@@ -30,9 +30,7 @@ import { Button } from "@/components/ui/button";
 import PhoneFrame from "@/components/orders/PhoneFrame";
 import StorefrontScreen from "@/components/orders/StorefrontScreen";
 import OrderNotifications from "@/components/orders/OrderNotifications";
-import StorefrontHeader from "@/components/orders/StorefrontHeader";
-import StoreProductCard from "@/components/orders/StoreProductCard";
-import CartBar from "@/components/orders/CartBar";
+import LivePreviewPicker from "@/components/orders/LivePreviewPicker";
 import MetricCard from "@/components/orders/MetricCard";
 import OrderQueue from "@/components/orders/OrderQueue";
 import OrderStatusBadge from "@/components/orders/OrderStatusBadge";
@@ -40,7 +38,6 @@ import FlowDiagram from "@/components/orders/FlowDiagram";
 import PricingTable from "@/components/orders/PricingTable";
 import IndustryStrip from "@/components/orders/IndustryStrip";
 import OrdersHeroSlideshow from "@/components/orders/OrdersHeroSlideshow";
-import { useCart } from "@/hooks/use-cart";
 import { demoStorefront } from "@/data/orders/storefronts";
 import { dashboardMetrics, demoOrders, ORDER_STATUSES } from "@/data/orders/dashboard";
 import { audiences } from "@/data/orders/audiences";
@@ -137,7 +134,6 @@ const ordersJsonLd = [
 ];
 
 const Orders = () => {
-  const cart = useCart();
 
   return (
     <Layout>
@@ -288,35 +284,11 @@ const Orders = () => {
               This is what your customers see.
             </h2>
             <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-              A real storefront layout, running right here. Add a few items and watch the cart build — exactly the
-              way it works on a phone.
+              Pick a business — food, flowers or services. Each is a real storefront layout, running right here.
             </p>
           </Reveal>
 
-          <Reveal className="mt-12 rounded-[2rem] border border-border bg-card p-6 shadow-[var(--shadow-soft)] lg:p-10">
-            <StorefrontHeader store={demoStorefront} demo />
-            <div className="mt-8 grid gap-5 md:grid-cols-3">
-              {demoStorefront.products.map((p) => (
-                <StoreProductCard
-                  key={p.id}
-                  product={p}
-                  quantity={cart.lines.find((l) => l.product.id === p.id)?.quantity ?? 0}
-                  onAdd={cart.add}
-                />
-              ))}
-            </div>
-            <CartBar
-              variant="inline"
-              className="mt-8"
-              count={cart.count}
-              subtotalCents={cart.subtotalCents}
-              ctaLabel="Sample checkout"
-              onCheckout={cart.clear}
-            />
-            <p className="mt-4 text-sm text-muted-foreground">
-              Demo only — no payment is processed and no order is sent.
-            </p>
-          </Reveal>
+          <LivePreviewPicker />
         </div>
       </section>
 
