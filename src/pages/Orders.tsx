@@ -27,7 +27,7 @@ import packing from "@/assets/people/orders/packing.jpg";
 import reviewingOrders from "@/assets/people/orders/reviewing-orders.jpg";
 import handoff from "@/assets/people/orders/handoff.jpg";
 import teamKitchen from "@/assets/people/orders/team-kitchen.jpg";
-import { CategoryTransition, ImmersiveImage, PeopleSequence } from "@/components/brand/story";
+import { ImmersiveImage, PeopleSequence } from "@/components/brand/story";
 import { Button } from "@/components/ui/button";
 import PhoneFrame from "@/components/orders/PhoneFrame";
 import StorefrontScreen from "@/components/orders/StorefrontScreen";
@@ -197,9 +197,82 @@ const Orders = () => {
         </div>
       </section>
 
+      <OrdersHeroSlideshow slides={ordersHeroSlides} />
+
+      {/* Pricing */}
+      <section id="pricing" className="scroll-mt-24 section-padding surface-subtle border-y border-border">
+        <div className="section-container">
+          <Reveal className="max-w-2xl">
+            <Eyebrow>{pricingHeading.eyebrow}</Eyebrow>
+            <h2 className="mt-5 text-4xl font-semibold leading-tight lg:text-5xl">{pricingHeading.title}</h2>
+            <p className="mt-6 text-lg leading-relaxed text-muted-foreground">{pricingHeading.subtitle}</p>
+          </Reveal>
+
+          <div className="mt-14">
+            <PricingTable />
+          </div>
+          <p className="mt-6 text-sm text-muted-foreground">{pricingHeading.footnote}</p>
+          <ol className="mt-10 flex flex-col gap-3 font-display text-sm sm:flex-row sm:items-center sm:gap-6" aria-label="How a store goes live">
+            <li><span className="font-semibold text-foreground">Build</span> <span className="text-muted-foreground">— free, no account</span></li>
+            <li aria-hidden="true" className="hidden text-muted-foreground sm:block">→</li>
+            <li><span className="font-semibold text-foreground">Save</span> <span className="text-muted-foreground">— create an account</span></li>
+            <li aria-hidden="true" className="hidden text-muted-foreground sm:block">→</li>
+            <li><span className="font-semibold text-foreground">Publish</span> <span className="text-muted-foreground">— finish payout setup</span></li>
+          </ol>
+          <Button size="lg" asChild className="mt-8 rounded-full">
+            <Link to={ORDERS_CTA.href} className="dot-action" onClick={() => trackCtaClick("pricing", ORDERS_CTA.variant)}>{ORDERS_CTA.label} <ArrowRight size={18} /></Link>
+          </Button>
+        </div>
+      </section>
+
       <StartBuildingStatement />
 
-      <OrdersHeroSlideshow slides={ordersHeroSlides} />
+      {/* How it works */}
+      <section id="how-it-works" className="section-padding scroll-mt-24">
+        <div className="section-container">
+          <Reveal className="max-w-2xl">
+            <Eyebrow>How it works</Eyebrow>
+            <h2 className="mt-5 text-4xl font-semibold leading-tight lg:text-5xl">
+              Four steps from follower to paid order.
+            </h2>
+          </Reveal>
+
+          <div className="mt-14 grid gap-6 md:grid-cols-2">
+            {steps.map((s, i) => (
+              <Reveal
+                key={s.num}
+                delay={i * 90}
+                className="rounded-3xl border border-border bg-card p-8 shadow-[var(--shadow-soft)]"
+              >
+                <p className="font-hero text-sm font-semibold tracking-[0.2em] text-accent">{s.num}</p>
+                <h3 className="mt-4 font-display text-xl font-semibold">{s.title}</h3>
+                <p className="mt-3 leading-relaxed text-muted-foreground">{s.desc}</p>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <StorefrontAssembly />
+
+      {/* Interactive storefront demo */}
+      <section className="section-padding surface-subtle border-y border-border">
+        <div className="section-container">
+          <Reveal className="max-w-2xl">
+            <Eyebrow>Live preview</Eyebrow>
+            <h2 className="mt-5 text-4xl font-semibold leading-tight lg:text-5xl">
+              This is what your customers see.
+            </h2>
+            <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
+              Pick a business — food, flowers or services. Each is a real storefront layout, running right here.
+            </p>
+          </Reveal>
+
+          <LivePreviewPicker />
+        </div>
+      </section>
+
+      <TryItInvitation />
 
       {/* Social commerce */}
       <section className="section-padding surface-subtle border-y border-border">
@@ -247,53 +320,6 @@ const Orders = () => {
           { src: handoff, alt: "A merchant handing a paper bag order to a customer", label: "Hand off", note: "Pickup or delivery, already paid." },
         ]}
       />
-
-      <StorefrontAssembly />
-
-      {/* How it works */}
-      <section id="how-it-works" className="section-padding scroll-mt-24">
-        <div className="section-container">
-          <Reveal className="max-w-2xl">
-            <Eyebrow>How it works</Eyebrow>
-            <h2 className="mt-5 text-4xl font-semibold leading-tight lg:text-5xl">
-              Four steps from follower to paid order.
-            </h2>
-          </Reveal>
-
-          <div className="mt-14 grid gap-6 md:grid-cols-2">
-            {steps.map((s, i) => (
-              <Reveal
-                key={s.num}
-                delay={i * 90}
-                className="rounded-3xl border border-border bg-card p-8 shadow-[var(--shadow-soft)]"
-              >
-                <p className="font-hero text-sm font-semibold tracking-[0.2em] text-accent">{s.num}</p>
-                <h3 className="mt-4 font-display text-xl font-semibold">{s.title}</h3>
-                <p className="mt-3 leading-relaxed text-muted-foreground">{s.desc}</p>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <TryItInvitation />
-
-      {/* Interactive storefront demo */}
-      <section className="section-padding surface-subtle border-y border-border">
-        <div className="section-container">
-          <Reveal className="max-w-2xl">
-            <Eyebrow>Live preview</Eyebrow>
-            <h2 className="mt-5 text-4xl font-semibold leading-tight lg:text-5xl">
-              This is what your customers see.
-            </h2>
-            <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-              Pick a business — food, flowers or services. Each is a real storefront layout, running right here.
-            </p>
-          </Reveal>
-
-          <LivePreviewPicker />
-        </div>
-      </section>
 
       {/* Dashboard showcase */}
       <section className="section-padding">
@@ -433,69 +459,6 @@ const Orders = () => {
               );
             })}
           </div>
-        </div>
-      </section>
-
-      {/* Mid-page invitation */}
-      <div className="section-container py-12 text-center">
-        <p className="font-display text-lg text-muted-foreground">Ready to see yours?</p>
-        <Button size="lg" asChild className="mt-4 rounded-full">
-          <Link to={ORDERS_CTA.href} className="dot-action" onClick={() => trackCtaClick("after-features", ORDERS_CTA.variant)}>{ORDERS_CTA.label} <ArrowRight size={18} /></Link>
-        </Button>
-      </div>
-
-      {/* Customer journey */}
-      <section className="section-padding">
-        <div className="section-container">
-          <Reveal className="max-w-2xl">
-            <Eyebrow>The full transaction</Eyebrow>
-            <h2 className="mt-5 text-4xl font-semibold leading-tight lg:text-5xl">
-              From a post to a picked-up order.
-            </h2>
-          </Reveal>
-
-          <div className="mt-14 grid items-center gap-12 lg:grid-cols-2">
-            <Reveal from="left" className="order-2 lg:order-1">
-              <FlowDiagram steps={journey} orientation="stacked" />
-            </Reveal>
-            <Reveal from="right" className="order-1 lg:order-2">
-              <PhoneFrame label="Customer ordering flow">
-                <StorefrontScreen store={demoStorefront} cart={{ count: 2, subtotalCents: 3400 }} highlightIndex={0} />
-              </PhoneFrame>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
-      <CategoryTransition
-        image={{ src: reviewingOrders, alt: "A food business owner smiling while checking the day's orders on a tablet", width: 1200, height: 1504, position: "50% 30%" }}
-        label="Pricing"
-        title="Grow when the orders do."
-      />
-
-      {/* Pricing */}
-      <section id="pricing" className="section-padding surface-subtle border-y border-border">
-        <div className="section-container">
-          <Reveal className="max-w-2xl">
-            <Eyebrow>{pricingHeading.eyebrow}</Eyebrow>
-            <h2 className="mt-5 text-4xl font-semibold leading-tight lg:text-5xl">{pricingHeading.title}</h2>
-            <p className="mt-6 text-lg leading-relaxed text-muted-foreground">{pricingHeading.subtitle}</p>
-          </Reveal>
-
-          <div className="mt-14">
-            <PricingTable />
-          </div>
-          <p className="mt-6 text-sm text-muted-foreground">{pricingHeading.footnote}</p>
-          <ol className="mt-10 flex flex-col gap-3 font-display text-sm sm:flex-row sm:items-center sm:gap-6" aria-label="How a store goes live">
-            <li><span className="font-semibold text-foreground">Build</span> <span className="text-muted-foreground">— free, no account</span></li>
-            <li aria-hidden="true" className="hidden text-muted-foreground sm:block">→</li>
-            <li><span className="font-semibold text-foreground">Save</span> <span className="text-muted-foreground">— create an account</span></li>
-            <li aria-hidden="true" className="hidden text-muted-foreground sm:block">→</li>
-            <li><span className="font-semibold text-foreground">Publish</span> <span className="text-muted-foreground">— finish payout setup</span></li>
-          </ol>
-          <Button size="lg" asChild className="mt-8 rounded-full">
-            <Link to={ORDERS_CTA.href} className="dot-action" onClick={() => trackCtaClick("pricing", ORDERS_CTA.variant)}>{ORDERS_CTA.label} <ArrowRight size={18} /></Link>
-          </Button>
         </div>
       </section>
 
