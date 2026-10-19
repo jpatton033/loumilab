@@ -933,7 +933,7 @@ const GetStarted = () => {
                 ) : null}
               </div>
 
-              <div className="mt-9 flex flex-wrap items-center justify-between gap-3">
+              <div className="mt-9 flex flex-wrap items-center justify-between gap-3 max-sm:sticky max-sm:bottom-0 max-sm:z-20 max-sm:-mx-5 max-sm:-mb-5 max-sm:rounded-b-3xl max-sm:border-t max-sm:border-border max-sm:bg-card max-sm:px-5 max-sm:pt-3 max-sm:pb-[calc(0.75rem+env(safe-area-inset-bottom))] max-sm:shadow-[var(--shadow-soft)]">
                 <Button
                   type="button"
                   variant="ghost"
