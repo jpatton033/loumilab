@@ -623,4 +623,4 @@
 /* Orders live preview: auto-tour progress line */
 .live-preview-progress { width: 0; animation-name: live-preview-progress; animation-timing-function: linear; animation-fill-mode: forwards; }
 @keyframes live-preview-progress { from { width: 0; } to { width: 100%; } }
-@media (prefers-reduced-motion: reduce) { .live-preview-progress { animation: none; width: 100%; opacity: .5; } }
+@media (prefers-reduced-motion: reduce) { .live-preview-progress { animation-timing-function: steps(4, end) !important; } }
