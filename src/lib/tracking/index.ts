@@ -183,3 +183,19 @@ export const trackStoreCreated = (params: Record<string, string | number> = {}) 
   if (!allowed() || !googleLoaded) return;
   window.dataLayer?.push({ event: "store_created", ...params });
 };
+
+/** CTA click (GTM only, so Meta conversions aren't double-counted). */
+export const trackCtaClick = (location: string, variant: string) => {
+  if (!allowed() || !googleLoaded) return;
+  window.dataLayer?.push({ event: "cta_click", cta_location: location, cta_variant: variant });
+};
+
+/** Builder started: first setup step completed, once per browser session (GTM only). */
+export const trackBuilderStarted = () => {
+  if (!allowed() || !googleLoaded) return;
+  try {
+    if (sessionStorage.getItem("loumilab-builder-started")) return;
+    sessionStorage.setItem("loumilab-builder-started", "1");
+  } catch { /* storage blocked: still send */ }
+  window.dataLayer?.push({ event: "builder_started" });
+};

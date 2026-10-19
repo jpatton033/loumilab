@@ -1,4 +1,4 @@
-import { track } from "@/lib/tracking";
+import { track, trackBuilderStarted } from "@/lib/tracking";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Check, ExternalLink, Loader2, ShieldCheck } from "lucide-react";
@@ -89,7 +89,13 @@ const GetStarted = () => {
   const [step, setStep] = useState(saved?.step ?? 0);
   const [email, setEmail] = useState<string | null>(null);
   const [authChecked, setAuthChecked] = useState(false);
-  const [industrySlug, setIndustrySlug] = useState(saved?.industrySlug ?? "food-catering");
+  // ?industry= (from the Live Preview) applies only to fresh visitors; a draft or saved store wins.
+  const [industrySlug, setIndustrySlug] = useState(() => {
+    if (saved?.industrySlug) return saved.industrySlug;
+    if (typeof window === "undefined") return "food-catering";
+    const s = new URLSearchParams(window.location.search).get("industry");
+    return s && /^[a-z-]{2,40}$/.test(s) ? s : "food-catering";
+  });
   const [purchaseModels, setPurchaseModels] = useState<string[]>(saved?.purchaseModels ?? ["products"]);
   // A name typed on the Orders homepage ("Try it here") carries in via ?name=,
   // but only for fresh visitors — a draft or a saved store always wins.
@@ -369,7 +375,7 @@ const GetStarted = () => {
       });
     }
     if (step >= 2) void persist();
-    if (step === 0) track("StartOnboarding");
+    if (step === 0) { track("StartOnboarding"); trackBuilderStarted(); }
     setStep((s) => Math.min(lastStep, s + 1));
   };
 

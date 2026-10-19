@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+import { ORDERS_CTA } from "@/data/orders/cta";
+import { trackCtaClick } from "@/lib/tracking";
 import {
   ArrowRight,
   BarChart3,
@@ -167,15 +169,16 @@ const Orders = () => {
               </p>
               <div className="mt-9 flex flex-col gap-3 sm:flex-row">
                 <Button size="lg" asChild className="rounded-full">
-                  <Link to="/orders/get-started" className="dot-action">
-                    Build your store — no sign-up required <ArrowRight size={18} />
+                  <Link to={ORDERS_CTA.href} className="dot-action" onClick={() => trackCtaClick("hero", ORDERS_CTA.variant)}>
+                    {ORDERS_CTA.label} <ArrowRight size={18} />
                   </Link>
                 </Button>
                 <Button size="lg" variant="outline" asChild className="rounded-full">
                   <a href="#how-it-works">See How It Works</a>
                 </Button>
               </div>
-              <p className="mt-6 text-sm text-muted-foreground">
+              <p className="mt-4 max-w-md text-sm text-muted-foreground">{ORDERS_CTA.support}</p>
+              <p className="mt-3 text-sm text-muted-foreground">
                 Already have a store?{" "}
                 <Link to="/orders/dashboard" className="underline underline-offset-4 hover:text-foreground">
                   Go to dashboard
@@ -433,6 +436,14 @@ const Orders = () => {
         </div>
       </section>
 
+      {/* Mid-page invitation */}
+      <div className="section-container py-12 text-center">
+        <p className="font-display text-lg text-muted-foreground">Ready to see yours?</p>
+        <Button size="lg" asChild className="mt-4 rounded-full">
+          <Link to={ORDERS_CTA.href} className="dot-action" onClick={() => trackCtaClick("after-features", ORDERS_CTA.variant)}>{ORDERS_CTA.label} <ArrowRight size={18} /></Link>
+        </Button>
+      </div>
+
       {/* Customer journey */}
       <section className="section-padding">
         <div className="section-container">
@@ -483,7 +494,7 @@ const Orders = () => {
             <li><span className="font-semibold text-foreground">Publish</span> <span className="text-muted-foreground">— finish payout setup</span></li>
           </ol>
           <Button size="lg" asChild className="mt-8 rounded-full">
-            <Link to="/orders/get-started" className="dot-action">Build your store — no sign-up required <ArrowRight size={18} /></Link>
+            <Link to={ORDERS_CTA.href} className="dot-action" onClick={() => trackCtaClick("pricing", ORDERS_CTA.variant)}>{ORDERS_CTA.label} <ArrowRight size={18} /></Link>
           </Button>
         </div>
       </section>
@@ -508,13 +519,13 @@ const Orders = () => {
           </Reveal>
           <Reveal delay={260}>
             <p className="mx-auto mt-8 max-w-md text-lg text-muted-foreground">
-              Your storefront is only a few minutes away.
+              Your storefront is only a few minutes away. No sign-up needed to start.
             </p>
           </Reveal>
           <Reveal delay={340} className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
             <Button size="lg" asChild className="rounded-full">
-              <Link to="/orders/get-started" className="dot-action">
-                Build your store — no sign-up required <ArrowRight size={18} />
+              <Link to={ORDERS_CTA.href} className="dot-action" onClick={() => trackCtaClick("closing", ORDERS_CTA.variant)}>
+                {ORDERS_CTA.label} <ArrowRight size={18} />
               </Link>
             </Button>
             <Button size="lg" variant="outline" asChild className="rounded-full">
