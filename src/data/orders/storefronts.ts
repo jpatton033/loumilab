@@ -6,6 +6,18 @@ import bakeCupcakes from "@/assets/orders/bake-cupcakes.jpg";
 import bakeCookies from "@/assets/orders/bake-cookies.jpg";
 import flowerBouquet from "@/assets/orders/flower-bouquet.jpg";
 import flowerArrangement from "@/assets/orders/flower-arrangement.jpg";
+import svcElecDiagnostic from "@/assets/orders/svc-elec-diagnostic.jpg";
+import svcElecPanel from "@/assets/orders/svc-elec-panel.jpg";
+import svcElecFixture from "@/assets/orders/svc-elec-fixture.jpg";
+import svcHandyHour from "@/assets/orders/svc-handy-hour.jpg";
+import svcHandyTv from "@/assets/orders/svc-handy-tv.jpg";
+import svcHandyFurniture from "@/assets/orders/svc-handy-furniture.jpg";
+import svcSalonSilk from "@/assets/orders/svc-salon-silk.jpg";
+import svcSalonBraids from "@/assets/orders/svc-salon-braids.jpg";
+import svcSalonCut from "@/assets/orders/svc-salon-cut.jpg";
+import svcCleanStandard from "@/assets/orders/svc-clean-standard.jpg";
+import svcCleanDeep from "@/assets/orders/svc-clean-deep.jpg";
+import svcCleanMove from "@/assets/orders/svc-clean-move.jpg";
 import flowerGift from "@/assets/orders/flower-gift.jpg";
 
 /**
@@ -94,6 +106,7 @@ export const storefronts: Storefront[] = [
         name: "Diagnostic Visit",
         description: "On-site troubleshooting and written findings",
         priceCents: 9900,
+        image: svcElecDiagnostic,
         availability: "available",
       },
       {
@@ -101,6 +114,7 @@ export const storefronts: Storefront[] = [
         name: "Panel Upgrade",
         description: "200-amp panel replacement, permit included",
         priceCents: 185000,
+        image: svcElecPanel,
         availability: "available",
       },
       {
@@ -108,6 +122,7 @@ export const storefronts: Storefront[] = [
         name: "Fixture & Outlet Installation",
         description: "Lighting, ceiling fans, outlets and switches",
         priceCents: 14500,
+        image: svcElecFixture,
         availability: "available",
       },
     ],
@@ -116,8 +131,8 @@ export const storefronts: Storefront[] = [
 
 
 /* Homepage-only demo stores. Never written to the database. */
-const svc = (id: string, name: string, description: string, priceCents: number): StoreProduct => ({
-  id, name, description, priceCents, availability: "available",
+const svc = (id: string, name: string, description: string, priceCents: number, image?: string): StoreProduct => ({
+  id, name, description, priceCents, image, availability: "available",
 });
 
 export const demoShowcaseStores: Storefront[] = [
@@ -150,9 +165,9 @@ export const demoShowcaseStores: Storefront[] = [
     acceptingOrders: true, hours: "Mon – Fri · 8:00 AM – 5:00 PM", pickupInfo: "On-site service across Charlotte",
     industrySlug: "handyman",
     products: [
-      svc("h_hour", "Handyman Hour", "General repairs, patching and odd jobs", 8500),
-      svc("h_tv", "TV Mounting", "Up to 75\", wall mount and cable tidy", 12900),
-      svc("h_furniture", "Furniture Assembly", "Beds, desks, shelving and more", 9500),
+      svc("h_hour", "Handyman Hour", "General repairs, patching and odd jobs", 8500, svcHandyHour),
+      svc("h_tv", "TV Mounting", "Up to 75\", wall mount and cable tidy", 12900, svcHandyTv),
+      svc("h_furniture", "Furniture Assembly", "Beds, desks, shelving and more", 9500, svcHandyFurniture),
     ],
   },
   {
@@ -161,9 +176,9 @@ export const demoShowcaseStores: Storefront[] = [
     acceptingOrders: true, hours: "Tue – Sat · 10:00 AM – 7:00 PM", pickupInfo: "Appointments at the studio",
     industrySlug: "beauty",
     products: [
-      svc("s_silk", "Silk Press", "Wash, treatment and silk press", 9500),
-      svc("s_braids", "Knotless Braids", "Medium, mid-back length", 22000),
-      svc("s_cut", "Cut & Style", "Consultation, cut and blowout", 6500),
+      svc("s_silk", "Silk Press", "Wash, treatment and silk press", 9500, svcSalonSilk),
+      svc("s_braids", "Knotless Braids", "Medium, mid-back length", 22000, svcSalonBraids),
+      svc("s_cut", "Cut & Style", "Consultation, cut and blowout", 6500, svcSalonCut),
     ],
   },
   {
@@ -172,9 +187,9 @@ export const demoShowcaseStores: Storefront[] = [
     acceptingOrders: true, hours: "Mon – Sat · 8:00 AM – 6:00 PM", pickupInfo: "In-home service across Philadelphia",
     industrySlug: "cleaning",
     products: [
-      svc("c_standard", "Standard Clean", "Up to 2 bedrooms, kitchen and baths", 13000),
-      svc("c_deep", "Deep Clean", "Baseboards, appliances and detail work", 24000),
-      svc("c_move", "Move-Out Clean", "Empty home, inside cabinets included", 29000),
+      svc("c_standard", "Standard Clean", "Up to 2 bedrooms, kitchen and baths", 13000, svcCleanStandard),
+      svc("c_deep", "Deep Clean", "Baseboards, appliances and detail work", 24000, svcCleanDeep),
+      svc("c_move", "Move-Out Clean", "Empty home, inside cabinets included", 29000, svcCleanMove),
     ],
   },
 ];
