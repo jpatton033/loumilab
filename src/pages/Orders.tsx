@@ -30,9 +30,6 @@ import { Button } from "@/components/ui/button";
 import PhoneFrame from "@/components/orders/PhoneFrame";
 import StorefrontScreen from "@/components/orders/StorefrontScreen";
 import OrderNotifications from "@/components/orders/OrderNotifications";
-import StorefrontHeader from "@/components/orders/StorefrontHeader";
-import StoreProductCard from "@/components/orders/StoreProductCard";
-import CartBar from "@/components/orders/CartBar";
 import LivePreviewPicker from "@/components/orders/LivePreviewPicker";
 import MetricCard from "@/components/orders/MetricCard";
 import OrderQueue from "@/components/orders/OrderQueue";
@@ -41,7 +38,6 @@ import FlowDiagram from "@/components/orders/FlowDiagram";
 import PricingTable from "@/components/orders/PricingTable";
 import IndustryStrip from "@/components/orders/IndustryStrip";
 import OrdersHeroSlideshow from "@/components/orders/OrdersHeroSlideshow";
-import { useCart } from "@/hooks/use-cart";
 import { demoStorefront } from "@/data/orders/storefronts";
 import { dashboardMetrics, demoOrders, ORDER_STATUSES } from "@/data/orders/dashboard";
 import { audiences } from "@/data/orders/audiences";
@@ -138,7 +134,6 @@ const ordersJsonLd = [
 ];
 
 const Orders = () => {
-  const cart = useCart();
 
   return (
     <Layout>
