@@ -36,8 +36,7 @@ const LivePreviewPicker = () => {
   const [auto, setAuto] = useState(true);
   const [hovering, setHovering] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [touched, setTouched] = useState(false);
-  const running = auto && !hovering && visible && !touched;
+  const running = auto && !hovering && visible;
 
   const go = (next: number) => {
     const i = (next + ENTRIES.length) % ENTRIES.length;
@@ -55,12 +54,7 @@ const LivePreviewPicker = () => {
     return () => io.disconnect();
   }, []);
 
-  useEffect(() => {
-    if (!running) return;
-    const t = window.setTimeout(() => { cart.clear(); setIndex((i) => (i + 1) % ENTRIES.length); }, INTERVAL_MS);
-    return () => window.clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [running, index]);
+  const advance = () => { cart.clear(); setIndex((i) => (i + 1) % ENTRIES.length); };
 
   const onKey = (e: KeyboardEvent) => {
     if (e.key === "ArrowRight") { e.preventDefault(); pick(index + 1); }
@@ -85,16 +79,10 @@ const LivePreviewPicker = () => {
               )}>
               <span className="block text-sm font-semibold leading-tight">{e.store.name}</span>
               <span className={cn("block text-xs", i === index ? "text-background/70" : "text-muted-foreground")}>{e.type}</span>
-              {i === index && auto && (
-                <span className="mt-1.5 block h-0.5 overflow-hidden rounded-full bg-background/20" aria-hidden="true">
-                  <span key={index} className="live-preview-progress block h-full bg-accent"
-                    style={{ animationDuration: `${INTERVAL_MS}ms`, animationPlayState: running ? "running" : "paused" }} />
-                </span>
-              )}
             </button>
           ))}
         </div>
-        <button type="button" onClick={() => { setAuto((a) => !a); setTouched(false); }}
+        <button type="button" onClick={() => setAuto((a) => !a)}
           aria-label={auto ? "Pause automatic store tour" : "Play automatic store tour"}
           className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border bg-card hover:text-accent">
           {auto ? <Pause size={16} /> : <Play size={16} />}
@@ -105,11 +93,21 @@ const LivePreviewPicker = () => {
         </button>
       </div>
 
+      <div className="mt-3 flex items-center gap-3">
+        <div className="h-[3px] flex-1 overflow-hidden rounded-full bg-border" aria-hidden="true">
+          <div key={`${index}-${auto}`}
+            className={cn("h-full rounded-full bg-accent", auto ? "live-preview-progress" : "w-full opacity-30")}
+            onAnimationEnd={advance}
+            style={auto ? { animationDuration: `${INTERVAL_MS}ms`, animationPlayState: running ? "running" : "paused" } : undefined} />
+        </div>
+        {!auto && <span className="shrink-0 text-xs text-muted-foreground">Tour paused — press play to resume</span>}
+      </div>
+
       <div key={entry.store.id} role="tabpanel" aria-label={`${entry.store.name} demo storefront`}
-        onMouseEnter={() => setHovering(true)} onMouseLeave={() => setHovering(false)}
-        onFocusCapture={() => setTouched(true)} onPointerDown={() => setTouched(true)}
         className="mt-6 motion-safe:animate-fade-in rounded-[2rem] border border-border bg-card p-6 shadow-[var(--shadow-soft)] lg:p-10">
         <StorefrontHeader store={entry.store} demo />
+        <div onMouseEnter={() => setHovering(true)} onMouseLeave={() => setHovering(false)}
+          onFocusCapture={() => setAuto(false)} onPointerDown={() => setAuto(false)}>
         <div className="mt-8 grid gap-5 md:grid-cols-3">
           {entry.store.products.map((p) => (
             <StoreProductCard key={p.id} product={p}
@@ -121,6 +119,7 @@ const LivePreviewPicker = () => {
         </div>
         <CartBar variant="inline" className="mt-8" count={cart.count} subtotalCents={cart.subtotalCents}
           ctaLabel={entry.service?.checkout ?? "Sample checkout"} onCheckout={cart.clear} />
+        </div>
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
           <p className="text-sm text-muted-foreground">Demo store — no payment is processed and no order is sent.</p>
           <Link to="/orders/get-started" className="inline-flex items-center gap-1.5 text-sm font-semibold hover:text-accent">
