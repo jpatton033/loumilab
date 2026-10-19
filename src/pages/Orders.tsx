@@ -27,7 +27,7 @@ import packing from "@/assets/people/orders/packing.jpg";
 import reviewingOrders from "@/assets/people/orders/reviewing-orders.jpg";
 import handoff from "@/assets/people/orders/handoff.jpg";
 import teamKitchen from "@/assets/people/orders/team-kitchen.jpg";
-import { CategoryTransition, ImmersiveImage, PeopleSequence } from "@/components/brand/story";
+import { ImmersiveImage, PeopleSequence } from "@/components/brand/story";
 import { Button } from "@/components/ui/button";
 import PhoneFrame from "@/components/orders/PhoneFrame";
 import StorefrontScreen from "@/components/orders/StorefrontScreen";
@@ -200,7 +200,7 @@ const Orders = () => {
       <OrdersHeroSlideshow slides={ordersHeroSlides} />
 
       {/* Pricing */}
-      <section id="pricing" className="section-padding surface-subtle border-y border-border">
+      <section id="pricing" className="scroll-mt-24 section-padding surface-subtle border-y border-border">
         <div className="section-container">
           <Reveal className="max-w-2xl">
             <Eyebrow>{pricingHeading.eyebrow}</Eyebrow>
