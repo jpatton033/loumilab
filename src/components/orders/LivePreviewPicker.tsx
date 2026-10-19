@@ -49,7 +49,7 @@ const LivePreviewPicker = () => {
   useEffect(() => {
     const el = rootRef.current;
     if (!el) return;
-    const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), { threshold: 0.3 });
+    const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), { threshold: 0.05 });
     io.observe(el);
     return () => io.disconnect();
   }, []);
