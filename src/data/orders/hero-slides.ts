@@ -33,7 +33,7 @@ export const ordersHeroSlides: OrdersHeroSlide[] = [
       "No monthly charges, no hidden costs. Just a simple way to take orders and get paid.",
     icon: Gift,
     accent_hsl: "217 91% 50%",
-    cta_primary: { label: "Create your store", href: "/orders/get-started" },
+    cta_primary: { label: "Build Your Free Store", href: "/orders/get-started" },
   },
   {
     id: "no-dead-links",
@@ -66,6 +66,6 @@ export const ordersHeroSlides: OrdersHeroSlide[] = [
       "Instagram, TikTok, Facebook, text, email, or your website — all your traffic lands in one place.",
     icon: Share2,
     accent_hsl: "15 90% 58%",
-    cta_primary: { label: "Create your store", href: "/orders/get-started" },
+    cta_primary: { label: "Build Your Free Store", href: "/orders/get-started" },
   },
 ];

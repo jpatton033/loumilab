@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { useInView } from "@/components/brand/dot";
 import { cn } from "@/lib/utils";
+import { ORDERS_CTA } from "@/data/orders/cta";
+import { trackCtaClick } from "@/lib/tracking";
 
 /** "Don't sign up. Start building." — the dot strikes "sign up", then lands on the action. */
 const StartBuildingStatement = () => {
@@ -28,11 +30,12 @@ const StartBuildingStatement = () => {
         </p>
         <div className="sb-cta mt-10 flex justify-center">
           <Link
-            to="/orders/get-started"
+            to={ORDERS_CTA.href}
+            onClick={() => trackCtaClick("statement", ORDERS_CTA.variant)}
             className="group inline-flex min-h-12 items-center gap-3 rounded-full bg-primary px-7 py-3 font-display text-base font-semibold text-primary-foreground shadow-[var(--shadow-soft)] transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
             <span className="sb-dot h-2.5 w-2.5 rounded-full bg-accent group-hover:bg-primary-foreground" aria-hidden="true" />
-            Build your store — no sign-up required
+            {ORDERS_CTA.label}
             <ArrowRight size={18} />
           </Link>
         </div>

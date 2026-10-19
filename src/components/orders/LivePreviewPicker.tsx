@@ -7,6 +7,9 @@ import StorefrontHeader from "./StorefrontHeader";
 import StoreProductCard from "./StoreProductCard";
 import CartBar from "./CartBar";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { ORDERS_CTA } from "@/data/orders/cta";
+import { trackCtaClick } from "@/lib/tracking";
 
 /** Demo-only: nothing here touches real stores, orders, payments or tracking. */
 interface DemoEntry {
@@ -122,9 +125,12 @@ const LivePreviewPicker = () => {
         </div>
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
           <p className="text-sm text-muted-foreground">Demo store — no payment is processed and no order is sent.</p>
-          <Link to="/orders/get-started" className="inline-flex items-center gap-1.5 text-sm font-semibold hover:text-accent">
-            Build a store like this <ArrowRight size={15} />
-          </Link>
+          <Button asChild className="rounded-full">
+            <Link to={`${ORDERS_CTA.href}?industry=${entry.store.industrySlug}`}
+              onClick={() => { setAuto(false); trackCtaClick("live-preview", ORDERS_CTA.variant); }}>
+              Build your own {entry.type.toLowerCase()} store <ArrowRight size={15} />
+            </Link>
+          </Button>
         </div>
       </div>
     </div>
