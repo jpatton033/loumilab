@@ -25,7 +25,7 @@ const ENTRIES: DemoEntry[] = [
   { store: demoShowcaseStores[5], type: "Cleaning", service: { action: "Book", checkout: "Sample booking" } },
 ];
 
-const INTERVAL_MS = 7000;
+const INTERVAL_MS = 3500;
 
 const LivePreviewPicker = () => {
   const [index, setIndex] = useState(0);
