@@ -222,6 +222,12 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://loumilab.com/resources/security-privacy/your-digital-footprint-is-bigger-than-you-think</loc>
+    <lastmod>2026-10-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://loumilab.com/resources/templates-tools/order-intake-template</loc>
     <lastmod>2026-10-18</lastmod>
     <changefreq>monthly</changefreq>
@@ -300,13 +306,13 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://loumilab.com/resources/technology-ai/where-ai-actually-helps-businesses</loc>
-    <lastmod>2026-10-18</lastmod>
+    <loc>https://loumilab.com/resources/technology-ai/ai-automation-for-small-businesses</loc>
+    <lastmod>2026-10-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://loumilab.com/resources/technology-ai/ai-automation-for-small-businesses</loc>
+    <loc>https://loumilab.com/resources/technology-ai/where-ai-actually-helps-businesses</loc>
     <lastmod>2026-10-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -325,13 +331,13 @@
   </url>
   <url>
     <loc>https://loumilab.com/resources/business-growth/the-hidden-cost-of-doing-everything-yourself</loc>
-    <lastmod>2026-10-18</lastmod>
+    <lastmod>2026-10-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://loumilab.com/resources/web-digital/the-internet-is-changing-are-we-losing-control-of-our-digital-experiences</loc>
-    <lastmod>2026-10-18</lastmod>
+    <lastmod>2026-10-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
