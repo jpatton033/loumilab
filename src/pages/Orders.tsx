@@ -200,7 +200,7 @@ const Orders = () => {
 
       <OrdersHeroSlideshow slides={ordersHeroSlides} />
 
-      <div className="section-container pt-8"><PromoBanner surface="homepage" /></div>
+      <PromoBanner surface="homepage" wrapperClassName="section-container pt-8" />
 
       {/* Pricing */}
       <section id="pricing" className="scroll-mt-24 section-padding surface-subtle border-y border-border">

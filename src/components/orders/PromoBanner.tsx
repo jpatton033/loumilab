@@ -19,13 +19,14 @@ export const PromoBannerView = ({ promo, className = "" }: { promo: PublicPromot
   </div>
 );
 
-const PromoBanner = ({ surface, className }: { surface: PromoSurface; className?: string }) => {
+const PromoBanner = ({ surface, className, wrapperClassName }: { surface: PromoSurface; className?: string; wrapperClassName?: string }) => {
   const { data: promo } = useActivePromotion(surface);
   useEffect(() => {
     if (promo) trackPromoViewed(promo.id, surface);
   }, [promo, surface]);
   if (!promo) return null;
-  return <PromoBannerView promo={promo} className={className} />;
+  const view = <PromoBannerView promo={promo} className={className} />;
+  return wrapperClassName ? <div className={wrapperClassName}>{view}</div> : view;
 };
 
 export default PromoBanner;
