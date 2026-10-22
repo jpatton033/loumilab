@@ -57,6 +57,13 @@
       "when": 1792022352078,
       "tag": "0007_fix_record_page_view_rate_limit",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1792692778359,
+      "tag": "0008_orders_promotions",
+      "breakpoints": true
     }
   ]
 }

@@ -1930,6 +1930,75 @@ export type Database = {
           },
         ]
       }
+      merchant_promotions: {
+        Row: {
+          activated_at: string | null
+          created_at: string
+          duration_days: number
+          eligible_volume_cents: number
+          ended_reason: string | null
+          expires_at: string | null
+          fees_waived_cents: number
+          id: string
+          merchant_id: string
+          normal_fee_bps: number
+          promo_fee_bps: number
+          promotion_id: string
+          qualified_at: string
+          start_trigger: string
+          status: string
+        }
+        Insert: {
+          activated_at?: string | null
+          created_at?: string
+          duration_days: number
+          eligible_volume_cents?: number
+          ended_reason?: string | null
+          expires_at?: string | null
+          fees_waived_cents?: number
+          id?: string
+          merchant_id: string
+          normal_fee_bps: number
+          promo_fee_bps: number
+          promotion_id: string
+          qualified_at?: string
+          start_trigger: string
+          status?: string
+        }
+        Update: {
+          activated_at?: string | null
+          created_at?: string
+          duration_days?: number
+          eligible_volume_cents?: number
+          ended_reason?: string | null
+          expires_at?: string | null
+          fees_waived_cents?: number
+          id?: string
+          merchant_id?: string
+          normal_fee_bps?: number
+          promo_fee_bps?: number
+          promotion_id?: string
+          qualified_at?: string
+          start_trigger?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "merchant_promotions_merchant_id_fkey"
+            columns: ["merchant_id"]
+            isOneToOne: true
+            referencedRelation: "merchants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "merchant_promotions_promotion_id_fkey"
+            columns: ["promotion_id"]
+            isOneToOne: false
+            referencedRelation: "orders_promotions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       merchant_quotes: {
         Row: {
           approved_at: string | null
@@ -2825,9 +2894,11 @@ export type Database = {
           livemode: boolean
           merchant_fee_cents: number
           merchant_id: string
+          merchant_promotion_id: string | null
           paid_at: string | null
           platform_fee_bps: number
           platform_fee_cents: number
+          promo_waived_cents: number
           public_token: string
           reference: string | null
           service_fee_cents: number
@@ -2863,9 +2934,11 @@ export type Database = {
           livemode?: boolean
           merchant_fee_cents?: number
           merchant_id: string
+          merchant_promotion_id?: string | null
           paid_at?: string | null
           platform_fee_bps?: number
           platform_fee_cents?: number
+          promo_waived_cents?: number
           public_token?: string
           reference?: string | null
           service_fee_cents?: number
@@ -2901,9 +2974,11 @@ export type Database = {
           livemode?: boolean
           merchant_fee_cents?: number
           merchant_id?: string
+          merchant_promotion_id?: string | null
           paid_at?: string | null
           platform_fee_bps?: number
           platform_fee_cents?: number
+          promo_waived_cents?: number
           public_token?: string
           reference?: string | null
           service_fee_cents?: number
@@ -2928,6 +3003,13 @@ export type Database = {
             columns: ["merchant_id"]
             isOneToOne: false
             referencedRelation: "merchants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_merchant_promotion_id_fkey"
+            columns: ["merchant_promotion_id"]
+            isOneToOne: false
+            referencedRelation: "merchant_promotions"
             referencedColumns: ["id"]
           },
           {
@@ -3130,6 +3212,72 @@ export type Database = {
         }
         Relationships: []
       }
+      orders_promotions: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string
+          duration_days: number
+          eligibility: string
+          fee_bps: number
+          id: string
+          message: string
+          name: string
+          selected_merchant_ids: string[]
+          show_builder: boolean
+          show_homepage: boolean
+          show_onboarding: boolean
+          signup_deadline: string | null
+          start_trigger: string
+          starts_at: string
+          status: string
+          terms: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          duration_days?: number
+          eligibility?: string
+          fee_bps?: number
+          id?: string
+          message?: string
+          name: string
+          selected_merchant_ids?: string[]
+          show_builder?: boolean
+          show_homepage?: boolean
+          show_onboarding?: boolean
+          signup_deadline?: string | null
+          start_trigger?: string
+          starts_at?: string
+          status?: string
+          terms?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          duration_days?: number
+          eligibility?: string
+          fee_bps?: number
+          id?: string
+          message?: string
+          name?: string
+          selected_merchant_ids?: string[]
+          show_builder?: boolean
+          show_homepage?: boolean
+          show_onboarding?: boolean
+          signup_deadline?: string | null
+          start_trigger?: string
+          starts_at?: string
+          status?: string
+          terms?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -3325,6 +3473,8 @@ export type Database = {
         Args: { _order_id: string }
         Returns: string
       }
+      expire_merchant_promotions: { Args: never; Returns: number }
+      get_active_promotion: { Args: { _surface: string }; Returns: Json }
       get_invoice_by_token: { Args: { _token: string }; Returns: Json }
       get_local_business: {
         Args: { _slug: string }
@@ -3428,6 +3578,10 @@ export type Database = {
       owns_merchant_media_path: {
         Args: { object_name: string }
         Returns: boolean
+      }
+      promo_qualify: {
+        Args: { _event: string; _merchant_id: string }
+        Returns: undefined
       }
       publish_local_candidate: {
         Args: { _id: string; _notes?: string }
