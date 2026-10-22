@@ -1,9 +1,11 @@
 import { TrendingDown } from "lucide-react";
-import { FEE_PLANS, marginalBps, nextThreshold, pct, progressiveFee, usd, useMerchantFeeProgress } from "@/lib/orders/feeSchedule";
+import { useFeePlans } from "@/components/orders/ProgressiveFees";
+import { marginalBps, nextThreshold, pct, progressiveFee, usd, useMerchantFeeProgress } from "@/lib/orders/feeSchedule";
 
 /** "Your fee this month" — shown only when progressive pricing is live. */
 const FeeProgressCard = ({ enabled }: { enabled: boolean }) => {
   const { data: p } = useMerchantFeeProgress(enabled);
+  const plans = useFeePlans();
   if (!p?.schedule) return null;
   const tiers = p.schedule.tiers;
   const rate = marginalBps(tiers, p.plan_slug, p.volume_cents);
@@ -13,7 +15,7 @@ const FeeProgressCard = ({ enabled }: { enabled: boolean }) => {
   const flat = Math.round((p.volume_cents * p.flat_bps) / 10000);
   const tiered = progressiveFee(tiers, p.plan_slug, 0, p.volume_cents)?.feeCents ?? flat;
   const savings = flat - tiered;
-  const planName = FEE_PLANS.find((x) => x.slug === p.plan_slug)?.name ?? p.plan_slug;
+  const planName = plans.find((x) => x.slug === p.plan_slug)?.name ?? p.plan_slug;
 
   return (
     <div className="mt-6 rounded-3xl border border-border bg-card px-5 py-4">

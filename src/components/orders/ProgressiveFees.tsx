@@ -18,6 +18,20 @@ export const useLiveFeeSchedule = () => {
   return { tiers: sched?.tiers ?? null, startsOn };
 };
 
+/** Plan names/prices as saved in Plans & Fees, so tables match the cards. */
+export const useFeePlans = () => {
+  const { data: plans = [] } = usePublicPlans();
+  return FEE_PLANS.map((f) => {
+    const p = plans.find((x) => x.slug === f.slug);
+    return {
+      slug: f.slug,
+      name: p?.name ?? f.name,
+      price: p?.monthly_price_cents != null ? `${usd(p.monthly_price_cents)}/month` : f.price,
+      monthlyCents: p?.monthly_price_cents ?? 0,
+    };
+  });
+};
+
 /** "First $2,500", "Next $2,500", "Next $5,000", "Above $10,000". */
 export const bandLabels = (t: FeeTiers) =>
   [...t.thresholds, null].map((to, i) => {
@@ -49,6 +63,7 @@ export const FeeAnnouncement = ({ showLink = true }: { showLink?: boolean }) => 
 };
 
 export const FeeTiersTable = ({ tiers }: { tiers: FeeTiers }) => {
+  const plans = useFeePlans();
   const labels = bandLabels(tiers);
   return (
     <div>
@@ -58,21 +73,21 @@ export const FeeTiersTable = ({ tiers }: { tiers: FeeTiers }) => {
         <thead>
           <tr className="border-b border-border text-muted-foreground">
             <th scope="col" className="py-2 pr-4 font-medium">Monthly eligible sales</th>
-            {FEE_PLANS.map((p) => <th key={p.slug} scope="col" className="py-2 pr-4 font-medium">{p.name}</th>)}
+            {plans.map((p) => <th key={p.slug} scope="col" className="py-2 pr-4 font-medium">{p.name}</th>)}
           </tr>
         </thead>
         <tbody>
           {labels.map((label, i) => (
             <tr key={label} className="border-b border-border/60 last:border-0">
               <th scope="row" className="py-2.5 pr-4 font-medium">{label}</th>
-              {FEE_PLANS.map((p) => <td key={p.slug} className="py-2.5 pr-4">{pct(tiers.rates[p.slug][i])}</td>)}
+              {plans.map((p) => <td key={p.slug} className="py-2.5 pr-4">{pct(tiers.rates[p.slug][i])}</td>)}
             </tr>
           ))}
         </tbody>
       </table>
       {/* Phones: one short list per plan */}
       <div className="grid gap-4 sm:hidden">
-        {FEE_PLANS.map((p) => (
+        {plans.map((p) => (
           <div key={p.slug} className="rounded-2xl border border-border p-4">
             <p className="font-semibold">{p.name} <span className="font-normal text-muted-foreground">· {p.price}</span></p>
             <dl className="mt-2 space-y-1 text-sm">
@@ -92,9 +107,10 @@ export const FeeTiersTable = ({ tiers }: { tiers: FeeTiers }) => {
 
 /** Worked example computed from the live schedule, never hardcoded. */
 export const FeeExample = ({ tiers, plan = "launch", salesCents = 600000 }: { tiers: FeeTiers; plan?: string; salesCents?: number }) => {
+  const plans = useFeePlans();
   const r = progressiveFee(tiers, plan, 0, salesCents);
   if (!r) return null;
-  const name = FEE_PLANS.find((p) => p.slug === plan)?.name ?? plan;
+  const name = plans.find((p) => p.slug === plan)?.name ?? plan;
   return (
     <div className="rounded-2xl bg-muted/50 p-5 text-sm">
       <p className="font-medium">Example: a {name} merchant with {usd(salesCents)} in eligible monthly sales pays</p>
@@ -109,19 +125,19 @@ export const FeeExample = ({ tiers, plan = "launch", salesCents = 600000 }: { ti
 };
 
 export const FeeCalculator = ({ tiers }: { tiers: FeeTiers }) => {
-  const { data: plans = [] } = usePublicPlans();
+  const plans = useFeePlans();
   const [plan, setPlan] = useState("launch");
   const [sales, setSales] = useState("6000");
   const cents = Math.max(0, Math.round((Number(sales.replace(/[^0-9.]/g, "")) || 0) * 100));
   const fee = progressiveFee(tiers, plan, 0, cents)?.feeCents ?? 0;
-  const sub = plans.find((p) => p.slug === plan)?.monthly_price_cents ?? 0;
+  const sub = plans.find((p) => p.slug === plan)?.monthlyCents ?? 0;
   return (
     <div className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-soft)]">
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="text-sm">
           <span className="block font-medium">Plan</span>
           <select value={plan} onChange={(e) => setPlan(e.target.value)} className="mt-1 h-11 w-full rounded-xl border border-input bg-background px-3">
-            {FEE_PLANS.map((p) => <option key={p.slug} value={p.slug}>{p.name}</option>)}
+            {plans.map((p) => <option key={p.slug} value={p.slug}>{p.name}</option>)}
           </select>
         </label>
         <label className="text-sm">
