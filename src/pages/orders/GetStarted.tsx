@@ -420,6 +420,7 @@ const GetStarted = () => {
               No account needed to start — about 5 minutes. Build your store first, then save it with a free
               account. It stays private until you publish.
             </p>
+            <PromoBanner surface={step === 0 ? "onboarding" : "builder"} className="mt-6" />
           </div>
 
           {/* Progress */}

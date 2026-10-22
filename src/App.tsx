@@ -30,6 +30,7 @@ const AdminNewsletter = lazy(() => import("./pages/admin/Newsletter"));
 const AdminOrdersPanel = lazy(() => import("./pages/admin/Orders"));
 const AdminMerchantsDirectory = lazy(() => import("./pages/admin/MerchantsDirectory"));
 const AdminPlans = lazy(() => import("./pages/admin/Plans"));
+const AdminPromotions = lazy(() => import("./pages/admin/Promotions"));
 const AdminCustomProjects = lazy(() => import("./pages/admin/CustomProjects"));
 const AdminIndustries = lazy(() => import("./pages/admin/Industries"));
 const AdminAuditLog = lazy(() => import("./pages/admin/AuditLog"));
@@ -123,6 +124,7 @@ const App = () => (
           <Route path="/admin/orders" element={<ProtectedRoute><AdminOrdersPanel /></ProtectedRoute>} />
           <Route path="/admin/merchants" element={<ProtectedRoute><AdminMerchantsDirectory /></ProtectedRoute>} />
           <Route path="/admin/plans" element={<ProtectedRoute><AdminPlans /></ProtectedRoute>} />
+          <Route path="/admin/promotions" element={<ProtectedRoute><AdminPromotions /></ProtectedRoute>} />
           <Route path="/admin/industries" element={<ProtectedRoute><AdminIndustries /></ProtectedRoute>} />
           <Route path="/admin/custom-projects" element={<ProtectedRoute><AdminCustomProjects /></ProtectedRoute>} />
           <Route path="/admin/local-importer" element={<ProtectedRoute><AdminLocalImporter /></ProtectedRoute>} />
