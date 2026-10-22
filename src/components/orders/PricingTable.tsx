@@ -139,7 +139,8 @@ const PlanCard = ({ plan, annual, delay }: { plan: OrdersPlan; annual: boolean; 
       </p>
 
       <ul className="mt-6 flex-1 space-y-2.5">
-        {plan.features.map((f) => (
+        {/* A flat "Lowest X% platform fee" bullet contradicts progressive rates once live. */}
+        {plan.features.filter((f) => startBps == null || !/platform fee/i.test(f)).map((f) => (
           <li key={f} className="flex items-start gap-2.5 text-sm">
             <Check size={15} className={cn("mt-0.5 shrink-0", featured ? "text-background" : "text-accent")} />
             <span className={featured ? "text-background/90" : ""}>{f}</span>
