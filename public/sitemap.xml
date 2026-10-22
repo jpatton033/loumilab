@@ -36,6 +36,11 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://loumilab.com/orders/pricing</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://loumilab.com/orders/tools</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -229,7 +234,7 @@
   </url>
   <url>
     <loc>https://loumilab.com/resources/security-privacy/your-digital-footprint-is-bigger-than-you-think</loc>
-    <lastmod>2026-10-21</lastmod>
+    <lastmod>2026-10-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
