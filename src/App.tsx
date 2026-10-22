@@ -45,6 +45,7 @@ const AdminTheDot = lazy(() => import("./pages/admin/TheDot"));
 const AdminTheDotEditor = lazy(() => import("./pages/admin/TheDotEditor"));
 import OrdersCustomProject from "./pages/orders/CustomProject";
 import BusinessTools from "./pages/orders/tools/Index";
+import OrdersPricing from "./pages/orders/Pricing";
 import FoodPricingCalculator from "./pages/orders/tools/FoodPricingCalculator";
 import LocalIndex from "./pages/orders/local/Index";
 import LocalJoin from "./pages/orders/local/Join";
@@ -89,6 +90,7 @@ const App = () => (
           <Route path="/orders/quote/:token" element={<OrdersQuoteView />} />
           <Route path="/orders/invoice/:token" element={<OrdersInvoiceView />} />
           <Route path="/orders/custom" element={<OrdersCustomProject />} />
+          <Route path="/orders/pricing" element={<OrdersPricing />} />
           <Route path="/orders/tools" element={<BusinessTools />} />
           <Route path="/orders/tools/food-pricing-calculator" element={<FoodPricingCalculator />} />
           <Route path="/orders/local" element={<LocalIndex />} />

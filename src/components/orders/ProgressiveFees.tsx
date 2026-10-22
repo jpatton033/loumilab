@@ -30,7 +30,7 @@ export const FeeAnnouncement = ({ showLink = true }: { showLink?: boolean }) => 
   const { tiers, startsOn } = useLiveFeeSchedule();
   if (!tiers) return null;
   return (
-    <div className="mx-auto max-w-3xl border-l-2 border-primary pl-5">
+    <div className="max-w-3xl border-l-2 border-primary pl-5">
       <p className="text-sm text-muted-foreground">Built for business. Priced for growth.{startsOn && ` Starting ${startsOn}.`}</p>
       <p className="mt-1 text-xl font-semibold text-foreground sm:text-2xl">Your business grows. Our fees shrink.</p>
       <p className="mt-2 text-base text-muted-foreground">

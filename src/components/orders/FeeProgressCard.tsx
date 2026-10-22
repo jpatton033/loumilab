@@ -20,7 +20,7 @@ const FeeProgressCard = ({ enabled }: { enabled: boolean }) => {
       <div className="flex items-center gap-2">
         <TrendingDown className="h-5 w-5 text-primary" aria-hidden />
         <p className="font-semibold">Your fee this month</p>
-        <span className="ml-auto text-sm text-muted-foreground">{planName} plan</span>
+        <span className="ml-auto text-sm text-muted-foreground">{planName} plan · starts at {pct(tiers.rates[p.plan_slug]?.[0] ?? rate)}</span>
       </div>
       <dl className="mt-4 grid grid-cols-2 gap-4 text-sm sm:grid-cols-4">
         <div><dt className="text-muted-foreground">Current rate</dt><dd className="text-lg font-semibold">{pct(rate)}</dd></div>
@@ -30,7 +30,7 @@ const FeeProgressCard = ({ enabled }: { enabled: boolean }) => {
       </dl>
       <p className="mt-4 text-sm text-muted-foreground">
         {next !== null && nextRate !== null
-          ? `${usd(next - p.volume_cents)} more in sales and your rate drops to ${pct(nextRate)} on sales above ${usd(next)}.`
+          ? `Next reduction: ${pct(nextRate)} after ${usd(next)} — ${usd(next - p.volume_cents)} to go.`
           : "You're at the lowest rate for your plan."}{" "}
         Lower rates apply only to sales after each threshold. Resets on the 1st (Eastern).
       </p>

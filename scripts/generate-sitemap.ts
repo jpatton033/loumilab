@@ -20,6 +20,7 @@ const staticEntries: Entry[] = [
   { path: "/orders", changefreq: "weekly", priority: "0.9" },
   { path: "/orders/get-started", changefreq: "monthly", priority: "0.8" },
   { path: "/orders/custom", changefreq: "monthly", priority: "0.6" },
+  { path: "/orders/pricing", changefreq: "monthly", priority: "0.8" },
   { path: "/orders/tools", changefreq: "monthly", priority: "0.7" },
   { path: "/orders/tools/food-pricing-calculator", changefreq: "monthly", priority: "0.8" },
   { path: "/orders/local", changefreq: "daily", priority: "0.8" },
