@@ -372,6 +372,8 @@ const AdminPlans = () => {
         checkout is unavailable rather than simulated.
       </p>
 
+      <ProgressiveFeesPanel />
+
       <Dialog open={Boolean(editing)} onOpenChange={(open) => !open && setEditing(null)}>
         <DialogContent className="max-h-[85vh] max-w-2xl overflow-y-auto">
           <DialogHeader>
@@ -488,8 +490,6 @@ const AdminPlans = () => {
               </div>
             </div>
           )}
-
-          <ProgressiveFeesPanel />
 
       <DialogFooter>
             <Button variant="outline" onClick={() => setEditing(null)}>
