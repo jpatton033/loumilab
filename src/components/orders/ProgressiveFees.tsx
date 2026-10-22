@@ -166,6 +166,7 @@ export const FeeSaleExample = () => {
   if (bps == null) return null;
   const sale = 10000;
   const b = saleBreakdown(sale, bps);
+  const usd2 = (c: number) => (c / 100).toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2 });
   const row = (label: string, v: string, strong = false) => (
     <div className="flex justify-between gap-4"><dt className={strong ? "font-medium text-foreground" : "text-muted-foreground"}>{label}</dt><dd className={strong ? "font-semibold" : "font-medium"}>{v}</dd></div>
   );
@@ -173,9 +174,9 @@ export const FeeSaleExample = () => {
     <div className="max-w-md rounded-2xl border border-border bg-card p-5 text-sm">
       <p className="font-semibold">You make a {usd(sale)} sale.</p>
       <dl className="mt-3 space-y-1.5">
-        {row(`Loumilab platform fee (${pct(bps)})`, usd(b.loumilab))}
-        {row("Estimated Stripe processing (2.9% + $0.30)", usd(b.stripe))}
-        {row("Estimated merchant proceeds", usd(b.proceeds), true)}
+        {row(`Loumilab platform fee (${pct(bps)})`, usd2(b.loumilab))}
+        {row("Estimated Stripe processing (2.9% + $0.30)", usd2(b.stripe))}
+        {row("Estimated merchant proceeds", usd2(b.proceeds), true)}
       </dl>
       <p className="mt-3 text-xs text-muted-foreground">
         {plan?.name ?? "Free"} plan, {usd(sale)} merchandise subtotal, no tax, tips, delivery or promotions. Stripe processing is an estimate charged by Stripe, not Loumilab. Proceeds are an estimate, not a guaranteed payout.
