@@ -2,7 +2,7 @@ import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { z } from "npm:zod@3";
 import { admin } from "../_shared/auth.ts";
 import { resolveReturnBase, stripe, stripeConfigured } from "../_shared/stripe.ts";
-import { loadMerchantContext, PaymentsError, platformFeeCents } from "../_shared/fees.ts";
+import { loadMerchantContext, PaymentsError, priceOrderFee } from "../_shared/fees.ts";
 
 /**
  * Pays a merchant invoice from its secret public link. The amount comes from
@@ -51,7 +51,8 @@ Deno.serve(async (req) => {
     if (invoice.amount_cents <= 0) return json({ error: "This invoice has no balance due." }, 400);
 
     const ctx = await loadMerchantContext(invoice.merchant_id);
-    const feeCents = platformFeeCents(invoice.amount_cents, ctx.feeBps);
+    const fee = await priceOrderFee(ctx, invoice.amount_cents);
+    const feeCents = fee.feeCents;
 
     const { data: job } = invoice.job_id
       ? await admin
@@ -97,7 +98,14 @@ Deno.serve(async (req) => {
 
     await admin
       .from("merchant_invoices")
-      .update({ stripe_checkout_session_id: session.id, platform_fee_cents: feeCents })
+      .update({
+        stripe_checkout_session_id: session.id,
+        platform_fee_cents: feeCents,
+        platform_fee_bps: fee.feeBps,
+        fee_schedule_id: fee.scheduleId,
+        fee_volume_start_cents: fee.volumeStartCents,
+        fee_breakdown: fee.breakdown,
+      })
       .eq("id", invoice.id);
 
     return json({ url: session.url });
