@@ -17,7 +17,7 @@ export const DEFAULT_TIERS: FeeTiers = {
   rates: { launch: [500, 450, 400, 350], starter: [390, 340, 290, 240], business: [290, 240, 190, 140] },
 };
 
-export const pct = (bps: number) => `${(bps / 100).toFixed(1).replace(/\.0$/, ".0")}%`;
+export const pct = (bps: number) => `${(bps / 100).toFixed(1)}%`;
 export const usd = (cents: number) =>
   (cents / 100).toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: cents % 100 ? 2 : 0 });
 
@@ -119,7 +119,7 @@ export function useFeeScheduleActions() {
         : supabase.from("orders_fee_schedules").insert({ tiers: p.tiers as never, notes: p.notes, created_by: u.user?.id }).select("id, version").single();
       const { data, error } = await q;
       if (error) throw error;
-      await logAudit({ action: "fee_schedule.save_draft", target_type: "orders_fee_schedule", target_id: data.id, new_value: p.tiers as never });
+      await logAudit({ action: "fee_schedule.save_draft", targetType: "orders_fee_schedule", targetId: data.id, newValue: p.tiers as never });
       return data;
     },
     onSuccess: done,
@@ -132,7 +132,7 @@ export function useFeeScheduleActions() {
         .update({ status: "active", effective_at: p.effectiveAt, activated_at: new Date().toISOString(), activated_by: u.user?.id })
         .eq("id", p.id);
       if (error) throw error;
-      await logAudit({ action: "fee_schedule.activate", target_type: "orders_fee_schedule", target_id: p.id, new_value: { effective_at: p.effectiveAt } });
+      await logAudit({ action: "fee_schedule.activate", targetType: "orders_fee_schedule", targetId: p.id, newValue: { effective_at: p.effectiveAt } });
     },
     onSuccess: done,
   });
@@ -140,7 +140,7 @@ export function useFeeScheduleActions() {
     mutationFn: async (p: { id: string; reason: string }) => {
       const { error } = await supabase.from("orders_fee_schedules").update({ status: "retired" }).eq("id", p.id);
       if (error) throw error;
-      await logAudit({ action: "fee_schedule.retire", target_type: "orders_fee_schedule", target_id: p.id, reason: p.reason });
+      await logAudit({ action: "fee_schedule.retire", targetType: "orders_fee_schedule", targetId: p.id, reason: p.reason });
     },
     onSuccess: done,
   });
