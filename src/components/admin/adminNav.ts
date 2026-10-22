@@ -1,4 +1,5 @@
 import {
+  BadgePercent,
   BookOpen,
   Dot,
   FileClock,
@@ -72,6 +73,7 @@ export const adminNav: AdminNavGroup[] = [
       { title: "Overview", url: "/admin/orders", icon: ShoppingBag },
       { title: "Merchants & Contacts", url: "/admin/merchants", icon: Users },
       { title: "Plans & Fees", url: "/admin/plans", icon: Tags },
+      { title: "Promotions", url: "/admin/promotions", icon: BadgePercent },
       { title: "Industries", url: "/admin/industries", icon: Store },
       { title: "Custom Projects", url: "/admin/custom-projects", icon: Wrench },
       { title: "Local Importer", url: "/admin/local-importer", icon: MapPinned },

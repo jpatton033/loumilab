@@ -2,7 +2,7 @@ import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { z } from "npm:zod@3";
 import { admin, requireUser } from "../_shared/auth.ts";
 import { resolveReturnBase, stripe, stripeConfigured, stripeLivemode } from "../_shared/stripe.ts";
-import { loadMerchantContext, PaymentsError } from "../_shared/fees.ts";
+import { loadMerchantContext, PaymentsError, platformFeeCents } from "../_shared/fees.ts";
 import { priceOrder, resolveCustomerShareBps } from "../_shared/pricing.ts";
 
 /**
@@ -173,6 +173,10 @@ Deno.serve(async (req) => {
         total_cents: pricing.totalCents + tip,
         platform_fee_cents: feeCents,
         platform_fee_bps: ctx.feeBps,
+        merchant_promotion_id: ctx.merchantPromotionId,
+        promo_waived_cents: ctx.merchantPromotionId
+          ? Math.max(0, platformFeeCents(subtotal, ctx.planFeeBps) - feeCents)
+          : 0,
         stripe_account_id: ctx.account.stripe_account_id,
         livemode: stripeLivemode,
         status: "pending",

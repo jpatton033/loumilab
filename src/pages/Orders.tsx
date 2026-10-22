@@ -1,3 +1,4 @@
+import PromoBanner from "@/components/orders/PromoBanner";
 import { Link } from "react-router-dom";
 import { ORDERS_CTA } from "@/data/orders/cta";
 import { trackCtaClick } from "@/lib/tracking";
@@ -198,6 +199,8 @@ const Orders = () => {
       </section>
 
       <OrdersHeroSlideshow slides={ordersHeroSlides} />
+
+      <PromoBanner surface="homepage" wrapperClassName="section-container pt-8" />
 
       {/* Pricing */}
       <section id="pricing" className="scroll-mt-24 section-padding surface-subtle border-y border-border">
