@@ -190,6 +190,17 @@ export const trackCtaClick = (location: string, variant: string) => {
   window.dataLayer?.push({ event: "cta_click", cta_location: location, cta_variant: variant });
 };
 
+/** Promo banner seen (GTM only), once per campaign + surface per session. */
+export const trackPromoViewed = (promoId: string, surface: string) => {
+  if (!allowed() || !googleLoaded) return;
+  const key = `loumilab-promo-viewed:${promoId}:${surface}`;
+  try {
+    if (sessionStorage.getItem(key)) return;
+    sessionStorage.setItem(key, "1");
+  } catch { /* storage blocked: still send */ }
+  window.dataLayer?.push({ event: "promo_viewed", promo_id: promoId, promo_surface: surface });
+};
+
 /** Builder started: first setup step completed, once per browser session (GTM only). */
 export const trackBuilderStarted = () => {
   if (!allowed() || !googleLoaded) return;
