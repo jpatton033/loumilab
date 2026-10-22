@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { FEE_PLANS, type FeeTiers, pct, progressiveFee, usd, useFeeSchedule } from "@/lib/orders/feeSchedule";
 import { usePublicPlans } from "@/lib/orders/plans";
+import { saleBreakdown } from "@/lib/orders/saleExample";
 
 /**
  * Progressive pricing pieces. Every one renders nothing until a fee schedule
@@ -156,22 +157,55 @@ export const FeeCalculator = ({ tiers }: { tiers: FeeTiers }) => {
   );
 };
 
-/** Section under the homepage pricing cards. */
+/** "You make a $100 sale." on the $0 plan; uses live starting rate or today's flat fee. */
+export const FeeSaleExample = () => {
+  const { tiers } = useLiveFeeSchedule();
+  const { data: plans = [] } = usePublicPlans();
+  const plan = plans.find((p) => p.slug === "launch");
+  const bps = tiers?.rates?.launch?.[0] ?? plan?.platform_fee_bps;
+  if (bps == null) return null;
+  const sale = 10000;
+  const b = saleBreakdown(sale, bps);
+  const row = (label: string, v: string, strong = false) => (
+    <div className="flex justify-between gap-4"><dt className={strong ? "font-medium text-foreground" : "text-muted-foreground"}>{label}</dt><dd className={strong ? "font-semibold" : "font-medium"}>{v}</dd></div>
+  );
+  return (
+    <div className="max-w-md rounded-2xl border border-border bg-card p-5 text-sm">
+      <p className="font-semibold">You make a {usd(sale)} sale.</p>
+      <dl className="mt-3 space-y-1.5">
+        {row(`Loumilab platform fee (${pct(bps)})`, usd(b.loumilab))}
+        {row("Estimated Stripe processing (2.9% + $0.30)", usd(b.stripe))}
+        {row("Estimated merchant proceeds", usd(b.proceeds), true)}
+      </dl>
+      <p className="mt-3 text-xs text-muted-foreground">
+        {plan?.name ?? "Free"} plan, {usd(sale)} merchandise subtotal, no tax, tips, delivery or promotions. Stripe processing is an estimate charged by Stripe, not Loumilab. Proceeds are an estimate, not a guaranteed payout.
+      </p>
+    </div>
+  );
+};
+
+/** Section under the homepage pricing cards: simple example plus a plain explainer. */
 const ProgressiveFees = () => {
   const { tiers } = useLiveFeeSchedule();
-  if (!tiers) return null;
   return (
-    <div className="mt-12 rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-soft)] sm:p-8">
-      <h3 className="text-xl font-semibold">Lower fees as your monthly sales grow</h3>
-      <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-        Each lower rate applies only to the additional sales above that threshold — never retroactively. Thresholds reset each month. No request needed; it's automatic.
-      </p>
-      <div className="mt-6"><FeeTiersTable tiers={tiers} /></div>
-      <div className="mt-6"><FeeExample tiers={tiers} /></div>
-      <p className="mt-4 text-sm text-muted-foreground">
-        Stripe processing fees are separate. No Loumilab fee on tips or sales tax.{" "}
-        <Link to="/orders/pricing" className="font-medium text-primary hover:underline">Try the pricing calculator</Link>
-      </p>
+    <div className="mt-12 grid gap-6 lg:grid-cols-2 lg:items-start">
+      <FeeSaleExample />
+      {tiers && (
+        <details className="rounded-2xl border border-border bg-card p-5 text-sm">
+          <summary className="cursor-pointer font-semibold">How do lower fees work?</summary>
+          <ul className="mt-3 list-disc space-y-1.5 pl-5 text-muted-foreground">
+            <li>Each plan has a starting platform fee.</li>
+            <li>Lower rates become available as your monthly sales grow.</li>
+            <li>Lower rates apply only to additional sales above each threshold.</li>
+            <li>Monthly sales totals reset on the 1st of each month.</li>
+            <li>It's automatic. You don't need to request anything.</li>
+          </ul>
+          <p className="mt-3 text-muted-foreground">
+            No Loumilab fee on tips or sales tax. Stripe processing is separate.{" "}
+            <Link to="/orders/pricing" className="font-medium text-primary hover:underline">See the full rate table</Link>
+          </p>
+        </details>
+      )}
     </div>
   );
 };
