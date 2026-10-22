@@ -12,6 +12,8 @@ import {
   type OrdersPlan,
 } from "@/lib/orders/plans";
 import { cn } from "@/lib/utils";
+import { pct } from "@/lib/orders/feeSchedule";
+import { useLiveFeeSchedule } from "@/components/orders/ProgressiveFees";
 
 /**
  * Public pricing table. Every value is read from the database so Super Admin
@@ -72,6 +74,8 @@ const PricingTable = () => {
 const PlanCard = ({ plan, annual, delay }: { plan: OrdersPlan; annual: boolean; delay: number }) => {
   const featured = Boolean(plan.badge);
   const saving = annual ? annualSavingLabel(plan) : null;
+  const { tiers } = useLiveFeeSchedule();
+  const startBps = tiers?.rates?.[plan.slug]?.[0];
 
   return (
     <Reveal
@@ -110,10 +114,21 @@ const PlanCard = ({ plan, annual, delay }: { plan: OrdersPlan; annual: boolean; 
         )}
       </p>
 
-      {plan.fee_label && (
-        <p className={cn("mt-1 text-sm", featured ? "text-background/70" : "text-muted-foreground")}>
-          {plan.fee_label}
-        </p>
+      {startBps != null ? (
+        <>
+          <p className={cn("mt-1 text-sm", featured ? "text-background/70" : "text-muted-foreground")}>
+            Starting at {pct(startBps)} platform fee
+          </p>
+          <p className={cn("mt-1 text-xs", featured ? "text-background/80" : "text-accent")}>
+            Lower fees automatically as monthly sales grow.
+          </p>
+        </>
+      ) : (
+        plan.fee_label && (
+          <p className={cn("mt-1 text-sm", featured ? "text-background/70" : "text-muted-foreground")}>
+            {plan.fee_label}
+          </p>
+        )
       )}
       {saving && (
         <p className={cn("mt-1 text-xs font-medium", featured ? "text-background/80" : "text-accent")}>{saving}</p>
