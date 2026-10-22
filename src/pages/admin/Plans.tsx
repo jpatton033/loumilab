@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import AdminShell from "@/components/admin/AdminShell";
+import ProgressiveFeesPanel from "@/components/admin/ProgressiveFeesPanel";
 import SEOHead from "@/components/SEOHead";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -488,7 +489,9 @@ const AdminPlans = () => {
             </div>
           )}
 
-          <DialogFooter>
+          <ProgressiveFeesPanel />
+
+      <DialogFooter>
             <Button variant="outline" onClick={() => setEditing(null)}>
               Cancel
             </Button>
