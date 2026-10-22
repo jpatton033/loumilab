@@ -45,3 +45,13 @@ describe("tier boundaries", () => {
     expect(marginalBps(T, "launch", 260000 - 20000)).toBe(500);
   });
 });
+
+describe("public pricing copy matches checkout math", async () => {
+  const { bandLabels } = await import("@/components/orders/ProgressiveFees");
+  it("bands read First/Next/Next/Above", () =>
+    expect(bandLabels(T)).toEqual(["First $2,500", "Next $2,500", "Next $5,000", "Above $10,000"]));
+  it("example slices for Launch $6,000", () => {
+    const r = progressiveFee(T, "launch", 0, 600000)!;
+    expect(r.slices.map((s) => [s.bps, s.cents])).toEqual([[500, 250000], [450, 250000], [400, 100000]]);
+  });
+});

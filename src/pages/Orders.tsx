@@ -39,7 +39,7 @@ import OrderQueue from "@/components/orders/OrderQueue";
 import OrderStatusBadge from "@/components/orders/OrderStatusBadge";
 import FlowDiagram from "@/components/orders/FlowDiagram";
 import PricingTable from "@/components/orders/PricingTable";
-import ProgressiveFees from "@/components/orders/ProgressiveFees";
+import ProgressiveFees, { FeeAnnouncement } from "@/components/orders/ProgressiveFees";
 import IndustryStrip from "@/components/orders/IndustryStrip";
 import OrdersHeroSlideshow from "@/components/orders/OrdersHeroSlideshow";
 import { demoStorefront } from "@/data/orders/storefronts";
@@ -212,6 +212,9 @@ const Orders = () => {
             <p className="mt-6 text-lg leading-relaxed text-muted-foreground">{pricingHeading.subtitle}</p>
           </Reveal>
 
+          <div className="mt-10">
+            <FeeAnnouncement />
+          </div>
           <div className="mt-14">
             <PricingTable />
           </div>
