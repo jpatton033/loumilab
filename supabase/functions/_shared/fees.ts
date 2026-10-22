@@ -1,5 +1,6 @@
 import { admin } from "./auth.ts";
 import { stripeLivemode } from "./stripe.ts";
+import { clampBps, effectiveFeeBps, isPromoLive } from "./promoFee.ts";
 
 /**
  * Server-side money authority for Loumilab Orders.
@@ -21,7 +22,11 @@ export interface MerchantContext {
     payout_status: string;
     livemode: boolean;
   };
+  /** Fee actually charged (plan fee, lowered by a live promotion). */
   feeBps: number;
+  /** The plan's normal fee, before any promotion. */
+  planFeeBps: number;
+  merchantPromotionId: string | null;
 }
 
 export class PaymentsError extends Error {
@@ -54,6 +59,22 @@ export async function resolveFeeBps(merchantId: string, fallbackPlanSlug: string
   return Math.min(Math.max(bps, 0), 1000);
 }
 
+/**
+ * Plan fee plus any live promotion for this merchant. A promotion only lowers
+ * the fee (see promoFee.ts) and expiry is checked against the clock here, so it
+ * ends on time even before the hourly cleanup marks it expired.
+ */
+export async function resolvePromoFee(merchantId: string, planBps: number) {
+  const { data: promo } = await admin
+    .from("merchant_promotions")
+    .select("id, status, expires_at, promo_fee_bps")
+    .eq("merchant_id", merchantId)
+    .maybeSingle();
+  const feeBps = effectiveFeeBps(planBps, promo);
+  const live = isPromoLive(promo) && feeBps < clampBps(planBps);
+  return { feeBps, merchantPromotionId: live ? (promo!.id as string) : null };
+}
+
 /** Merchant, connected account and fee rate — or a thrown PaymentsError. */
 export async function loadMerchantContext(merchantId: string): Promise<MerchantContext> {
   const { data: merchant } = await admin
@@ -78,8 +99,9 @@ export async function loadMerchantContext(merchantId: string): Promise<MerchantC
     throw new PaymentsError("Payments are temporarily unavailable for this business.", 409);
   }
 
-  const feeBps = await resolveFeeBps(merchantId, merchant.plan_slug);
-  return { merchant, account, feeBps };
+  const planFeeBps = await resolveFeeBps(merchantId, merchant.plan_slug);
+  const promo = await resolvePromoFee(merchantId, planFeeBps);
+  return { merchant, account, feeBps: promo.feeBps, planFeeBps, merchantPromotionId: promo.merchantPromotionId };
 }
 
 /** Loumilab's application fee, charged on merchandise only — never on tax or tips. */
