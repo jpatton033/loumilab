@@ -2,7 +2,7 @@ import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { z } from "npm:zod@3";
 import { admin, requireUser } from "../_shared/auth.ts";
 import { resolveReturnBase, stripe, stripeConfigured, stripeLivemode } from "../_shared/stripe.ts";
-import { loadMerchantContext, PaymentsError, platformFeeCents } from "../_shared/fees.ts";
+import { loadMerchantContext, PaymentsError, priceOrderFee, releaseFeeReservation } from "../_shared/fees.ts";
 import { priceOrder, resolveCustomerShareBps } from "../_shared/pricing.ts";
 
 /**
@@ -117,7 +117,13 @@ Deno.serve(async (req) => {
     }
 
     const customerShareBps = await resolveCustomerShareBps(store.merchant_id, store.customer_fee_share_bps ?? 0);
+    // Progressive/promo fee for this order's merchandise. Holds the volume
+    // briefly so a concurrent checkout can't claim the same tier room.
+    const fee = await priceOrderFee(ctx, subtotal);
+    if (input.quote) await releaseFeeReservation(fee.reservationId);
+
     const pricing = await priceOrder({
+      platformFeeOverrideCents: fee.feeCents,
       store,
       subtotalCents: subtotal,
       fulfilment: input.fulfilment,
@@ -172,11 +178,12 @@ Deno.serve(async (req) => {
         tip_cents: tip,
         total_cents: pricing.totalCents + tip,
         platform_fee_cents: feeCents,
-        platform_fee_bps: ctx.feeBps,
+        platform_fee_bps: fee.feeBps,
+        fee_schedule_id: fee.scheduleId,
+        fee_volume_start_cents: fee.volumeStartCents,
+        fee_breakdown: fee.breakdown,
         merchant_promotion_id: ctx.merchantPromotionId,
-        promo_waived_cents: ctx.merchantPromotionId
-          ? Math.max(0, platformFeeCents(subtotal, ctx.planFeeBps) - feeCents)
-          : 0,
+        promo_waived_cents: ctx.merchantPromotionId ? Math.max(0, fee.baseFeeCents - feeCents) : 0,
         stripe_account_id: ctx.account.stripe_account_id,
         livemode: stripeLivemode,
         status: "pending",
@@ -184,6 +191,7 @@ Deno.serve(async (req) => {
       .select("id, public_token")
       .single();
 
+    await releaseFeeReservation(fee.reservationId);
     if (orderError || !order) return json({ error: "We couldn't start your order. Please try again." }, 500);
 
     await admin.from("order_items").insert(

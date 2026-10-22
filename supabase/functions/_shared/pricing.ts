@@ -132,6 +132,8 @@ export async function priceOrder(opts: {
   deliveryAddress?: string;
   feeBps: number;
   customerShareBps: number;
+  /** Exact platform fee from priceOrderFee (progressive tiers / promotion). */
+  platformFeeOverrideCents?: number;
 }): Promise<OrderPricing> {
   const { store, subtotalCents, fulfilment, feeBps } = opts;
   const tiers = parseTiers(store.delivery_tiers);
@@ -153,7 +155,7 @@ export async function priceOrder(opts: {
   }
 
   const serviceFeeCents = fulfilment === "delivery" ? Math.max(0, store.service_fee_cents) : 0;
-  const platform = platformFeeCents(subtotalCents, feeBps);
+  const platform = opts.platformFeeOverrideCents ?? platformFeeCents(subtotalCents, feeBps);
 
   const preTotal = subtotalCents + deliveryFeeCents + serviceFeeCents;
   const estimatedStripeFeeCents = Math.round((preTotal * STRIPE_PCT_BPS) / 10000) + STRIPE_FIXED_CENTS;
