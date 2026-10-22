@@ -55,3 +55,30 @@ export async function handleSubscriptionChange(subscription: Obj, eventType: str
     await admin.from("merchant_subscriptions").update(patch).eq("stripe_subscription_id", subId);
   }
 }
+
+/**
+ * Refunds and lost chargebacks reduce the month's eligible volume so later
+ * orders don't get a lower tier they didn't earn. The fee already charged on
+ * the order itself is never recalculated.
+ */
+export async function handleChargeReversal(charge: Obj, kind: "refund" | "dispute_lost") {
+  const pi = str(charge.payment_intent);
+  if (!pi) return;
+  const reversed = kind === "refund" ? num(charge.amount_refunded) : num(charge.amount);
+  for (const table of ["orders", "merchant_invoices"] as const) {
+    const amountCol = table === "orders" ? "subtotal_cents" : "amount_cents";
+    const { data } = await admin
+      .from(table)
+      .select(`id, ${amountCol}, fee_refunded_cents`)
+      .eq("stripe_payment_intent_id", pi)
+      .maybeSingle();
+    if (!data) continue;
+    const row = data as unknown as Record<string, number | string>;
+    // Never above the merchandise amount; never lowers an earlier, larger value.
+    const value = Math.min(Number(row[amountCol]) || 0, reversed);
+    if (value > (Number(row.fee_refunded_cents) || 0)) {
+      await admin.from(table).update({ fee_refunded_cents: value }).eq("id", row.id as string);
+    }
+    return;
+  }
+}

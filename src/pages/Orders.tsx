@@ -39,6 +39,7 @@ import OrderQueue from "@/components/orders/OrderQueue";
 import OrderStatusBadge from "@/components/orders/OrderStatusBadge";
 import FlowDiagram from "@/components/orders/FlowDiagram";
 import PricingTable from "@/components/orders/PricingTable";
+import ProgressiveFees from "@/components/orders/ProgressiveFees";
 import IndustryStrip from "@/components/orders/IndustryStrip";
 import OrdersHeroSlideshow from "@/components/orders/OrdersHeroSlideshow";
 import { demoStorefront } from "@/data/orders/storefronts";
@@ -215,6 +216,7 @@ const Orders = () => {
             <PricingTable />
           </div>
           <p className="mt-6 text-sm text-muted-foreground">{pricingHeading.footnote}</p>
+          <ProgressiveFees />
           <ol className="mt-10 flex flex-col gap-3 font-display text-sm sm:flex-row sm:items-center sm:gap-6" aria-label="How a store goes live">
             <li><span className="font-semibold text-foreground">Build</span> <span className="text-muted-foreground">— free, no account</span></li>
             <li aria-hidden="true" className="hidden text-muted-foreground sm:block">→</li>

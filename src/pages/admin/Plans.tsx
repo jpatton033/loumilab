@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import AdminShell from "@/components/admin/AdminShell";
+import ProgressiveFeesPanel from "@/components/admin/ProgressiveFeesPanel";
 import SEOHead from "@/components/SEOHead";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -371,6 +372,8 @@ const AdminPlans = () => {
         checkout is unavailable rather than simulated.
       </p>
 
+      <ProgressiveFeesPanel />
+
       <Dialog open={Boolean(editing)} onOpenChange={(open) => !open && setEditing(null)}>
         <DialogContent className="max-h-[85vh] max-w-2xl overflow-y-auto">
           <DialogHeader>
@@ -488,7 +491,7 @@ const AdminPlans = () => {
             </div>
           )}
 
-          <DialogFooter>
+      <DialogFooter>
             <Button variant="outline" onClick={() => setEditing(null)}>
               Cancel
             </Button>

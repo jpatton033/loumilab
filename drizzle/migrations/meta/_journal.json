@@ -64,6 +64,13 @@
       "when": 1792692778359,
       "tag": "0008_orders_promotions",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1792695231719,
+      "tag": "0009_progressive_platform_fees",
+      "breakpoints": true
     }
   ]
 }

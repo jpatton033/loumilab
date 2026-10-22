@@ -1586,11 +1586,16 @@ export type Database = {
           amount_cents: number
           created_at: string
           due_at: string | null
+          fee_breakdown: Json | null
+          fee_refunded_cents: number
+          fee_schedule_id: string | null
+          fee_volume_start_cents: number | null
           id: string
           job_id: string | null
           kind: string
           merchant_id: string
           paid_at: string | null
+          platform_fee_bps: number | null
           platform_fee_cents: number | null
           public_token: string
           quote_id: string | null
@@ -1603,11 +1608,16 @@ export type Database = {
           amount_cents?: number
           created_at?: string
           due_at?: string | null
+          fee_breakdown?: Json | null
+          fee_refunded_cents?: number
+          fee_schedule_id?: string | null
+          fee_volume_start_cents?: number | null
           id?: string
           job_id?: string | null
           kind?: string
           merchant_id: string
           paid_at?: string | null
+          platform_fee_bps?: number | null
           platform_fee_cents?: number | null
           public_token?: string
           quote_id?: string | null
@@ -1620,11 +1630,16 @@ export type Database = {
           amount_cents?: number
           created_at?: string
           due_at?: string | null
+          fee_breakdown?: Json | null
+          fee_refunded_cents?: number
+          fee_schedule_id?: string | null
+          fee_volume_start_cents?: number | null
           id?: string
           job_id?: string | null
           kind?: string
           merchant_id?: string
           paid_at?: string | null
+          platform_fee_bps?: number | null
           platform_fee_cents?: number | null
           public_token?: string
           quote_id?: string | null
@@ -2889,6 +2904,10 @@ export type Database = {
           delivery_address: string | null
           delivery_fee_cents: number
           failure_reason: string | null
+          fee_breakdown: Json | null
+          fee_refunded_cents: number
+          fee_schedule_id: string | null
+          fee_volume_start_cents: number | null
           fulfilment: Database["public"]["Enums"]["fulfilment_type"]
           id: string
           livemode: boolean
@@ -2929,6 +2948,10 @@ export type Database = {
           delivery_address?: string | null
           delivery_fee_cents?: number
           failure_reason?: string | null
+          fee_breakdown?: Json | null
+          fee_refunded_cents?: number
+          fee_schedule_id?: string | null
+          fee_volume_start_cents?: number | null
           fulfilment?: Database["public"]["Enums"]["fulfilment_type"]
           id?: string
           livemode?: boolean
@@ -2969,6 +2992,10 @@ export type Database = {
           delivery_address?: string | null
           delivery_fee_cents?: number
           failure_reason?: string | null
+          fee_breakdown?: Json | null
+          fee_refunded_cents?: number
+          fee_schedule_id?: string | null
+          fee_volume_start_cents?: number | null
           fulfilment?: Database["public"]["Enums"]["fulfilment_type"]
           id?: string
           livemode?: boolean
@@ -3020,6 +3047,69 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      orders_fee_reservations: {
+        Row: {
+          cents: number
+          created_at: string
+          id: string
+          merchant_id: string
+        }
+        Insert: {
+          cents: number
+          created_at?: string
+          id?: string
+          merchant_id: string
+        }
+        Update: {
+          cents?: number
+          created_at?: string
+          id?: string
+          merchant_id?: string
+        }
+        Relationships: []
+      }
+      orders_fee_schedules: {
+        Row: {
+          activated_at: string | null
+          activated_by: string | null
+          created_at: string
+          created_by: string | null
+          effective_at: string | null
+          id: string
+          notes: string | null
+          status: string
+          tiers: Json
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          activated_at?: string | null
+          activated_by?: string | null
+          created_at?: string
+          created_by?: string | null
+          effective_at?: string | null
+          id?: string
+          notes?: string | null
+          status?: string
+          tiers: Json
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          activated_at?: string | null
+          activated_by?: string | null
+          created_at?: string
+          created_by?: string | null
+          effective_at?: string | null
+          id?: string
+          notes?: string | null
+          status?: string
+          tiers?: Json
+          updated_at?: string
+          version?: number
+        }
+        Relationships: []
       }
       orders_industries: {
         Row: {
@@ -3454,6 +3544,29 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      active_fee_schedule: {
+        Args: never
+        Returns: {
+          activated_at: string | null
+          activated_by: string | null
+          created_at: string
+          created_by: string | null
+          effective_at: string | null
+          id: string
+          notes: string | null
+          status: string
+          tiers: Json
+          updated_at: string
+          version: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "orders_fee_schedules"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      admin_fee_summary: { Args: never; Returns: Json }
       admin_merchant_directory: { Args: never; Returns: Json }
       check_and_increment_rate_limit: {
         Args: { _key: string; _max_count: number; _window_seconds: number }
@@ -3474,7 +3587,9 @@ export type Database = {
         Returns: string
       }
       expire_merchant_promotions: { Args: never; Returns: number }
+      fee_period_start: { Args: { _at?: string }; Returns: string }
       get_active_promotion: { Args: { _surface: string }; Returns: Json }
+      get_fee_schedule: { Args: never; Returns: Json }
       get_invoice_by_token: { Args: { _token: string }; Returns: Json }
       get_local_business: {
         Args: { _slug: string }
@@ -3546,6 +3661,11 @@ export type Database = {
       }
       local_norm_domain: { Args: { _url: string }; Returns: string }
       local_norm_phone: { Args: { _p: string }; Returns: string }
+      merchant_fee_paid_volume: {
+        Args: { _from: string; _merchant_id: string }
+        Returns: number
+      }
+      merchant_fee_progress: { Args: never; Returns: Json }
       merchant_mark_conversation_read: {
         Args: { _conversation_id: string }
         Returns: undefined
@@ -3595,6 +3715,10 @@ export type Database = {
           _session: string
         }
         Returns: undefined
+      }
+      reserve_fee_volume: {
+        Args: { _cents: number; _merchant_id: string }
+        Returns: Json
       }
       respond_to_quote: {
         Args: { _approve: boolean; _token: string }

@@ -155,6 +155,7 @@ export const ORDERS_TERMS: LegalDocument = {
       title: "12. Merchant Fees and Subscription Plans",
       blocks: [
         "Merchants may be charged subscription fees, platform fees, transaction-related fees, or other charges according to the Loumilab Orders plan selected by the Merchant.",
+        "Where progressive platform fees are in effect, the platform fee is calculated on eligible merchandise sales in each calendar month (US Eastern time) at marginal rates: a lower rate applies only to sales above each threshold, never retroactively. Taxes and tips are never subject to the platform fee. Refunds and lost chargebacks reduce the month's eligible sales for future orders but do not change fees already charged. Stripe processing fees are separate.",
         "Applicable pricing and plan features will be disclosed during signup, subscription selection, or within the Merchant dashboard.",
         "Payment-processing fees imposed by payment providers may be separate from Loumilab's fees.",
         "Loumilab may modify plans, pricing, or platform fees upon reasonable notice as required by applicable law or contractual commitments.",

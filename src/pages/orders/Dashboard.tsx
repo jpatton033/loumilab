@@ -63,6 +63,7 @@ import PublishStoreButton from "@/components/orders/PublishStoreButton";
 import { storePath } from "@/lib/orders/setup";
 import { useMerchantSetup } from "@/lib/orders/setup";
 import MerchantPromoCard from "@/components/orders/MerchantPromoCard";
+import FeeProgressCard from "@/components/orders/FeeProgressCard";
 
 
 type Filter = "All" | OrderStatus;
@@ -242,6 +243,7 @@ const Dashboard = () => {
                 {industry?.name ?? "Food & Catering"} · {plan?.name ?? "Starter"} plan
               </p>
               <MerchantPromoCard merchantId={merchant?.id} />
+              <FeeProgressCard enabled={Boolean(merchant?.id)} />
             </div>
 
             <div className="flex w-full flex-wrap items-center gap-3 lg:w-auto">
