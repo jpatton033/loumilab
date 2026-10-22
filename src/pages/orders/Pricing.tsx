@@ -4,7 +4,7 @@ import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import Eyebrow from "@/components/brand/Eyebrow";
 import PricingTable from "@/components/orders/PricingTable";
-import { FeeAnnouncement, FeeCalculator, FeeExample, FeeTiersTable, useLiveFeeSchedule } from "@/components/orders/ProgressiveFees";
+import { FeeAnnouncement, FeeCalculator, FeeSaleExample, FeeExample, FeeTiersTable, useLiveFeeSchedule } from "@/components/orders/ProgressiveFees";
 import { pricingHeading } from "@/data/orders/pricing";
 import { ORDERS_CTA } from "@/data/orders/cta";
 import { trackCtaClick } from "@/lib/tracking";
@@ -43,6 +43,7 @@ const OrdersPricing = () => {
         {tiers && <div className="mt-8"><FeeAnnouncement showLink={false} /></div>}
         <div className="mt-12"><PricingTable /></div>
         <p className="mt-6 text-sm text-muted-foreground">{pricingHeading.footnote}</p>
+        <div className="mt-8"><FeeSaleExample /></div>
       </section>
 
       {tiers && (
