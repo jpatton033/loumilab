@@ -42,7 +42,7 @@ export function useFeeSchedule() {
     queryFn: async () => {
       const { data, error } = await supabase.rpc("get_fee_schedule");
       if (error) throw error;
-      return (data ?? { active: null, upcoming: null }) as { active: PublicSchedule | null; upcoming: PublicSchedule | null };
+      return (data ?? { active: null, upcoming: null }) as unknown as { active: PublicSchedule | null; upcoming: PublicSchedule | null };
     },
   });
 }
@@ -63,7 +63,7 @@ export function useMerchantFeeProgress(enabled = true) {
     queryFn: async () => {
       const { data, error } = await supabase.rpc("merchant_fee_progress");
       if (error) throw error;
-      return (data ?? null) as FeeProgress | null;
+      return (data ?? null) as unknown as FeeProgress | null;
     },
   });
 }
@@ -99,7 +99,7 @@ export function useAdminFeeSummary() {
     queryFn: async () => {
       const { data, error } = await supabase.rpc("admin_fee_summary");
       if (error) throw error;
-      return data as { merchants: number; volume_cents: number; fees_cents: number; progressive_orders: number; flat_equivalent_cents: number };
+      return data as unknown as { merchants: number; volume_cents: number; fees_cents: number; progressive_orders: number; flat_equivalent_cents: number };
     },
   });
 }
