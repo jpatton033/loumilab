@@ -53,7 +53,7 @@ export const FeeAnnouncement = ({ showLink = true }: { showLink?: boolean }) => 
         {showLink && (
           <>
             {" "}
-            <Link to="/orders/pricing" className="inline-flex items-center gap-1 font-medium text-primary hover:underline">
+            <Link to="/orders/pricing" className="inline-flex items-center gap-1 font-medium text-accent hover:underline">
               See how pricing works <ArrowRight size={14} aria-hidden />
             </Link>
           </>
