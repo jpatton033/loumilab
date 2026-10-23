@@ -71,6 +71,13 @@
       "when": 1792695231719,
       "tag": "0009_progressive_platform_fees",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1792776334232,
+      "tag": "0010_fix_merchant_fee_progress_owner",
+      "breakpoints": true
     }
   ]
 }
