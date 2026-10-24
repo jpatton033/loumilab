@@ -85,6 +85,13 @@
       "when": 1792839268471,
       "tag": "0011_merchant_calendar_sync",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1792840843466,
+      "tag": "0012_calendar_sync_all_plans",
+      "breakpoints": true
     }
   ]
 }
