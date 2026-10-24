@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { syncJobToCalendar } from "./calendarSync";
 
 /**
  * Service-side commerce spine: catalog, jobs, quotes and invoices.
@@ -203,8 +204,12 @@ export const useAdvanceJob = (merchantId?: string | null) => {
     mutationFn: async ({ id, status }: { id: string; status: JobStatus }) => {
       const { error } = await supabase.from("merchant_jobs").update({ status }).eq("id", id);
       if (error) throw error;
+      if (status === "cancelled") await syncJobToCalendar(id);
     },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["orders", "jobs", merchantId] }),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ["orders", "jobs", merchantId] });
+      void qc.invalidateQueries({ queryKey: ["orders", "calendar-events"] });
+    },
   });
 };
 
@@ -215,8 +220,13 @@ export const useScheduleJob = (merchantId?: string | null) => {
     mutationFn: async ({ id, scheduled_for }: { id: string; scheduled_for: string | null }) => {
       const { error } = await supabase.from("merchant_jobs").update({ scheduled_for }).eq("id", id);
       if (error) throw error;
+      // Calendar mirroring is best-effort: a sync problem never undoes the saved time.
+      await syncJobToCalendar(id);
     },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["orders", "jobs", merchantId] }),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ["orders", "jobs", merchantId] });
+      void qc.invalidateQueries({ queryKey: ["orders", "calendar-events"] });
+    },
   });
 };
 
