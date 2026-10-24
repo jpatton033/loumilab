@@ -73,7 +73,13 @@ const Footer = () => (
 
       <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 text-sm text-muted-foreground sm:flex-row">
         <span>© {new Date().getFullYear()} Loumilab — Building Secure Digital Innovations.</span>
-        <span className="flex items-center gap-4 text-xs">
+        <span className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs">
+          <Link to="/orders/terms" className="underline-offset-4 hover:text-accent hover:underline">
+            Terms of Service
+          </Link>
+          <Link to="/orders/privacy" className="underline-offset-4 hover:text-accent hover:underline">
+            Privacy Policy
+          </Link>
           <button type="button" className="underline-offset-4 hover:text-primary hover:underline" onClick={() => window.dispatchEvent(new Event("loumilab:open-cookie-settings"))}>
             Cookie settings
           </button>
