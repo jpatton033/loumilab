@@ -16,6 +16,7 @@ import {
   useTickets,
   useMySupportActivity,
 } from "@/lib/support/queries";
+import { formatActivity } from "@/lib/support/activity";
 import { GRANT_DURATIONS, SCOPE_LABELS, grantIsActive, type SupportScope } from "@/lib/support/rules";
 
 const TOPICS = [
