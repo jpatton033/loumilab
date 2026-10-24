@@ -78,6 +78,13 @@
       "when": 1792776334232,
       "tag": "0010_fix_merchant_fee_progress_owner",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1792839268471,
+      "tag": "0011_merchant_calendar_sync",
+      "breakpoints": true
     }
   ]
 }
