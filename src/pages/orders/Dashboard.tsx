@@ -67,6 +67,7 @@ import { storePath } from "@/lib/orders/setup";
 import { useMerchantSetup } from "@/lib/orders/setup";
 import MerchantPromoCard from "@/components/orders/MerchantPromoCard";
 import FeeProgressCard from "@/components/orders/FeeProgressCard";
+import HelpDrawer from "@/components/orders/HelpDrawer";
 
 
 type Filter = "All" | OrderStatus;
@@ -280,6 +281,7 @@ const Dashboard = () => {
               {merchant && setup?.slug && (
                 <StoreLink slug={setup.slug} isPublic={setup.isPublic} variant="inline" />
               )}
+              {merchant && <HelpDrawer merchantId={merchant.id} />}
             </div>
           </div>
 

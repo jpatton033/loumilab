@@ -3601,6 +3601,166 @@ export type Database = {
         }
         Relationships: []
       }
+      support_access_grants: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          granted_by: string | null
+          id: string
+          merchant_id: string
+          requested_by: string | null
+          revoked_at: string | null
+          revoked_by: string | null
+          scopes: string[]
+          status: string
+          ticket_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          granted_by?: string | null
+          id?: string
+          merchant_id: string
+          requested_by?: string | null
+          revoked_at?: string | null
+          revoked_by?: string | null
+          scopes: string[]
+          status?: string
+          ticket_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          granted_by?: string | null
+          id?: string
+          merchant_id?: string
+          requested_by?: string | null
+          revoked_at?: string | null
+          revoked_by?: string | null
+          scopes?: string[]
+          status?: string
+          ticket_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "support_access_grants_merchant_id_fkey"
+            columns: ["merchant_id"]
+            isOneToOne: false
+            referencedRelation: "merchants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "support_access_grants_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "support_tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      support_staff: {
+        Row: {
+          added_by: string | null
+          created_at: string
+          email: string
+          level: string
+          user_id: string
+        }
+        Insert: {
+          added_by?: string | null
+          created_at?: string
+          email: string
+          level: string
+          user_id: string
+        }
+        Update: {
+          added_by?: string | null
+          created_at?: string
+          email?: string
+          level?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      support_ticket_messages: {
+        Row: {
+          author_id: string
+          author_kind: string
+          body: string
+          created_at: string
+          id: string
+          ticket_id: string
+        }
+        Insert: {
+          author_id: string
+          author_kind: string
+          body: string
+          created_at?: string
+          id?: string
+          ticket_id: string
+        }
+        Update: {
+          author_id?: string
+          author_kind?: string
+          body?: string
+          created_at?: string
+          id?: string
+          ticket_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "support_ticket_messages_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "support_tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      support_tickets: {
+        Row: {
+          assignee_id: string | null
+          created_at: string
+          id: string
+          merchant_id: string
+          opened_by: string
+          status: string
+          subject: string
+          topic: string
+          updated_at: string
+        }
+        Insert: {
+          assignee_id?: string | null
+          created_at?: string
+          id?: string
+          merchant_id: string
+          opened_by: string
+          status?: string
+          subject: string
+          topic: string
+          updated_at?: string
+        }
+        Update: {
+          assignee_id?: string | null
+          created_at?: string
+          id?: string
+          merchant_id?: string
+          opened_by?: string
+          status?: string
+          subject?: string
+          topic?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "support_tickets_merchant_id_fkey"
+            columns: ["merchant_id"]
+            isOneToOne: false
+            referencedRelation: "merchants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       suppressed_emails: {
         Row: {
           created_at: string
@@ -3786,6 +3946,10 @@ export type Database = {
       }
       local_norm_domain: { Args: { _url: string }; Returns: string }
       local_norm_phone: { Args: { _p: string }; Returns: string }
+      merchant_decide_access: {
+        Args: { _approve: boolean; _grant: string; _hours: number }
+        Returns: undefined
+      }
       merchant_fee_paid_volume: {
         Args: { _from: string; _merchant_id: string }
         Returns: number
@@ -3798,6 +3962,15 @@ export type Database = {
       merchant_messaging_enabled: {
         Args: { _merchant_id: string }
         Returns: boolean
+      }
+      merchant_open_ticket: {
+        Args: {
+          _body: string
+          _grant_hours: number
+          _subject: string
+          _topic: string
+        }
+        Returns: string
       }
       merchant_send_order_message: {
         Args: { _body: string; _order_id: string }
@@ -3849,6 +4022,7 @@ export type Database = {
         Args: { _approve: boolean; _token: string }
         Returns: Json
       }
+      revoke_support_access: { Args: { _grant: string }; Returns: undefined }
       search_local_businesses: {
         Args: {
           _accepting?: boolean
@@ -3928,6 +4102,48 @@ export type Database = {
           _name: string
           _slug: string
         }
+        Returns: undefined
+      }
+      support_apply_change: {
+        Args: {
+          _merchant: string
+          _patch: Json
+          _reason: string
+          _scope: string
+          _target: string
+        }
+        Returns: undefined
+      }
+      support_audit: {
+        Args: {
+          _action: string
+          _merchant: string
+          _meta: Json
+          _new: Json
+          _old: Json
+          _reason: string
+        }
+        Returns: undefined
+      }
+      support_level: { Args: { _uid: string }; Returns: number }
+      support_merchant_overview: {
+        Args: { _merchant: string; _view_as?: boolean }
+        Returns: Json
+      }
+      support_reply: {
+        Args: { _body: string; _ticket: string }
+        Returns: undefined
+      }
+      support_request_access: {
+        Args: { _merchant: string; _scopes: string[]; _ticket: string }
+        Returns: string
+      }
+      support_set_staff: {
+        Args: { _email: string; _level: string }
+        Returns: undefined
+      }
+      support_ticket_set_status: {
+        Args: { _assign_self: boolean; _status: string; _ticket: string }
         Returns: undefined
       }
       suppress_local_profile: {
