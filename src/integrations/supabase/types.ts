@@ -3980,7 +3980,7 @@ export type Database = {
         Args: never
         Returns: {
           action: string
-          actor_role: string
+          by_merchant: boolean
           created_at: string
           new_value: Json
           old_value: Json
