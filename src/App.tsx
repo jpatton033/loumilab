@@ -139,6 +139,10 @@ const App = () => (
           <Route path="/admin/the-dot" element={<ProtectedRoute><AdminTheDot /></ProtectedRoute>} />
           <Route path="/admin/the-dot/:id" element={<ProtectedRoute><AdminTheDotEditor /></ProtectedRoute>} />
           <Route path="/admin/audit-log" element={<ProtectedRoute><AdminAuditLog /></ProtectedRoute>} />
+          <Route path="/admin/support" element={<ProtectedRoute supportLevel={1}><AdminHelpDesk /></ProtectedRoute>} />
+          <Route path="/admin/support/merchant/:id" element={<ProtectedRoute supportLevel={1}><AdminMerchantSupport /></ProtectedRoute>} />
+          <Route path="/admin/support/:id" element={<ProtectedRoute supportLevel={1}><AdminHelpDesk /></ProtectedRoute>} />
+          <Route path="/admin/support-team" element={<ProtectedRoute supportLevel={1}><AdminSupportTeam /></ProtectedRoute>} />
           <Route path="/admin/reports/daily-brief" element={<ProtectedRoute><AdminDailyBrief /></ProtectedRoute>} />
           <Route path="/admin/settings/daily-brief" element={<ProtectedRoute><AdminDailyBriefSettings /></ProtectedRoute>} />
 

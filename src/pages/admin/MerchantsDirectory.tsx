@@ -79,6 +79,7 @@ const Detail = ({ r }: { r: DirectoryRow }) => {
         )}
         {r.listing_slug && <Button size="sm" variant="outline" asChild><a href={`/orders/local/${r.listing_slug}`} target="_blank" rel="noreferrer"><ExternalLink className="h-4 w-4" /> Local listing</a></Button>}
         {r.store_slug && <Button size="sm" variant="outline" asChild><a href={`/orders/store/${r.store_slug}`} target="_blank" rel="noreferrer"><ExternalLink className="h-4 w-4" /> Storefront</a></Button>}
+        {r.merchant_id && <Button size="sm" variant="outline" asChild><Link to={`/admin/support/merchant/${r.merchant_id}`}>Support view</Link></Button>}
         {r.merchant_id && <Button size="sm" variant="ghost" asChild><Link to="/admin/orders">Edit contact details</Link></Button>}
       </div>
     </div>

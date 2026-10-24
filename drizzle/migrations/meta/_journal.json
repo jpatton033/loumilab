@@ -99,6 +99,20 @@
       "when": 1792855588710,
       "tag": "0013_merchant_help_desk",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1792856764170,
+      "tag": "0014_merchant_support_activity",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1792857060819,
+      "tag": "0015_fix_support_overview_requirements",
+      "breakpoints": true
     }
   ]
 }

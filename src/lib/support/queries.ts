@@ -167,3 +167,19 @@ export const useApplyChange = () =>
 
 export const useSetStaff = () =>
   useInvalidating((a: { email: string; level: string }) => call("support_set_staff", { _email: a.email, _level: a.level }));
+
+export interface SupportActivity {
+  created_at: string;
+  action: string;
+  actor_role: string | null;
+  new_value: unknown;
+  reason: string | null;
+}
+
+/** The signed-in merchant's own support history (server-filtered). */
+export const useMySupportActivity = (enabled: boolean) =>
+  useQuery({
+    queryKey: ["support", "my-activity"],
+    enabled,
+    queryFn: () => call<SupportActivity[]>("merchant_support_activity"),
+  });
