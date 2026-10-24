@@ -1,4 +1,5 @@
 import ConsentAndTracking from "./components/tracking/ConsentAndTracking";
+import CalendarOAuthReturn from "./pages/orders/CalendarOAuthReturn";
 import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -99,6 +100,8 @@ const App = () => (
           <Route path="/local" element={<Navigate to="/orders/local" replace />} />
           <Route path="/orders/terms" element={<OrdersTerms />} />
           <Route path="/orders/privacy" element={<OrdersPrivacy />} />
+          <Route path="/oauth/google-calendar/return" element={<CalendarOAuthReturn provider="google" />} />
+          <Route path="/oauth/outlook/return" element={<CalendarOAuthReturn provider="microsoft" />} />
 
 
 
