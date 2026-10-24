@@ -1,0 +1,54 @@
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import AddToCalendar from "@/components/orders/AddToCalendar";
+import { jobCalendarEvent } from "@/lib/orders/calendar";
+import type { MerchantJob } from "@/lib/orders/commerce";
+
+/** datetime-local value in the browser's own time zone. */
+const toLocalInput = (iso: string | null) => {
+  if (!iso) return "";
+  const d = new Date(iso);
+  const off = d.getTimezoneOffset() * 60_000;
+  return new Date(d.getTime() - off).toISOString().slice(0, 16);
+};
+
+const JobScheduleControls = ({
+  job,
+  businessName,
+  industrySlug,
+  onSave,
+}: {
+  job: MerchantJob;
+  businessName: string;
+  industrySlug?: string | null;
+  onSave: (scheduledFor: string | null) => void;
+}) => {
+  const [value, setValue] = useState(toLocalInput(job.scheduled_for));
+  const event = jobCalendarEvent({ ...job, businessName, industrySlug });
+  const dirty = value !== toLocalInput(job.scheduled_for);
+
+  return (
+    <>
+      <Input
+        type="datetime-local"
+        aria-label={`Booked time for ${job.title}`}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        className="h-11 w-auto rounded-full text-sm sm:h-9"
+      />
+      {dirty && (
+        <Button
+          size="sm"
+          className="rounded-full"
+          onClick={() => onSave(value ? new Date(value).toISOString() : null)}
+        >
+          Save time
+        </Button>
+      )}
+      {event && !dirty && <AddToCalendar event={event} />}
+    </>
+  );
+};
+
+export default JobScheduleControls;
