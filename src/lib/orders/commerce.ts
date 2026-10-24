@@ -208,6 +208,18 @@ export const useAdvanceJob = (merchantId?: string | null) => {
   });
 };
 
+/** Set or clear a job's booked date/time (merchant's own job; RLS enforces ownership). */
+export const useScheduleJob = (merchantId?: string | null) => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, scheduled_for }: { id: string; scheduled_for: string | null }) => {
+      const { error } = await supabase.from("merchant_jobs").update({ scheduled_for }).eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["orders", "jobs", merchantId] }),
+  });
+};
+
 export interface NewQuoteInput {
   merchant_id: string;
   job_id?: string | null;
