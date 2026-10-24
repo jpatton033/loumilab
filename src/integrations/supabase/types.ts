@@ -3976,6 +3976,17 @@ export type Database = {
         Args: { _body: string; _order_id: string }
         Returns: Json
       }
+      merchant_support_activity: {
+        Args: never
+        Returns: {
+          action: string
+          actor_role: string
+          created_at: string
+          new_value: Json
+          old_value: Json
+          reason: string
+        }[]
+      }
       newsletter_set_interests: {
         Args: { _email: string; _interests: string[] }
         Returns: boolean
