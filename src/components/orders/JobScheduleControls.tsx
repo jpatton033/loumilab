@@ -13,20 +13,31 @@ const toLocalInput = (iso: string | null) => {
   return new Date(d.getTime() - off).toISOString().slice(0, 16);
 };
 
+const SYNC_LABELS: Record<string, string> = {
+  synced: "On calendar",
+  pending: "Syncing…",
+  failed: "Couldn't sync, retry",
+};
+
 const JobScheduleControls = ({
   job,
   businessName,
   industrySlug,
   onSave,
+  syncStatus,
+  onRetry,
 }: {
   job: MerchantJob;
   businessName: string;
   industrySlug?: string | null;
   onSave: (scheduledFor: string | null) => void;
+  syncStatus?: string | null;
+  onRetry?: () => void;
 }) => {
   const [value, setValue] = useState(toLocalInput(job.scheduled_for));
   const event = jobCalendarEvent({ ...job, businessName, industrySlug });
   const dirty = value !== toLocalInput(job.scheduled_for);
+  const label = syncStatus ? SYNC_LABELS[syncStatus] : null;
 
   return (
     <>
@@ -47,6 +58,14 @@ const JobScheduleControls = ({
         </Button>
       )}
       {event && !dirty && <AddToCalendar event={event} />}
+      {label &&
+        (syncStatus === "failed" && onRetry ? (
+          <button type="button" onClick={onRetry} className="text-xs text-destructive underline-offset-4 hover:underline">
+            {label}
+          </button>
+        ) : (
+          <span className="text-xs text-muted-foreground">{label}</span>
+        ))}
     </>
   );
 };

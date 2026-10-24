@@ -207,6 +207,33 @@ export type Database = {
         }
         Relationships: []
       }
+      app_user_connections: {
+        Row: {
+          connection_key_ciphertext: string
+          connector_id: string
+          created_at: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          connection_key_ciphertext: string
+          connector_id: string
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          connection_key_ciphertext?: string
+          connector_id?: string
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       audit_logs: {
         Row: {
           action: string
@@ -1537,6 +1564,50 @@ export type Database = {
           },
         ]
       }
+      merchant_calendar_links: {
+        Row: {
+          account_email: string | null
+          calendar_id: string | null
+          calendar_name: string | null
+          created_at: string
+          id: string
+          merchant_id: string
+          provider: string
+          reconnect_required: boolean
+          updated_at: string
+        }
+        Insert: {
+          account_email?: string | null
+          calendar_id?: string | null
+          calendar_name?: string | null
+          created_at?: string
+          id?: string
+          merchant_id: string
+          provider: string
+          reconnect_required?: boolean
+          updated_at?: string
+        }
+        Update: {
+          account_email?: string | null
+          calendar_id?: string | null
+          calendar_name?: string | null
+          created_at?: string
+          id?: string
+          merchant_id?: string
+          provider?: string
+          reconnect_required?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "merchant_calendar_links_merchant_id_fkey"
+            columns: ["merchant_id"]
+            isOneToOne: true
+            referencedRelation: "merchants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       merchant_customers: {
         Row: {
           address: string | null
@@ -1668,6 +1739,60 @@ export type Database = {
             columns: ["quote_id"]
             isOneToOne: false
             referencedRelation: "merchant_quotes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      merchant_job_calendar_events: {
+        Row: {
+          attempts: number
+          external_event_id: string | null
+          id: string
+          job_id: string
+          last_error: string | null
+          merchant_id: string
+          provider: string
+          sync_status: string
+          synced_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          attempts?: number
+          external_event_id?: string | null
+          id?: string
+          job_id: string
+          last_error?: string | null
+          merchant_id: string
+          provider: string
+          sync_status?: string
+          synced_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          attempts?: number
+          external_event_id?: string | null
+          id?: string
+          job_id?: string
+          last_error?: string | null
+          merchant_id?: string
+          provider?: string
+          sync_status?: string
+          synced_at?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "merchant_job_calendar_events_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "merchant_jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "merchant_job_calendar_events_merchant_id_fkey"
+            columns: ["merchant_id"]
+            isOneToOne: false
+            referencedRelation: "merchants"
             referencedColumns: ["id"]
           },
         ]

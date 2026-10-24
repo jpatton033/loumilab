@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, ExternalLink, RefreshCw } from "lucide-react";
 import Layout from "@/components/Layout";
@@ -55,6 +55,8 @@ import {
 } from "@/lib/orders/industries";
 import { useMyMerchant, useJobs, useAdvanceJob, useScheduleJob, nextJobStatus, JOB_STATUS_LABELS } from "@/lib/orders/commerce";
 import JobScheduleControls from "@/components/orders/JobScheduleControls";
+import CalendarIntegrationsCard from "@/components/orders/CalendarIntegrationsCard";
+import { useJobCalendarEvents, syncJobToCalendar, retryFailedCalendarSyncs } from "@/lib/orders/calendarSync";
 import { usePublicPlans } from "@/lib/orders/plans";
 import { resolveEntitlements, isEnabled, type EntitlementKey } from "@/lib/orders/entitlements";
 import SetupChecklist from "@/components/orders/SetupChecklist";
@@ -126,6 +128,14 @@ const Dashboard = () => {
   const { data: jobs } = useJobs(merchant?.id);
   const advanceJob = useAdvanceJob(merchant?.id);
   const scheduleJob = useScheduleJob(merchant?.id);
+  const calendarSyncOn = isEnabled(entitlements, "calendar.sync");
+  const { data: calendarEvents, refetch: refetchCalendarEvents } = useJobCalendarEvents(calendarSyncOn ? merchant?.id : null);
+  const retriedCalendar = useRef(false);
+  useEffect(() => {
+    if (!calendarSyncOn || retriedCalendar.current) return;
+    retriedCalendar.current = true;
+    void retryFailedCalendarSyncs().then(() => refetchCalendarEvents());
+  }, [calendarSyncOn, refetchCalendarEvents]);
   const { data: setup } = useMerchantSetup(terms.catalog);
 
   const {
@@ -597,6 +607,8 @@ const Dashboard = () => {
                               businessName={merchant.business_name}
                               industrySlug={industrySlug}
                               onSave={(scheduled_for) => scheduleJob.mutate({ id: job.id, scheduled_for })}
+                              syncStatus={calendarSyncOn ? calendarEvents?.[job.id]?.sync_status : null}
+                              onRetry={() => void syncJobToCalendar(job.id).then(() => refetchCalendarEvents())}
                             />
                             <Button
                               size="sm"
@@ -652,11 +664,18 @@ const Dashboard = () => {
             {/* Schedule */}
             {activeModule === "schedule" &&
               (moduleAllowed("schedule") ? (
+                <div className="space-y-4">
+                {merchant && calendarSyncOn ? (
+                  <CalendarIntegrationsCard merchantId={merchant.id} />
+                ) : (
+                  <LockedFeature entitlement="calendar.sync" description="Connect your Google or Outlook calendar and sync appointments automatically." />
+                )}
                 <div className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-soft)] sm:p-8">
                   <p className="font-display font-semibold">{terms.schedule}</p>
                   <p className="mt-2 text-sm text-muted-foreground">
                     Approved work appears here with its {terms.schedule.toLowerCase()} and {terms.location.toLowerCase()}.
                   </p>
+                </div>
                 </div>
               ) : (
                 <LockedFeature
