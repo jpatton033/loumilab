@@ -53,7 +53,8 @@ import {
   MODULE_ENTITLEMENT,
   type ModuleKey,
 } from "@/lib/orders/industries";
-import { useMyMerchant, useJobs, useAdvanceJob, nextJobStatus, JOB_STATUS_LABELS } from "@/lib/orders/commerce";
+import { useMyMerchant, useJobs, useAdvanceJob, useScheduleJob, nextJobStatus, JOB_STATUS_LABELS } from "@/lib/orders/commerce";
+import JobScheduleControls from "@/components/orders/JobScheduleControls";
 import { usePublicPlans } from "@/lib/orders/plans";
 import { resolveEntitlements, isEnabled, type EntitlementKey } from "@/lib/orders/entitlements";
 import SetupChecklist from "@/components/orders/SetupChecklist";
@@ -124,6 +125,7 @@ const Dashboard = () => {
 
   const { data: jobs } = useJobs(merchant?.id);
   const advanceJob = useAdvanceJob(merchant?.id);
+  const scheduleJob = useScheduleJob(merchant?.id);
   const { data: setup } = useMerchantSetup(terms.catalog);
 
   const {
@@ -589,14 +591,22 @@ const Dashboard = () => {
                               {JOB_STATUS_LABELS[job.status]}
                             </p>
                           </div>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="rounded-full"
-                            onClick={() => advanceJob.mutate({ id: job.id, status: nextJobStatus(job.status) })}
-                          >
-                            Move to {JOB_STATUS_LABELS[nextJobStatus(job.status)]}
-                          </Button>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <JobScheduleControls
+                              job={job}
+                              businessName={merchant.business_name}
+                              industrySlug={industrySlug}
+                              onSave={(scheduled_for) => scheduleJob.mutate({ id: job.id, scheduled_for })}
+                            />
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="rounded-full"
+                              onClick={() => advanceJob.mutate({ id: job.id, status: nextJobStatus(job.status) })}
+                            >
+                              Move to {JOB_STATUS_LABELS[nextJobStatus(job.status)]}
+                            </Button>
+                          </div>
                         </div>
                       ))}
                     </div>
