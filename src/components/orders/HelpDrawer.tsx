@@ -14,6 +14,7 @@ import {
   useRevokeAccess,
   useTicket,
   useTickets,
+  useMySupportActivity,
 } from "@/lib/support/queries";
 import { GRANT_DURATIONS, SCOPE_LABELS, grantIsActive, type SupportScope } from "@/lib/support/rules";
 
@@ -27,6 +28,15 @@ const TOPICS = [
 ] as const;
 
 const STATUS: Record<string, string> = { new: "Sent", open: "In progress", waiting: "Waiting on you", resolved: "Resolved" };
+const ACTIVITY: Record<string, string> = {
+  "support.view_merchant": "Support viewed your account",
+  "support.view_as_merchant": "Support viewed your dashboard (read-only)",
+  "support.grant_created": "You allowed support access",
+  "support.grant_declined": "You declined a support access request",
+  "support.grant_revoked": "Support access was revoked",
+  "support.access_requested": "Support asked for access",
+  "support.ticket_status": "Your request status changed",
+};
 const fmt = (d: string) => new Date(d).toLocaleString([], { dateStyle: "medium", timeStyle: "short" });
 
 const Thread = ({ id, onBack }: { id: string; onBack: () => void }) => {
@@ -70,6 +80,7 @@ const HelpDrawer = ({ merchantId }: { merchantId?: string }) => {
   const [hours, setHours] = useState(24);
   const [thread, setThread] = useState<string | null>(null);
   const [approveHours, setApproveHours] = useState(24);
+  const { data: activity = [] } = useMySupportActivity(!!merchantId);
 
   if (!merchantId) return null;
   const active = grants.filter((g) => grantIsActive(g));
@@ -162,6 +173,17 @@ const HelpDrawer = ({ merchantId }: { merchantId?: string }) => {
                       <p className="font-medium">{t.subject}</p>
                       <p className="text-xs text-muted-foreground">{STATUS[t.status]} · {fmt(t.updated_at)}</p>
                     </button>
+                  ))}
+                </div>
+              )}
+              {activity.length > 0 && (
+                <div className="space-y-2">
+                  <h3 className="font-semibold">Support activity</h3>
+                  {activity.slice(0, 15).map((a, i) => (
+                    <div key={i} className="rounded-2xl border border-border p-3 text-xs">
+                      <p className="font-medium">{ACTIVITY[a.action] ?? (a.action.startsWith("support.change.") ? "Support changed " + (SCOPE_LABELS[a.action.slice(15) as SupportScope] ?? "a setting").toLowerCase() : a.action)}</p>
+                      <p className="text-muted-foreground">{fmt(a.created_at)}{a.actor_role && a.actor_role !== "merchant" ? " · " + a.actor_role.replace("_", " ") : ""}{a.reason ? " · " + a.reason : ""}</p>
+                    </div>
                   ))}
                 </div>
               )}
