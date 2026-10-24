@@ -69,7 +69,7 @@ export const BASE_ENTITLEMENTS: Entitlements = {
   "custom_workflows.enabled": false,
   "priority_support.enabled": false,
   "messaging.enabled": false,
-  "calendar.sync": false,
+  "calendar.sync": true,
 };
 
 /** Plain-language label for each capability, used in upgrade prompts. */
@@ -109,7 +109,6 @@ export const ENTITLEMENT_TIER: Partial<Record<EntitlementKey, string>> = {
   "branding.remove_loumilab": "Premium",
   "priority_support.enabled": "Premium",
   "messaging.enabled": "Starter",
-  "calendar.sync": "Business",
 };
 
 

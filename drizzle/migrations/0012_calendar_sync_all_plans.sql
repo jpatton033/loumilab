@@ -1,0 +1,1 @@
+UPDATE public.orders_plans SET entitlements = coalesce(entitlements,'{}'::jsonb) || '{"calendar.sync": true}'::jsonb;
