@@ -20,6 +20,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { adminNav } from "@/components/admin/adminNav";
+import { useQuery } from "@tanstack/react-query";
 import { useAdminCounts } from "@/lib/admin/queries";
 import { ExternalLink, LogOut, RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -30,6 +31,16 @@ const AdminSidebar = ({ email }: { email: string | null }) => {
   const collapsed = state === "collapsed";
   const { data: counts } = useAdminCounts();
   const navigate = useNavigate();
+  // Support-only staff see just the Support section; full admins see everything.
+  const { data: isFullAdmin = false } = useQuery({
+    queryKey: ["admin", "is-full-admin"],
+    queryFn: async () => {
+      const { data: u } = await supabase.auth.getUser();
+      if (!u.user) return false;
+      const { data } = await supabase.from("user_roles").select("role").eq("user_id", u.user.id);
+      return !!data?.some((r) => r.role === "admin");
+    },
+  });
 
   const isActive = (url: string, match?: string[]) =>
     pathname === url || (match ?? []).some((m) => pathname.startsWith(m));
@@ -57,7 +68,7 @@ const AdminSidebar = ({ email }: { email: string | null }) => {
       </SidebarHeader>
 
       <SidebarContent>
-        {adminNav.map((group) => (
+        {adminNav.filter((group) => isFullAdmin || group.support).map((group) => (
           <SidebarGroup key={group.label}>
             <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
             <SidebarGroupContent>

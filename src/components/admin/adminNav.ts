@@ -5,6 +5,8 @@ import {
   FileClock,
   Inbox,
   LayoutDashboard,
+  LifeBuoy,
+  UserCog,
   Mail,
   MapPinned,
   ScrollText,
@@ -34,6 +36,8 @@ export interface AdminNavItem {
 export interface AdminNavGroup {
   label: string;
   items: AdminNavItem[];
+  /** Visible to Help Desk support staff (not only full admins). */
+  support?: boolean;
 }
 
 export const adminNav: AdminNavGroup[] = [
@@ -47,6 +51,14 @@ export const adminNav: AdminNavGroup[] = [
         icon: Inbox,
         badge: (c) => (c?.inquiriesNew ? c.inquiriesNew : undefined),
       },
+    ],
+  },
+  {
+    label: "Support",
+    support: true,
+    items: [
+      { title: "Help Desk", url: "/admin/support", icon: LifeBuoy, match: ["/admin/support/"] },
+      { title: "Support Team", url: "/admin/support-team", icon: UserCog },
     ],
   },
   {
