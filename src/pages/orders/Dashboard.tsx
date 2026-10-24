@@ -662,27 +662,28 @@ const Dashboard = () => {
               ))}
 
             {/* Schedule */}
-            {activeModule === "schedule" &&
-              (moduleAllowed("schedule") ? (
-                <div className="space-y-4">
+            {activeModule === "schedule" && (
+              <div className="space-y-4">
                 {merchant && calendarSyncOn ? (
                   <CalendarIntegrationsCard merchantId={merchant.id} />
                 ) : (
                   <LockedFeature entitlement="calendar.sync" description="Connect your Google or Outlook calendar and sync appointments automatically." />
                 )}
-                <div className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-soft)] sm:p-8">
-                  <p className="font-display font-semibold">{terms.schedule}</p>
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    Approved work appears here with its {terms.schedule.toLowerCase()} and {terms.location.toLowerCase()}.
-                  </p>
-                </div>
-                </div>
-              ) : (
-                <LockedFeature
-                  entitlement="orders.scheduling"
-                  description={`Let customers book a ${terms.schedule.toLowerCase()} and keep your day organised.`}
-                />
-              ))}
+                {moduleAllowed("schedule") ? (
+                  <div className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-soft)] sm:p-8">
+                    <p className="font-display font-semibold">{terms.schedule}</p>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      Approved work appears here with its {terms.schedule.toLowerCase()} and {terms.location.toLowerCase()}.
+                    </p>
+                  </div>
+                ) : (
+                  <LockedFeature
+                    entitlement="orders.scheduling"
+                    description={`Let customers book a ${terms.schedule.toLowerCase()} and keep your day organised.`}
+                  />
+                )}
+              </div>
+            )}
 
             {activeModule === "customers" && (
               <div className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-soft)] sm:p-8">
