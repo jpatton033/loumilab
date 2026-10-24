@@ -162,6 +162,18 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://loumilab.com/the-dot/issue/the-internet-is-becoming-less-human</loc>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://loumilab.com/the-dot/issue/small-business-renaissance-technology-changing-competition</loc>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://loumilab.com/orders/local/taste-this</loc>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -283,6 +295,12 @@
   <url>
     <loc>https://loumilab.com/resources/web-digital/what-a-modern-business-website-should-do</loc>
     <lastmod>2026-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://loumilab.com/resources/technology-ai/the-illusion-of-choice-in-the-digital-economy</loc>
+    <lastmod>2026-10-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
