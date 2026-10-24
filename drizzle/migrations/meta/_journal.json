@@ -113,6 +113,13 @@
       "when": 1792857060819,
       "tag": "0015_fix_support_overview_requirements",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1792861896060,
+      "tag": "0016_support_activity_no_staff",
+      "breakpoints": true
     }
   ]
 }
