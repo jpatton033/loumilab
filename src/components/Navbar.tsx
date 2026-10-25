@@ -19,12 +19,20 @@ const navLinks: NavItem[] = [
   { label: "Contact", to: "/contact" },
 ];
 
+const serviceLinks = [
+  { to: "/services", label: "All services", desc: "Design, build, innovate and secure." },
+  { to: "/services/business-email", label: "Business Email & Domain Setup", desc: "Professional email on your own domain, from $99." },
+];
+
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [productsOpen, setProductsOpen] = useState(false);
   const [mobileProducts, setMobileProducts] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
+  const [mobileServices, setMobileServices] = useState(false);
+  const servicesRef = useRef<HTMLDivElement | null>(null);
   const [user, setUser] = useState<{ id: string; email?: string } | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const location = useLocation();
@@ -75,15 +83,19 @@ const Navbar = () => {
     setOpen(false);
     setProductsOpen(false);
     setMobileProducts(false);
+    setServicesOpen(false);
+    setMobileServices(false);
   }, [location.pathname]);
 
   useEffect(() => {
-    if (!productsOpen) return;
+    if (!productsOpen && !servicesOpen) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setProductsOpen(false);
+      if (e.key === "Escape") { setProductsOpen(false); setServicesOpen(false); }
     };
     const onClick = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setProductsOpen(false);
+      const t = e.target as Node;
+      if (menuRef.current && !menuRef.current.contains(t)) setProductsOpen(false);
+      if (servicesRef.current && !servicesRef.current.contains(t)) setServicesOpen(false);
     };
     document.addEventListener("keydown", onKey);
     document.addEventListener("mousedown", onClick);
@@ -91,7 +103,7 @@ const Navbar = () => {
       document.removeEventListener("keydown", onKey);
       document.removeEventListener("mousedown", onClick);
     };
-  }, [productsOpen]);
+  }, [productsOpen, servicesOpen]);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -144,14 +156,32 @@ const Navbar = () => {
 
         {/* Desktop */}
         <nav className="hidden items-center gap-5 lg:flex xl:gap-8" aria-label="Main">
-          <Link
-            to="/services"
-            className={`text-sm font-medium transition-colors ${
-              location.pathname === "/services" ? "text-accent" : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            Services
-          </Link>
+          <div ref={servicesRef} className="relative">
+            <button
+              type="button"
+              aria-expanded={servicesOpen}
+              aria-haspopup="true"
+              onClick={() => { setServicesOpen((v) => !v); setProductsOpen(false); }}
+              className={`inline-flex items-center gap-1 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-sm ${
+                location.pathname.startsWith("/services") || servicesOpen ? "text-accent" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Services
+              <ChevronDown size={14} className={`transition-transform ${servicesOpen ? "rotate-180" : ""}`} />
+            </button>
+            {servicesOpen && (
+              <div role="menu" className="absolute left-0 top-full w-[340px] pt-4">
+                <div className="space-y-1 rounded-3xl border border-border bg-popover p-3 shadow-[var(--shadow-lift)]">
+                  {serviceLinks.map((s) => (
+                    <Link key={s.to} to={s.to} role="menuitem" className="block rounded-2xl px-4 py-3 hover:bg-secondary">
+                      <span className="block font-display text-sm font-semibold text-foreground">{s.label}</span>
+                      <span className="mt-0.5 block text-xs text-muted-foreground">{s.desc}</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
 
           <div ref={menuRef} className="relative">
             <button
@@ -292,9 +322,25 @@ const Navbar = () => {
           aria-label="Mobile"
         >
           <div className="section-container flex flex-col gap-1 py-6">
-            <Link to="/services" className="py-3 text-base font-medium">
+            <button
+              type="button"
+              onClick={() => setMobileServices((v) => !v)}
+              aria-expanded={mobileServices}
+              className="flex items-center justify-between py-3 text-left text-base font-medium"
+            >
               Services
-            </Link>
+              <ChevronDown size={16} className={`transition-transform ${mobileServices ? "rotate-180" : ""}`} />
+            </button>
+            {mobileServices && (
+              <div className="mb-2 space-y-3 rounded-2xl bg-secondary p-4">
+                {serviceLinks.map((s) => (
+                  <Link key={s.to} to={s.to} className="block">
+                    <span className="block text-sm font-medium">{s.label}</span>
+                    <span className="block text-xs text-muted-foreground">{s.desc}</span>
+                  </Link>
+                ))}
+              </div>
+            )}
 
             <button
               type="button"
