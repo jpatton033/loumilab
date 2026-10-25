@@ -693,6 +693,7 @@ export type Database = {
           sent_count: number
           status: string
           stripe_session_id: string | null
+          third_party_delta_cents: number
           total_after_cents: number
           total_before_cents: number
         }
@@ -716,6 +717,7 @@ export type Database = {
           sent_count?: number
           status?: string
           stripe_session_id?: string | null
+          third_party_delta_cents?: number
           total_after_cents: number
           total_before_cents: number
         }
@@ -739,6 +741,7 @@ export type Database = {
           sent_count?: number
           status?: string
           stripe_session_id?: string | null
+          third_party_delta_cents?: number
           total_after_cents?: number
           total_before_cents?: number
         }
@@ -780,6 +783,41 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "email_setup_events_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "email_setup_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_setup_mgmt_checks: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          kind: string
+          notes: string | null
+          request_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          kind: string
+          notes?: string | null
+          request_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          kind?: string
+          notes?: string | null
+          request_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_setup_mgmt_checks_request_id_fkey"
             columns: ["request_id"]
             isOneToOne: false
             referencedRelation: "email_setup_requests"
@@ -893,6 +931,59 @@ export type Database = {
           },
         ]
       }
+      email_setup_purchases: {
+        Row: {
+          amount_cents: number
+          commitment: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          kind: string
+          purchased_on: string
+          reference: string | null
+          renews_on: string | null
+          request_id: string
+          vendor: string
+        }
+        Insert: {
+          amount_cents: number
+          commitment?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          kind: string
+          purchased_on: string
+          reference?: string | null
+          renews_on?: string | null
+          request_id: string
+          vendor: string
+        }
+        Update: {
+          amount_cents?: number
+          commitment?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          kind?: string
+          purchased_on?: string
+          reference?: string | null
+          renews_on?: string | null
+          request_id?: string
+          vendor?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_setup_purchases_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "email_setup_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       email_setup_requests: {
         Row: {
           access_token_hash: string
@@ -904,10 +995,18 @@ export type Database = {
           created_at: string
           customer_action_message: string | null
           extra_devices: number
+          fulfillment_stage: string
           full_name: string
+          handoff: Json
+          handoff_customer_actions: string | null
+          handoff_manual_review: boolean
           id: string
           intake: Json
           mailboxes: number
+          management_consent_at: string | null
+          management_plan: string | null
+          management_status: string
+          management_subscription_id: string | null
           needs_review: boolean
           package: string
           paid_at: string | null
@@ -918,15 +1017,21 @@ export type Database = {
           primary_address: string | null
           provider: string
           provider_plan: string | null
+          purchase_auth: Json | null
+          purchase_auth_at: string | null
+          purchase_mode: string
           quote_cents: number | null
           quote_note: string | null
           request_number: string
           review_reasons: string[]
           service_status: string
           standalone_domain: boolean
+          stripe_customer_id: string | null
           stripe_payment_intent_id: string | null
           stripe_session_id: string | null
           third_party_ack_at: string | null
+          third_party_budget_cents: number
+          third_party_lines: Json
           third_party_snapshot: Json | null
           total_cents: number
           updated_at: string
@@ -941,10 +1046,18 @@ export type Database = {
           created_at?: string
           customer_action_message?: string | null
           extra_devices?: number
+          fulfillment_stage?: string
           full_name: string
+          handoff?: Json
+          handoff_customer_actions?: string | null
+          handoff_manual_review?: boolean
           id?: string
           intake?: Json
           mailboxes?: number
+          management_consent_at?: string | null
+          management_plan?: string | null
+          management_status?: string
+          management_subscription_id?: string | null
           needs_review?: boolean
           package: string
           paid_at?: string | null
@@ -955,15 +1068,21 @@ export type Database = {
           primary_address?: string | null
           provider: string
           provider_plan?: string | null
+          purchase_auth?: Json | null
+          purchase_auth_at?: string | null
+          purchase_mode?: string
           quote_cents?: number | null
           quote_note?: string | null
           request_number?: string
           review_reasons?: string[]
           service_status?: string
           standalone_domain?: boolean
+          stripe_customer_id?: string | null
           stripe_payment_intent_id?: string | null
           stripe_session_id?: string | null
           third_party_ack_at?: string | null
+          third_party_budget_cents?: number
+          third_party_lines?: Json
           third_party_snapshot?: Json | null
           total_cents?: number
           updated_at?: string
@@ -978,10 +1097,18 @@ export type Database = {
           created_at?: string
           customer_action_message?: string | null
           extra_devices?: number
+          fulfillment_stage?: string
           full_name?: string
+          handoff?: Json
+          handoff_customer_actions?: string | null
+          handoff_manual_review?: boolean
           id?: string
           intake?: Json
           mailboxes?: number
+          management_consent_at?: string | null
+          management_plan?: string | null
+          management_status?: string
+          management_subscription_id?: string | null
           needs_review?: boolean
           package?: string
           paid_at?: string | null
@@ -992,15 +1119,21 @@ export type Database = {
           primary_address?: string | null
           provider?: string
           provider_plan?: string | null
+          purchase_auth?: Json | null
+          purchase_auth_at?: string | null
+          purchase_mode?: string
           quote_cents?: number | null
           quote_note?: string | null
           request_number?: string
           review_reasons?: string[]
           service_status?: string
           standalone_domain?: boolean
+          stripe_customer_id?: string | null
           stripe_payment_intent_id?: string | null
           stripe_session_id?: string | null
           third_party_ack_at?: string | null
+          third_party_budget_cents?: number
+          third_party_lines?: Json
           third_party_snapshot?: Json | null
           total_cents?: number
           updated_at?: string
