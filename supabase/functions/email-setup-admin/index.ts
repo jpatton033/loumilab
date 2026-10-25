@@ -4,6 +4,7 @@ import { admin, requireUser } from "../_shared/auth.ts";
 import { logEvent, Mail, newToken, refreshBalance, sha256Hex } from "../_shared/emailSetup.ts";
 import { priceLine, proposeTotals } from "../_shared/emailSetupBalance.ts";
 import type { EmailPackage } from "../_shared/emailSetupPricing.ts";
+import { computeFunds, handoffMissing, HANDOFF_ITEMS, purchaseAllowed, quoteTotals, STAGES, type PurchaseMode } from "../_shared/emailSetupPurchasing.ts";
 
 /** Admin-only fulfillment and billing actions. All money is calculated here. */
 
@@ -24,7 +25,16 @@ const Line = z.object({
 
 const Body = z.discriminatedUnion("action", [
   z.object({ action: z.literal("set_status"), id: z.string().uuid(), status: z.enum(STATUSES), message: z.string().trim().max(3000).optional() }),
-  z.object({ action: z.literal("quote"), id: z.string().uuid(), cents: z.number().int().min(100).max(1_000_000), note: z.string().trim().max(2000).optional() }),
+  z.object({ action: z.literal("quote"), id: z.string().uuid(), cents: z.number().int().min(100).max(1_000_000), note: z.string().trim().max(2000).optional(),
+    third_party_lines: z.array(z.object({ label: z.string().trim().min(2).max(160), cents: z.number().int().min(1).max(500_000), billing: z.string().trim().min(2).max(200) })).max(10).optional() }),
+  z.object({ action: z.literal("record_purchase"), id: z.string().uuid(), kind: z.enum(["domain", "email_hosting", "other", "correction"]),
+    vendor: z.string().trim().min(1).max(120), description: z.string().trim().max(500).optional(), amount_cents: z.number().int().min(-500_000).max(500_000).refine((n) => n !== 0),
+    purchased_on: z.string().regex(/^\d{4}-\d{2}-\d{2}$/), reference: z.string().trim().max(200).optional(), commitment: z.string().trim().max(200).optional(),
+    renews_on: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional() }),
+  z.object({ action: z.literal("update_handoff"), id: z.string().uuid(), handoff: z.record(z.boolean()), manual_review: z.boolean() }),
+  z.object({ action: z.literal("handoff_action"), id: z.string().uuid(), message: z.string().trim().min(5).max(3000) }),
+  z.object({ action: z.literal("set_stage"), id: z.string().uuid(), stage: z.enum(STAGES.map(([k]) => k) as [string, ...string[]]) }),
+  z.object({ action: z.literal("log_check"), id: z.string().uuid(), kind: z.enum(["monthly_dns", "expiration_reminder", "security_review", "quarterly_review", "support_request", "other"]), notes: z.string().trim().max(2000).optional() }),
   z.object({ action: z.literal("new_link"), id: z.string().uuid() }),
   z.object({
     action: z.literal("propose_change"), id: z.string().uuid(),
@@ -32,6 +42,7 @@ const Body = z.discriminatedUnion("action", [
     package_reason: z.string().trim().max(1000).optional(),
     lines: z.array(Line).max(20),
     customer_reason: z.string().trim().min(5).max(2000),
+    third_party_cents: z.number().int().min(0).max(500_000).optional(),
     internal_note: z.string().trim().max(2000).optional(),
   }),
   z.object({ action: z.literal("cancel_change"), id: z.string().uuid(), change_set_id: z.string().uuid() }),
@@ -73,11 +84,21 @@ Deno.serve(async (req) => {
     if (b.action === "quote") {
       const bal = await refreshBalance(r.id);
       if (bal.chargedCents > 0) return json({ error: "Already paid — use Change order instead." }, 409);
-      const patch = { quote_cents: b.cents, quote_note: b.note || null, service_status: "awaiting_payment" };
+      const purchasing = r.purchase_mode === "loumilab_purchase";
+      if (purchasing && !b.third_party_lines?.length) return json({ error: "Add the confirmed domain and email hosting prices." }, 400);
+      const q = quoteTotals(b.cents, purchasing ? b.third_party_lines! : []);
+      // A new quote always needs a fresh authorization.
+      const patch = {
+        quote_cents: q.totalCents, quote_note: b.note || null, service_status: "awaiting_payment",
+        third_party_lines: purchasing ? b.third_party_lines : [], third_party_budget_cents: q.thirdPartyCents, purchase_auth: null, purchase_auth_at: null,
+      };
       await admin.from("email_setup_requests").update(patch).eq("id", r.id);
       const token = await rotate();
-      await logEvent(r.id, "quote", `Quote issued: $${(b.cents / 100).toFixed(2)}`, true);
-      await Mail.quote({ ...r, ...patch }, token);
+      await logEvent(r.id, "quote", purchasing
+        ? `Quote issued: setup $${(q.serviceCents / 100).toFixed(2)} + provider costs $${(q.thirdPartyCents / 100).toFixed(2)}`
+        : `Quote issued: $${(b.cents / 100).toFixed(2)}`, true);
+      if (purchasing) await Mail.purchaseQuote({ ...r, ...patch }, token);
+      else await Mail.quote({ ...r, ...patch }, token);
       return json({ ok: true });
     }
 
@@ -97,6 +118,10 @@ Deno.serve(async (req) => {
         priced.push({ kind: l.kind, ...pl, reason: l.reason, customer_note: l.customer_note || null });
         if (l.kind === "addon" && l.addon === "mailbox") mailboxes += pl.quantity;
         if (l.kind === "addon" && l.addon === "device") devices += pl.quantity;
+      }
+      if (b.third_party_cents) {
+        if (r.purchase_mode !== "loumilab_purchase") return json({ error: "Provider-cost changes only apply when Loumilab buys the services." }, 400);
+        priced.push({ kind: "custom", label: "Additional provider cost (passed through to provider)", quantity: 1, unit_cents: b.third_party_cents, amount_cents: b.third_party_cents, reason: b.customer_reason, customer_note: "Covers a higher confirmed domain or email hosting price. Not Loumilab revenue." });
       }
       if (!priced.length) return json({ error: "Add at least one change." }, 400);
       let totals;
