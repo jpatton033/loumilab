@@ -35,6 +35,8 @@ export interface EmailSetupInput {
   /** "yes" | "no" | "unsure" — only meaningful when the domain is owned. */
   registrarAccess: "yes" | "no" | "unsure";
   complexNeeds: boolean;
+  /** Loumilab buys the domain/hosting: real prices must be confirmed first. */
+  loumilabPurchase?: boolean;
 }
 
 export interface PriceLine { label: string; cents: number }
@@ -54,6 +56,7 @@ export function priceEmailSetup(i: EmailSetupInput): EmailSetupPrice {
   if (i.ownsDomain && i.registrarAccess !== "yes") reasons.push("Domain access needs to be confirmed");
   if (i.package === "email" && !i.ownsDomain) reasons.push("No domain yet for the email-only package");
   if (i.complexNeeds) reasons.push("Special requirements need a review");
+  if (i.loumilabPurchase) reasons.push("Domain and email prices need confirming before Loumilab buys them");
 
   const mailboxes = Math.max(1, Math.floor(i.mailboxes));
   const devices = Math.max(0, Math.floor(i.extraDevices));
