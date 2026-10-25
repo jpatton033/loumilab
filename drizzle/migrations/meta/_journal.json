@@ -127,6 +127,13 @@
       "when": 1792938560739,
       "tag": "0017_email_setup_service",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1792939205050,
+      "tag": "0018_email_setup_billing",
+      "breakpoints": true
     }
   ]
 }

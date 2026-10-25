@@ -7,8 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { track } from "@/lib/tracking";
+import { ThirdPartyCosts, type ThirdPartySnapshot } from "@/components/services/ProviderCosts";
 import {
-  addEmailSetupInfo, PACKAGE_LABELS, PROVIDER_LABELS, SERVICE_STATUS_LABELS, startEmailSetupCheckout, usd,
+  computeBalance, decideEmailSetupChange, payEmailSetupBalance, type ChangeStatus,
+  addEmailSetupInfo, PAYMENT_STATUS_LABELS, PACKAGE_LABELS, PROVIDER_LABELS, SERVICE_STATUS_LABELS, startEmailSetupCheckout, usd,
   type EmailPackage, type EmailProvider,
 } from "@/lib/services/emailSetup";
 
@@ -16,7 +18,12 @@ interface Status {
   request_number: string; package: EmailPackage; business_name: string; first_name: string; provider: EmailProvider;
   primary_address: string | null; needs_review: boolean; price_lines: { label: string; cents: number }[]; total_cents: number;
   quote_cents: number | null; quote_note: string | null; service_status: string; payment_status: string;
-  customer_action_message: string | null; updates: { kind: string; detail: string; at: string }[];
+  customer_action_message: string | null; third_party: ThirdPartySnapshot | null;
+  payments: { kind: "charge" | "refund"; amount_cents: number; at: string }[];
+  change_sets: { id: string; status: ChangeStatus; customer_reason: string; package_from: EmailPackage; package_to: EmailPackage;
+    total_before_cents: number; total_after_cents: number; paid_before_cents: number; amount_due_cents: number; credit_cents: number;
+    created_at: string; lines: { label: string; quantity: number; unit_cents: number; amount_cents: number; note: string | null }[] }[];
+  updates: { kind: string; detail: string; at: string }[];
 }
 
 const BusinessEmailStatus = () => {
@@ -35,12 +42,16 @@ const BusinessEmailStatus = () => {
       return data as unknown as Status | null;
     },
     // Poll briefly after returning from Stripe until the webhook confirms payment.
-    refetchInterval: (query) => (params.get("paid") && (query.state.data as Status | null)?.payment_status !== "paid" ? 3000 : false),
+    refetchInterval: (query) => {
+      const d = query.state.data as Status | null | undefined;
+      const waiting = d && (d.payments.length === 0 || d.change_sets.some((c) => c.status === "approved"));
+      return params.get("paid") && waiting ? 3000 : false;
+    },
   });
   const s = q.data;
 
   useEffect(() => {
-    if (s?.payment_status !== "paid") return;
+    if (!s || s.payments.length === 0) return;
     const key = `loumilab.emailSetup.purchased.${s.request_number}`;
     if (localStorage.getItem(key)) return;
     localStorage.setItem(key, "1");
@@ -59,8 +70,27 @@ const BusinessEmailStatus = () => {
     setBusy(false);
   };
 
+  const bal = s ? computeBalance(s, [...s.change_sets].reverse(), s.payments) : null;
+  const openChange = s?.change_sets.find((c) => c.status === "proposed" || c.status === "approved") ?? null;
   const amount = s ? (s.needs_review ? s.quote_cents : s.total_cents) : null;
-  const canPay = s && s.payment_status !== "paid" && s.service_status === "awaiting_payment" && amount;
+  const canPay = s && bal && bal.chargedCents === 0 && !openChange && s.service_status === "awaiting_payment" && amount;
+
+  const decide = async (approve: boolean) => {
+    if (!openChange) return;
+    setBusy(true); setErr(null);
+    try {
+      const res = await decideEmailSetupChange(token, openChange.id, approve);
+      if (approve && (res.due ?? 0) > 0) { const { url } = await payEmailSetupBalance(token, openChange.id); window.location.href = url; return; }
+      await q.refetch();
+    } catch (e) { setErr(e instanceof Error ? e.message : "Something went wrong."); }
+    setBusy(false);
+  };
+  const payChange = async () => {
+    if (!openChange) return;
+    setBusy(true); setErr(null);
+    try { const { url } = await payEmailSetupBalance(token, openChange.id); window.location.href = url; }
+    catch (e) { setErr(e instanceof Error ? e.message : "Something went wrong."); setBusy(false); }
+  };
 
   return (
     <Layout>
@@ -80,13 +110,13 @@ const BusinessEmailStatus = () => {
             <div className="mt-8 rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-soft)]">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <span className="font-display text-lg font-semibold">{SERVICE_STATUS_LABELS[s.service_status]}</span>
-                <span className="rounded-full bg-secondary px-3 py-1 text-xs font-medium">Payment: {s.payment_status === "paid" ? "Paid" : "Not paid"}</span>
+                <span className="rounded-full bg-secondary px-3 py-1 text-xs font-medium">Payment: {PAYMENT_STATUS_LABELS[s.payment_status] ?? s.payment_status}</span>
               </div>
               {s.service_status === "awaiting_quote" && <p className="mt-3 text-sm text-muted-foreground">We're reviewing your request and will email a quote. No payment has been taken.</p>}
               {s.service_status === "awaiting_customer" && s.customer_action_message && (
                 <p className="mt-3 whitespace-pre-line rounded-2xl bg-accent-soft p-4 text-sm"><b>We need:</b> {s.customer_action_message}</p>
               )}
-              {s.service_status === "paid_awaiting_setup" && <p className="mt-3 text-sm text-muted-foreground">Thanks — we'll contact you to schedule setup. Have your domain registrar sign-in ready. Never send us passwords.</p>}
+              {s.service_status === "ready_for_setup" && <p className="mt-3 text-sm text-muted-foreground">Thanks — we'll contact you to schedule setup. Have your domain registrar sign-in ready. Never send us passwords.</p>}
 
               <table className="mt-5 w-full text-sm"><tbody>
                 {s.needs_review ? (
@@ -102,6 +132,47 @@ const BusinessEmailStatus = () => {
               {canPay && <Button className="mt-5 w-full" size="lg" disabled={busy} onClick={pay}>{busy ? "Please wait…" : `Pay ${usd(amount!)} securely`}</Button>}
               {err && <p className="mt-3 text-sm text-destructive">{err}</p>}
             </div>
+
+            {openChange && (
+              <div className="mt-6 rounded-3xl border-2 border-accent/40 bg-card p-6 shadow-[var(--shadow-soft)]">
+                <h2 className="font-display text-lg font-semibold">{openChange.status === "proposed" ? "Please review a change to your order" : "Approved — payment needed"}</h2>
+                <p className="mt-2 text-sm"><b>Why:</b> {openChange.customer_reason}</p>
+                <p className="mt-2 text-sm text-muted-foreground">Original: {PACKAGE_LABELS[openChange.package_from]} · {usd(openChange.total_before_cents)}</p>
+                <table className="mt-4 w-full text-sm"><tbody>
+                  {openChange.lines.map((l, i) => (
+                    <tr key={i}><td className="py-1">{l.label}{l.quantity > 1 ? ` × ${l.quantity}` : ""}{l.note && <span className="block text-xs text-muted-foreground">{l.note}</span>}</td><td className="py-1 text-right align-top">{usd(l.amount_cents)}</td></tr>
+                  ))}
+                  <tr className="border-t border-border"><td className="pt-2">Revised total</td><td className="pt-2 text-right">{usd(openChange.total_after_cents)}</td></tr>
+                  <tr><td>Already paid</td><td className="text-right">{usd(openChange.paid_before_cents)}</td></tr>
+                  <tr className="font-semibold"><td>{openChange.amount_due_cents > 0 ? "Balance due to Loumilab" : "Credit to you"}</td><td className="text-right">{usd(openChange.amount_due_cents > 0 ? openChange.amount_due_cents : openChange.credit_cents)}</td></tr>
+                </tbody></table>
+                <p className="mt-3 text-xs text-muted-foreground">Third-party domain and email subscription costs stay separate and aren't part of this amount.</p>
+                {openChange.status === "proposed" ? (
+                  <div className="mt-5 flex flex-wrap gap-3">
+                    <Button disabled={busy} onClick={() => decide(true)}>{openChange.amount_due_cents > 0 ? `Approve and pay ${usd(openChange.amount_due_cents)}` : "Approve changes"}</Button>
+                    <Button variant="outline" disabled={busy} onClick={() => decide(false)}>Decline</Button>
+                  </div>
+                ) : (
+                  <Button className="mt-5" disabled={busy} onClick={payChange}>{busy ? "Please wait…" : `Pay ${usd(openChange.amount_due_cents)} securely`}</Button>
+                )}
+              </div>
+            )}
+
+            {bal && bal.chargedCents > 0 && (
+              <div className="mt-6 rounded-3xl border border-border bg-card p-6 text-sm">
+                <h2 className="font-display text-lg font-semibold">Your payments to Loumilab</h2>
+                <dl className="mt-3 space-y-1">
+                  <div className="flex justify-between"><dt>Original order</dt><dd>{usd(bal.originalCents)}</dd></div>
+                  {bal.adjustmentsCents !== 0 && <div className="flex justify-between"><dt>Approved changes</dt><dd>{usd(bal.adjustmentsCents)}</dd></div>}
+                  <div className="flex justify-between font-semibold"><dt>Current total</dt><dd>{usd(bal.totalCents)}</dd></div>
+                  <div className="flex justify-between"><dt>Paid</dt><dd>{usd(bal.chargedCents)}</dd></div>
+                  {bal.refundedCents > 0 && <div className="flex justify-between"><dt>Refunded</dt><dd>−{usd(bal.refundedCents)}</dd></div>}
+                  <div className="flex justify-between"><dt>{bal.balanceCents >= 0 ? "Balance due" : "Credit"}</dt><dd>{usd(Math.abs(bal.balanceCents))}</dd></div>
+                </dl>
+              </div>
+            )}
+
+            {s.third_party && <div className="mt-6"><ThirdPartyCosts snap={s.third_party} title="Provider costs you pay separately (estimates shown when you ordered)" /></div>}
 
             {s.service_status !== "completed" && s.service_status !== "canceled" && (
               <div className="mt-6 rounded-3xl border border-border bg-card p-6">
