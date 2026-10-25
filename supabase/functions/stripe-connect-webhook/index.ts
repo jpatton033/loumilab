@@ -1,6 +1,7 @@
 import { admin } from "../_shared/auth.ts";
 import { resolvePayoutStatus, stripe, stripeLivemode, stripeMode } from "../_shared/stripe.ts";
 import { handleChargeReversal, handleCheckoutCompleted, handleSubscriptionChange } from "./handlers.ts";
+import { handleEmailSetupSession } from "./emailSetup.ts";
 
 
 const WEBHOOK_SECRET = Deno.env.get("STRIPE_WEBHOOK_SECRET") ?? "";
@@ -74,7 +75,18 @@ Deno.serve(async (req) => {
       }
     }
 
-    if (event.type === "checkout.session.completed") {
+    const emailSetupTypes = [
+      "checkout.session.completed",
+      "checkout.session.async_payment_succeeded",
+      "checkout.session.async_payment_failed",
+      "checkout.session.expired",
+    ];
+    const handledEmailSetup =
+      emailSetupTypes.includes(event.type) && !(event as { account?: string }).account
+        ? await handleEmailSetupSession(event.data.object as Record<string, unknown>, event.type)
+        : false;
+
+    if (event.type === "checkout.session.completed" && !handledEmailSetup) {
       await handleCheckoutCompleted(
         event.data.object as Record<string, unknown>,
         (event as { account?: string }).account ?? undefined,
