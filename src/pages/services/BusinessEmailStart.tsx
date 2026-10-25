@@ -8,25 +8,27 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
+import { buildSnapshot, ProviderCostNotice, ThirdPartyCosts } from "@/components/services/ProviderCosts";
 import { track } from "@/lib/tracking";
 import {
-  DRAFT_KEY, TOKEN_KEY, PACKAGE_LABELS, PROVIDER_LABELS, priceEmailSetup, startEmailSetupCheckout, submitEmailSetup, usd,
+  DRAFT_KEY, TOKEN_KEY, useProviderPrices, PACKAGE_LABELS, PROVIDER_LABELS, priceEmailSetup, startEmailSetupCheckout, submitEmailSetup, usd,
   type EmailPackage, type EmailProvider,
 } from "@/lib/services/emailSetup";
 
 interface Form {
   package: EmailPackage; full_name: string; business_name: string; contact_email: string; phone: string;
   owns_domain: boolean | null; existing_domain: string; registrar_access: "yes" | "no" | "unsure"; desired_domain: string;
-  provider: EmailProvider | ""; primary_address: string; mailboxes: number; aliases: boolean; migration: boolean;
+  provider: EmailProvider | ""; provider_plan: "" | "m365_basic" | "exchange_p1"; primary_address: string; mailboxes: number; aliases: boolean; migration: boolean;
   extra_devices: number; standalone_domain: boolean; complex_needs: boolean; special_requirements: string; notes: string;
 }
 const empty: Form = {
   package: "email", full_name: "", business_name: "", contact_email: "", phone: "", owns_domain: null, existing_domain: "",
-  registrar_access: "yes", desired_domain: "", provider: "", primary_address: "", mailboxes: 1, aliases: false, migration: false,
+  registrar_access: "yes", desired_domain: "", provider: "", provider_plan: "", primary_address: "", mailboxes: 1, aliases: false, migration: false,
   extra_devices: 0, standalone_domain: false, complex_needs: false, special_requirements: "", notes: "",
 };
 
 const ACKS = [
+  "I understand domain registration, renewals and email hosting are separate third-party costs, not part of Loumilab's charge.",
   "Loumilab provides setup services, not email hosting.",
   "Domain and email subscription fees are paid separately to those providers.",
   "I keep ownership of my domain and email accounts.",
@@ -74,6 +76,9 @@ const BusinessEmailStart = () => {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const started = useRef(false);
+  const prices = useProviderPrices();
+  const planKey = f.provider === "google" ? "google_starter" : f.provider === "zoho" ? "zoho_lite" : f.provider === "microsoft" ? f.provider_plan || null : null;
+  const snap = useMemo(() => buildSnapshot(prices.data ?? [], f.provider || "help", planKey, f.mailboxes, !!f.owns_domain), [prices.data, f.provider, planKey, f.mailboxes, f.owns_domain]);
 
   const set = <K extends keyof Form>(k: K, v: Form[K]) => {
     if (!started.current) { started.current = true; track("IntakeStart", { content_name: "Business Email" }); }
@@ -90,7 +95,7 @@ const BusinessEmailStart = () => {
   const valid = [
     f.full_name.trim().length > 1 && f.business_name.trim() && /^\S+@\S+\.\S+$/.test(f.contact_email),
     f.owns_domain !== null && (f.owns_domain ? f.existing_domain.trim().length > 3 : true),
-    !!f.provider && f.mailboxes >= 1,
+    !!f.provider && f.mailboxes >= 1 && (f.provider !== "microsoft" || !!f.provider_plan),
     true,
     acks.every(Boolean),
   ];
@@ -99,7 +104,7 @@ const BusinessEmailStart = () => {
     setBusy(true); setError(null);
     try {
       const res = await submitEmailSetup({
-        ...f, owns_domain: !!f.owns_domain, registrar_access: f.owns_domain ? f.registrar_access : "yes", provider: f.provider || "help",
+        ...f, provider_plan: planKey ?? undefined, third_party_ack: true, owns_domain: !!f.owns_domain, registrar_access: f.owns_domain ? f.registrar_access : "yes", provider: f.provider || "help",
       });
       track("IntakeSubmit", { content_name: res.needs_review ? "quote" : "standard" });
       localStorage.setItem(TOKEN_KEY, res.token);
@@ -167,6 +172,14 @@ const BusinessEmailStart = () => {
               <Field group label="Email provider" hint="Your provider hosts your email and bills you monthly. Not sure? We'll recommend one.">
                 <Choice value={f.provider} onChange={(v) => set("provider", v)} options={Object.entries(PROVIDER_LABELS) as [EmailProvider, string][]} />
               </Field>
+              {f.provider === "microsoft" && (
+                <Field group label="Microsoft plan" hint="Business Basic includes Teams and web Office apps. Exchange Online Plan 1 is email only.">
+                  <Choice value={f.provider_plan} onChange={(v) => set("provider_plan", v)} options={[["m365_basic", "Microsoft 365 Business Basic"], ["exchange_p1", "Exchange Online Plan 1"]]} />
+                </Field>
+              )}
+              {f.provider && snap.items.length > 0 && (
+                <ThirdPartyCosts snap={{ ...snap, domain: null }} title={f.provider === "help" ? "Your options and their estimated monthly cost" : "Estimated provider cost"} />
+              )}
               <Field label="Main email address you'd like (optional)"><Input placeholder="hello@yourbusiness.com" value={f.primary_address} onChange={(e) => set("primary_address", e.target.value)} /></Field>
               <Field label="How many mailboxes?" hint="A mailbox is a separate inbox with its own sign-in, usually one per person. One is included; more are $25 each.">
                 <Input type="number" min={1} max={100} inputMode="numeric" value={f.mailboxes} onChange={(e) => set("mailboxes", Math.max(1, Number(e.target.value) || 1))} />
@@ -197,6 +210,7 @@ const BusinessEmailStart = () => {
             {step === 4 && (<>
               <div>
                 <h2 className="font-display text-xl font-semibold">Order summary</h2>
+                <p className="mt-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Loumilab charges</p>
                 <p className="mt-1 text-sm text-muted-foreground">{f.business_name} · {PROVIDER_LABELS[(f.provider || "help") as EmailProvider]}</p>
                 {price.needsReview ? (
                   <div className="mt-4 rounded-2xl bg-accent-soft p-4 text-sm">
@@ -213,16 +227,18 @@ const BusinessEmailStart = () => {
                     </tbody>
                   </table>
                 )}
-                <p className="mt-4 rounded-2xl bg-surface-subtle p-4 text-xs leading-relaxed text-muted-foreground">
-                  Not included, paid directly to providers: domain registration and renewals, and your {PROVIDER_LABELS[(f.provider || "help") as EmailProvider] === "Help me choose" ? "email provider" : PROVIDER_LABELS[f.provider as EmailProvider]} subscription.
-                </p>
+                <p className="mt-1 text-xs text-muted-foreground">Loumilab charges above. Nothing below is included in your payment to Loumilab.</p>
+                <div className="mt-4 space-y-3">
+                  <ThirdPartyCosts snap={snap} />
+                  <ProviderCostNotice />
+                </div>
               </div>
               <fieldset className="space-y-3">
                 <legend className="text-sm font-semibold">Please confirm</legend>
                 {ACKS.map((a, i) => (
                   <label key={a} className="flex min-h-11 items-start gap-3 text-sm">
                     <Checkbox className="mt-0.5" checked={acks[i]} onCheckedChange={(v) => setAcks((p) => p.map((x, j) => (j === i ? v === true : x)))} />
-                    <span>{a}{i === 5 && <> (<Link to="/orders/terms" className="underline" target="_blank">terms</Link>)</>}</span>
+                    <span>{a}{i === 6 && <> (<Link to="/orders/terms" className="underline" target="_blank">terms</Link>)</>}</span>
                   </label>
                 ))}
               </fieldset>
