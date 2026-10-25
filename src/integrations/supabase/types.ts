@@ -504,6 +504,51 @@ export type Database = {
         }
         Relationships: []
       }
+      email_provider_prices: {
+        Row: {
+          active: boolean
+          billing_note: string
+          checked_on: string
+          key: string
+          monthly_available: boolean
+          monthly_cents: number
+          per_user: boolean
+          plan_name: string
+          provider: string
+          sort: number
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          active?: boolean
+          billing_note?: string
+          checked_on?: string
+          key: string
+          monthly_available?: boolean
+          monthly_cents: number
+          per_user?: boolean
+          plan_name: string
+          provider: string
+          sort?: number
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          active?: boolean
+          billing_note?: string
+          checked_on?: string
+          key?: string
+          monthly_available?: boolean
+          monthly_cents?: number
+          per_user?: boolean
+          plan_name?: string
+          provider?: string
+          sort?: number
+          updated_at?: string
+          url?: string
+        }
+        Relationships: []
+      }
       email_send_log: {
         Row: {
           created_at: string
@@ -566,6 +611,146 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      email_setup_adjustments: {
+        Row: {
+          amount_cents: number
+          change_set_id: string
+          created_at: string
+          created_by: string | null
+          customer_note: string | null
+          id: string
+          kind: string
+          label: string
+          quantity: number
+          reason: string
+          request_id: string
+          unit_cents: number
+        }
+        Insert: {
+          amount_cents: number
+          change_set_id: string
+          created_at?: string
+          created_by?: string | null
+          customer_note?: string | null
+          id?: string
+          kind: string
+          label: string
+          quantity?: number
+          reason: string
+          request_id: string
+          unit_cents: number
+        }
+        Update: {
+          amount_cents?: number
+          change_set_id?: string
+          created_at?: string
+          created_by?: string | null
+          customer_note?: string | null
+          id?: string
+          kind?: string
+          label?: string
+          quantity?: number
+          reason?: string
+          request_id?: string
+          unit_cents?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_setup_adjustments_change_set_id_fkey"
+            columns: ["change_set_id"]
+            isOneToOne: false
+            referencedRelation: "email_setup_change_sets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "email_setup_adjustments_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "email_setup_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_setup_change_sets: {
+        Row: {
+          amount_due_cents: number
+          canceled_at: string | null
+          created_at: string
+          created_by: string | null
+          credit_cents: number
+          customer_reason: string
+          decided_at: string | null
+          devices_to: number | null
+          id: string
+          internal_note: string | null
+          mailboxes_to: number | null
+          package_from: string
+          package_to: string
+          paid_at: string | null
+          paid_before_cents: number
+          request_id: string
+          sent_count: number
+          status: string
+          stripe_session_id: string | null
+          total_after_cents: number
+          total_before_cents: number
+        }
+        Insert: {
+          amount_due_cents: number
+          canceled_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          credit_cents?: number
+          customer_reason: string
+          decided_at?: string | null
+          devices_to?: number | null
+          id?: string
+          internal_note?: string | null
+          mailboxes_to?: number | null
+          package_from: string
+          package_to: string
+          paid_at?: string | null
+          paid_before_cents: number
+          request_id: string
+          sent_count?: number
+          status?: string
+          stripe_session_id?: string | null
+          total_after_cents: number
+          total_before_cents: number
+        }
+        Update: {
+          amount_due_cents?: number
+          canceled_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          credit_cents?: number
+          customer_reason?: string
+          decided_at?: string | null
+          devices_to?: number | null
+          id?: string
+          internal_note?: string | null
+          mailboxes_to?: number | null
+          package_from?: string
+          package_to?: string
+          paid_at?: string | null
+          paid_before_cents?: number
+          request_id?: string
+          sent_count?: number
+          status?: string
+          stripe_session_id?: string | null
+          total_after_cents?: number
+          total_before_cents?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_setup_change_sets_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "email_setup_requests"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       email_setup_events: {
         Row: {
@@ -660,6 +845,54 @@ export type Database = {
           },
         ]
       }
+      email_setup_payments: {
+        Row: {
+          amount_cents: number
+          change_set_id: string | null
+          created_at: string
+          id: string
+          kind: string
+          request_id: string
+          stripe_payment_intent_id: string | null
+          stripe_ref: string
+        }
+        Insert: {
+          amount_cents: number
+          change_set_id?: string | null
+          created_at?: string
+          id?: string
+          kind: string
+          request_id: string
+          stripe_payment_intent_id?: string | null
+          stripe_ref: string
+        }
+        Update: {
+          amount_cents?: number
+          change_set_id?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          request_id?: string
+          stripe_payment_intent_id?: string | null
+          stripe_ref?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_setup_payments_change_set_id_fkey"
+            columns: ["change_set_id"]
+            isOneToOne: false
+            referencedRelation: "email_setup_change_sets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "email_setup_payments_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "email_setup_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       email_setup_requests: {
         Row: {
           access_token_hash: string
@@ -684,6 +917,7 @@ export type Database = {
           price_lines: Json
           primary_address: string | null
           provider: string
+          provider_plan: string | null
           quote_cents: number | null
           quote_note: string | null
           request_number: string
@@ -692,6 +926,8 @@ export type Database = {
           standalone_domain: boolean
           stripe_payment_intent_id: string | null
           stripe_session_id: string | null
+          third_party_ack_at: string | null
+          third_party_snapshot: Json | null
           total_cents: number
           updated_at: string
         }
@@ -718,6 +954,7 @@ export type Database = {
           price_lines?: Json
           primary_address?: string | null
           provider: string
+          provider_plan?: string | null
           quote_cents?: number | null
           quote_note?: string | null
           request_number?: string
@@ -726,6 +963,8 @@ export type Database = {
           standalone_domain?: boolean
           stripe_payment_intent_id?: string | null
           stripe_session_id?: string | null
+          third_party_ack_at?: string | null
+          third_party_snapshot?: Json | null
           total_cents?: number
           updated_at?: string
         }
@@ -752,6 +991,7 @@ export type Database = {
           price_lines?: Json
           primary_address?: string | null
           provider?: string
+          provider_plan?: string | null
           quote_cents?: number | null
           quote_note?: string | null
           request_number?: string
@@ -760,6 +1000,8 @@ export type Database = {
           standalone_domain?: boolean
           stripe_payment_intent_id?: string | null
           stripe_session_id?: string | null
+          third_party_ack_at?: string | null
+          third_party_snapshot?: Json | null
           total_cents?: number
           updated_at?: string
         }
@@ -4073,6 +4315,7 @@ export type Database = {
       expire_merchant_promotions: { Args: never; Returns: number }
       fee_period_start: { Args: { _at?: string }; Returns: string }
       get_active_promotion: { Args: { _surface: string }; Returns: Json }
+      get_email_provider_prices: { Args: never; Returns: Json }
       get_fee_schedule: { Args: never; Returns: Json }
       get_invoice_by_token: { Args: { _token: string }; Returns: Json }
       get_local_business: {
