@@ -5,7 +5,6 @@ import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
@@ -55,9 +54,10 @@ function Choice<T extends string | boolean>({ value, options, onChange }: { valu
   );
 }
 
-const Field = ({ label, children, hint }: { label: string; children: React.ReactNode; hint?: React.ReactNode }) => (
-  <label className="block"><Label asChild className="text-sm font-medium"><span>{label}</span></Label><div className="mt-1.5">{children}</div>{hint && <Hint>{hint}</Hint>}</label>
-);
+const Field = ({ label, children, hint, group }: { label: string; children: React.ReactNode; hint?: React.ReactNode; group?: boolean }) => {
+  const body = <><span className="text-sm font-medium">{label}</span><div className="mt-1.5">{children}</div>{hint && <Hint>{hint}</Hint>}</>;
+  return group ? <div role="group" aria-label={label}>{body}</div> : <label className="block">{body}</label>;
+};
 
 const BusinessEmailStart = () => {
   const [params] = useSearchParams();
@@ -134,7 +134,7 @@ const BusinessEmailStart = () => {
 
           <div className="mt-8 space-y-6 rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-soft)] sm:p-8">
             {step === 0 && (<>
-              <Field label="Package">
+              <Field group label="Package">
                 <Choice value={f.package} onChange={(v) => set("package", v)} options={[["email", "Email Setup · $99"], ["email_domain", "Email + Domain · $149"]]} />
               </Field>
               <Field label="Full name"><Input autoComplete="name" value={f.full_name} onChange={(e) => set("full_name", e.target.value)} /></Field>
@@ -144,12 +144,12 @@ const BusinessEmailStart = () => {
             </>)}
 
             {step === 1 && (<>
-              <Field label="Does your business already own a domain?" hint="A domain is your web address, like yourbusiness.com.">
+              <Field group label="Does your business already own a domain?" hint="A domain is your web address, like yourbusiness.com.">
                 <Choice value={f.owns_domain} onChange={(v) => set("owns_domain", v)} options={[[true, "Yes"], [false, "Not yet"]]} />
               </Field>
               {f.owns_domain === true && (<>
                 <Field label="Your domain"><Input placeholder="yourbusiness.com" value={f.existing_domain} onChange={(e) => set("existing_domain", e.target.value)} /></Field>
-                <Field label="Can you sign in where you bought it?" hint="This is your registrar — for example GoDaddy, Namecheap, Squarespace or Google Domains.">
+                <Field group label="Can you sign in where you bought it?" hint="This is your registrar — for example GoDaddy, Namecheap, Squarespace or Google Domains.">
                   <Choice value={f.registrar_access} onChange={(v) => set("registrar_access", v)} options={[["yes", "Yes"], ["no", "No"], ["unsure", "Not sure"]]} />
                 </Field>
               </>)}
@@ -164,7 +164,7 @@ const BusinessEmailStart = () => {
             </>)}
 
             {step === 2 && (<>
-              <Field label="Email provider" hint="Your provider hosts your email and bills you monthly. Not sure? We'll recommend one.">
+              <Field group label="Email provider" hint="Your provider hosts your email and bills you monthly. Not sure? We'll recommend one.">
                 <Choice value={f.provider} onChange={(v) => set("provider", v)} options={Object.entries(PROVIDER_LABELS) as [EmailProvider, string][]} />
               </Field>
               <Field label="Main email address you'd like (optional)"><Input placeholder="hello@yourbusiness.com" value={f.primary_address} onChange={(e) => set("primary_address", e.target.value)} /></Field>
@@ -174,10 +174,10 @@ const BusinessEmailStart = () => {
               <Field label="Extra devices to set up" hint="Phones or computers you'd like us to help connect. $25 each.">
                 <Input type="number" min={0} max={50} inputMode="numeric" value={f.extra_devices} onChange={(e) => set("extra_devices", Math.max(0, Number(e.target.value) || 0))} />
               </Field>
-              <Field label="Do you need aliases?" hint="An alias is an extra address, like orders@, that delivers into an existing inbox. Up to three are included.">
+              <Field group label="Do you need aliases?" hint="An alias is an extra address, like orders@, that delivers into an existing inbox. Up to three are included.">
                 <Choice value={f.aliases} onChange={(v) => set("aliases", v)} options={[[true, "Yes"], [false, "No"]]} />
               </Field>
-              <Field label="Do you need existing email moved over?" hint="Migration copies old messages into the new account. It's quoted separately after review.">
+              <Field group label="Do you need existing email moved over?" hint="Migration copies old messages into the new account. It's quoted separately after review.">
                 <Choice value={f.migration} onChange={(v) => set("migration", v)} options={[[true, "Yes"], [false, "No"]]} />
               </Field>
             </>)}
