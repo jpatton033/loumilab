@@ -567,6 +567,204 @@ export type Database = {
         }
         Relationships: []
       }
+      email_setup_events: {
+        Row: {
+          created_at: string
+          detail: string | null
+          id: string
+          kind: string
+          request_id: string
+          visible_to_customer: boolean
+        }
+        Insert: {
+          created_at?: string
+          detail?: string | null
+          id?: string
+          kind: string
+          request_id: string
+          visible_to_customer?: boolean
+        }
+        Update: {
+          created_at?: string
+          detail?: string | null
+          id?: string
+          kind?: string
+          request_id?: string
+          visible_to_customer?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_setup_events_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "email_setup_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_setup_notes: {
+        Row: {
+          author_id: string | null
+          body: string
+          created_at: string
+          id: string
+          request_id: string
+        }
+        Insert: {
+          author_id?: string | null
+          body: string
+          created_at?: string
+          id?: string
+          request_id: string
+        }
+        Update: {
+          author_id?: string | null
+          body?: string
+          created_at?: string
+          id?: string
+          request_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_setup_notes_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "email_setup_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_setup_notifications: {
+        Row: {
+          kind: string
+          request_id: string
+          sent_at: string
+        }
+        Insert: {
+          kind: string
+          request_id: string
+          sent_at?: string
+        }
+        Update: {
+          kind?: string
+          request_id?: string
+          sent_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_setup_notifications_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "email_setup_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_setup_requests: {
+        Row: {
+          access_token_hash: string
+          business_name: string
+          checklist: Json
+          completed_at: string | null
+          completion_record: Json | null
+          contact_email: string
+          created_at: string
+          customer_action_message: string | null
+          extra_devices: number
+          full_name: string
+          id: string
+          intake: Json
+          mailboxes: number
+          needs_review: boolean
+          package: string
+          paid_at: string | null
+          paid_cents: number | null
+          payment_status: string
+          phone: string | null
+          price_lines: Json
+          primary_address: string | null
+          provider: string
+          quote_cents: number | null
+          quote_note: string | null
+          request_number: string
+          review_reasons: string[]
+          service_status: string
+          standalone_domain: boolean
+          stripe_payment_intent_id: string | null
+          stripe_session_id: string | null
+          total_cents: number
+          updated_at: string
+        }
+        Insert: {
+          access_token_hash: string
+          business_name: string
+          checklist?: Json
+          completed_at?: string | null
+          completion_record?: Json | null
+          contact_email: string
+          created_at?: string
+          customer_action_message?: string | null
+          extra_devices?: number
+          full_name: string
+          id?: string
+          intake?: Json
+          mailboxes?: number
+          needs_review?: boolean
+          package: string
+          paid_at?: string | null
+          paid_cents?: number | null
+          payment_status?: string
+          phone?: string | null
+          price_lines?: Json
+          primary_address?: string | null
+          provider: string
+          quote_cents?: number | null
+          quote_note?: string | null
+          request_number?: string
+          review_reasons?: string[]
+          service_status?: string
+          standalone_domain?: boolean
+          stripe_payment_intent_id?: string | null
+          stripe_session_id?: string | null
+          total_cents?: number
+          updated_at?: string
+        }
+        Update: {
+          access_token_hash?: string
+          business_name?: string
+          checklist?: Json
+          completed_at?: string | null
+          completion_record?: Json | null
+          contact_email?: string
+          created_at?: string
+          customer_action_message?: string | null
+          extra_devices?: number
+          full_name?: string
+          id?: string
+          intake?: Json
+          mailboxes?: number
+          needs_review?: boolean
+          package?: string
+          paid_at?: string | null
+          paid_cents?: number | null
+          payment_status?: string
+          phone?: string | null
+          price_lines?: Json
+          primary_address?: string | null
+          provider?: string
+          quote_cents?: number | null
+          quote_note?: string | null
+          request_number?: string
+          review_reasons?: string[]
+          service_status?: string
+          standalone_domain?: boolean
+          stripe_payment_intent_id?: string | null
+          stripe_session_id?: string | null
+          total_cents?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       email_unsubscribe_tokens: {
         Row: {
           created_at: string
@@ -3867,6 +4065,7 @@ export type Database = {
         Args: { _approve: boolean; _notes?: string; _request_id: string }
         Returns: undefined
       }
+      email_setup_status: { Args: { _token: string }; Returns: Json }
       ensure_order_conversation: {
         Args: { _order_id: string }
         Returns: string

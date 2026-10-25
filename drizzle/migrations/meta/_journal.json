@@ -120,6 +120,13 @@
       "when": 1792861896060,
       "tag": "0016_support_activity_no_staff",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1792938560739,
+      "tag": "0017_email_setup_service",
+      "breakpoints": true
     }
   ]
 }
