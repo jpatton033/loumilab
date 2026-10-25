@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { track } from "@/lib/tracking";
+import { HandoffAndRenewals, ManagementPlans, PurchaseQuote, StageTracker, type PurchasingStatus } from "@/components/services/EmailSetupCustomerExtras";
 import { ThirdPartyCosts, type ThirdPartySnapshot } from "@/components/services/ProviderCosts";
 import {
   computeBalance, decideEmailSetupChange, payEmailSetupBalance, type ChangeStatus,
@@ -14,7 +15,7 @@ import {
   type EmailPackage, type EmailProvider,
 } from "@/lib/services/emailSetup";
 
-interface Status {
+interface Status extends Omit<PurchasingStatus, "quote_cents" | "service_status"> {
   request_number: string; package: EmailPackage; business_name: string; first_name: string; provider: EmailProvider;
   primary_address: string | null; needs_review: boolean; price_lines: { label: string; cents: number }[]; total_cents: number;
   quote_cents: number | null; quote_note: string | null; service_status: string; payment_status: string;
@@ -73,7 +74,8 @@ const BusinessEmailStatus = () => {
   const bal = s ? computeBalance(s, [...s.change_sets].reverse(), s.payments) : null;
   const openChange = s?.change_sets.find((c) => c.status === "proposed" || c.status === "approved") ?? null;
   const amount = s ? (s.needs_review ? s.quote_cents : s.total_cents) : null;
-  const canPay = s && bal && bal.chargedCents === 0 && !openChange && s.service_status === "awaiting_payment" && amount;
+  const purchasing = s?.purchase_mode === "loumilab_purchase";
+  const canPay = s && !purchasing && bal && bal.chargedCents === 0 && !openChange && s.service_status === "awaiting_payment" && amount;
 
   const decide = async (approve: boolean) => {
     if (!openChange) return;
@@ -120,7 +122,7 @@ const BusinessEmailStatus = () => {
 
               <table className="mt-5 w-full text-sm"><tbody>
                 {s.needs_review ? (
-                  s.quote_cents ? <tr className="font-semibold"><td>Quoted setup price</td><td className="text-right">{usd(s.quote_cents)}</td></tr>
+                  s.quote_cents ? <tr className="font-semibold"><td>{purchasing ? "Initial total (itemized below)" : "Quoted setup price"}</td><td className="text-right">{usd(s.quote_cents)}</td></tr>
                     : <tr><td className="text-muted-foreground">Price</td><td className="text-right text-muted-foreground">Awaiting quote</td></tr>
                 ) : (<>
                   {s.price_lines.map((l) => <tr key={l.label}><td className="py-1">{l.label}</td><td className="py-1 text-right">{usd(l.cents)}</td></tr>)}
@@ -128,10 +130,13 @@ const BusinessEmailStatus = () => {
                 </>)}
               </tbody></table>
               {s.quote_note && <p className="mt-3 text-sm text-muted-foreground">{s.quote_note}</p>}
-              <p className="mt-3 text-xs text-muted-foreground">Domain and email subscription fees are paid separately to your providers.</p>
+              <p className="mt-3 text-xs text-muted-foreground">{purchasing ? "Loumilab buys your first domain and email hosting term for you. Renewals are billed to you by the providers after handoff." : "Domain and email subscription fees are paid separately to your providers."}</p>
               {canPay && <Button className="mt-5 w-full" size="lg" disabled={busy} onClick={pay}>{busy ? "Please wait…" : `Pay ${usd(amount!)} securely`}</Button>}
               {err && <p className="mt-3 text-sm text-destructive">{err}</p>}
             </div>
+
+            <StageTracker s={s} />
+            <PurchaseQuote s={s} token={token} paid={!!bal && bal.chargedCents > 0} onDone={() => q.refetch()} />
 
             {openChange && (
               <div className="mt-6 rounded-3xl border-2 border-accent/40 bg-card p-6 shadow-[var(--shadow-soft)]">
@@ -146,7 +151,7 @@ const BusinessEmailStatus = () => {
                   <tr><td>Already paid</td><td className="text-right">{usd(openChange.paid_before_cents)}</td></tr>
                   <tr className="font-semibold"><td>{openChange.amount_due_cents > 0 ? "Balance due to Loumilab" : "Credit to you"}</td><td className="text-right">{usd(openChange.amount_due_cents > 0 ? openChange.amount_due_cents : openChange.credit_cents)}</td></tr>
                 </tbody></table>
-                <p className="mt-3 text-xs text-muted-foreground">Third-party domain and email subscription costs stay separate and aren't part of this amount.</p>
+                <p className="mt-3 text-xs text-muted-foreground">{purchasing ? "Any provider-cost line above is passed through to the provider, not kept by Loumilab." : "Third-party domain and email subscription costs stay separate and aren't part of this amount."}</p>
                 {openChange.status === "proposed" ? (
                   <div className="mt-5 flex flex-wrap gap-3">
                     <Button disabled={busy} onClick={() => decide(true)}>{openChange.amount_due_cents > 0 ? `Approve and pay ${usd(openChange.amount_due_cents)}` : "Approve changes"}</Button>
@@ -172,7 +177,10 @@ const BusinessEmailStatus = () => {
               </div>
             )}
 
-            {s.third_party && <div className="mt-6"><ThirdPartyCosts snap={s.third_party} title="Provider costs you pay separately (estimates shown when you ordered)" /></div>}
+            <HandoffAndRenewals s={s} />
+            <ManagementPlans s={s} token={token} onDone={() => q.refetch()} />
+
+            {s.third_party && !purchasing && <div className="mt-6"><ThirdPartyCosts snap={s.third_party} title="Provider costs you pay separately (estimates shown when you ordered)" /></div>}
 
             {s.service_status !== "completed" && s.service_status !== "canceled" && (
               <div className="mt-6 rounded-3xl border border-border bg-card p-6">

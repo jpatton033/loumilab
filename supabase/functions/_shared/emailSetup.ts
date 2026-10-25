@@ -111,6 +111,16 @@ const changeHtml = (r: Req, c: Req, lines: any[]) =>
   <tr><td>Already paid</td><td style="text-align:right">${money(c.paid_before_cents)}</td></tr>
   <tr><td style="font-weight:600">${c.amount_due_cents > 0 ? "Balance due" : "Credit to you"}</td><td style="text-align:right;font-weight:600">${money(c.amount_due_cents > 0 ? c.amount_due_cents : c.credit_cents)}</td></tr></table>`;
 
+// deno-lint-ignore no-explicit-any
+const purchaseSplit = (r: Req) => {
+  const tp = (r.third_party_lines ?? []) as { label: string; cents: number; billing: string }[];
+  const total = r.quote_cents ?? r.total_cents;
+  const service = total - (r.third_party_budget_cents ?? 0);
+  const row = (a: string, b: string, bold = false) => `<tr><td style="padding:4px 0;${bold ? "font-weight:600" : "color:#52525b"}">${a}</td><td style="text-align:right;${bold ? "font-weight:600" : ""}">${b}</td></tr>`;
+  return `<table width="100%" style="font-size:14px;margin:8px 0 16px">${row("Loumilab setup (one-time)", money(service))}${tp.map((l) => row(`${escapeHtml(l.label)} <span style="color:#a1a1aa">· ${escapeHtml(l.billing)}</span>`, money(l.cents))).join("")}${row("Initial total", money(total), true)}</table>` +
+    p('<span style="font-size:13px;color:#71717a">Third-party amounts are passed through to the providers, not kept by Loumilab. Future renewals are billed to you by the providers after handoff.</span>');
+};
+
 export const Mail = {
   async received(r: Req, token: string) {
     await send(r, "customer_review_received", r.contact_email, `We received your request ${r.request_number}`, frame("We're reviewing your request",
@@ -150,6 +160,9 @@ export const Mail = {
       p(`<b>Signing in:</b> use your provider's sign-in page (${escapeHtml(prov(r))}) with the account you created. Keep your multi-factor authentication method safe.`) +
       p("<b>Your accounts:</b> you own your domain and email accounts. Manage users, billing and settings in your provider's admin page.") +
       p("<b>Renewals:</b> your domain and email subscription renew with those providers. Keep a payment method current there so your email keeps working.") +
+      (r._renewals ? p(`<b>Renewal dates:</b><br/>${r._renewals}`) : "") +
+      (r.purchase_mode === "loumilab_purchase" ? p("<b>Billing:</b> future provider billing has been moved to you. Loumilab's payment method is no longer responsible for renewals.") : "") +
+      p("<b>Optional management:</b> Essential ($19/month) or Business ($39/month) management is available from your request page. It's separate from provider fees and you can cancel any time.") +
       p("<b>Support:</b> for 7 days we'll correct any configuration issue caused by our setup. Just reply to this email or write to hello@loumilab.com.")));
   },
   // deno-lint-ignore no-explicit-any
@@ -174,6 +187,33 @@ export const Mail = {
   async customerPaymentFailed(r: Req) {
     await send(r, `customer_payment_failed_${Date.now()}`, r.contact_email, `Payment unsuccessful — ${r.request_number}`, frame("Your payment didn't go through",
       hi(r) + p("No money was taken. You can try again from your request page, or reply to this email if you need help.")));
+  },
+  async purchaseQuote(r: Req, token: string) {
+    await send(r, `customer_purchase_quote_${r.quote_cents}`, r.contact_email, `Your itemized quote — ${r.request_number}`, frame("Your quote is ready",
+      hi(r) + p("We confirmed the real prices. Please review the itemized summary and authorize Loumilab to buy these services for you.") +
+      purchaseSplit(r) + btn(statusUrl(token), "Review and authorize")));
+  },
+  async authorized(r: Req) {
+    await send(r, "customer_purchase_authorized", r.contact_email, `Purchase authorization received — ${r.request_number}`, frame("Thanks for authorizing your purchase",
+      hi(r) + p("We saved your authorization for the services below. We'll buy them only after your payment is confirmed, and never above this amount without asking you first.") + purchaseSplit(r)));
+  },
+  async purchased(r: Req, vendor: string, what: string) {
+    await send(r, `customer_purchased_${what}_${vendor.slice(0, 20)}`, r.contact_email, `We purchased your ${what === "domain" ? "domain" : "email service"} — ${r.request_number}`, frame("Service purchased",
+      hi(r) + p(`We purchased your ${what === "domain" ? "domain" : "email hosting"} with <b>${escapeHtml(vendor)}</b> on your behalf. It will be set up in your ownership, and we'll move future billing to you before we finish.`)));
+  },
+  async stage(r: Req, label: string, stageKey: string) {
+    await send(r, `customer_stage_${stageKey}`, r.contact_email, `Update: ${label} — ${r.request_number}`, frame(label,
+      hi(r) + p(`Your setup for <b>${escapeHtml(r.business_name)}</b> has moved to <b>${escapeHtml(label)}</b>.`)));
+  },
+  async handoffAction(r: Req, message: string, token: string | null) {
+    await send(r, `customer_handoff_${Date.now()}`, r.contact_email, `Action needed to take over your accounts — ${r.request_number}`, frame("Your part of the handoff",
+      hi(r) + p("To make your domain and email fully yours, please:") + p(escapeHtml(message).replace(/\n/g, "<br/>")) +
+      p("Never send us passwords or recovery codes. Set them up yourself in each provider's own sign-in page.") + (token ? btn(statusUrl(token), "View your request") : "")));
+  },
+  async managementActive(r: Req, label: string, cents: number) {
+    await send(r, `customer_mgmt_active_${r.management_subscription_id ?? ""}`, r.contact_email, `${label} is active`, frame(`${label} is active`,
+      hi(r) + p(`Your optional Loumilab management plan is active at <b>${money(cents)}/month</b>, billed by Loumilab.`) +
+      p("This fee is separate from your domain renewals and email hosting, which your providers bill you directly. You can cancel any time from your request page — your domain and email stay yours.")));
   },
   async customerInfo(r: Req) {
     await send(r, `team_info_${Date.now()}`, TEAM_INBOX, `New info from customer: ${r.request_number}`, teamSummary(r, p("The customer added information to their request.")));

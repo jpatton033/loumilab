@@ -1,7 +1,7 @@
 import { admin } from "../_shared/auth.ts";
 import { resolvePayoutStatus, stripe, stripeLivemode, stripeMode } from "../_shared/stripe.ts";
 import { handleChargeReversal, handleCheckoutCompleted, handleSubscriptionChange } from "./handlers.ts";
-import { handleEmailSetupRefund, handleEmailSetupSession } from "./emailSetup.ts";
+import { handleEmailSetupMgmt, handleEmailSetupRefund, handleEmailSetupSession } from "./emailSetup.ts";
 
 
 const WEBHOOK_SECRET = Deno.env.get("STRIPE_WEBHOOK_SECRET") ?? "";
@@ -98,7 +98,8 @@ Deno.serve(async (req) => {
       event.type === "customer.subscription.updated" ||
       event.type === "customer.subscription.deleted"
     ) {
-      await handleSubscriptionChange(event.data.object as Record<string, unknown>, event.type);
+      const isMgmt = !(event as { account?: string }).account && await handleEmailSetupMgmt(event.data.object as Record<string, unknown>, event.type);
+      if (!isMgmt) await handleSubscriptionChange(event.data.object as Record<string, unknown>, event.type);
     }
 
     if (event.type === "charge.refunded") {
