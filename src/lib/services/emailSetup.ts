@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 export * from "../../../supabase/functions/_shared/emailSetupPricing";
 export * from "../../../supabase/functions/_shared/emailSetupBalance";
+export * from "../../../supabase/functions/_shared/emailSetupPurchasing";
 import { useQuery } from "@tanstack/react-query";
 
 export const SERVICE_STATUS_LABELS: Record<string, string> = {
@@ -45,6 +46,15 @@ export const startEmailSetupCheckout = (token: string) =>
   call<{ url: string }>("email-setup", { action: "checkout", token, origin: window.location.origin });
 export const addEmailSetupInfo = (token: string, message: string) =>
   call<{ ok: true }>("email-setup", { action: "add_info", token, message });
+export const authorizeEmailSetupPurchase = (token: string, acks: true[], quote_cents: number) =>
+  call<{ ok: true }>("email-setup", { action: "authorize", token, acks, quote_cents });
+export const startEmailSetupManagement = (token: string, plan: "essential" | "business") =>
+  call<{ url: string }>("email-setup", { action: "start_management", token, plan, consent: true, origin: window.location.origin });
+export const cancelEmailSetupManagement = (token: string) =>
+  call<{ ok: true }>("email-setup", { action: "cancel_management", token });
+export const MANAGEMENT_STATUS_LABELS: Record<string, string> = {
+  none: "Not active", pending: "Starting", active: "Active", past_due: "Payment issue", canceling: "Cancels at period end", canceled: "Canceled",
+};
 export const emailSetupAdmin = (body: Record<string, unknown>) => call<{ ok: true; token?: string }>("email-setup-admin", body);
 
 export const decideEmailSetupChange = (token: string, change_set_id: string, approve: boolean) =>
