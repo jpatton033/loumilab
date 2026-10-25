@@ -129,7 +129,7 @@ Deno.serve(async (req) => {
       catch (e) { return json({ error: (e as Error).message }, 400); }
 
       const { data: c, error } = await admin.from("email_setup_change_sets").insert({
-        request_id: r.id, status: "proposed", customer_reason: b.customer_reason, internal_note: b.internal_note || null,
+        request_id: r.id, status: "proposed", third_party_delta_cents: b.third_party_cents ?? 0, customer_reason: b.customer_reason, internal_note: b.internal_note || null,
         package_from: from, package_to: b.package_to, mailboxes_to: mailboxes, devices_to: devices,
         total_before_cents: bal.totalCents, total_after_cents: totals.totalAfter, paid_before_cents: bal.netPaidCents,
         amount_due_cents: totals.amountDue, credit_cents: totals.credit, created_by: user.id,
@@ -169,27 +169,88 @@ Deno.serve(async (req) => {
       return json({ ok: true, token });
     }
 
+    if (b.action === "record_purchase") {
+      if (r.purchase_mode !== "loumilab_purchase") return json({ error: "This customer pays providers directly." }, 409);
+      const bal = await refreshBalance(r.id);
+      const { data: prior } = await admin.from("email_setup_purchases").select("amount_cents").eq("request_id", r.id);
+      const funds = computeFunds({ agreedTotalCents: bal.totalCents, budgetCents: r.third_party_budget_cents, netPaidCents: bal.netPaidCents, purchases: prior ?? [] });
+      if (!purchaseAllowed(funds.remainingCents, b.amount_cents)) {
+        return json({ error: `This is more than the $${(funds.remainingCents / 100).toFixed(2)} the customer approved and paid. Request the difference with Change order before buying.` }, 409);
+      }
+      const { error } = await admin.from("email_setup_purchases").insert({
+        request_id: r.id, kind: b.kind, vendor: b.vendor, description: b.description || null, amount_cents: b.amount_cents, purchased_on: b.purchased_on,
+        reference: b.reference || null, commitment: b.commitment || null, renews_on: b.renews_on || null, created_by: user.id,
+      });
+      if (error) return json({ error: error.message }, 400);
+      await admin.from("audit_logs").insert({ actor_id: user.id, action: "email_setup.purchase_recorded", target_type: "email_setup_request", target_id: r.id, new_value: b }).then(() => {}, () => {});
+      await logEvent(r.id, "purchase", b.kind === "correction" ? `Purchase correction: ${b.vendor}` : `Purchased ${b.kind === "domain" ? "domain" : b.kind === "email_hosting" ? "email hosting" : "service"} with ${b.vendor}`, b.kind !== "correction");
+      if (b.kind === "domain" || b.kind === "email_hosting") await Mail.purchased(r, b.vendor, b.kind);
+      return json({ ok: true });
+    }
+
+    if (b.action === "update_handoff") {
+      const allowed = new Set(HANDOFF_ITEMS.map(([k]) => k as string));
+      const handoff = Object.fromEntries(Object.entries(b.handoff).filter(([k]) => allowed.has(k)));
+      await admin.from("email_setup_requests").update({ handoff, handoff_manual_review: b.manual_review }).eq("id", r.id);
+      if (b.manual_review && !r.handoff_manual_review) await logEvent(r.id, "handoff", "Billing transfer needs manual review (provider can't transfer billing)");
+      return json({ ok: true });
+    }
+
+    if (b.action === "handoff_action") {
+      await admin.from("email_setup_requests").update({ handoff_customer_actions: b.message }).eq("id", r.id);
+      await logEvent(r.id, "handoff", "Action needed from you to take over billing and ownership", true);
+      await Mail.handoffAction({ ...r, handoff_customer_actions: b.message }, b.message, await rotate());
+      return json({ ok: true });
+    }
+
+    if (b.action === "log_check") {
+      await admin.from("email_setup_mgmt_checks").insert({ request_id: r.id, kind: b.kind, notes: b.notes || null, created_by: user.id });
+      return json({ ok: true });
+    }
+
+    if (b.action === "set_stage") {
+      const bal = await refreshBalance(r.id);
+      if (!["submitted"].includes(b.stage) && bal.netPaidCents <= 0) return json({ error: "This request hasn't been paid yet." }, 409);
+      if (b.stage === "completed") return json({ error: "Use Service status → Completed to finish the order." }, 400);
+      if (b.stage === "purchasing" && r.purchase_mode === "loumilab_purchase" && !r.purchase_auth_at) return json({ error: "The customer hasn't authorized purchases." }, 409);
+      await admin.from("email_setup_requests").update({ fulfillment_stage: b.stage }).eq("id", r.id);
+      const label = STAGES.find(([k]) => k === b.stage)![1];
+      await logEvent(r.id, "stage", label, true);
+      if (b.stage !== "payment_confirmed") await Mail.stage(r, label, b.stage);
+      return json({ ok: true });
+    }
+
     // set_status
     const bal = await refreshBalance(r.id);
     if (["ready_for_setup", "in_progress", "testing", "completed"].includes(b.status) && bal.netPaidCents <= 0) {
       return json({ error: "This request hasn't been paid yet." }, 409);
     }
     if (b.status === "completed" && bal.balanceCents > 0) return json({ error: "There's still a balance due." }, 409);
+    if (b.status === "completed") {
+      const h = handoffMissing(r.purchase_mode as PurchaseMode, r.handoff, r.handoff_manual_review);
+      if (!h.canComplete) return json({ error: r.handoff_manual_review ? "Billing handoff is flagged for manual review." : `Finish the handoff checklist first (${h.missing.length} item(s) left).` }, 409);
+    }
     if (b.status === "awaiting_customer" && !b.message) return json({ error: "Add a message telling the customer what's needed." }, 400);
 
     const patch: Record<string, unknown> = { service_status: b.status };
     if (b.status === "awaiting_customer") patch.customer_action_message = b.message;
     if (b.status === "completed") {
       patch.completed_at = new Date().toISOString();
+      patch.fulfillment_stage = "completed";
       patch.completion_record = { completed_by: user.id, checklist: r.checklist, at: patch.completed_at, total_cents: bal.totalCents, paid_cents: bal.netPaidCents };
     }
-    await admin.from("email_setup_requests").update(patch).eq("id", r.id);
+    const { error: upErr } = await admin.from("email_setup_requests").update(patch).eq("id", r.id);
+    if (upErr) return json({ error: upErr.message }, 409);
     await logEvent(r.id, "status", LABEL[b.status] ?? b.status, Boolean(LABEL[b.status]));
 
     const next = { ...r, ...patch };
     if (b.status === "in_progress") await Mail.started(next);
     if (b.status === "awaiting_customer") await Mail.action(next, b.message!);
-    if (b.status === "completed") await Mail.completed(next);
+    if (b.status === "completed") {
+      const { data: ren } = await admin.from("email_setup_purchases").select("vendor,kind,renews_on,commitment").eq("request_id", r.id).in("kind", ["domain", "email_hosting"]);
+      next._renewals = (ren ?? []).map((x) => `${x.kind === "domain" ? "Domain" : "Email hosting"} (${x.vendor}): ${x.renews_on ?? "see provider"}${x.commitment ? ` · ${x.commitment}` : ""}`).join("<br/>");
+      await Mail.completed(next);
+    }
     return json({ ok: true });
   } catch (err) {
     console.error("email-setup-admin", err instanceof Error ? err.message : err);
