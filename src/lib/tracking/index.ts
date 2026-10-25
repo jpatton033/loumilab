@@ -165,6 +165,12 @@ const MAP = {
   StartOnboarding: { meta: "InitiateCheckout", google: "begin_checkout" },
   StorePublished: { meta: "StartTrial", google: "store_published" },
   ViewPricing: { meta: "ViewContent", google: "view_item_list" },
+  ViewService: { meta: "ViewContent", google: "view_item" },
+  SelectPackage: { meta: "CustomizeProduct", google: "select_item" },
+  IntakeStart: { meta: "Contact", google: "intake_start" },
+  IntakeSubmit: { meta: "Lead", google: "intake_submit" },
+  BeginCheckout: { meta: "InitiateCheckout", google: "begin_checkout" },
+  Purchase: { meta: "Purchase", google: "purchase" },
 } as const;
 export type ConversionName = keyof typeof MAP;
 

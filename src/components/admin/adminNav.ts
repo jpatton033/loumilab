@@ -1,4 +1,4 @@
-import {
+import { AtSign,
   BadgePercent,
   BookOpen,
   Dot,
@@ -60,6 +60,10 @@ export const adminNav: AdminNavGroup[] = [
       { title: "Help Desk", url: "/admin/support", icon: LifeBuoy, match: ["/admin/support/"] },
       { title: "Support Team", url: "/admin/support-team", icon: UserCog },
     ],
+  },
+  {
+    label: "Services",
+    items: [{ title: "Email Setup", url: "/admin/email-setup", icon: AtSign }],
   },
   {
     label: "Mail",

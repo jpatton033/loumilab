@@ -124,6 +124,23 @@ const Services = () => (
             </div>
           </Reveal>
         ))}
+        <Reveal>
+          <Link
+            to="/services/business-email"
+            className="group flex flex-col gap-6 rounded-3xl border border-border bg-card p-8 shadow-[var(--shadow-soft)] glow-hover hover:border-accent/40 lg:flex-row lg:items-center lg:justify-between lg:p-12"
+          >
+            <div>
+              <span className="font-display text-xs font-semibold uppercase tracking-[0.22em] text-accent">Setup service · from $99</span>
+              <h2 className="mt-3 font-display text-2xl font-semibold lg:text-3xl">Business Email &amp; Domain Setup</h2>
+              <p className="mt-3 max-w-2xl leading-relaxed text-muted-foreground">
+                A professional email address on your own domain, configured by Loumilab on Google Workspace, Microsoft 365 or Zoho Mail.
+              </p>
+            </div>
+            <span className="inline-flex shrink-0 items-center gap-2 font-display text-sm font-semibold">
+              See packages <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+            </span>
+          </Link>
+        </Reveal>
       </div>
     </section>
 
