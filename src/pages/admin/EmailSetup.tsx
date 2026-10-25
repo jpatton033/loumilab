@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import AdminShell from "@/components/admin/AdminShell";
 import SEOHead from "@/components/SEOHead";
@@ -161,7 +161,7 @@ function Detail({ r, onChanged, toast }: { r: Req; onChanged: () => void; toast:
       {r.needs_review && <p className="rounded-xl bg-accent-soft p-3 text-sm"><b>Review needed:</b> {r.review_reasons.join("; ")}</p>}
 
       <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-sm">
-        {info.filter(([, v]) => v !== null && v !== undefined && v !== "").map(([k, v]) => (<><dt key={k} className="text-muted-foreground">{k}</dt><dd className="whitespace-pre-line">{String(v)}</dd></>))}
+        {info.filter(([, v]) => v !== null && v !== undefined && v !== "").map(([k, v]) => (<Fragment key={k}><dt className="text-muted-foreground">{k}</dt><dd className="whitespace-pre-line">{String(v)}</dd></Fragment>))}
       </dl>
 
       {!r.needs_review && (
