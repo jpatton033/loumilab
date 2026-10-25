@@ -188,7 +188,7 @@ const Navbar = () => {
               type="button"
               aria-expanded={productsOpen}
               aria-haspopup="true"
-              onClick={() => setProductsOpen((v) => !v)}
+              onClick={() => { setProductsOpen((v) => !v); setServicesOpen(false); }}
               className={`inline-flex items-center gap-1 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-sm ${
                 productsActive || productsOpen ? "text-accent" : "text-muted-foreground hover:text-foreground"
               }`}
