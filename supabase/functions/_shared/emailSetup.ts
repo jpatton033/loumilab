@@ -111,6 +111,16 @@ const changeHtml = (r: Req, c: Req, lines: any[]) =>
   <tr><td>Already paid</td><td style="text-align:right">${money(c.paid_before_cents)}</td></tr>
   <tr><td style="font-weight:600">${c.amount_due_cents > 0 ? "Balance due" : "Credit to you"}</td><td style="text-align:right;font-weight:600">${money(c.amount_due_cents > 0 ? c.amount_due_cents : c.credit_cents)}</td></tr></table>`;
 
+// deno-lint-ignore no-explicit-any
+const purchaseSplit = (r: Req) => {
+  const tp = (r.third_party_lines ?? []) as { label: string; cents: number; billing: string }[];
+  const total = r.quote_cents ?? r.total_cents;
+  const service = total - (r.third_party_budget_cents ?? 0);
+  const row = (a: string, b: string, bold = false) => `<tr><td style="padding:4px 0;${bold ? "font-weight:600" : "color:#52525b"}">${a}</td><td style="text-align:right;${bold ? "font-weight:600" : ""}">${b}</td></tr>`;
+  return `<table width="100%" style="font-size:14px;margin:8px 0 16px">${row("Loumilab setup (one-time)", money(service))}${tp.map((l) => row(`${escapeHtml(l.label)} <span style="color:#a1a1aa">· ${escapeHtml(l.billing)}</span>`, money(l.cents))).join("")}${row("Initial total", money(total), true)}</table>` +
+    p('<span style="font-size:13px;color:#71717a">Third-party amounts are passed through to the providers, not kept by Loumilab. Future renewals are billed to you by the providers after handoff.</span>');
+};
+
 export const Mail = {
   async received(r: Req, token: string) {
     await send(r, "customer_review_received", r.contact_email, `We received your request ${r.request_number}`, frame("We're reviewing your request",
@@ -150,6 +160,9 @@ export const Mail = {
       p(`<b>Signing in:</b> use your provider's sign-in page (${escapeHtml(prov(r))}) with the account you created. Keep your multi-factor authentication method safe.`) +
       p("<b>Your accounts:</b> you own your domain and email accounts. Manage users, billing and settings in your provider's admin page.") +
       p("<b>Renewals:</b> your domain and email subscription renew with those providers. Keep a payment method current there so your email keeps working.") +
+      (r._renewals ? p(`<b>Renewal dates:</b><br/>${r._renewals}`) : "") +
+      (r.purchase_mode === "loumilab_purchase" ? p("<b>Billing:</b> future provider billing has been moved to you. Loumilab's payment method is no longer responsible for renewals.") : "") +
+      p("<b>Optional management:</b> Essential ($19/month) or Business ($39/month) management is available from your request page. It's separate from provider fees and you can cancel any time.") +
       p("<b>Support:</b> for 7 days we'll correct any configuration issue caused by our setup. Just reply to this email or write to hello@loumilab.com.")));
   },
   // deno-lint-ignore no-explicit-any
