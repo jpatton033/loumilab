@@ -56,7 +56,7 @@ function Choice<T extends string | boolean>({ value, options, onChange }: { valu
 }
 
 const Field = ({ label, children, hint }: { label: string; children: React.ReactNode; hint?: React.ReactNode }) => (
-  <div><Label className="text-sm font-medium">{label}</Label><div className="mt-1.5">{children}</div>{hint && <Hint>{hint}</Hint>}</div>
+  <label className="block"><Label asChild className="text-sm font-medium"><span>{label}</span></Label><div className="mt-1.5">{children}</div>{hint && <Hint>{hint}</Hint>}</label>
 );
 
 const BusinessEmailStart = () => {
