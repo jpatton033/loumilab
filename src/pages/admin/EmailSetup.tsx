@@ -15,6 +15,7 @@ import {
   type EmailPackage, type EmailProvider,
 } from "@/lib/services/emailSetup";
 import { EmailSetupBilling, ProviderPricingEditor } from "@/components/admin/EmailSetupBilling";
+import { EmailSetupPurchasing } from "@/components/admin/EmailSetupPurchasing";
 import type { Tables } from "@/integrations/supabase/types";
 
 type Req = Tables<"email_setup_requests">;
@@ -178,12 +179,13 @@ function Detail({ r, onChanged, toast }: { r: Req; onChanged: () => void; toast:
       )}
 
       <EmailSetupBilling r={r} onChanged={onChanged} />
+      <EmailSetupPurchasing key={r.id + r.updated_at} r={r} onChanged={onChanged} />
 
       {(r.intake as Record<string, unknown>)?.third_party_ack !== undefined || r.third_party_ack_at ? (
         <p className="text-xs text-muted-foreground">Customer acknowledged third-party costs {r.third_party_ack_at ? new Date(r.third_party_ack_at).toLocaleString() : ""}.</p>
       ) : null}
 
-      {r.needs_review && !r.paid_cents && (
+      {r.needs_review && !r.paid_cents && r.purchase_mode !== "loumilab_purchase" && (
         <section className="space-y-2 rounded-2xl border border-border p-4">
           <h3 className="font-semibold">Issue quote</h3>
           <Input type="number" min={1} step="0.01" placeholder="Amount in dollars" value={quote} onChange={(e) => setQuote(e.target.value)} />
