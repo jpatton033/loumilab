@@ -48,7 +48,7 @@ const AdminEmailSetup = () => {
   const open = list.data?.find((r) => r.id === openId) ?? null;
 
   return (
-    <AdminShell>
+    <AdminShell title="Email Setup">
       <SEOHead title="Email Setup | Admin" description="Business email setup requests" path="/admin/email-setup" noindex />
       <div className="space-y-6">
         <div>
