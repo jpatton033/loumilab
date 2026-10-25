@@ -3,6 +3,7 @@ import { z } from "npm:zod@3";
 import { admin } from "../_shared/auth.ts";
 import { stripe, stripeConfigured } from "../_shared/stripe.ts";
 import { priceEmailSetup, PACKAGE_LABELS } from "../_shared/emailSetupPricing.ts";
+import { MANAGEMENT_PLANS, PURCHASE_AUTH_ACKS } from "../_shared/emailSetupPurchasing.ts";
 import { logEvent, Mail, newToken, refreshBalance, sha256Hex, SITE, thirdPartySnapshot } from "../_shared/emailSetup.ts";
 
 /** Public Business Email & Domain Setup: submit intake, start checkout, add info. */
@@ -33,6 +34,7 @@ const Intake = z.object({
   notes: t(2000).optional().default(""),
   provider_plan: z.enum(["google_starter", "m365_basic", "exchange_p1", "zoho_lite"]).optional(),
   third_party_ack: z.literal(true),
+  purchase_mode: z.enum(["customer_direct", "loumilab_purchase"]).optional().default("customer_direct"),
   website: z.string().max(0).optional(), // honeypot
 });
 
@@ -41,6 +43,9 @@ const Body = z.discriminatedUnion("action", [
   z.object({ action: z.literal("checkout"), token: z.string().regex(/^[a-f0-9]{64}$/), origin: z.string().url().max(200).optional() }),
   z.object({ action: z.literal("decide_change"), token: z.string().regex(/^[a-f0-9]{64}$/), change_set_id: z.string().uuid(), approve: z.boolean() }),
   z.object({ action: z.literal("pay_balance"), token: z.string().regex(/^[a-f0-9]{64}$/), change_set_id: z.string().uuid(), origin: z.string().url().max(200).optional() }),
+  z.object({ action: z.literal("authorize"), token: z.string().regex(/^[a-f0-9]{64}$/), acks: z.array(z.literal(true)).length(PURCHASE_AUTH_ACKS.length), quote_cents: z.number().int() }),
+  z.object({ action: z.literal("start_management"), token: z.string().regex(/^[a-f0-9]{64}$/), plan: z.enum(["essential", "business"]), consent: z.literal(true), origin: z.string().url().max(200).optional() }),
+  z.object({ action: z.literal("cancel_management"), token: z.string().regex(/^[a-f0-9]{64}$/) }),
   z.object({ action: z.literal("add_info"), token: z.string().regex(/^[a-f0-9]{64}$/), message: t(3000).min(2) }),
 ]);
 
@@ -76,6 +81,7 @@ Deno.serve(async (req) => {
         package: i.package, provider: i.provider, mailboxes: i.mailboxes, extraDevices: i.extra_devices,
         standaloneDomain: i.standalone_domain, migration: i.migration, ownsDomain: i.owns_domain,
         registrarAccess: i.registrar_access, complexNeeds: i.complex_needs,
+        loumilabPurchase: i.purchase_mode === "loumilab_purchase",
       });
       const token = newToken();
       const snapshot = await thirdPartySnapshot(i.provider, i.provider_plan ?? null, i.mailboxes, i.owns_domain);
@@ -93,6 +99,7 @@ Deno.serve(async (req) => {
         service_status: price.needsReview ? "awaiting_quote" : "awaiting_payment",
         payment_status: "unpaid",
         provider_plan: i.provider_plan ?? null,
+        purchase_mode: i.purchase_mode,
         third_party_snapshot: snapshot,
         third_party_ack_at: new Date().toISOString(),
       }).select("*").single();
@@ -104,6 +111,50 @@ Deno.serve(async (req) => {
 
     const r = await findByToken(body.token);
     if (!r) return json({ error: "We couldn't find this request." }, 404);
+
+    if (body.action === "authorize") {
+      if (r.purchase_mode !== "loumilab_purchase") return json({ error: "This order doesn't need purchase authorization." }, 409);
+      if (!r.quote_cents || r.service_status !== "awaiting_payment") return json({ error: "Your quote isn't ready yet." }, 409);
+      if (body.quote_cents !== r.quote_cents) return json({ error: "Your quote changed. Please refresh and review it again." }, 409);
+      if (r.payment_status === "paid") return json({ error: "Already paid." }, 409);
+      const auth = {
+        acks: PURCHASE_AUTH_ACKS, total_cents: r.quote_cents, third_party_budget_cents: r.third_party_budget_cents,
+        service_cents: r.quote_cents - r.third_party_budget_cents, third_party_lines: r.third_party_lines, at: new Date().toISOString(), terms: "/orders/terms",
+      };
+      await admin.from("email_setup_requests").update({ purchase_auth: auth, purchase_auth_at: auth.at }).eq("id", r.id);
+      await logEvent(r.id, "authorization", `You authorized Loumilab to purchase services up to $${(r.third_party_budget_cents / 100).toFixed(2)}`, true);
+      await Mail.authorized({ ...r, purchase_auth: auth });
+      return json({ ok: true });
+    }
+
+    if (body.action === "start_management" || body.action === "cancel_management") {
+      if (!stripeConfigured) return json({ error: "Payments are not available right now." }, 503);
+      if (body.action === "cancel_management") {
+        if (!r.management_subscription_id || !["active", "past_due"].includes(r.management_status)) return json({ error: "No active management plan." }, 409);
+        await stripe.subscriptions.update(r.management_subscription_id, { cancel_at_period_end: true });
+        await admin.from("email_setup_requests").update({ management_status: "canceling" }).eq("id", r.id);
+        await logEvent(r.id, "management", "Management plan set to cancel at the end of the current period. Your domain and email are unaffected.", true);
+        return json({ ok: true });
+      }
+      if (r.service_status !== "completed") return json({ error: "Management can start once your setup is complete." }, 409);
+      if (["active", "past_due", "canceling", "pending"].includes(r.management_status) && r.management_subscription_id) return json({ error: "A management plan is already set up." }, 409);
+      const plan = MANAGEMENT_PLANS[body.plan];
+      const back = `${safeOrigin(body.origin)}/services/business-email/status/${body.token}`;
+      const session = await stripe.checkout.sessions.create({
+        mode: "subscription",
+        line_items: [{ price_data: { currency: "usd", unit_amount: plan.cents, recurring: { interval: "month" }, product_data: { name: `Loumilab ${plan.label}` } }, quantity: 1 }],
+        customer_email: r.contact_email,
+        client_reference_id: r.id,
+        metadata: { kind: "email_setup_mgmt", request_id: r.id, plan: body.plan },
+        subscription_data: { metadata: { kind: "email_setup_mgmt", request_id: r.id, plan: body.plan }, description: `Loumilab ${plan.label} · ${r.request_number}` },
+        success_url: `${back}?mgmt=1`,
+        cancel_url: back,
+        expires_at: Math.floor(Date.now() / 1000) + 60 * 60,
+      }, { idempotencyKey: `email-setup-mgmt-${r.id}-${body.plan}-${Math.floor(Date.now() / 60000)}` });
+      await admin.from("email_setup_requests").update({ management_plan: body.plan, management_consent_at: new Date().toISOString() }).eq("id", r.id);
+      await logEvent(r.id, "management", `Started ${plan.label} checkout`);
+      return json({ url: session.url });
+    }
 
     if (body.action === "add_info") {
       await logEvent(r.id, "customer_info", body.message, true);
@@ -188,6 +239,10 @@ Deno.serve(async (req) => {
       return json({ error: "Your quote isn't ready yet. We'll email you when it is." }, 409);
     }
     if (!amount || amount < 100) return json({ error: "Nothing to pay for this request." }, 409);
+    const purchasing = r.purchase_mode === "loumilab_purchase";
+    if (purchasing && (!r.purchase_auth_at || r.purchase_auth?.total_cents !== amount)) {
+      return json({ error: "Please review and authorize the purchase first." }, 409);
+    }
 
     // Reuse an open session so double-clicks never create two payments.
     if (r.stripe_session_id) {
@@ -200,7 +255,13 @@ Deno.serve(async (req) => {
 
     const origin = safeOrigin(body.origin);
     const back = `${origin}/services/business-email/status/${body.token}`;
-    const lineItems = r.needs_review
+    const tp = (r.third_party_lines ?? []) as { label: string; cents: number; billing: string }[];
+    const lineItems = purchasing
+      ? [
+          { price_data: { currency: "usd", unit_amount: amount - r.third_party_budget_cents, product_data: { name: `${PACKAGE_LABELS[r.package as "email"]} — Loumilab setup` } }, quantity: 1 },
+          ...tp.map((l) => ({ price_data: { currency: "usd", unit_amount: l.cents, product_data: { name: `${l.label} (purchased on your behalf)`, description: l.billing.slice(0, 200) || undefined } }, quantity: 1 })),
+        ]
+      : r.needs_review
       ? [{ price_data: { currency: "usd", unit_amount: amount, product_data: { name: `${PACKAGE_LABELS[r.package as "email"]} — custom quote` } }, quantity: 1 }]
       : (r.price_lines as { label: string; cents: number }[]).map((l) => ({
           price_data: { currency: "usd", unit_amount: l.cents, product_data: { name: l.label } }, quantity: 1,
@@ -210,7 +271,7 @@ Deno.serve(async (req) => {
       line_items: lineItems,
       customer_email: r.contact_email,
       client_reference_id: r.id,
-      metadata: { kind: "email_setup", request_id: r.id, request_number: r.request_number },
+      metadata: { kind: "email_setup", request_id: r.id, request_number: r.request_number, service_cents: String(amount - (purchasing ? r.third_party_budget_cents : 0)), third_party_cents: String(purchasing ? r.third_party_budget_cents : 0) },
       payment_intent_data: { metadata: { kind: "email_setup", request_id: r.id }, description: `Loumilab ${r.request_number}` },
       success_url: `${back}?paid=1`,
       cancel_url: `${back}?canceled=1`,
