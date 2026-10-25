@@ -175,6 +175,33 @@ export const Mail = {
     await send(r, `customer_payment_failed_${Date.now()}`, r.contact_email, `Payment unsuccessful — ${r.request_number}`, frame("Your payment didn't go through",
       hi(r) + p("No money was taken. You can try again from your request page, or reply to this email if you need help.")));
   },
+  async purchaseQuote(r: Req, token: string) {
+    await send(r, `customer_purchase_quote_${r.quote_cents}`, r.contact_email, `Your itemized quote — ${r.request_number}`, frame("Your quote is ready",
+      hi(r) + p("We confirmed the real prices. Please review the itemized summary and authorize Loumilab to buy these services for you.") +
+      purchaseSplit(r) + btn(statusUrl(token), "Review and authorize")));
+  },
+  async authorized(r: Req) {
+    await send(r, "customer_purchase_authorized", r.contact_email, `Purchase authorization received — ${r.request_number}`, frame("Thanks for authorizing your purchase",
+      hi(r) + p("We saved your authorization for the services below. We'll buy them only after your payment is confirmed, and never above this amount without asking you first.") + purchaseSplit(r)));
+  },
+  async purchased(r: Req, vendor: string, what: string) {
+    await send(r, `customer_purchased_${what}_${vendor.slice(0, 20)}`, r.contact_email, `We purchased your ${what === "domain" ? "domain" : "email service"} — ${r.request_number}`, frame("Service purchased",
+      hi(r) + p(`We purchased your ${what === "domain" ? "domain" : "email hosting"} with <b>${escapeHtml(vendor)}</b> on your behalf. It will be set up in your ownership, and we'll move future billing to you before we finish.`)));
+  },
+  async stage(r: Req, label: string, stageKey: string) {
+    await send(r, `customer_stage_${stageKey}`, r.contact_email, `Update: ${label} — ${r.request_number}`, frame(label,
+      hi(r) + p(`Your setup for <b>${escapeHtml(r.business_name)}</b> has moved to <b>${escapeHtml(label)}</b>.`)));
+  },
+  async handoffAction(r: Req, message: string, token: string | null) {
+    await send(r, `customer_handoff_${Date.now()}`, r.contact_email, `Action needed to take over your accounts — ${r.request_number}`, frame("Your part of the handoff",
+      hi(r) + p("To make your domain and email fully yours, please:") + p(escapeHtml(message).replace(/\n/g, "<br/>")) +
+      p("Never send us passwords or recovery codes. Set them up yourself in each provider's own sign-in page.") + (token ? btn(statusUrl(token), "View your request") : "")));
+  },
+  async managementActive(r: Req, label: string, cents: number) {
+    await send(r, `customer_mgmt_active_${r.management_subscription_id ?? ""}`, r.contact_email, `${label} is active`, frame(`${label} is active`,
+      hi(r) + p(`Your optional Loumilab management plan is active at <b>${money(cents)}/month</b>, billed by Loumilab.`) +
+      p("This fee is separate from your domain renewals and email hosting, which your providers bill you directly. You can cancel any time from your request page — your domain and email stay yours.")));
+  },
   async customerInfo(r: Req) {
     await send(r, `team_info_${Date.now()}`, TEAM_INBOX, `New info from customer: ${r.request_number}`, teamSummary(r, p("The customer added information to their request.")));
   },
