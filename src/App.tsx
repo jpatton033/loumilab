@@ -36,6 +36,10 @@ const AdminCustomProjects = lazy(() => import("./pages/admin/CustomProjects"));
 const AdminIndustries = lazy(() => import("./pages/admin/Industries"));
 const AdminAuditLog = lazy(() => import("./pages/admin/AuditLog"));
 const AdminMail = lazy(() => import("./pages/admin/Mail"));
+const AdminEmailSetup = lazy(() => import("./pages/admin/EmailSetup"));
+const EmailSetupPage = lazy(() => import("./pages/services/BusinessEmail"));
+const EmailSetupStart = lazy(() => import("./pages/services/BusinessEmailStart"));
+const EmailSetupStatus = lazy(() => import("./pages/services/BusinessEmailStatus"));
 const AdminLocalImporter = lazy(() => import("./pages/admin/LocalImporter"));
 const AdminDailyBrief = lazy(() => import("./pages/admin/reports/DailyBrief"));
 const AdminDailyBriefSettings = lazy(() => import("./pages/admin/settings/DailyBriefSettings"));
@@ -84,6 +88,9 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/services/business-email" element={<EmailSetupPage />} />
+          <Route path="/services/business-email/start" element={<EmailSetupStart />} />
+          <Route path="/services/business-email/status/:token" element={<EmailSetupStatus />} />
           <Route path="/how-we-work" element={<HowWeWork />} />
           <Route path="/products" element={<Products />} />
           <Route path="/orders" element={<Orders />} />
@@ -135,6 +142,7 @@ const App = () => (
           <Route path="/admin/promotions" element={<ProtectedRoute><AdminPromotions /></ProtectedRoute>} />
           <Route path="/admin/industries" element={<ProtectedRoute><AdminIndustries /></ProtectedRoute>} />
           <Route path="/admin/custom-projects" element={<ProtectedRoute><AdminCustomProjects /></ProtectedRoute>} />
+          <Route path="/admin/email-setup" element={<ProtectedRoute><AdminEmailSetup /></ProtectedRoute>} />
           <Route path="/admin/local-importer" element={<ProtectedRoute><AdminLocalImporter /></ProtectedRoute>} />
           <Route path="/admin/the-dot" element={<ProtectedRoute><AdminTheDot /></ProtectedRoute>} />
           <Route path="/admin/the-dot/:id" element={<ProtectedRoute><AdminTheDotEditor /></ProtectedRoute>} />
