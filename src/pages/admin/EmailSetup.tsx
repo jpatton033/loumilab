@@ -14,6 +14,7 @@ import {
   emailSetupAdmin, PACKAGE_LABELS, PAYMENT_STATUS_LABELS, PROVIDER_LABELS, SERVICE_STATUS_LABELS, usd,
   type EmailPackage, type EmailProvider,
 } from "@/lib/services/emailSetup";
+import { EmailSetupBilling, ProviderPricingEditor } from "@/components/admin/EmailSetupBilling";
 import type { Tables } from "@/integrations/supabase/types";
 
 type Req = Tables<"email_setup_requests">;
@@ -31,6 +32,7 @@ const AdminEmailSetup = () => {
   const [svc, setSvc] = useState("all");
   const [pay, setPay] = useState("all");
   const [openId, setOpenId] = useState<string | null>(null);
+  const [tab, setTab] = useState<"requests" | "pricing">("requests");
 
   const list = useQuery({
     queryKey: ["admin", "email-setup"],
@@ -55,6 +57,11 @@ const AdminEmailSetup = () => {
           <h1 className="font-display text-2xl font-semibold">Business Email &amp; Domain Setup</h1>
           <p className="text-sm text-muted-foreground">Requests, payments and fulfillment.</p>
         </div>
+        <div className="flex gap-2">
+          <Button size="sm" variant={tab === "requests" ? "default" : "outline"} onClick={() => setTab("requests")}>Requests</Button>
+          <Button size="sm" variant={tab === "pricing" ? "default" : "outline"} onClick={() => setTab("pricing")}>Provider pricing</Button>
+        </div>
+        {tab === "pricing" ? <ProviderPricingEditor /> : <>
         <div className="flex flex-wrap gap-3">
           <Input className="max-w-xs" placeholder="Search number, business, name, email" value={search} onChange={(e) => setSearch(e.target.value)} />
           <select className="h-10 rounded-md border border-input bg-background px-3 text-sm" value={svc} onChange={(e) => setSvc(e.target.value)}>
@@ -88,6 +95,7 @@ const AdminEmailSetup = () => {
             </tbody>
           </table>
         </div>
+        </>}
       </div>
       <Sheet open={!!open} onOpenChange={(o) => !o && setOpenId(null)}>
         <SheetContent className="w-full overflow-y-auto sm:max-w-xl">
@@ -169,7 +177,13 @@ function Detail({ r, onChanged, toast }: { r: Req; onChanged: () => void; toast:
           <div className="mt-1 flex justify-between border-t border-border pt-1 font-semibold"><span>Total</span><span>{usd(r.total_cents)}</span></div></div>
       )}
 
-      {r.needs_review && r.payment_status !== "paid" && (
+      <EmailSetupBilling r={r} onChanged={onChanged} />
+
+      {(r.intake as Record<string, unknown>)?.third_party_ack !== undefined || r.third_party_ack_at ? (
+        <p className="text-xs text-muted-foreground">Customer acknowledged third-party costs {r.third_party_ack_at ? new Date(r.third_party_ack_at).toLocaleString() : ""}.</p>
+      ) : null}
+
+      {r.needs_review && !r.paid_cents && (
         <section className="space-y-2 rounded-2xl border border-border p-4">
           <h3 className="font-semibold">Issue quote</h3>
           <Input type="number" min={1} step="0.01" placeholder="Amount in dollars" value={quote} onChange={(e) => setQuote(e.target.value)} />
