@@ -13,7 +13,7 @@ interface Meta { path: string; title: string; description: string; ogType?: stri
 const S = (path: string, title: string, description: string): Meta => ({ path, title, description });
 
 const staticMeta: Meta[] = [
-  S("/services/business-email", "Business Email & Domain Setup | Loumilab", "Professional business email on your own domain, set up by Loumilab. Google Workspace, Microsoft 365 or Zoho Mail with DNS, SPF, DKIM and DMARC. From $99 one-time."),
+  S("/services/business-email", "Business Email & Domain Setup Services | Loumilab", "Get professional business email and domain setup with Loumilab. We handle initial purchasing, configuration, security, and account handoff."),
   S("/services", "Technology & Software Development Services | Loumilab", "Website and product design, SaaS and web app development, workflow automation, AI and cybersecurity consulting — delivered end to end by one senior Loumilab team."),
   S("/how-we-work", "How We Work: From Idea to Launch | Loumilab", "Discovery, design, build, security, launch and growth — how Loumilab takes digital products from first idea to a secure, maintainable launch and beyond."),
   S("/products", "Digital Products Built by Loumilab | Loumilab", "Explore the products and companies built by Loumilab: Loumilab Orders for online ordering, Loumilab Local for food discovery, and Vurtti for compliance teams."),
