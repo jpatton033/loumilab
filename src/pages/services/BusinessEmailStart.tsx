@@ -20,11 +20,12 @@ interface Form {
   owns_domain: boolean | null; existing_domain: string; registrar_access: "yes" | "no" | "unsure"; desired_domain: string;
   provider: EmailProvider | ""; provider_plan: "" | "m365_basic" | "exchange_p1"; primary_address: string; mailboxes: number; aliases: boolean; migration: boolean;
   extra_devices: number; standalone_domain: boolean; complex_needs: boolean; special_requirements: string; notes: string;
+  purchase_mode: "customer_direct" | "loumilab_purchase";
 }
 const empty: Form = {
   package: "email", full_name: "", business_name: "", contact_email: "", phone: "", owns_domain: null, existing_domain: "",
   registrar_access: "yes", desired_domain: "", provider: "", provider_plan: "", primary_address: "", mailboxes: 1, aliases: false, migration: false,
-  extra_devices: 0, standalone_domain: false, complex_needs: false, special_requirements: "", notes: "",
+  extra_devices: 0, standalone_domain: false, complex_needs: false, special_requirements: "", notes: "", purchase_mode: "customer_direct",
 };
 
 const ACKS = [
@@ -90,6 +91,7 @@ const BusinessEmailStart = () => {
     package: f.package, provider: (f.provider || "help") as EmailProvider, mailboxes: f.mailboxes, extraDevices: f.extra_devices,
     standaloneDomain: f.standalone_domain, migration: f.migration, ownsDomain: !!f.owns_domain,
     registrarAccess: f.owns_domain ? f.registrar_access : "yes", complexNeeds: f.complex_needs,
+    loumilabPurchase: f.purchase_mode === "loumilab_purchase",
   }), [f]);
 
   const valid = [
@@ -209,7 +211,12 @@ const BusinessEmailStart = () => {
 
             {step === 4 && (<>
               <div>
-                <h2 className="font-display text-xl font-semibold">Order summary</h2>
+                <h2 className="font-display text-xl font-semibold">Who buys the domain and email service?</h2>
+                <Choice value={f.purchase_mode} onChange={(v) => set("purchase_mode", v)} options={[["customer_direct", "I'll pay the providers myself"], ["loumilab_purchase", "Loumilab buys them for me"]]} />
+                <Hint>{f.purchase_mode === "loumilab_purchase"
+                  ? "We confirm the real prices first, then send one itemized quote: our setup fee plus the first domain and email hosting charges. You authorize it, pay once, and we buy everything in your name. After setup, future renewals move to you. Loumilab isn't your ongoing registrar or email provider."
+                  : "You'll buy your domain and email subscription directly from the providers. Loumilab only charges the setup fee."}</Hint>
+                <h2 className="mt-6 font-display text-xl font-semibold">Order summary</h2>
                 <p className="mt-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Loumilab charges</p>
                 <p className="mt-1 text-sm text-muted-foreground">{f.business_name} · {PROVIDER_LABELS[(f.provider || "help") as EmailProvider]}</p>
                 {price.needsReview ? (
