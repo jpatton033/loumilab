@@ -185,7 +185,7 @@ Deno.serve(async (req) => {
           // Nothing to pay (downgrade, discount or credit): apply right away.
           await admin.from("email_setup_change_sets").update({ status: "paid", paid_at: new Date().toISOString() }).eq("id", c.id);
           await admin.from("email_setup_requests").update({
-            package: c.package_to, ...(c.mailboxes_to != null ? { mailboxes: c.mailboxes_to } : {}), ...(c.devices_to != null ? { extra_devices: c.devices_to } : {}),
+            package: c.package_to, third_party_budget_cents: (r.third_party_budget_cents ?? 0) + (c.third_party_delta_cents ?? 0), ...(c.mailboxes_to != null ? { mailboxes: c.mailboxes_to } : {}), ...(c.devices_to != null ? { extra_devices: c.devices_to } : {}),
             service_status: bal.netPaidCents > 0 ? "ready_for_setup" : "awaiting_payment",
           }).eq("id", r.id);
           await refreshBalance(r.id);

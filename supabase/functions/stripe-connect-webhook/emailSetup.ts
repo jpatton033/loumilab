@@ -37,7 +37,7 @@ export async function handleEmailSetupSession(session: Obj, type: string) {
         .update({ status: "paid", paid_at: new Date().toISOString() }).eq("id", changeId).eq("status", "approved").select("*").maybeSingle();
       if (c) {
         await admin.from("email_setup_requests").update({
-          package: c.package_to,
+          package: c.package_to, third_party_budget_cents: (r.third_party_budget_cents ?? 0) + (c.third_party_delta_cents ?? 0),
           ...(c.mailboxes_to != null ? { mailboxes: c.mailboxes_to } : {}),
           ...(c.devices_to != null ? { extra_devices: c.devices_to } : {}),
           service_status: r.service_status === "awaiting_payment" || r.service_status === "awaiting_approval" ? "ready_for_setup" : r.service_status,
