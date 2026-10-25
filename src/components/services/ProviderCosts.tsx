@@ -32,7 +32,7 @@ export const ThirdPartyCosts = ({ snap, title = "Third-party costs (paid to prov
         <li key={i.plan}>
           <div className="flex justify-between gap-3"><span className="font-medium">{i.plan}</span><span className="shrink-0">≈ {usd(i.est_monthly_cents)}/mo</span></div>
           <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
-            {usd(i.monthly_cents)} per user/month × {i.users} user{i.users === 1 ? "" : "s"}. {i.billing} {i.monthly_available ? "Monthly billing available." : "No monthly billing option."}{" "}
+            {usd(i.monthly_cents)} per user/month × {i.users} user{i.users === 1 ? "" : "s"}. {i.billing} {i.monthly_available ? "Monthly billing available." : ""}{" "}
             <a href={i.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-0.5 underline">Official pricing <ExternalLink size={11} /></a>
           </p>
         </li>

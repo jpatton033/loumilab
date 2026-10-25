@@ -61,7 +61,7 @@ async function send(r: Req, kind: string, to: string, subject: string, html: str
   if (!(await claim(r.id, kind))) return;
   const res = await sendManagedEmail({ to, subject, html, label: `email-setup-${kind}`, idempotencyKey: `email-setup-${r.id}-${kind}`, displayName: "Loumilab" });
   if (!res.ok && !res.suppressed) console.error("email setup mail not sent", kind, res.error);
-  await logEvent(r.id, "email", `${kind} → ${to === TEAM_INBOX ? "Loumilab" : "customer"}`);
+  await logEvent(r.id, "email", `Email to ${to === TEAM_INBOX ? "Loumilab" : "customer"}: ${subject}`);
 }
 
 const teamSummary = (r: Req, extra = "") =>
