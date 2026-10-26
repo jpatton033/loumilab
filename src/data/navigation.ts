@@ -36,8 +36,8 @@ export const navMenus: NavMenu[] = [
     match: ["/products", "/orders"],
     groups: productGroups.map((g) => ({
       label: g.label,
-      items: g.items.map((p) => ({ label: p.name, to: p.href, desc: p.tagline, external: p.external })),
-    })),
+      items: g.items.filter((p) => p.href !== "/orders/tools").map((p) => ({ label: p.name, to: p.href, desc: p.tagline, external: p.external })),
+    })).filter((g) => g.items.length > 0),
     footer: { label: "View all products", to: "/products" },
   },
   {

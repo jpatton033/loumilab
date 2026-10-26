@@ -78,7 +78,7 @@
     /* Smooth for in-page anchors; route changes use an instant programmatic jump. */
     scroll-behavior: smooth;
     /* Keeps anchored sections clear of the fixed header. */
-    scroll-padding-top: 6rem;
+    scroll-padding-top: 5.5rem;
   }
 
   body {
