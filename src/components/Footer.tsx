@@ -52,6 +52,9 @@ const Footer = () => (
               )
             )}
             <Link to="/products" className="w-fit text-sm text-foreground/70 transition-colors hover:text-accent">Ecosystem</Link>
+            <Link to="/orders/compare/square" className="w-fit text-sm text-foreground/70 transition-colors hover:text-accent">Orders vs. Square</Link>
+            <Link to="/orders/compare/shopify" className="w-fit text-sm text-foreground/70 transition-colors hover:text-accent">Orders vs. Shopify</Link>
+            <Link to="/orders/compare/toast" className="w-fit text-sm text-foreground/70 transition-colors hover:text-accent">Orders vs. Toast</Link>
           </nav>
         </div>
 

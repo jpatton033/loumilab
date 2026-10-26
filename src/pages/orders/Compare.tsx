@@ -11,7 +11,7 @@ const OrdersCompare = () => {
   const { slug } = useParams();
   const c = findCompetitor(slug);
   if (!c) return <Navigate to="/orders" replace />;
-  const cta = { label: ORDERS_CTA.label, to: ORDERS_CTA.href, onClick: () => trackCtaClick?.(ORDERS_CTA.variant, `compare-${c.slug}`) };
+  const cta = { label: ORDERS_CTA.label, to: ORDERS_CTA.href, onClick: () => trackCtaClick(`compare-${c.slug}`, ORDERS_CTA.variant) };
   const faq = [
     [`Is Loumilab Orders cheaper than ${c.name}?`, "The Starter plan is $0/month forever, and you only pay a platform fee on merchandise sales. Stripe card fees are separate."],
     [`Can I switch from ${c.name}?`, "Yes. Build and preview your new store before signing up, then publish when you're ready."],
