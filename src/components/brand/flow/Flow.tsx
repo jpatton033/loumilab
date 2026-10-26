@@ -46,11 +46,11 @@ export const BenefitTrio = ({ items }: { items: { title: string; body: string }[
 );
 
 /** Closing band that repeats the page's one main action. */
-export const ClosingCta = ({ title, lede, cta }: { title: string; lede?: string; cta: Cta }) => (
+export const ClosingCta = ({ title, lede, cta, tone = "light" }: { title: string; lede?: string; cta: Cta; tone?: "light" | "dark" }) => (
   <section className="section-container py-20 lg:py-28">
-    <div className="rounded-[2rem] bg-surface-subtle px-6 py-16 text-center sm:px-12 lg:py-20">
+    <div className={`rounded-[2rem] px-6 py-16 text-center sm:px-12 lg:py-20 ${tone === "dark" ? "bg-surface-inverse text-inverse" : "bg-surface-subtle"}`}>
       <h2 className="mx-auto max-w-3xl font-hero text-4xl font-semibold tracking-tight sm:text-5xl">{title}</h2>
-      {lede && <p className="mx-auto mt-5 max-w-xl text-lg text-muted-foreground">{lede}</p>}
+      {lede && <p className={`mx-auto mt-5 max-w-xl text-lg ${tone === "dark" ? "text-inverse-muted" : "text-muted-foreground"}`}>{lede}</p>}
       <Button size="lg" asChild className="mt-10">
         <Link to={cta.to} onClick={cta.onClick}>{cta.label} <ArrowRight className="ml-1 h-4 w-4" /></Link>
       </Button>
