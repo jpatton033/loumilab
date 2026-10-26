@@ -14,4 +14,5 @@
 - [x] Count Google sign-ups
 
 - [x] Squarespace-style flow: shared hero / three-benefit / closing-button blocks; Orders vs. Square, Shopify, Toast comparison pages linked from Orders, pricing and footer
-- [ ] Squarespace-style flow: move Home, Services, Business Email, Products, Work, About, How We Work, Local, Resources, The Dot. and Contact onto the shared blocks (one main button each)
+- [x] Website refinement: homepage "What do you need?" paths; Services menu grouped (Studio / Managed Business Technology)
+- [ ] Website refinement: full audit report, then remaining pages onto the shared flow (Services, Business Email, Products, Local, Work, About, How We Work, Resources, The Dot., Contact)

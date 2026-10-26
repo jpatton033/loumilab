@@ -20,8 +20,8 @@ const navLinks: NavItem[] = [
 ];
 
 const serviceLinks = [
-  { to: "/services", label: "All services", desc: "Design, build, innovate and secure." },
-  { to: "/services/business-email", label: "Business Email & Domain Setup", desc: "Professional email on your own domain, from $99." },
+  { to: "/services", label: "All services", desc: "Design, build, innovate and secure.", group: "Technology Studio" },
+  { to: "/services/business-email", label: "Business Email & Domain Setup", desc: "Professional email on your own domain, from $99.", group: "Managed Business Technology" },
 ];
 
 
@@ -174,6 +174,7 @@ const Navbar = () => {
                 <div className="space-y-1 rounded-3xl border border-border bg-popover p-3 shadow-[var(--shadow-lift)]">
                   {serviceLinks.map((s) => (
                     <Link key={s.to} to={s.to} role="menuitem" className="block rounded-2xl px-4 py-3 hover:bg-secondary">
+                      <span className="mb-1 block text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-accent">{s.group}</span>
                       <span className="block font-display text-sm font-semibold text-foreground">{s.label}</span>
                       <span className="mt-0.5 block text-xs text-muted-foreground">{s.desc}</span>
                     </Link>
