@@ -213,7 +213,7 @@ const LocalIndex = () => {
             </div>
 
             {isLoading ? (
-              <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+              <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3 [&>*]:min-w-0">
                 {[0, 1, 2].map((i) => <div key={i} className="h-80 animate-pulse rounded-3xl bg-secondary" />)}
               </div>
             ) : results.length === 0 ? (
@@ -229,7 +229,7 @@ const LocalIndex = () => {
                 )}
               </div>
             ) : (
-              <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+              <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3 [&>*]:min-w-0">
                 {results.map((b) => <LocalBusinessCard key={b.slug} business={b} />)}
               </div>
             )}
