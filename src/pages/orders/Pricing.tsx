@@ -43,6 +43,7 @@ const OrdersPricing = () => {
         {tiers && <div className="mt-8"><FeeAnnouncement showLink={false} /></div>}
         <div className="mt-12"><PricingTable /></div>
         <p className="mt-6 text-sm text-muted-foreground">{pricingHeading.footnote}</p>
+        <p className="mt-3 text-sm text-muted-foreground">Compare: <Link to="/orders/compare/square" className="font-semibold text-foreground hover:text-accent">vs. Square</Link> · <Link to="/orders/compare/shopify" className="font-semibold text-foreground hover:text-accent">vs. Shopify</Link> · <Link to="/orders/compare/toast" className="font-semibold text-foreground hover:text-accent">vs. Toast</Link></p>
         <div className="mt-8"><FeeSaleExample /></div>
       </section>
 
