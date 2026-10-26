@@ -1,3 +1,4 @@
+import { ClosingCta } from "@/components/brand/flow/Flow";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import Layout from "@/components/Layout";
@@ -85,12 +86,7 @@ const OrdersPricing = () => {
         </section>
       )}
 
-      <section className="section-container pb-20">
-        <p className="text-lg text-muted-foreground">Less managing. More business.</p>
-        <Link to={ORDERS_CTA.href} className="dot-action mt-4" onClick={() => trackCtaClick("pricing_page", ORDERS_CTA.variant)}>
-          {ORDERS_CTA.label} <ArrowRight size={18} />
-        </Link>
-      </section>
+      <ClosingCta tone="dark" title="Less managing. More business." lede={ORDERS_CTA.support} cta={{ label: ORDERS_CTA.label, to: ORDERS_CTA.href, onClick: () => trackCtaClick("pricing_page", ORDERS_CTA.variant) }} />
     </Layout>
   );
 };
