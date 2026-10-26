@@ -499,9 +499,9 @@ const Orders = () => {
                 {ORDERS_CTA.label} <ArrowRight size={18} />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" asChild className="rounded-full">
-              <Link to="/contact">Learn More</Link>
-            </Button>
+            <Link to="/orders/compare/square" className="self-center text-sm font-semibold text-foreground underline-offset-4 hover:text-accent hover:underline">
+              Compare Orders vs. Square
+            </Link>
           </Reveal>
           <p className="mt-12 font-display text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">
             Orders by Loumilab
