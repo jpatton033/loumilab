@@ -64,8 +64,7 @@ const HowWeWork = () => (
           How we bring products to life.
         </h1>
         <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-          Transparent, collaborative, and fast. A process built to get from idea to something real in weeks,
-          then keep improving it.
+          Every great idea begins with possibility. Together, we give it purpose, bring it to life, and make room for what comes next.
         </p>
       </div>
     </section>
