@@ -194,7 +194,7 @@ const LocalIndex = () => {
               <LocalFilters value={search} onChange={update} hasZip={hasZip} />
             </div>
           </aside>
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center justify-between gap-3">
               <h2 className="font-display text-2xl font-semibold">
                 {searching ? `${results.length} ${results.length === 1 ? "business" : "businesses"}` : "All local businesses"}
