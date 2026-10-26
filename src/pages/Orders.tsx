@@ -485,7 +485,7 @@ const Orders = () => {
             </p>
           </Reveal>
           <Reveal delay={340} className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
-            <Button size="lg" asChild className="rounded-full">
+            <Button size="lg" asChild className="rounded-full bg-accent text-accent-foreground hover:bg-accent/90">
               <Link to={ORDERS_CTA.href} className="dot-action" onClick={() => trackCtaClick("closing", ORDERS_CTA.variant)}>
                 {ORDERS_CTA.label} <ArrowRight size={18} />
               </Link>
