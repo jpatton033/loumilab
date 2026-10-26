@@ -39,7 +39,7 @@ const Reveal = ({ children, delay = 0, className, as: Tag = "div", from = "botto
           io.disconnect();
         }
       },
-      { threshold: 0.12, rootMargin: "0px 0px -60px 0px" }
+      { threshold: 0, rootMargin: "0px 0px -60px 0px" }
     );
     io.observe(el);
     return () => io.disconnect();
