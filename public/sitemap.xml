@@ -36,6 +36,11 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://loumilab.com/services/business-email</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://loumilab.com/orders/pricing</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -264,7 +269,7 @@
   </url>
   <url>
     <loc>https://loumilab.com/resources/security-privacy/small-business-security-baseline</loc>
-    <lastmod>2026-10-23</lastmod>
+    <lastmod>2026-10-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -300,7 +305,7 @@
   </url>
   <url>
     <loc>https://loumilab.com/resources/technology-ai/the-illusion-of-choice-in-the-digital-economy</loc>
-    <lastmod>2026-10-24</lastmod>
+    <lastmod>2026-10-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -329,6 +334,12 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://loumilab.com/resources/business-growth/when-growth-becomes-a-problem</loc>
+    <lastmod>2026-10-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://loumilab.com/resources/business-growth/more-customers-wont-fix-a-broken-business-process</loc>
     <lastmod>2026-10-18</lastmod>
     <changefreq>monthly</changefreq>
@@ -349,6 +360,12 @@
   <url>
     <loc>https://loumilab.com/resources/security-privacy/your-business-collects-more-customer-data-than-you-think</loc>
     <lastmod>2026-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://loumilab.com/resources/security-privacy/the-next-cybersecurity-attack-may-not-look-like-a-cyberattack</loc>
+    <lastmod>2026-10-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
