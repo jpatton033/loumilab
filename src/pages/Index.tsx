@@ -7,7 +7,6 @@ import ArticleCard from "@/components/kc/ArticleCard";
 import { MoreLink, TileActions } from "@/components/brand/apple/Tiles";
 import { Button } from "@/components/ui/button";
 import { usePublishedArticles } from "@/lib/kc/queries";
-import TheDotSignup from "@/components/thedot/TheDotSignup";
 import PhoneFrame from "@/components/orders/PhoneFrame";
 import StorefrontScreen from "@/components/orders/StorefrontScreen";
 import { demoStorefront } from "@/data/orders/storefronts";
@@ -174,14 +173,11 @@ const Index = () => {
           <MoreLink to="/resources">Visit Resources</MoreLink>
         </Reveal>
         {articles.length > 0 && <div className="mt-10 grid gap-5 md:grid-cols-3">{articles.map((a) => <ArticleCard key={a.id} article={a} />)}</div>}
-        <div className="mt-10 grid gap-5 md:grid-cols-2">
+        <div className="mt-10 grid gap-5">
           <Link to="/orders/tools" className="rounded-3xl border border-border p-8 transition-colors hover:border-accent/50">
             <h3 className="font-display text-xl font-semibold">Free Business Tools</h3>
             <p className="mt-2 text-muted-foreground">Price your products with confidence. No sign-up needed.</p>
           </Link>
-          <div className="rounded-3xl border border-border p-8">
-            <TheDotSignup source="home" variant="inline" heading="The Dot." description="Our brief on the ideas, technology, and shifts shaping how businesses work, build, and grow." />
-          </div>
         </div>
       </section>
 

@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import SiteNewsletter from "@/components/thedot/SiteNewsletter";
 import { RouteDot } from "@/components/brand/dot";
 
 const Layout = ({ children }: { children: ReactNode }) => (
@@ -8,6 +9,7 @@ const Layout = ({ children }: { children: ReactNode }) => (
     <Navbar />
     <RouteDot />
     <main className="flex-1 pt-16 lg:pt-20">{children}</main>
+    <SiteNewsletter />
     <Footer />
   </div>
 );

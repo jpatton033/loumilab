@@ -24,11 +24,11 @@ const Footer = () => {
   const products = navMenus.find((m) => m.id === "products")!;
   const resources = navMenus.find((m) => m.id === "resources")!;
   return (
-    <footer className="border-t border-border bg-surface-subtle">
+    <footer className="section-dark border-t border-border">
       <div className="section-container py-16 lg:py-20">
         <div className="grid grid-cols-2 gap-10 md:grid-cols-3 lg:grid-cols-6">
           <div className="col-span-2 md:col-span-3 lg:col-span-1">
-            <Link to="/" className="mb-4 flex items-center" aria-label="Loumilab home"><Wordmark size="md" /></Link>
+            <Link to="/" className="mb-4 flex items-center" aria-label="Loumilab home"><Wordmark size="md" className="brightness-0 invert" /></Link>
             <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">A technology studio for digital products.</p>
             <a href="mailto:hello@loumilab.com" className={`${linkCls} mt-4`}>hello@loumilab.com</a>
           </div>

@@ -153,7 +153,7 @@ const Services = () => (
     <DotThread reverse />
 
     {/* Ongoing partnership */}
-    <section className="section-padding border-t border-border bg-surface-subtle">
+    <section className="section-padding section-dark">
       <div className="section-container">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-20">
           <Reveal>
