@@ -99,7 +99,10 @@ const HowWeWork = () => (
 
     <section className="section-padding border-t border-border bg-surface-subtle">
       <div className="section-container text-center">
-        <h2 className="text-3xl font-semibold lg:text-4xl">Ready to start at step one?</h2>
+        <h2 className="text-3xl font-semibold lg:text-4xl">Your next step starts here.</h2>
+        <p className="mx-auto mt-4 max-w-xl text-lg leading-relaxed text-muted-foreground text-balance">
+          Tell us what you're looking to build, and we'll help turn your vision into a practical, working solution.
+        </p>
         <Button size="lg" asChild className="mt-8">
           <Link to="/contact">
             Start Your Project <ArrowRight size={18} />
