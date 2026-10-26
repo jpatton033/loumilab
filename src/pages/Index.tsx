@@ -4,7 +4,6 @@ import { ArrowRight } from "lucide-react";
 import SEOHead from "@/components/SEOHead";
 import Reveal from "@/components/Reveal";
 import ArticleCard from "@/components/kc/ArticleCard";
-import { DotMarker } from "@/components/brand/dot";
 import { MoreLink, TileActions } from "@/components/brand/apple/Tiles";
 import { Button } from "@/components/ui/button";
 import { usePublishedArticles } from "@/lib/kc/queries";
@@ -55,16 +54,18 @@ const Index = () => {
       {/* 1 Hero */}
       <section className="overflow-hidden pt-12 lg:pt-20">
         <div className="section-container text-center">
-          <h1 className="mx-auto max-w-4xl font-hero text-5xl font-semibold leading-[1.04] tracking-tight text-foreground text-balance sm:text-6xl lg:text-[4.25rem]">
-            We build what's next.
+          <h1 className="hero-rise mx-auto max-w-3xl font-hero text-[2.75rem] font-medium leading-[1.0] tracking-[-0.035em] text-foreground sm:text-6xl lg:text-[4.75rem]">
+            We build <br className="hidden sm:block" />what's next.
           </h1>
-          <DotMarker className="mx-auto" synchronized />
-          <p className="mx-auto max-w-2xl text-lg leading-relaxed text-muted-foreground text-balance lg:text-xl">
+          <span aria-hidden="true" className="hero-dot" />
+          <p className="hero-rise mx-auto max-w-[36ch] text-lg leading-relaxed text-muted-foreground text-balance lg:text-xl" style={{ animationDelay: "60ms" }}>
             Loumilab designs, builds, and manages digital products and technology solutions that help businesses launch, operate, and grow.
           </p>
-          <TileActions primary={{ label: "Explore Solutions", to: "/services" }} secondary={{ label: "Start a Project", to: "/contact" }} className="mt-8" />
+          <div className="hero-rise" style={{ animationDelay: "120ms" }}>
+            <TileActions primary={{ label: "Explore Solutions", to: "/services" }} secondary={{ label: "Start a Project", to: "/contact" }} className="mt-8" />
+          </div>
         </div>
-        <div className="section-container mt-12 lg:mt-16">
+        <div className="section-container mt-14 lg:mt-20">
           <div className="photo-frame relative aspect-[4/5] sm:aspect-[16/8]">
             <img src={heroBuild} alt="A small product team building something together around a table of laptops and sketches" width={1600} height={900} fetchPriority="high" decoding="async" sizes="(min-width: 1280px) 1200px, 100vw" className="h-full w-full object-cover" />
           </div>
