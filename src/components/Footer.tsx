@@ -18,11 +18,6 @@ const Col = ({ title, items }: { title: string; items: NavLinkItem[] }) => (
   </div>
 );
 
-const compare: NavLinkItem[] = [
-  { label: "Orders vs. Square", to: "/orders/compare/square" },
-  { label: "Orders vs. Shopify", to: "/orders/compare/shopify" },
-  { label: "Orders vs. Toast", to: "/orders/compare/toast" },
-];
 
 const Footer = () => {
   const solutions = navMenus.find((m) => m.id === "solutions")!;
@@ -38,7 +33,7 @@ const Footer = () => {
             <a href="mailto:hello@loumilab.com" className={`${linkCls} mt-4`}>hello@loumilab.com</a>
           </div>
           {solutions.groups.map((g) => <Col key={g.label} title={g.label} items={g.items} />)}
-          <Col title="Products" items={[...products.groups.flatMap((g) => g.items), ...compare]} />
+          <Col title="Products" items={[...products.groups.flatMap((g) => g.items).filter((i) => i.to !== "/orders/tools"), { label: "All products", to: products.footer?.to ?? "/products" }]} />
           <Col title="Resources" items={resources.groups.flatMap((g) => g.items)} />
           <Col title="Company" items={footerCompany} />
         </div>

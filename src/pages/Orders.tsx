@@ -51,6 +51,7 @@ import { DotMarker, DotThread } from "@/components/brand/dot";
 import StartBuildingStatement from "@/components/orders/creative/StartBuildingStatement";
 import StorefrontAssembly from "@/components/orders/creative/StorefrontAssembly";
 import TryItInvitation from "@/components/orders/creative/TryItInvitation";
+import { COMPETITORS } from "@/data/orders/competitors";
 
 const steps = [
   {
@@ -499,9 +500,12 @@ const Orders = () => {
                 {ORDERS_CTA.label} <ArrowRight size={18} />
               </Link>
             </Button>
-            <Link to="/orders/compare/square" className="self-center text-sm font-semibold text-foreground underline-offset-4 hover:text-accent hover:underline">
-              Compare Orders vs. Square
-            </Link>
+<p className="self-center text-sm text-muted-foreground">
+              Compare alternatives:{" "}
+              {COMPETITORS.map((c, i) => (
+                <span key={c.slug}>{i > 0 && " · "}<Link to={`/orders/compare/${c.slug}`} className="font-semibold text-foreground underline-offset-4 hover:text-accent hover:underline">{c.name}</Link></span>
+              ))}
+            </p>
           </Reveal>
           <p className="mt-12 font-display text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">
             Orders by Loumilab
