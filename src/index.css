@@ -50,6 +50,9 @@
     /* Custom tokens */
     --surface-elevated: 0 0% 100%;
     --surface-subtle: 240 14% 98%;
+    --surface-inverse: 240 8% 7%;
+    --inverse-foreground: 0 0% 98%;
+    --inverse-muted: 240 5% 68%;
     --surface-tint: 240 20% 96%;
     --accent-glow: 217 91% 62%;
     --accent-soft: 217 91% 96%;
