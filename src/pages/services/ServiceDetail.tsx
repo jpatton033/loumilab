@@ -43,12 +43,12 @@ const ServiceDetail = () => {
 
       <section className="bg-surface-inverse py-20 text-inverse lg:py-28" aria-labelledby="process">
         <div className="section-container">
-          <h2 id="process" className="font-hero text-4xl font-semibold tracking-tight lg:text-5xl">How it works.</h2>
+          <h2 id="process" className="font-hero text-4xl font-semibold tracking-tight text-inverse lg:text-5xl">How it works.</h2>
           <ol className="mt-12 grid gap-10 md:grid-cols-4">
             {s.process.map((p, i) => (
               <li key={p.step}>
                 <span className="font-display text-sm font-semibold text-accent-glow">0{i + 1}</span>
-                <h3 className="mt-3 font-display text-xl font-semibold">{p.step}</h3>
+                <h3 className="mt-3 font-display text-xl font-semibold text-inverse">{p.step}</h3>
                 <p className="mt-2 text-inverse-muted">{p.body}</p>
               </li>
             ))}
