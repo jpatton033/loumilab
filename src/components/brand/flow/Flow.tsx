@@ -57,3 +57,21 @@ export const ClosingCta = ({ title, lede, cta }: { title: string; lede?: string;
     </div>
   </section>
 );
+
+/** "What do you need?" row: clear paths into each part of Loumilab. */
+export const PathPicker = ({ title, items }: { title: string; items: { label: string; body: string; to: string }[] }) => (
+  <section className="section-container py-16 lg:py-24" aria-labelledby="path-picker-title">
+    <h2 id="path-picker-title" className="font-hero text-4xl font-semibold tracking-tight lg:text-5xl">{title}</h2>
+    <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+      {items.map((p) => (
+        <li key={p.to}>
+          <Link to={p.to} className="group flex h-full flex-col rounded-3xl border border-border bg-card p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-accent/50 hover:shadow-[var(--shadow-lift)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+            <span className="font-display text-lg font-semibold leading-snug">{p.label}</span>
+            <span className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">{p.body}</span>
+            <ArrowRight aria-hidden="true" className="mt-5 h-4 w-4 text-accent transition-transform group-hover:translate-x-1" />
+          </Link>
+        </li>
+      ))}
+    </ul>
+  </section>
+);
