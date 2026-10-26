@@ -316,7 +316,7 @@ const BusinessEmail = () => {
       </section>
 
       {/* Final CTA */}
-      <section className="section-padding bg-surface-inverse text-inverse-foreground">
+      <section className="section-padding bg-surface-inverse text-inverse">
         <div className="section-container max-w-2xl text-center">
           <h2 className="font-hero text-4xl font-semibold leading-tight lg:text-6xl">Your Business Deserves Professional Email.</h2>
           <p className="mt-4 text-lg leading-relaxed text-inverse-muted">From choosing a domain to configuring your inbox, Loumilab makes getting started easier.</p>
