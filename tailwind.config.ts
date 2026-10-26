@@ -50,6 +50,11 @@ export default {
           DEFAULT: "hsl(var(--surface-elevated))",
           subtle: "hsl(var(--surface-subtle))",
           tint: "hsl(var(--surface-tint))",
+          inverse: "hsl(var(--surface-inverse))",
+        },
+        inverse: {
+          DEFAULT: "hsl(var(--inverse-foreground))",
+          muted: "hsl(var(--inverse-muted))",
         },
 
         popover: {

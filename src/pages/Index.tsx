@@ -1,25 +1,22 @@
 import Layout from "@/components/Layout";
 import { Link } from "react-router-dom";
-import { VurttiLogo } from "@/components/brand/VurttiLogo";
+import { ArrowRight } from "lucide-react";
 import SEOHead from "@/components/SEOHead";
 import Reveal from "@/components/Reveal";
 import ArticleCard from "@/components/kc/ArticleCard";
-import { PeopleSequence } from "@/components/brand/story";
-import { DotMarker, DotSplit, DotThread } from "@/components/brand/dot";
-import { GridTile, MoreLink, ProductTile, Statement, TileActions } from "@/components/brand/apple/Tiles";
-import { PathPicker } from "@/components/brand/flow/Flow";
+import { DotMarker } from "@/components/brand/dot";
+import { MoreLink, TileActions } from "@/components/brand/apple/Tiles";
+import { Button } from "@/components/ui/button";
 import { usePublishedArticles } from "@/lib/kc/queries";
 import TheDotSignup from "@/components/thedot/TheDotSignup";
+import PhoneFrame from "@/components/orders/PhoneFrame";
+import StorefrontScreen from "@/components/orders/StorefrontScreen";
+import { demoStorefront } from "@/data/orders/storefronts";
+import { ORDERS_CTA } from "@/data/orders/cta";
+import { servicePages } from "@/data/services";
 import heroBuild from "@/assets/people/studio/hero-build.jpg";
-import designer from "@/assets/people/studio/designer.jpg";
-import engineer from "@/assets/people/studio/engineer.jpg";
-import collaboration from "@/assets/people/studio/collaboration.jpg";
-import studioTeam from "@/assets/people/studio-team.jpg";
-import bakerOrders from "@/assets/people/baker-orders.jpg";
 import market from "@/assets/people/local/market.jpg";
-import homeChef from "@/assets/people/orders/home-chef.jpg";
-import reviewingOrders from "@/assets/people/orders/reviewing-orders.jpg";
-import handoff from "@/assets/people/orders/handoff.jpg";
+import officeReview from "@/assets/people/email/office-review.jpg";
 
 const homeJsonLd = {
   "@context": "https://schema.org",
@@ -27,14 +24,21 @@ const homeJsonLd = {
   name: "Loumilab",
   url: "https://loumilab.com",
   email: "hello@loumilab.com",
-  description:
-    "Loumilab designs, builds, launches, and secures digital products and technology businesses. Websites, software, AI automation, and cybersecurity.",
+  description: "Loumilab designs, builds, and manages digital products and technology solutions that help businesses launch, operate, and grow.",
   subOrganization: [{ "@type": "Organization", name: "Vurtti", url: "https://www.vurttidocs.com" }],
   owns: [
     { "@type": "Product", name: "Loumilab Orders", url: "https://loumilab.com/orders" },
     { "@type": "Product", name: "Loumilab Local", url: "https://loumilab.com/orders/local" },
   ],
 };
+
+const pathways = [
+  { title: "Technology Studio", body: "Websites, custom software, AI automation, and cybersecurity solutions designed around business needs.", cta: "Explore Studio Services", to: "/services" },
+  { title: "Loumilab Products", body: "Purpose-built digital products that help businesses sell, operate, and connect with customers.", cta: "Explore Products", to: "/products" },
+  { title: "Managed Business Technology", body: "Professional setup, configuration, and management of essential business technology.", cta: "Explore Managed Services", to: "/services/business-email" },
+];
+
+const studio = servicePages.filter((s) => s.group === "Technology Studio");
 
 const Index = () => {
   const { data: articles = [] } = usePublishedArticles({ limit: 3 });
@@ -43,22 +47,22 @@ const Index = () => {
     <Layout>
       <SEOHead
         title="Loumilab | Technology Studio for Digital Products"
-        description="Loumilab is a technology studio that designs, builds, launches and secures digital products for businesses: websites, software, AI automation and cybersecurity."
+        description="Loumilab designs, builds, and manages digital products and technology solutions — websites, custom software, AI automation, cybersecurity and business email — that help businesses grow."
         path="/"
         jsonLd={homeJsonLd}
       />
 
-      {/* Hero */}
-      <section className="overflow-hidden pt-12 lg:pt-16">
+      {/* 1 Hero */}
+      <section className="overflow-hidden pt-12 lg:pt-20">
         <div className="section-container text-center">
-          <h1 className="mx-auto max-w-5xl font-hero text-5xl font-semibold leading-[1.02] tracking-normal text-foreground text-balance sm:text-6xl lg:text-8xl">
+          <h1 className="mx-auto max-w-4xl font-hero text-5xl font-semibold leading-[1.04] tracking-tight text-foreground text-balance sm:text-6xl lg:text-[4.25rem]">
             We build what's next.
           </h1>
           <DotMarker className="mx-auto" synchronized />
-          <p className="mx-auto max-w-4xl text-[1.375rem] font-normal leading-[1.5] tracking-normal text-foreground/70 text-balance lg:text-[1.875rem]">
-            Loumilab is a technology studio creating websites, custom software, and secure digital solutions that help businesses operate, connect, and grow.
+          <p className="mx-auto max-w-2xl text-lg leading-relaxed text-muted-foreground text-balance lg:text-xl">
+            Loumilab designs, builds, and manages digital products and technology solutions that help businesses launch, operate, and grow.
           </p>
-          <TileActions primary={{ label: "Start a Project", to: "/contact" }} secondary={{ label: "Explore products", to: "/products" }} className="mt-8" />
+          <TileActions primary={{ label: "Explore Solutions", to: "/services" }} secondary={{ label: "Start a Project", to: "/contact" }} className="mt-8" />
         </div>
         <div className="section-container mt-12 lg:mt-16">
           <div className="photo-frame relative aspect-[4/5] sm:aspect-[16/8]">
@@ -67,121 +71,127 @@ const Index = () => {
         </div>
       </section>
 
-      <PathPicker
-        title="What do you need?"
-        items={[
-          { label: "A website or custom software", body: "Designed and built around how your business works.", to: "/services" },
-          { label: "Take orders online", body: "A free storefront with Loumilab Orders.", to: "/orders" },
-          { label: "Business email", body: "Professional email on your own domain, set up for you.", to: "/services/business-email" },
-          { label: "AI or security", body: "Automation that saves real work, and protection built in.", to: "/how-we-work" },
-          { label: "Free tools and resources", body: "Pricing tools, guides and The Dot.", to: "/resources" },
-        ]}
-      />
-
-      {/* Products */}
-      <DotSplit className="mt-4 lg:mt-8" />
-      <ProductTile
-        className="mt-6"
-        tone="subtle"
-        eyebrow="Loumilab Orders"
-        title="Sell anywhere. Take orders in one place."
-        line="Your storefront, your orders, your customers — free to start."
-        primary={{ label: "Explore Orders", to: "/orders" }}
-        secondary={{ label: "See pricing", to: "/orders#pricing" }}
-        image={bakerOrders}
-        alt="A baker boxing a fresh pastry order with incoming orders on a tablet beside her"
-      />
-      <ProductTile
-        eyebrow="Loumilab Local"
-        title="Discover what's cooking near you."
-        line="Home chefs, bakers and neighborhood favorites, all in one place."
-        primary={{ label: "Explore Local", to: "/orders/local" }}
-        secondary={{ label: "List your business", to: "/orders/local/join" }}
-        image={market}
-        alt="Neighbors shopping at a busy outdoor farmers' market"
-      />
-
-      <Statement line="Every product we design, build and secure exists to remove friction, protect value or unlock growth.">
-        Technology should move businesses <span className="text-accent">forward.</span>
-      </Statement>
-
-      {/* Capabilities grid */}
-      <section className="pb-16 lg:pb-24">
-        <div className="section-container grid gap-4 md:grid-cols-2">
-          <GridTile eyebrow="Design" title="Products people enjoy using." line="Brand-led websites and interfaces built around clarity." image={designer} alt="A designer sketching app screens on a tablet" links={{ primary: { label: "Learn more", to: "/services" } }} />
-          <GridTile eyebrow="Build" title="Software that holds up." line="Web apps and platforms that are fast and ready to grow." image={engineer} alt="An engineer reviewing code on two monitors" links={{ primary: { label: "Learn more", to: "/services" } }} />
-          <GridTile eyebrow="Innovate" title="New ideas, shipped." line="Automation and AI where it removes real work." image={collaboration} alt="A founder and designer working through ideas at a laptop" links={{ primary: { label: "Learn more", to: "/services" } }} />
-          <GridTile eyebrow="Secure" title="Security from day one." line="Secure architecture and reviews, built in — not bolted on." image={studioTeam} alt="The Loumilab team reviewing work together" links={{ primary: { label: "Learn more", to: "/services" }, secondary: { label: "How we work", to: "/how-we-work" } }} />
-        </div>
-      </section>
-
-      <PeopleSequence
-        className="border-t border-border"
-        eyebrow="Built around people"
-        title="Made for the people who make things."
-        items={[
-          { src: homeChef, alt: "A home chef cooking in a sunlit kitchen", label: "Makers", note: "Turning a craft into a business." },
-          { src: reviewingOrders, alt: "A business owner checking orders on a tablet", label: "Owners", note: "Running the day from one screen." },
-          { src: designer, alt: "A designer sketching on a tablet", label: "Creators", note: "Shaping how products feel.", width: 1200, height: 1200 },
-          { src: engineer, alt: "An engineer reviewing code", label: "Builders", note: "Making it work, and keeping it safe.", width: 1200, height: 1200 },
-          { src: handoff, alt: "A merchant handing an order to a customer", label: "Communities", note: "Where it all comes together." },
-        ]}
-      />
-
-      {/* Ecosystem */}
-      <section className="pb-16 lg:pb-24">
-        <div className="section-container grid gap-4 md:grid-cols-2">
-          <GridTile eyebrow="A Loumilab company" title="Compliance, simplified." line="Vurtti is compliance technology for documentation-heavy teams." links={{ primary: { label: "Visit Vurtti", to: "https://www.vurttidocs.com", external: true } }}>
-            <div className="mb-10 grid aspect-[4/3] place-items-center rounded-2xl border border-border bg-background">
-              <VurttiLogo size="xl" />
-            </div>
-          </GridTile>
-          <GridTile eyebrow="What's next" title="We're always building." line="New products are in the lab. Have an idea worth building with us?" links={{ primary: { label: "Start a Project", to: "/contact" }, secondary: { label: "All products", to: "/products" } }}>
-            <Link to="/contact" aria-label="Start a Project" className="mb-10 grid aspect-[4/3] place-items-center rounded-2xl border border-dashed border-accent/40 bg-accent-soft transition-all duration-300 hover:-translate-y-0.5 hover:border-accent hover:shadow-[var(--shadow-accent-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
-              <span aria-hidden="true" className="font-hero text-6xl font-semibold text-accent">+</span>
-            </Link>
-          </GridTile>
-        </div>
-      </section>
-
-      {/* Resources */}
-      {articles.length > 0 && (
-        <section className="section-padding border-t border-border bg-surface-subtle">
-          <div className="section-container">
-            <Reveal className="flex flex-wrap items-end justify-between gap-4">
-              <h2 className="font-hero text-4xl font-semibold tracking-[-0.03em] lg:text-6xl">From Resources.</h2>
-              <MoreLink to="/resources">Visit Resources</MoreLink>
+      {/* 2 Pathways */}
+      <section className="section-container py-20 lg:py-28" aria-label="What Loumilab does">
+        <div className="grid gap-10 md:grid-cols-3 md:gap-8">
+          {pathways.map((p, i) => (
+            <Reveal key={p.title} delay={i * 80} className="flex flex-col border-t border-foreground/80 pt-6">
+              <h2 className="font-display text-2xl font-semibold tracking-tight">{p.title}</h2>
+              <p className="mt-3 flex-1 leading-relaxed text-muted-foreground">{p.body}</p>
+              <Link to={p.to} className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-accent hover:underline underline-offset-4">
+                {p.cta} <ArrowRight size={14} aria-hidden />
+              </Link>
             </Reveal>
-            <div className="mt-10 grid gap-5 md:grid-cols-3">
-              {articles.map((a) => <ArticleCard key={a.id} article={a} />)}
+          ))}
+        </div>
+      </section>
+
+      {/* 3 Products (dark) */}
+      <section className="bg-surface-inverse py-20 text-inverse lg:py-28" aria-labelledby="products-title">
+        <div className="section-container">
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent-glow">Loumilab Products</p>
+          <h2 id="products-title" className="mt-4 max-w-3xl font-hero text-4xl font-semibold tracking-tight lg:text-6xl">Less managing. More business.</h2>
+
+          <div className="mt-14 grid items-center gap-12 lg:grid-cols-2">
+            <div>
+              <h3 className="font-display text-3xl font-semibold">Loumilab Orders</h3>
+              <p className="mt-4 max-w-md text-lg leading-relaxed text-inverse-muted">
+                A storefront that adapts to your industry — food, baking, services and more — with every order in one dashboard. Build and preview your store before you sign up.
+              </p>
+              <p className="mt-4 font-display font-semibold text-inverse">Transparent. First and Always.</p>
+              <div className="mt-8 flex flex-wrap items-center gap-5">
+                <Button size="lg" asChild className="bg-accent text-accent-foreground hover:bg-accent/90"><Link to={ORDERS_CTA.href}>Build Your Store</Link></Button>
+                <Link to="/orders" className="text-sm font-semibold text-inverse underline-offset-4 hover:underline">See How It Works</Link>
+              </div>
+            </div>
+            <div className="flex justify-center">
+              <div className="w-[280px] text-foreground"><PhoneFrame label="Example storefront in Loumilab Orders"><StorefrontScreen store={demoStorefront} highlightIndex={0} /></PhoneFrame></div>
             </div>
           </div>
-        </section>
-      )}
 
-      {/* The Dot. */}
-      <section className="section-padding border-t border-border">
-        <div className="section-container">
-          <Reveal className="max-w-2xl">
-            <TheDotSignup
-              source="home"
-              variant="inline"
-              heading="Ideas, technology, and what's next."
-              description="The Dot. is our brief on the ideas, technology, and shifts shaping how businesses work, build, and grow."
-            />
-          </Reveal>
-          <Reveal delay={100} className="mt-5">
-            <MoreLink to="/the-dot">Visit The Dot.</MoreLink>
-          </Reveal>
+          <div className="mt-20 grid items-center gap-12 border-t border-inverse/15 pt-16 lg:grid-cols-2">
+            <div className="order-2 lg:order-1 overflow-hidden rounded-3xl">
+              <img src={market} alt="Neighbors shopping at a busy outdoor farmers' market" width={1200} height={900} loading="lazy" className="aspect-[4/3] w-full object-cover" />
+            </div>
+            <div className="order-1 lg:order-2">
+              <h3 className="font-display text-3xl font-semibold">Loumilab Local</h3>
+              <p className="mt-4 max-w-md text-lg leading-relaxed text-inverse-muted">
+                Free discovery for home chefs, bakers and neighborhood favorites. Customers find you; listing your business costs nothing.
+              </p>
+              <div className="mt-8 flex flex-wrap items-center gap-5">
+                <Button size="lg" variant="outline" asChild className="border-inverse/40 bg-transparent text-inverse hover:bg-inverse/10 hover:text-inverse"><Link to="/orders/local">Explore Local</Link></Button>
+                <Link to="/orders/local/join" className="text-sm font-semibold text-inverse underline-offset-4 hover:underline">List Your Business</Link>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Closing */}
-      <Statement line="Let's turn the idea into something real.">Have something worth building?</Statement>
-      <DotThread reverse className="-mt-10 mb-6 lg:-mt-14" />
-      <div className="-mt-10 pb-24 lg:-mt-16">
-        <TileActions primary={{ label: "Start a Project", to: "/contact" }} secondary={{ label: "Contact Loumilab", to: "/contact" }} actionMarker />
-      </div>
+      {/* 4 Studio services */}
+      <section className="section-container py-20 lg:py-28" aria-labelledby="studio-title">
+        <Reveal className="flex flex-wrap items-end justify-between gap-4">
+          <h2 id="studio-title" className="font-hero text-4xl font-semibold tracking-tight lg:text-6xl">Technology Studio.</h2>
+          <MoreLink to="/services">All solutions</MoreLink>
+        </Reveal>
+        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {studio.map((s) => (
+            <Link key={s.slug} to={`/services/${s.slug}`} className="group overflow-hidden rounded-3xl border border-border bg-card transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              <img src={s.image} alt="" width={800} height={600} loading="lazy" className="aspect-[4/3] w-full object-cover" />
+              <div className="p-6">
+                <h3 className="font-display text-lg font-semibold">{s.name}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.lede}</p>
+                <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-accent">Learn more <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" /></span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* 5 Managed */}
+      <section className="border-y border-border bg-surface-subtle py-20 lg:py-28">
+        <div className="section-container grid items-center gap-12 lg:grid-cols-2">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">Managed Business Technology</p>
+            <h2 className="mt-4 font-hero text-4xl font-semibold tracking-tight lg:text-5xl">Business email and domains, handled.</h2>
+            <p className="mt-5 max-w-lg text-lg leading-relaxed text-muted-foreground">
+              We set up and support professional email and domains with established providers like Google Workspace, Microsoft 365 and Zoho — configured, secured and handed over in your name.
+            </p>
+            <div className="mt-8 flex flex-wrap items-center gap-5">
+              <Button size="lg" asChild><Link to="/services/business-email">Explore Managed Services</Link></Button>
+              <Link to="/services/domains" className="text-sm font-semibold underline-offset-4 hover:text-accent hover:underline">Domain setup</Link>
+            </div>
+          </div>
+          <div className="overflow-hidden rounded-3xl">
+            <img src={officeReview} alt="A business owner reviewing email setup details at her desk" width={1200} height={900} loading="lazy" className="aspect-[4/3] w-full object-cover" />
+          </div>
+        </div>
+      </section>
+
+      {/* 6 Resources */}
+      <section className="section-container py-20 lg:py-28" aria-labelledby="resources-title">
+        <Reveal className="flex flex-wrap items-end justify-between gap-4">
+          <h2 id="resources-title" className="font-hero text-4xl font-semibold tracking-tight lg:text-6xl">Resources and insights.</h2>
+          <MoreLink to="/resources">Visit Resources</MoreLink>
+        </Reveal>
+        {articles.length > 0 && <div className="mt-10 grid gap-5 md:grid-cols-3">{articles.map((a) => <ArticleCard key={a.id} article={a} />)}</div>}
+        <div className="mt-10 grid gap-5 md:grid-cols-2">
+          <Link to="/orders/tools" className="rounded-3xl border border-border p-8 transition-colors hover:border-accent/50">
+            <h3 className="font-display text-xl font-semibold">Free Business Tools</h3>
+            <p className="mt-2 text-muted-foreground">Price your products with confidence. No sign-up needed.</p>
+          </Link>
+          <div className="rounded-3xl border border-border p-8">
+            <TheDotSignup source="home" variant="inline" heading="The Dot." description="Our brief on the ideas, technology, and shifts shaping how businesses work, build, and grow." />
+          </div>
+        </div>
+      </section>
+
+      {/* 7 Closing (dark) */}
+      <section className="section-container pb-24">
+        <div className="rounded-[2rem] bg-surface-inverse px-6 py-20 text-center text-inverse sm:px-12 lg:py-24">
+          <h2 className="mx-auto max-w-3xl font-hero text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">Have something in mind? Let's build it.</h2>
+          <Button size="lg" asChild className="mt-10 bg-accent text-accent-foreground hover:bg-accent/90"><Link to="/contact">Start a Project</Link></Button>
+        </div>
+      </section>
     </Layout>
   );
 };

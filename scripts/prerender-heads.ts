@@ -13,6 +13,11 @@ interface Meta { path: string; title: string; description: string; ogType?: stri
 const S = (path: string, title: string, description: string): Meta => ({ path, title, description });
 
 const staticMeta: Meta[] = [
+  S("/services/website-development", "Website Development for Businesses | Loumilab", "Loumilab designs and builds fast, accessible business websites that explain what you do clearly and turn visitors into inquiries and customers."),
+  S("/services/custom-software", "Custom Software & Web App Development | Loumilab", "Loumilab builds custom web applications, portals and internal tools around how your business actually works — designed, built and secured by one team."),
+  S("/services/ai-automation", "AI & Workflow Automation for Businesses | Loumilab", "Loumilab adds practical AI and workflow automation that removes repetitive work, with people in control."),
+  S("/services/cybersecurity", "Cybersecurity Reviews & Secure Development | Loumilab", "Loumilab helps businesses find and fix security gaps: application reviews, access hardening, secure configuration and secure-by-default development."),
+  S("/services/domains", "Domain Setup & DNS Management | Loumilab", "Loumilab sets up and manages your business domain with established registrars: DNS, email records and website connections, done properly."),
   S("/services/business-email", "Business Email & Domain Setup Services | Loumilab", "Get professional business email and domain setup with Loumilab. We handle initial purchasing, configuration, security, and account handoff."),
   S("/services", "Technology & Software Development Services | Loumilab", "Website and product design, SaaS and web app development, workflow automation, AI and cybersecurity consulting — delivered end to end by one senior Loumilab team."),
   S("/how-we-work", "How We Work: From Idea to Launch | Loumilab", "Discovery, design, build, security, launch and growth — how Loumilab takes digital products from first idea to a secure, maintainable launch and beyond."),
