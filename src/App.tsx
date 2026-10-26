@@ -37,6 +37,7 @@ const AdminIndustries = lazy(() => import("./pages/admin/Industries"));
 const AdminAuditLog = lazy(() => import("./pages/admin/AuditLog"));
 const AdminMail = lazy(() => import("./pages/admin/Mail"));
 const AdminEmailSetup = lazy(() => import("./pages/admin/EmailSetup"));
+const ServiceDetail = lazy(() => import("./pages/services/ServiceDetail"));
 const EmailSetupPage = lazy(() => import("./pages/services/BusinessEmail"));
 const EmailSetupStart = lazy(() => import("./pages/services/BusinessEmailStart"));
 const EmailSetupStatus = lazy(() => import("./pages/services/BusinessEmailStatus"));
@@ -89,6 +90,11 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/services/website-development" element={<ServiceDetail />} />
+          <Route path="/services/custom-software" element={<ServiceDetail />} />
+          <Route path="/services/ai-automation" element={<ServiceDetail />} />
+          <Route path="/services/cybersecurity" element={<ServiceDetail />} />
+          <Route path="/services/domains" element={<ServiceDetail />} />
           <Route path="/services/business-email" element={<EmailSetupPage />} />
           <Route path="/services/business-email/start" element={<EmailSetupStart />} />
           <Route path="/services/business-email/status/:token" element={<EmailSetupStatus />} />
