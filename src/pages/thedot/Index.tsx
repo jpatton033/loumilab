@@ -1,3 +1,4 @@
+import { ClosingCta } from "@/components/brand/flow/Flow";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
@@ -125,6 +126,7 @@ const TheDotIndex = () => {
           )}
         </div>
       </section>
+      <ClosingCta tone="dark" title="Have something in mind? Let's build it." lede="When an idea is ready to become a product, Loumilab can help." cta={{ label: "Start a Project", to: "/contact" }} />
     </Layout>
   );
 };

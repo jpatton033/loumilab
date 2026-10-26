@@ -316,11 +316,11 @@ const BusinessEmail = () => {
       </section>
 
       {/* Final CTA */}
-      <section className="section-padding border-t border-border bg-surface-subtle">
+      <section className="section-padding bg-surface-inverse text-inverse">
         <div className="section-container max-w-2xl text-center">
-          <h2 className="text-3xl font-semibold leading-tight lg:text-4xl">Your Business Deserves Professional Email.</h2>
-          <p className="mt-4 text-lg leading-relaxed text-muted-foreground">From choosing a domain to configuring your inbox, Loumilab makes getting started easier.</p>
-          <Button asChild size="lg" className="mt-8">
+          <h2 className="font-hero text-4xl font-semibold leading-tight lg:text-6xl">Your Business Deserves Professional Email.</h2>
+          <p className="mt-4 text-lg leading-relaxed text-inverse-muted">From choosing a domain to configuring your inbox, Loumilab makes getting started easier.</p>
+          <Button asChild size="lg" variant="secondary" className="mt-8 rounded-full">
             <Link to={START} onClick={() => pick("unspecified")}>Get Started <ArrowRight size={18} /></Link>
           </Button>
         </div>

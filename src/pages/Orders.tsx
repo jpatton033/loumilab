@@ -52,6 +52,9 @@ import StartBuildingStatement from "@/components/orders/creative/StartBuildingSt
 import StorefrontAssembly from "@/components/orders/creative/StorefrontAssembly";
 import TryItInvitation from "@/components/orders/creative/TryItInvitation";
 import { COMPETITORS } from "@/data/orders/competitors";
+import { ScreenFrame } from "@/components/brand/flow/Flow";
+import builderShot from "@/assets/orders/screens/store-builder.jpg";
+import dashboardShot from "@/assets/orders/screens/merchant-dashboard.jpg";
 
 const steps = [
   {
@@ -155,48 +158,42 @@ const Orders = () => {
         <div className="pointer-events-none absolute inset-0 hero-wash" aria-hidden="true" />
         <div className="pointer-events-none absolute inset-0 hero-grid" aria-hidden="true" />
         <div className="section-container relative">
-          <div className="grid items-center gap-14 lg:grid-cols-2 lg:gap-16">
-            <div>
-              <DotMarker />
-              <Eyebrow>Loumilab Orders</Eyebrow>
-              <h1 className="mt-5 font-hero text-[clamp(2.5rem,7vw,4.75rem)] font-semibold leading-[0.98] tracking-[-0.03em]">
-                Your business.
-                <br />
-                Your storefront.
-                <br />
-                Your orders.
-              </h1>
-              <p className="mt-7 max-w-xl text-lg leading-relaxed text-muted-foreground">
-                Create a simple storefront, share your link, accept orders, and manage everything in one place.
-                No complicated e-commerce setup required.
-              </p>
-              <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-                <Button size="lg" asChild className="rounded-full">
-                  <Link to={ORDERS_CTA.href} className="dot-action" onClick={() => trackCtaClick("hero", ORDERS_CTA.variant)}>
-                    {ORDERS_CTA.label} <ArrowRight size={18} />
-                  </Link>
-                </Button>
-                <Button size="lg" variant="outline" asChild className="rounded-full">
-                  <a href="#how-it-works">See How It Works</a>
-                </Button>
-              </div>
-              <p className="mt-4 max-w-md text-sm text-muted-foreground">{ORDERS_CTA.support}</p>
-              <p className="mt-3 text-sm text-muted-foreground">
-                Already have a store?{" "}
-                <Link to="/orders/dashboard" className="underline underline-offset-4 hover:text-foreground">
-                  Go to dashboard
+          <div className="mx-auto max-w-4xl text-center">
+            <div className="flex justify-center"><DotMarker /></div>
+            <Eyebrow>Loumilab Orders</Eyebrow>
+            <h1 className="mt-5 font-hero text-[clamp(2.5rem,7vw,5rem)] font-semibold leading-[0.98] tracking-[-0.03em]">
+              Your business. Your storefront. Your orders.
+            </h1>
+            <p className="mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-muted-foreground">
+              Create a simple storefront, share your link, accept orders, and manage everything in one place.
+              No complicated e-commerce setup required.
+            </p>
+            <div className="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Button size="lg" asChild className="rounded-full">
+                <Link to={ORDERS_CTA.href} className="dot-action" onClick={() => trackCtaClick("hero", ORDERS_CTA.variant)}>
+                  {ORDERS_CTA.label} <ArrowRight size={18} />
                 </Link>
-              </p>
+              </Button>
+              <a href="#how-it-works" className="text-sm font-semibold text-foreground underline-offset-4 hover:text-accent hover:underline">
+                See how it works
+              </a>
             </div>
-
-            <div className="flex flex-col items-center gap-8 lg:flex-row lg:items-center lg:justify-end lg:gap-6">
-              <PhoneFrame label="Sunday Kitchen storefront preview" className="lg:mx-0 lg:max-w-[290px]">
-                <StorefrontScreen store={demoStorefront} />
-              </PhoneFrame>
-              <OrderNotifications className="w-full max-w-sm lg:w-56 lg:max-w-none lg:shrink-0" />
-            </div>
-
+            <p className="mx-auto mt-5 max-w-md text-sm text-muted-foreground">{ORDERS_CTA.support}</p>
+            <p className="mt-3 text-sm text-muted-foreground">
+              Already have a store?{" "}
+              <Link to="/orders/dashboard" className="underline underline-offset-4 hover:text-foreground">
+                Go to dashboard
+              </Link>
+            </p>
           </div>
+
+          <Reveal className="mx-auto mt-14 max-w-6xl lg:mt-20">
+            <ScreenFrame
+              src={builderShot}
+              label="Loumilab Orders — Store builder"
+              alt="The Loumilab Orders store builder: step 1 asks for your industry, with a live phone preview of the storefront beside it."
+            />
+          </Reveal>
         </div>
       </section>
 
@@ -333,7 +330,7 @@ const Orders = () => {
       {/* Dashboard showcase */}
       <section className="section-padding">
         <div className="section-container">
-          <Reveal className="max-w-2xl">
+          <Reveal className="mx-auto max-w-2xl text-center">
             <Eyebrow>Merchant dashboard</Eyebrow>
             <h2 className="mt-5 font-hero text-4xl font-semibold leading-tight tracking-tight lg:text-6xl">
               Everything in one place.
@@ -342,24 +339,17 @@ const Orders = () => {
               Today&apos;s orders, revenue, and what needs attention — on one screen simple enough to run during a
               rush.
             </p>
+            <Link to="/orders/dashboard" className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-accent hover:underline">
+              Open the demo dashboard <ArrowRight size={15} />
+            </Link>
           </Reveal>
 
-          <Reveal className="mt-12 rounded-[2rem] border border-border bg-surface-subtle p-4 shadow-[var(--shadow-lift)] lg:p-8">
-            <div className="grid gap-4 md:grid-cols-3">
-              {dashboardMetrics.map((m) => (
-                <MetricCard key={m.id} label={m.label} value={m.value} delta={m.delta} />
-              ))}
-            </div>
-
-            <div className="mt-6 overflow-hidden rounded-3xl border border-border bg-card">
-              <div className="flex items-center justify-between border-b border-border px-5 py-4 sm:px-6">
-                <p className="font-display font-semibold">Order queue</p>
-                <Link to="/orders/dashboard" className="text-sm font-semibold text-accent hover:underline">
-                  Open dashboard
-                </Link>
-              </div>
-              <OrderQueue orders={demoOrders.slice(0, 3)} />
-            </div>
+          <Reveal className="mx-auto mt-12 max-w-6xl">
+            <ScreenFrame
+              src={dashboardShot}
+              label="Loumilab Orders — Merchant dashboard"
+              alt="The Loumilab Orders merchant dashboard showing today's revenue, order count, average order, and a queue of orders marked New, Confirmed, Preparing, Ready and Completed."
+            />
           </Reveal>
         </div>
       </section>

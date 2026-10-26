@@ -16,12 +16,18 @@ const contactSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
   email: z.string().trim().email("Please enter a valid email").regex(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/, "Please enter a valid email address").max(255, "Email must be less than 255 characters"),
   company: z.string().trim().max(200, "Company must be less than 200 characters").optional().or(z.literal("")),
+  service: z.string().max(80).optional().or(z.literal("")),
+  budget: z.string().max(80).optional().or(z.literal("")),
   message: z.string().trim().min(10, "Message must be at least 10 characters").max(2000, "Message must be less than 2000 characters"),
 });
 
+const SERVICES = ["Website development", "Custom software", "AI & automation", "Cybersecurity", "Business email or domain", "Loumilab Orders", "Not sure yet"];
+const BUDGETS = ["Under $2,500", "$2,500 – $10,000", "$10,000 – $25,000", "$25,000+", "Not sure yet"];
+const selectCls = "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
+
 const Contact = () => {
   const { toast } = useToast();
-  const [form, setForm] = useState({ name: "", email: "", company: "", message: "" });
+  const [form, setForm] = useState({ name: "", email: "", company: "", service: "", budget: "", message: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const [submitting, setSubmitting] = useState(false);
@@ -60,6 +66,8 @@ const Contact = () => {
         name: result.data.name,
         email: result.data.email,
         company: result.data.company || null,
+        service: result.data.service || null,
+        budget: result.data.budget || null,
         message: result.data.message,
       });
 
@@ -67,7 +75,7 @@ const Contact = () => {
       toast({ title: "Something went wrong", description: "Please try again or email us directly.", variant: "destructive" });
     } else {
       toast({ title: "Message sent!", description: "We'll get back to you within 24 hours." });
-      setForm({ name: "", email: "", company: "", message: "" });
+      setForm({ name: "", email: "", company: "", service: "", budget: "", message: "" });
       setSent(true);
       track("Lead", { content_name: "Contact inquiry" });
       localStorage.setItem("last_contact_submission", Date.now().toString());
@@ -167,12 +175,28 @@ const Contact = () => {
                 />
                 {errors.company && <p className="text-sm text-destructive mt-1">{errors.company}</p>}
               </div>
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="c-service" className="block text-sm font-medium mb-2 text-foreground/80">What do you need?</label>
+                  <select id="c-service" value={form.service} onChange={(e) => setForm({ ...form, service: e.target.value })} className={selectCls}>
+                    <option value="">Choose a service (optional)</option>
+                    {SERVICES.map((o) => <option key={o}>{o}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label htmlFor="c-budget" className="block text-sm font-medium mb-2 text-foreground/80">Budget</label>
+                  <select id="c-budget" value={form.budget} onChange={(e) => setForm({ ...form, budget: e.target.value })} className={selectCls}>
+                    <option value="">Choose a range (optional)</option>
+                    {BUDGETS.map((o) => <option key={o}>{o}</option>)}
+                  </select>
+                </div>
+              </div>
               <div>
                 <label className="block text-sm font-medium mb-2 text-foreground/80">Tell us about your project</label>
                 <Textarea
                   value={form.message}
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  placeholder="What are you looking to build? Timeline, budget, and any other details..."
+                  placeholder="What are you looking to build? Timeline and any other details..."
                   rows={6}
                   required
                   className="bg-background resize-none"

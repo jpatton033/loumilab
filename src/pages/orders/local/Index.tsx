@@ -129,7 +129,7 @@ const LocalIndex = () => {
       </section>
 
       {/* Categories */}
-      <section className="section-container pb-12">
+      <section className="section-container overflow-x-clip pb-12">
         <h2 className="font-display text-2xl font-semibold">Explore categories</h2>
         <div className="-mx-4 mt-5 flex snap-x gap-3 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-3 sm:px-0 lg:grid-cols-9">
           {LOCAL_CATEGORIES.map((c) => {
@@ -194,7 +194,7 @@ const LocalIndex = () => {
               <LocalFilters value={search} onChange={update} hasZip={hasZip} />
             </div>
           </aside>
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center justify-between gap-3">
               <h2 className="font-display text-2xl font-semibold">
                 {searching ? `${results.length} ${results.length === 1 ? "business" : "businesses"}` : "All local businesses"}
@@ -213,7 +213,7 @@ const LocalIndex = () => {
             </div>
 
             {isLoading ? (
-              <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+              <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3 [&>*]:min-w-0">
                 {[0, 1, 2].map((i) => <div key={i} className="h-80 animate-pulse rounded-3xl bg-secondary" />)}
               </div>
             ) : results.length === 0 ? (
@@ -229,7 +229,7 @@ const LocalIndex = () => {
                 )}
               </div>
             ) : (
-              <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+              <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3 [&>*]:min-w-0">
                 {results.map((b) => <LocalBusinessCard key={b.slug} business={b} />)}
               </div>
             )}
@@ -250,14 +250,14 @@ const LocalIndex = () => {
 
       {/* Merchant CTA */}
       <section className="section-container pb-24">
-        <div className="flex flex-col items-start justify-between gap-6 rounded-3xl border border-border bg-secondary p-8 sm:flex-row sm:items-center sm:p-12">
+        <div className="flex flex-col items-start justify-between gap-6 rounded-3xl bg-surface-inverse p-8 text-inverse sm:flex-row sm:items-center sm:p-12">
           <div>
             <h2 className="font-display text-2xl font-semibold sm:text-3xl">List your business on Loumilab Local. It's free.</h2>
-            <p className="mt-2 max-w-lg text-muted-foreground">
+            <p className="mt-2 max-w-lg text-inverse-muted">
               Get discovered by neighbours in a few minutes — no store or payment setup needed. Add online ordering with Loumilab Orders whenever you're ready.
             </p>
           </div>
-          <Button asChild size="lg" className="rounded-full">
+          <Button asChild size="lg" variant="secondary" className="rounded-full">
             <Link to="/orders/local/join" className="dot-action">List my business <ArrowRight size={16} /></Link>
           </Button>
         </div>

@@ -18,6 +18,7 @@ interface Submission {
   email: string;
   company: string | null;
   budget: string | null;
+  service?: string | null;
   message: string;
   status: SubmissionStatus;
   created_at: string;
@@ -173,6 +174,11 @@ const AdminInquiries = () => {
                 {selected.company && (
                   <p>
                     <span className="text-muted-foreground">Company:</span> {selected.company}
+                  </p>
+                )}
+                {selected.service && (
+                  <p>
+                    <span className="text-muted-foreground">Service:</span> {selected.service}
                   </p>
                 )}
                 {selected.budget && (
