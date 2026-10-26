@@ -141,6 +141,13 @@
       "when": 1792940899863,
       "tag": "0019_email_setup_customer_funded_purchasing",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1793020030059,
+      "tag": "0020_contact_service_field",
+      "breakpoints": true
     }
   ]
 }

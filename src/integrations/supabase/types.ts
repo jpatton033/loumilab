@@ -288,6 +288,7 @@ export type Database = {
           id: string
           message: string
           name: string
+          service: string | null
           status: Database["public"]["Enums"]["submission_status"]
           updated_at: string
         }
@@ -299,6 +300,7 @@ export type Database = {
           id?: string
           message: string
           name: string
+          service?: string | null
           status?: Database["public"]["Enums"]["submission_status"]
           updated_at?: string
         }
@@ -310,6 +312,7 @@ export type Database = {
           id?: string
           message?: string
           name?: string
+          service?: string | null
           status?: Database["public"]["Enums"]["submission_status"]
           updated_at?: string
         }
