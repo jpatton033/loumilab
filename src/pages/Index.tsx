@@ -89,11 +89,11 @@ const Index = () => {
       <section className="bg-surface-inverse py-20 text-inverse lg:py-28" aria-labelledby="products-title">
         <div className="section-container">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent-glow">Loumilab Products</p>
-          <h2 id="products-title" className="mt-4 max-w-3xl font-hero text-4xl font-semibold tracking-tight lg:text-6xl">Less managing. More business.</h2>
+          <h2 id="products-title" className="mt-4 max-w-3xl font-hero text-4xl font-semibold tracking-tight text-inverse lg:text-6xl">Less managing. More business.</h2>
 
           <div className="mt-14 grid items-center gap-12 lg:grid-cols-2">
             <div>
-              <h3 className="font-display text-3xl font-semibold">Loumilab Orders</h3>
+              <h3 className="font-display text-3xl font-semibold text-inverse">Loumilab Orders</h3>
               <p className="mt-4 max-w-md text-lg leading-relaxed text-inverse-muted">
                 A storefront that adapts to your industry — food, baking, services and more — with every order in one dashboard. Build and preview your store before you sign up.
               </p>
@@ -113,7 +113,7 @@ const Index = () => {
               <img src={market} alt="Neighbors shopping at a busy outdoor farmers' market" width={1200} height={900} loading="lazy" className="aspect-[4/3] w-full object-cover" />
             </div>
             <div className="order-1 lg:order-2">
-              <h3 className="font-display text-3xl font-semibold">Loumilab Local</h3>
+              <h3 className="font-display text-3xl font-semibold text-inverse">Loumilab Local</h3>
               <p className="mt-4 max-w-md text-lg leading-relaxed text-inverse-muted">
                 Free discovery for home chefs, bakers and neighborhood favorites. Customers find you; listing your business costs nothing.
               </p>
@@ -184,7 +184,7 @@ const Index = () => {
       {/* 7 Closing (dark) */}
       <section className="section-container pb-24">
         <div className="rounded-[2rem] bg-surface-inverse px-6 py-20 text-center text-inverse sm:px-12 lg:py-24">
-          <h2 className="mx-auto max-w-3xl font-hero text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">Have something in mind? Let's build it.</h2>
+          <h2 className="mx-auto max-w-3xl font-hero text-4xl font-semibold tracking-tight text-inverse sm:text-5xl lg:text-6xl">Have something in mind? Let's build it.</h2>
           <Button size="lg" asChild className="mt-10 bg-accent text-accent-foreground hover:bg-accent/90"><Link to="/contact">Start a Project</Link></Button>
         </div>
       </section>
