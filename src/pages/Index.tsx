@@ -52,13 +52,12 @@ const Index = () => {
       />
 
       {/* 1 Hero */}
-      <section className="overflow-hidden pt-12 lg:pt-20">
+      <section className="overflow-hidden pt-10 lg:pt-16">
         <div className="section-container text-center">
-          <h1 className="hero-rise mx-auto max-w-3xl font-hero text-[2.75rem] font-medium leading-[1.0] tracking-[-0.035em] text-foreground sm:text-6xl lg:text-[4.75rem]">
-            We build <br />what's next.
+          <h1 className="hero-rise mx-auto font-headline text-[2.5rem] font-semibold leading-[1.05] tracking-[-0.02em] text-foreground sm:text-[3.5rem] xl:text-[4.5rem]">
+            We build <br className="xl:hidden" />what's next<span className="text-accent">.</span>
           </h1>
-          <span aria-hidden="true" className="hero-dot" />
-          <p className="hero-rise mx-auto max-w-[36ch] text-lg leading-relaxed text-muted-foreground text-balance lg:text-xl" style={{ animationDelay: "60ms" }}>
+          <p className="hero-rise mx-auto mt-6 max-w-[40rem] text-lg leading-relaxed text-muted-foreground text-balance lg:text-xl" style={{ animationDelay: "60ms" }}>
             Loumilab designs, builds, and manages digital products and technology solutions that help businesses launch, operate, and grow.
           </p>
           <div className="hero-rise" style={{ animationDelay: "120ms" }}>

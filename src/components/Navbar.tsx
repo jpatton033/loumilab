@@ -118,12 +118,12 @@ const Navbar = () => {
 
   return (
     <header className={`fixed left-0 right-0 top-0 z-50 transition-[border-color,background-color] duration-200 ${scrolled || openMenu ? "border-b border-border bg-background/95 backdrop-blur-sm" : "border-b border-transparent bg-background"}`}>
-      <div className="section-container flex h-16 items-center lg:h-[72px]">
-        <Link to="/" onClick={handleLogoClick} className="flex items-center" aria-label="Loumilab home">
+      <div className="section-container flex h-16 items-center lg:grid lg:h-[72px] lg:grid-cols-[1fr_auto_1fr]">
+        <Link to="/" onClick={handleLogoClick} className="flex items-center justify-self-start" aria-label="Loumilab home">
           <Wordmark size="sm" animated={animateLogo} className={logoAnimationComplete ? "brand-wordmark-complete" : undefined} onAnimationComplete={completeLogoAnimation} />
         </Link>
 
-        <nav ref={navRef} className="ml-10 hidden h-full items-center gap-1 lg:flex xl:ml-12" aria-label="Main">
+        <nav ref={navRef} className="hidden h-full items-center gap-1 lg:flex" aria-label="Main">
           {navMenus.map((menu) => {
             const expanded = openMenu === menu.id;
             const wide = menu.groups.length > 1;
@@ -172,7 +172,7 @@ const Navbar = () => {
           ))}
         </nav>
 
-        <div className="ml-auto hidden items-center gap-2 lg:flex">
+        <div className="ml-auto hidden items-center gap-2 justify-self-end lg:flex">
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <button type="button" aria-label="Account" className="inline-flex h-10 w-10 items-center justify-center rounded-md text-foreground/65 transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
