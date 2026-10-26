@@ -1,3 +1,4 @@
+import { ClosingCta } from "@/components/brand/flow/Flow";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import Reveal from "@/components/Reveal";
@@ -40,13 +41,13 @@ const Products = () => (
 
     <section className="relative overflow-hidden pt-16 pb-16 lg:pt-24 lg:pb-20">
       <div className="pointer-events-none absolute inset-0 hero-wash" aria-hidden="true" />
-      <div className="section-container relative max-w-3xl">
-        <DotMarker />
+      <div className="section-container relative mx-auto max-w-4xl text-center">
+        <div className="flex justify-center"><DotMarker /></div>
         <Eyebrow>Ecosystem</Eyebrow>
-        <h1 className="mt-5 text-4xl font-semibold leading-tight lg:text-6xl">
+        <h1 className="mt-5 font-hero text-5xl font-semibold leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl">
           Products and companies built by Loumilab.
         </h1>
-        <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
+        <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
           We build technology for clients and we build our own. Each product below is designed, engineered,
           and secured by the same team.
         </p>
@@ -94,19 +95,7 @@ const Products = () => (
       </div>
     </section>
 
-    <section className="section-padding border-t border-border bg-surface-subtle">
-      <div className="section-container text-center">
-        <h2 className="text-3xl font-semibold lg:text-4xl">Building a product of your own?</h2>
-        <p className="mx-auto mt-4 max-w-md text-muted-foreground">
-          We&apos;ve done it for ourselves. We can do it with you.
-        </p>
-        <Button size="lg" asChild className="mt-8">
-          <Link to="/contact" className="dot-action">
-            Start a Project <ArrowRight size={18} />
-          </Link>
-        </Button>
-      </div>
-    </section>
+    <ClosingCta tone="dark" title="Building a product of your own?" lede="We've done it for ourselves. We can do it with you." cta={{ label: "Start a Project", to: "/contact" }} />
   </Layout>
 );
 

@@ -1,3 +1,4 @@
+import { ClosingCta } from "@/components/brand/flow/Flow";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import Reveal from "@/components/Reveal";
@@ -40,13 +41,13 @@ const About = () => (
 
     <section className="relative overflow-hidden pt-16 pb-16 lg:pt-24 lg:pb-20">
       <div className="pointer-events-none absolute inset-0 hero-wash" aria-hidden="true" />
-      <div className="section-container relative max-w-3xl">
-        <DotMarker />
+      <div className="section-container relative mx-auto max-w-4xl text-center">
+        <div className="flex justify-center"><DotMarker /></div>
         <Eyebrow>About</Eyebrow>
-        <h1 className="mt-5 text-4xl font-semibold leading-tight lg:text-6xl">
+        <h1 className="mt-5 font-hero text-5xl font-semibold leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl">
           A technology partner and a product builder.
         </h1>
-        <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
+        <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
           Loumilab is a technology studio that builds digital products, software, and business solutions
           designed to help companies grow. As a team, we develop ideas into products and
           ventures—bringing together creativity, technology, and experience to shape how we think,
@@ -108,21 +109,7 @@ const About = () => (
       </div>
     </section>
 
-    <section className="section-padding border-t border-border">
-      <div className="section-container">
-        <div className="rounded-3xl border border-border bg-card p-10 text-center shadow-[var(--shadow-soft)] lg:p-16">
-          <h2 className="text-3xl font-semibold lg:text-4xl">Want to work with us?</h2>
-          <p className="mx-auto mt-4 max-w-md text-muted-foreground">
-            Whether you&apos;re hiring a studio or joining one, we&apos;d like to hear from you.
-          </p>
-          <Button size="lg" asChild className="mt-8">
-            <Link to="/contact" className="dot-action">
-              Get in Touch <ArrowRight size={18} />
-            </Link>
-          </Button>
-        </div>
-      </div>
-    </section>
+    <ClosingCta tone="dark" title="Want to work with us?" lede="Whether you're hiring a studio or joining one, we'd like to hear from you." cta={{ label: "Start a Project", to: "/contact" }} />
   </Layout>
 );
 
