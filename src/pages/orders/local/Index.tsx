@@ -250,14 +250,14 @@ const LocalIndex = () => {
 
       {/* Merchant CTA */}
       <section className="section-container pb-24">
-        <div className="flex flex-col items-start justify-between gap-6 rounded-3xl border border-border bg-secondary p-8 sm:flex-row sm:items-center sm:p-12">
+        <div className="flex flex-col items-start justify-between gap-6 rounded-3xl bg-surface-inverse p-8 text-inverse-foreground sm:flex-row sm:items-center sm:p-12">
           <div>
             <h2 className="font-display text-2xl font-semibold sm:text-3xl">List your business on Loumilab Local. It's free.</h2>
-            <p className="mt-2 max-w-lg text-muted-foreground">
+            <p className="mt-2 max-w-lg text-inverse-muted">
               Get discovered by neighbours in a few minutes — no store or payment setup needed. Add online ordering with Loumilab Orders whenever you're ready.
             </p>
           </div>
-          <Button asChild size="lg" className="rounded-full">
+          <Button asChild size="lg" variant="secondary" className="rounded-full">
             <Link to="/orders/local/join" className="dot-action">List my business <ArrowRight size={16} /></Link>
           </Button>
         </div>

@@ -1,3 +1,4 @@
+import { ClosingCta } from "@/components/brand/flow/Flow";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
@@ -243,6 +244,7 @@ const ResourcesIndex = () => {
           )}
         </div>
       </section>
+      <ClosingCta tone="dark" title="Need help putting it into practice?" lede="Loumilab designs, builds and secures the technology behind growing businesses." cta={{ label: "Start a Project", to: "/contact" }} />
     </Layout>
   );
 };
