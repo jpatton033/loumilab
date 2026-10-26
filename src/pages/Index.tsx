@@ -54,7 +54,7 @@ const Index = () => {
       {/* 1 Hero */}
       <section className="overflow-hidden pt-10 lg:pt-16">
         <div className="section-container text-center">
-          <h1 className="mx-auto font-headline text-[2.5rem] font-medium leading-[1.04] tracking-[-0.03em] text-foreground sm:text-[3.5rem] xl:text-[4.5rem]">
+          <h1 className="mx-auto font-headline text-[2.5rem] font-medium leading-[1.04] tracking-[-0.035em] text-foreground sm:text-[3.5rem] xl:text-[4.5rem]">
             We build <br className="xl:hidden" />what's next.
           </h1>
           <p className="mx-auto mt-6 max-w-[40rem] text-lg leading-relaxed text-muted-foreground text-balance lg:text-xl">
