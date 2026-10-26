@@ -16,4 +16,4 @@
 - [x] Squarespace-style flow: shared hero / three-benefit / closing-button blocks; Orders vs. Square, Shopify, Toast comparison pages linked from Orders, pricing and footer
 - [x] Website refinement: homepage "What do you need?" paths; Services menu grouped (Studio / Managed Business Technology)
 - [x] Redesign: navigation (Solutions/Products/Resources/About), footer, homepage, dark section tokens, 5 new service pages (web, software, AI, security, domains)
-- [ ] Redesign: Orders, Local, Business Email, Products, About, Contact, Resources, The Dot. page refinements; Start a Project form service/budget fields
+- [x] Redesign: Orders (centered opening, real builder/dashboard screenshots, cleaner pricing cards), Local, Business Email, Products, About, Contact, Resources, The Dot.; Start a Project form service/budget fields
