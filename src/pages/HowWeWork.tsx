@@ -1,3 +1,4 @@
+import { ClosingCta } from "@/components/brand/flow/Flow";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import Reveal from "@/components/Reveal";
@@ -96,19 +97,7 @@ const HowWeWork = () => (
       line="You work directly with the people building your product."
     />
 
-    <section className="section-padding section-dark">
-      <div className="section-container text-center">
-        <h2 className="text-3xl font-semibold lg:text-4xl">Your next step starts here.</h2>
-        <p className="mx-auto mt-4 max-w-xl text-lg leading-relaxed text-muted-foreground text-balance">
-          Tell us what you're looking to build, and we'll help turn your vision into a practical, working solution.
-        </p>
-        <Button size="lg" asChild className="mt-8">
-          <Link to="/contact">
-            Start Your Project <ArrowRight size={18} />
-          </Link>
-        </Button>
-      </div>
-    </section>
+    <ClosingCta tone="dark" title="Your next step starts here." cta={{ label: "Start a Project", to: "/contact" }} />
   </Layout>
 );
 

@@ -316,8 +316,8 @@ const BusinessEmail = () => {
       </section>
 
       {/* Final CTA */}
-      <section className="section-padding bg-surface-inverse text-inverse">
-        <div className="section-container max-w-2xl text-center">
+      <section className="section-container py-20 lg:py-28">
+        <div className="section-dark mx-auto rounded-[2rem] px-6 py-16 text-center sm:px-12 lg:py-20">
           <h2 className="font-hero text-4xl font-semibold leading-tight lg:text-6xl">Your Business Deserves Professional Email.</h2>
           <p className="mt-4 text-lg leading-relaxed text-inverse-muted">From choosing a domain to configuring your inbox, Loumilab makes getting started easier.</p>
           <Button asChild size="lg" variant="secondary" className="mt-8 rounded-full">

@@ -1,3 +1,4 @@
+import { ClosingCta } from "@/components/brand/flow/Flow";
 import { useState } from "react";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
@@ -151,16 +152,7 @@ const Work = () => {
 
       <DotThread reverse />
 
-      <section className="section-padding section-dark">
-        <div className="section-container text-center">
-          <h2 className="text-3xl font-semibold lg:text-4xl">Let&apos;s make yours the next one.</h2>
-          <Button size="lg" asChild className="mt-8">
-            <Link to="/contact" className="dot-action">
-              Work With Us <ArrowRight size={18} />
-            </Link>
-          </Button>
-        </div>
-      </section>
+      <ClosingCta tone="dark" title="Let's make yours the next one." cta={{ label: "Start a Project", to: "/contact" }} />
     </Layout>
   );
 };

@@ -1,3 +1,4 @@
+import { ClosingCta } from "@/components/brand/flow/Flow";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import Reveal from "@/components/Reveal";
@@ -179,16 +180,7 @@ const Services = () => (
       </div>
     </section>
 
-    <section className="section-padding border-t border-border">
-      <div className="section-container text-center">
-        <h2 className="text-3xl font-semibold lg:text-4xl">Tell us what you&apos;re building.</h2>
-        <Button size="lg" asChild className="mt-8">
-          <Link to="/contact">
-            Start a Project <ArrowRight size={18} />
-          </Link>
-        </Button>
-      </div>
-    </section>
+    <ClosingCta tone="dark" title="Tell us what you're building." cta={{ label: "Start a Project", to: "/contact" }} />
   </Layout>
 );
 

@@ -79,7 +79,7 @@ const OrdersCompare = () => {
           ))}
         </p>
       </section>
-      <ClosingCta title="Start selling for $0." lede={ORDERS_CTA.support} cta={cta} />
+      <ClosingCta tone="dark" title="Start selling for $0." lede={ORDERS_CTA.support} cta={cta} />
     </Layout>
   );
 };
