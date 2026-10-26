@@ -7,6 +7,7 @@ import ArticleCard from "@/components/kc/ArticleCard";
 import { PeopleSequence } from "@/components/brand/story";
 import { DotMarker, DotSplit, DotThread } from "@/components/brand/dot";
 import { GridTile, MoreLink, ProductTile, Statement, TileActions } from "@/components/brand/apple/Tiles";
+import { PathPicker } from "@/components/brand/flow/Flow";
 import { usePublishedArticles } from "@/lib/kc/queries";
 import TheDotSignup from "@/components/thedot/TheDotSignup";
 import heroBuild from "@/assets/people/studio/hero-build.jpg";
@@ -66,8 +67,19 @@ const Index = () => {
         </div>
       </section>
 
+      <PathPicker
+        title="What do you need?"
+        items={[
+          { label: "A website or custom software", body: "Designed and built around how your business works.", to: "/services" },
+          { label: "Take orders online", body: "A free storefront with Loumilab Orders.", to: "/orders" },
+          { label: "Business email", body: "Professional email on your own domain, set up for you.", to: "/services/business-email" },
+          { label: "AI or security", body: "Automation that saves real work, and protection built in.", to: "/how-we-work" },
+          { label: "Free tools and resources", body: "Pricing tools, guides and The Dot.", to: "/resources" },
+        ]}
+      />
+
       {/* Products */}
-      <DotSplit className="mt-16 lg:mt-24" />
+      <DotSplit className="mt-4 lg:mt-8" />
       <ProductTile
         className="mt-6"
         tone="subtle"
