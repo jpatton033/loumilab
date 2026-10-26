@@ -54,13 +54,13 @@ const Index = () => {
       {/* 1 Hero */}
       <section className="overflow-hidden pt-10 lg:pt-16">
         <div className="section-container text-center">
-          <h1 className="hero-rise mx-auto font-headline text-[2.5rem] font-semibold leading-[1.05] tracking-[-0.02em] text-foreground sm:text-[3.5rem] xl:text-[4.5rem]">
-            We build <br className="xl:hidden" />what's next<span className="text-accent">.</span>
+          <h1 className="mx-auto font-headline text-[2.5rem] font-medium leading-[1.04] tracking-[-0.03em] text-foreground sm:text-[3.5rem] xl:text-[4.5rem]">
+            We build <br className="xl:hidden" />what's next.
           </h1>
-          <p className="hero-rise mx-auto mt-6 max-w-[40rem] text-lg leading-relaxed text-muted-foreground text-balance lg:text-xl" style={{ animationDelay: "60ms" }}>
+          <p className="mx-auto mt-6 max-w-[40rem] text-lg leading-relaxed text-muted-foreground text-balance lg:text-xl">
             Loumilab designs, builds, and manages digital products and technology solutions that help businesses launch, operate, and grow.
           </p>
-          <div className="hero-rise" style={{ animationDelay: "120ms" }}>
+          <div>
             <TileActions primary={{ label: "Explore Solutions", to: "/services" }} secondary={{ label: "Start a Project", to: "/contact" }} className="mt-8" />
           </div>
         </div>

@@ -16,7 +16,7 @@ export default {
       fontFamily: {
         display: ['"Space Grotesk"', 'system-ui', 'sans-serif'],
         body: ['"Inter"', 'system-ui', 'sans-serif'],
-        headline: ['Outfit', 'system-ui', 'sans-serif'],
+        headline: ['"Neue Haas Grotesk Display Pro"', '"Hanken Grotesk"', '"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif'],
         hero: ['Urbanist', 'system-ui', '-apple-system', 'sans-serif'],
       },
       colors: {
