@@ -151,7 +151,7 @@ const Work = () => {
 
       <DotThread reverse />
 
-      <section className="section-padding border-t border-border bg-surface-subtle">
+      <section className="section-padding section-dark">
         <div className="section-container text-center">
           <h2 className="text-3xl font-semibold lg:text-4xl">Let&apos;s make yours the next one.</h2>
           <Button size="lg" asChild className="mt-8">

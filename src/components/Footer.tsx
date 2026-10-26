@@ -24,7 +24,7 @@ const Footer = () => {
   const products = navMenus.find((m) => m.id === "products")!;
   const resources = navMenus.find((m) => m.id === "resources")!;
   return (
-    <footer className="border-t border-border bg-surface-subtle">
+    <footer className="section-dark border-t border-border">
       <div className="section-container py-16 lg:py-20">
         <div className="grid grid-cols-2 gap-10 md:grid-cols-3 lg:grid-cols-6">
           <div className="col-span-2 md:col-span-3 lg:col-span-1">

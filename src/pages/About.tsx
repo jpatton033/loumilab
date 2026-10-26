@@ -80,7 +80,7 @@ const About = () => (
       </div>
     </section>
 
-    <section className="section-padding border-t border-border bg-surface-subtle">
+    <section className="section-padding section-dark">
       <div className="section-container">
         <Reveal className="max-w-2xl">
           <Eyebrow>The group</Eyebrow>
