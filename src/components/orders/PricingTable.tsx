@@ -63,10 +63,23 @@ const PricingTable = () => {
       )}
 
       <div className="grid gap-6 pt-3 md:grid-cols-2 xl:grid-cols-3">
-        {plans.map((plan, i) => (
+        {plans.filter((p) => p.slug !== "custom").map((plan, i) => (
           <PlanCard key={plan.id} plan={plan} annual={annual} delay={i * 80} />
         ))}
       </div>
+      {plans.filter((p) => p.slug === "custom").map((plan) => (
+        <Reveal key={plan.id} className="mt-6 flex flex-col gap-5 rounded-3xl border border-border bg-card p-8 shadow-[var(--shadow-soft)] md:flex-row md:items-center md:justify-between">
+          <div className="max-w-2xl">
+            <h3 className="font-display text-xl font-semibold">{plan.name}{plan.positioning && <span className="ml-2 text-sm font-normal text-muted-foreground">{plan.positioning}</span>}</h3>
+            {plan.description && <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{plan.description}</p>}
+          </div>
+          <div className="flex shrink-0 flex-col items-stretch gap-2 sm:flex-row sm:items-center">
+            <Button asChild size="lg" variant="outline" className="rounded-full">
+              <Link to={plan.cta_secondary_href ?? plan.cta_href ?? "/contact"}>{plan.cta_secondary_label ?? plan.cta_label}</Link>
+            </Button>
+          </div>
+        </Reveal>
+      ))}
     </div>
   );
 };
