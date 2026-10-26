@@ -75,3 +75,16 @@ export const PathPicker = ({ title, items }: { title: string; items: { label: st
     </ul>
   </section>
 );
+
+/** Real product screenshot in a quiet browser frame. */
+export const ScreenFrame = ({ src, alt, label, className = "" }: { src: string; alt: string; label?: string; className?: string }) => (
+  <figure className={`overflow-hidden rounded-[1.75rem] border border-border bg-card shadow-[var(--shadow-lift)] ${className}`}>
+    <div className="flex items-center gap-2 border-b border-border bg-surface-subtle px-4 py-3" aria-hidden="true">
+      <span className="h-2.5 w-2.5 rounded-full bg-border" />
+      <span className="h-2.5 w-2.5 rounded-full bg-border" />
+      <span className="h-2.5 w-2.5 rounded-full bg-border" />
+      {label && <span className="ml-3 truncate font-display text-xs text-muted-foreground">{label}</span>}
+    </div>
+    <img src={src} alt={alt} loading="lazy" className="block w-full" />
+  </figure>
+);
