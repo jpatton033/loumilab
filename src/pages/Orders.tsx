@@ -467,8 +467,8 @@ const Orders = () => {
       />
 
       {/* Final CTA */}
-      <section className="section-padding">
-        <div className="section-container text-center">
+      <section className="section-container py-20 lg:py-28">
+        <div className="section-dark rounded-[2rem] px-6 py-16 text-center sm:px-12 lg:py-20">
           <Reveal>
             <h2 className="font-hero text-[clamp(2.25rem,7vw,5rem)] font-semibold leading-[1] tracking-[-0.03em]">
               Stop taking orders through DMs.
