@@ -643,6 +643,8 @@
     --surface-subtle: 0 0% 10%;
     --border: 0 0% 20%;
     --input: 0 0% 24%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 7%;
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
   }
