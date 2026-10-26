@@ -12,3 +12,6 @@
 
 - [x] Store setup: build store first, account at step 7; draft survives sign-in
 - [x] Count Google sign-ups
+
+- [x] Squarespace-style flow: shared hero / three-benefit / closing-button blocks; Orders vs. Square, Shopify, Toast comparison pages linked from Orders, pricing and footer
+- [ ] Squarespace-style flow: move Home, Services, Business Email, Products, Work, About, How We Work, Local, Resources, The Dot. and Contact onto the shared blocks (one main button each)
