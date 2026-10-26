@@ -627,10 +627,3 @@
 .live-preview-progress { width: 0; animation-name: live-preview-progress; animation-timing-function: linear; animation-fill-mode: forwards; }
 @keyframes live-preview-progress { from { width: 0; } to { width: 100%; } }
 @media (prefers-reduced-motion: reduce) { .live-preview-progress { animation-timing-function: steps(4, end) !important; } }
-
-/* Homepage hero: one quiet Blue Dot that arrives once and stays still. */
-.hero-dot { display: block; width: 6px; height: 6px; margin: 1.5rem auto; border-radius: 9999px; background: hsl(var(--accent)); animation: heroDotIn .9s var(--ldot-ease, cubic-bezier(.22,1,.36,1)) .5s both; }
-@keyframes heroDotIn { from { opacity: 0; transform: translateY(-6px) scale(.5); } to { opacity: 1; transform: none; } }
-.hero-rise { animation: heroRise .7s cubic-bezier(.22,1,.36,1) both; }
-@keyframes heroRise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-@media (prefers-reduced-motion: reduce) { .hero-dot, .hero-rise { animation: none; } }
