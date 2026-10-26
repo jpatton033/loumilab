@@ -129,7 +129,7 @@ const LocalIndex = () => {
       </section>
 
       {/* Categories */}
-      <section className="section-container pb-12">
+      <section className="section-container overflow-x-clip pb-12">
         <h2 className="font-display text-2xl font-semibold">Explore categories</h2>
         <div className="-mx-4 mt-5 flex snap-x gap-3 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-3 sm:px-0 lg:grid-cols-9">
           {LOCAL_CATEGORIES.map((c) => {
