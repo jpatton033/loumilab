@@ -3,6 +3,7 @@ import engineer from "@/assets/people/studio/engineer.jpg";
 import collaboration from "@/assets/people/studio/collaboration.jpg";
 import studioTeam from "@/assets/people/studio-team.jpg";
 import officeReview from "@/assets/people/email/office-review.jpg";
+import domainSetup from "@/assets/people/email/domain-setup.jpg";
 
 export interface ServicePage {
   slug: string;
@@ -166,7 +167,7 @@ export const servicePages: ServicePage[] = [
     seoDescription: "Loumilab sets up and manages your business domain with established registrars: purchase guidance, DNS records, email records and website connections, done properly.",
     title: "Your domain, set up properly.",
     lede: "We help you get the right domain through an established registrar and configure it for your website and email.",
-    image: officeReview,
+    image: domainSetup,
     imageAlt: "A business owner reviewing setup details at her desk",
     delivers: [
       { title: "The right name", body: "Help choosing and securing a domain through an established registrar in your name." },
