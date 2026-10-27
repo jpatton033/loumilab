@@ -5,53 +5,29 @@ import { trackCtaClick } from "@/lib/tracking";
 import {
   ArrowRight,
   BarChart3,
-  Bell,
   Clock,
   CreditCard,
   Instagram,
-  LayoutGrid,
   MonitorSmartphone,
-  PackageCheck,
   Smartphone,
   Store,
-  Zap,
 } from "lucide-react";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import Reveal from "@/components/Reveal";
 import Eyebrow from "@/components/brand/Eyebrow";
-import PhotoSplit from "@/components/brand/PhotoSplit";
-import bakerOrders from "@/assets/people/baker-orders.jpg";
-import homeChef from "@/assets/people/orders/home-chef.jpg";
-import bakerDecorating from "@/assets/people/orders/baker-decorating.jpg";
-import packing from "@/assets/people/orders/packing.jpg";
-import reviewingOrders from "@/assets/people/orders/reviewing-orders.jpg";
-import handoff from "@/assets/people/orders/handoff.jpg";
-import teamKitchen from "@/assets/people/orders/team-kitchen.jpg";
-import { ImmersiveImage, PeopleSequence } from "@/components/brand/story";
 import { Button } from "@/components/ui/button";
-import PhoneFrame from "@/components/orders/PhoneFrame";
-import StorefrontScreen from "@/components/orders/StorefrontScreen";
-import OrderNotifications from "@/components/orders/OrderNotifications";
 import LivePreviewPicker from "@/components/orders/LivePreviewPicker";
-import MetricCard from "@/components/orders/MetricCard";
-import OrderQueue from "@/components/orders/OrderQueue";
 import OrderStatusBadge from "@/components/orders/OrderStatusBadge";
-import FlowDiagram from "@/components/orders/FlowDiagram";
 import PricingTable from "@/components/orders/PricingTable";
-import ProgressiveFees, { FeeAnnouncement } from "@/components/orders/ProgressiveFees";
-import IndustryStrip from "@/components/orders/IndustryStrip";
+import { FeeAnnouncement } from "@/components/orders/ProgressiveFees";
 import OrdersShowcase from "@/components/orders/OrdersShowcase";
 import OrdersHeroSlideshow from "@/components/orders/OrdersHeroSlideshow";
-import { demoStorefront } from "@/data/orders/storefronts";
-import { dashboardMetrics, demoOrders, ORDER_STATUSES } from "@/data/orders/dashboard";
+import { ORDER_STATUSES } from "@/data/orders/dashboard";
 import { audiences } from "@/data/orders/audiences";
 import { pricingHeading, pricingPlans } from "@/data/orders/pricing";
 import { ordersHeroSlides } from "@/data/orders/hero-slides";
-import { DotMarker, DotThread } from "@/components/brand/dot";
-import StartBuildingStatement from "@/components/orders/creative/StartBuildingStatement";
-import StorefrontAssembly from "@/components/orders/creative/StorefrontAssembly";
-import TryItInvitation from "@/components/orders/creative/TryItInvitation";
+import { DotMarker } from "@/components/brand/dot";
 import { COMPETITORS } from "@/data/orders/competitors";
 import { ScreenFrame } from "@/components/brand/flow/Flow";
 import builderShot from "@/assets/orders/screens/store-builder.jpg";
@@ -89,22 +65,7 @@ const features = [
   { icon: BarChart3, title: "Sales Analytics", desc: "Simple revenue and order insights, no spreadsheet required." },
 ];
 
-const journey = [
-  { id: "j1", label: "Seen on social", detail: "A customer spots the plate on Instagram." },
-  { id: "j2", label: "Taps Order Now", detail: "One link, straight from the bio." },
-  { id: "j3", label: "Storefront opens", detail: "Fast, mobile-first, no app install." },
-  { id: "j4", label: "Selects & checks out", detail: "Items added, order confirmed." },
-  { id: "j5", label: "Merchant is notified", detail: "The order lands in the dashboard.", emphasis: true },
-  { id: "j6", label: "Status updated", detail: "Confirmed, preparing, ready." },
-  { id: "j7", label: "Customer confirmed", detail: "They know exactly when to pick up." },
-];
 
-const socialFlow = [
-  { id: "f1", label: "Instagram · Facebook · TikTok · Text", detail: "Where your audience already is." },
-  { id: "f2", label: "Loumilab Orders Store", detail: "One link that takes real orders.", emphasis: true },
-  { id: "f3", label: "Order + Payment", detail: "Captured in a clean checkout." },
-  { id: "f4", label: "Merchant Dashboard", detail: "Everything organized in one queue." },
-];
 
 const ordersJsonLd = [
   {
