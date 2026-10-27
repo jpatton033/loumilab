@@ -167,6 +167,36 @@ const Orders = () => {
 
       <PromoBanner surface="homepage" wrapperClassName="section-container pt-8" />
 
+      {/* Pricing */}
+      <section id="pricing" className="scroll-mt-24 section-padding surface-subtle border-y border-border">
+        <div className="section-container">
+          <Reveal className="max-w-2xl">
+            <Eyebrow>{pricingHeading.eyebrow}</Eyebrow>
+            <h2 className="mt-5 text-4xl font-semibold leading-tight lg:text-5xl">{pricingHeading.title}</h2>
+            <p className="mt-6 text-lg leading-relaxed text-muted-foreground">{pricingHeading.subtitle}</p>
+          </Reveal>
+
+          <div className="mt-10">
+            <FeeAnnouncement />
+          </div>
+          <div className="mt-14">
+            <PricingTable />
+          </div>
+          <p className="mt-6 text-sm text-muted-foreground">{pricingHeading.footnote}</p>
+          <Link to="/orders/pricing" className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-accent hover:underline">See how pricing works <ArrowRight size={15} /></Link>
+          <ol className="mt-10 flex flex-col gap-3 font-display text-sm sm:flex-row sm:items-center sm:gap-6" aria-label="How a store goes live">
+            <li><span className="font-semibold text-foreground">Build</span> <span className="text-muted-foreground">— free, no account</span></li>
+            <li aria-hidden="true" className="hidden text-muted-foreground sm:block">→</li>
+            <li><span className="font-semibold text-foreground">Save</span> <span className="text-muted-foreground">— create an account</span></li>
+            <li aria-hidden="true" className="hidden text-muted-foreground sm:block">→</li>
+            <li><span className="font-semibold text-foreground">Publish</span> <span className="text-muted-foreground">— finish payout setup</span></li>
+          </ol>
+          <Button size="lg" asChild className="mt-8 rounded-full">
+            <Link to={ORDERS_CTA.href} className="dot-action" onClick={() => trackCtaClick("pricing", ORDERS_CTA.variant)}>{ORDERS_CTA.label} <ArrowRight size={18} /></Link>
+          </Button>
+        </div>
+      </section>
+
       {/* How it works */}
       <section id="how-it-works" className="section-padding scroll-mt-24">
         <div className="section-container">
@@ -275,36 +305,6 @@ const Orders = () => {
             ))}
           </div>
 
-        </div>
-      </section>
-
-      {/* Pricing */}
-      <section id="pricing" className="scroll-mt-24 section-padding surface-subtle border-y border-border">
-        <div className="section-container">
-          <Reveal className="max-w-2xl">
-            <Eyebrow>{pricingHeading.eyebrow}</Eyebrow>
-            <h2 className="mt-5 text-4xl font-semibold leading-tight lg:text-5xl">{pricingHeading.title}</h2>
-            <p className="mt-6 text-lg leading-relaxed text-muted-foreground">{pricingHeading.subtitle}</p>
-          </Reveal>
-
-          <div className="mt-10">
-            <FeeAnnouncement />
-          </div>
-          <div className="mt-14">
-            <PricingTable />
-          </div>
-          <p className="mt-6 text-sm text-muted-foreground">{pricingHeading.footnote}</p>
-          <Link to="/orders/pricing" className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-accent hover:underline">See how pricing works <ArrowRight size={15} /></Link>
-          <ol className="mt-10 flex flex-col gap-3 font-display text-sm sm:flex-row sm:items-center sm:gap-6" aria-label="How a store goes live">
-            <li><span className="font-semibold text-foreground">Build</span> <span className="text-muted-foreground">— free, no account</span></li>
-            <li aria-hidden="true" className="hidden text-muted-foreground sm:block">→</li>
-            <li><span className="font-semibold text-foreground">Save</span> <span className="text-muted-foreground">— create an account</span></li>
-            <li aria-hidden="true" className="hidden text-muted-foreground sm:block">→</li>
-            <li><span className="font-semibold text-foreground">Publish</span> <span className="text-muted-foreground">— finish payout setup</span></li>
-          </ol>
-          <Button size="lg" asChild className="mt-8 rounded-full">
-            <Link to={ORDERS_CTA.href} className="dot-action" onClick={() => trackCtaClick("pricing", ORDERS_CTA.variant)}>{ORDERS_CTA.label} <ArrowRight size={18} /></Link>
-          </Button>
         </div>
       </section>
 
