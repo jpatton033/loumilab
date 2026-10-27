@@ -107,8 +107,11 @@ export const useDisconnectCalendar = () => {
   return useMutation({ mutationFn: () => invoke("calendar-manage", { action: "disconnect" }), onSuccess: inv });
 };
 
+const hasSession = async () => !!(await supabase.auth.getSession()).data.session;
+
 /** Mirror one job onto the merchant's calendar; never throws into the job flow. */
 export async function syncJobToCalendar(jobId: string) {
+  if (!(await hasSession())) return null;
   try {
     return await invoke<{ status: string }>("calendar-sync", { job_id: jobId });
   } catch (e) {
@@ -118,6 +121,7 @@ export async function syncJobToCalendar(jobId: string) {
 }
 
 export async function retryFailedCalendarSyncs() {
+  if (!(await hasSession())) return null;
   try {
     return await invoke("calendar-sync", { retry_failed: true });
   } catch {
