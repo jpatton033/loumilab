@@ -7,9 +7,7 @@ import ArticleCard from "@/components/kc/ArticleCard";
 import { MoreLink, TileActions } from "@/components/brand/apple/Tiles";
 import { Button } from "@/components/ui/button";
 import { usePublishedArticles } from "@/lib/kc/queries";
-import PhoneFrame from "@/components/orders/PhoneFrame";
-import StorefrontScreen from "@/components/orders/StorefrontScreen";
-import { demoStorefront } from "@/data/orders/storefronts";
+import OrdersShowcase from "@/components/orders/OrdersShowcase";
 import { ORDERS_CTA } from "@/data/orders/cta";
 import { servicePages } from "@/data/services";
 import heroBuild from "@/assets/people/studio/hero-build.jpg";
@@ -91,22 +89,7 @@ const Index = () => {
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent-glow">Loumilab Products</p>
           <h2 id="products-title" className="mt-4 max-w-3xl font-hero text-4xl font-semibold tracking-tight text-inverse lg:text-6xl">Less managing. More business.</h2>
 
-          <div className="mt-14 grid items-center gap-12 lg:grid-cols-2">
-            <div>
-              <h3 className="font-display text-3xl font-semibold text-inverse">Loumilab Orders</h3>
-              <p className="mt-4 max-w-md text-lg leading-relaxed text-inverse-muted">
-                A storefront that adapts to your industry — food, baking, services and more — with every order in one dashboard. Build and preview your store before you sign up.
-              </p>
-              <p className="mt-4 font-display font-semibold text-inverse">Transparent. First and Always.</p>
-              <div className="mt-8 flex flex-wrap items-center gap-5">
-                <Button size="lg" asChild className="bg-accent text-accent-foreground hover:bg-accent/90"><Link to={ORDERS_CTA.href}>Build Your Store</Link></Button>
-                <Link to="/orders" className="text-sm font-semibold text-inverse underline-offset-4 hover:underline">See How It Works</Link>
-              </div>
-            </div>
-            <div className="flex justify-center">
-              <div className="w-[280px] text-foreground"><PhoneFrame label="Example storefront in Loumilab Orders"><StorefrontScreen store={demoStorefront} highlightIndex={0} /></PhoneFrame></div>
-            </div>
-          </div>
+          <div className="mt-14"><OrdersShowcase /></div>
 
           <div className="mt-20 grid items-center gap-12 border-t border-inverse/15 pt-16 lg:grid-cols-2">
             <div className="order-2 lg:order-1 overflow-hidden rounded-3xl">

@@ -5,52 +5,29 @@ import { trackCtaClick } from "@/lib/tracking";
 import {
   ArrowRight,
   BarChart3,
-  Bell,
   Clock,
   CreditCard,
   Instagram,
-  LayoutGrid,
   MonitorSmartphone,
-  PackageCheck,
   Smartphone,
   Store,
-  Zap,
 } from "lucide-react";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import Reveal from "@/components/Reveal";
 import Eyebrow from "@/components/brand/Eyebrow";
-import PhotoSplit from "@/components/brand/PhotoSplit";
-import bakerOrders from "@/assets/people/baker-orders.jpg";
-import homeChef from "@/assets/people/orders/home-chef.jpg";
-import bakerDecorating from "@/assets/people/orders/baker-decorating.jpg";
-import packing from "@/assets/people/orders/packing.jpg";
-import reviewingOrders from "@/assets/people/orders/reviewing-orders.jpg";
-import handoff from "@/assets/people/orders/handoff.jpg";
-import teamKitchen from "@/assets/people/orders/team-kitchen.jpg";
-import { ImmersiveImage, PeopleSequence } from "@/components/brand/story";
 import { Button } from "@/components/ui/button";
-import PhoneFrame from "@/components/orders/PhoneFrame";
-import StorefrontScreen from "@/components/orders/StorefrontScreen";
-import OrderNotifications from "@/components/orders/OrderNotifications";
 import LivePreviewPicker from "@/components/orders/LivePreviewPicker";
-import MetricCard from "@/components/orders/MetricCard";
-import OrderQueue from "@/components/orders/OrderQueue";
 import OrderStatusBadge from "@/components/orders/OrderStatusBadge";
-import FlowDiagram from "@/components/orders/FlowDiagram";
 import PricingTable from "@/components/orders/PricingTable";
-import ProgressiveFees, { FeeAnnouncement } from "@/components/orders/ProgressiveFees";
-import IndustryStrip from "@/components/orders/IndustryStrip";
+import { FeeAnnouncement } from "@/components/orders/ProgressiveFees";
+import OrdersShowcase from "@/components/orders/OrdersShowcase";
 import OrdersHeroSlideshow from "@/components/orders/OrdersHeroSlideshow";
-import { demoStorefront } from "@/data/orders/storefronts";
-import { dashboardMetrics, demoOrders, ORDER_STATUSES } from "@/data/orders/dashboard";
+import { ORDER_STATUSES } from "@/data/orders/dashboard";
 import { audiences } from "@/data/orders/audiences";
 import { pricingHeading, pricingPlans } from "@/data/orders/pricing";
 import { ordersHeroSlides } from "@/data/orders/hero-slides";
-import { DotMarker, DotThread } from "@/components/brand/dot";
-import StartBuildingStatement from "@/components/orders/creative/StartBuildingStatement";
-import StorefrontAssembly from "@/components/orders/creative/StorefrontAssembly";
-import TryItInvitation from "@/components/orders/creative/TryItInvitation";
+import { DotMarker } from "@/components/brand/dot";
 import { COMPETITORS } from "@/data/orders/competitors";
 import { ScreenFrame } from "@/components/brand/flow/Flow";
 import builderShot from "@/assets/orders/screens/store-builder.jpg";
@@ -81,33 +58,14 @@ const steps = [
 
 const features = [
   { icon: Store, title: "Custom Storefront", desc: "Every business gets its own shareable Loumilab Orders page." },
-  { icon: LayoutGrid, title: "Product & Menu Management", desc: "Add products, photos, descriptions, pricing, and availability." },
   { icon: CreditCard, title: "Online Payments", desc: "Architected for secure, provider-handled card payments." },
   { icon: MonitorSmartphone, title: "Order Dashboard", desc: "View and manage every order from one place." },
-  { icon: PackageCheck, title: "Order Status Updates", desc: "Move orders through New, Confirmed, Preparing, Ready, and Completed." },
   { icon: Smartphone, title: "Mobile Management", desc: "Run the whole operation from your phone behind the counter." },
   { icon: Clock, title: "Pickup Options", desc: "Configure pickup instructions and pickup windows." },
-  { icon: Zap, title: "Inventory & Availability", desc: "Mark items available, unavailable, or sold out in a tap." },
-  { icon: Bell, title: "Customer Notifications", desc: "Built so email and SMS order updates can be switched on." },
   { icon: BarChart3, title: "Sales Analytics", desc: "Simple revenue and order insights, no spreadsheet required." },
 ];
 
-const journey = [
-  { id: "j1", label: "Seen on social", detail: "A customer spots the plate on Instagram." },
-  { id: "j2", label: "Taps Order Now", detail: "One link, straight from the bio." },
-  { id: "j3", label: "Storefront opens", detail: "Fast, mobile-first, no app install." },
-  { id: "j4", label: "Selects & checks out", detail: "Items added, order confirmed." },
-  { id: "j5", label: "Merchant is notified", detail: "The order lands in the dashboard.", emphasis: true },
-  { id: "j6", label: "Status updated", detail: "Confirmed, preparing, ready." },
-  { id: "j7", label: "Customer confirmed", detail: "They know exactly when to pick up." },
-];
 
-const socialFlow = [
-  { id: "f1", label: "Instagram · Facebook · TikTok · Text", detail: "Where your audience already is." },
-  { id: "f2", label: "Loumilab Orders Store", detail: "One link that takes real orders.", emphasis: true },
-  { id: "f3", label: "Order + Payment", detail: "Captured in a clean checkout." },
-  { id: "f4", label: "Merchant Dashboard", detail: "Everything organized in one queue." },
-];
 
 const ordersJsonLd = [
   {
@@ -187,7 +145,7 @@ const Orders = () => {
             </p>
           </div>
 
-          <Reveal className="mx-auto mt-14 max-w-6xl lg:mt-20">
+          <Reveal className="mx-auto mt-14 hidden max-w-6xl md:block lg:mt-20">
             <ScreenFrame
               src={builderShot}
               label="Loumilab Orders — Store builder"
@@ -197,41 +155,17 @@ const Orders = () => {
         </div>
       </section>
 
-      <OrdersHeroSlideshow slides={ordersHeroSlides} />
-
-      <PromoBanner surface="homepage" wrapperClassName="section-container pt-8" />
-
-      {/* Pricing */}
-      <section id="pricing" className="scroll-mt-24 section-padding surface-subtle border-y border-border">
+      {/* Storefront showcase */}
+      <section className="bg-surface-inverse py-20 text-inverse lg:py-28" aria-label="Loumilab Orders storefront">
         <div className="section-container">
-          <Reveal className="max-w-2xl">
-            <Eyebrow>{pricingHeading.eyebrow}</Eyebrow>
-            <h2 className="mt-5 text-4xl font-semibold leading-tight lg:text-5xl">{pricingHeading.title}</h2>
-            <p className="mt-6 text-lg leading-relaxed text-muted-foreground">{pricingHeading.subtitle}</p>
-          </Reveal>
-
-          <div className="mt-10">
-            <FeeAnnouncement />
-          </div>
-          <div className="mt-14">
-            <PricingTable />
-          </div>
-          <p className="mt-6 text-sm text-muted-foreground">{pricingHeading.footnote}</p>
-          <ProgressiveFees />
-          <ol className="mt-10 flex flex-col gap-3 font-display text-sm sm:flex-row sm:items-center sm:gap-6" aria-label="How a store goes live">
-            <li><span className="font-semibold text-foreground">Build</span> <span className="text-muted-foreground">— free, no account</span></li>
-            <li aria-hidden="true" className="hidden text-muted-foreground sm:block">→</li>
-            <li><span className="font-semibold text-foreground">Save</span> <span className="text-muted-foreground">— create an account</span></li>
-            <li aria-hidden="true" className="hidden text-muted-foreground sm:block">→</li>
-            <li><span className="font-semibold text-foreground">Publish</span> <span className="text-muted-foreground">— finish payout setup</span></li>
-          </ol>
-          <Button size="lg" asChild className="mt-8 rounded-full">
-            <Link to={ORDERS_CTA.href} className="dot-action" onClick={() => trackCtaClick("pricing", ORDERS_CTA.variant)}>{ORDERS_CTA.label} <ArrowRight size={18} /></Link>
-          </Button>
+          <OrdersShowcase ctaLabel={ORDERS_CTA.label} secondary={{ label: "See how it works", to: "#how-it-works" }} onCtaClick={() => trackCtaClick("showcase", ORDERS_CTA.variant)} />
         </div>
       </section>
 
-      <StartBuildingStatement />
+
+      <OrdersHeroSlideshow slides={ordersHeroSlides} />
+
+      <PromoBanner surface="homepage" wrapperClassName="section-container pt-8" />
 
       {/* How it works */}
       <section id="how-it-works" className="section-padding scroll-mt-24">
@@ -259,8 +193,6 @@ const Orders = () => {
         </div>
       </section>
 
-      <StorefrontAssembly />
-
       {/* Interactive storefront demo */}
       <section className="section-padding surface-subtle border-y border-border">
         <div className="section-container">
@@ -278,55 +210,6 @@ const Orders = () => {
         </div>
       </section>
 
-      <TryItInvitation />
-
-      {/* Social commerce */}
-      <section className="section-padding surface-subtle border-y border-border">
-        <div className="section-container">
-          <Reveal className="max-w-3xl">
-            <Eyebrow>Social commerce</Eyebrow>
-            <h2 className="mt-5 font-hero text-4xl font-semibold leading-tight tracking-tight lg:text-6xl">
-              Your followers are already customers.
-            </h2>
-            <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-              Businesses shouldn&apos;t have to manage orders through dozens of DMs, text messages, screenshots,
-              payment requests, and spreadsheets. Loumilab Orders turns a social media audience into a simple
-              ordering experience.
-            </p>
-          </Reveal>
-
-          <div className="mt-14 flex items-center gap-3 text-muted-foreground">
-            <Instagram size={18} />
-            <span className="text-sm">One link. Every channel.</span>
-          </div>
-          <FlowDiagram steps={socialFlow} className="mt-6" />
-        </div>
-      </section>
-
-      <PhotoSplit
-        image={bakerOrders}
-        alt="A baker boxing a fresh pastry order, with incoming orders on a tablet beside her"
-        eyebrow="Built for real merchants"
-        title="Spend the morning baking, not answering DMs."
-        dotLens
-      >
-        <p>Orders arrive in one place with pickup times, notes and payment already handled — so you can get back to the work you love.</p>
-      </PhotoSplit>
-
-      <DotThread reverse />
-
-      <PeopleSequence
-        eyebrow="From kitchen to customer"
-        title="You create it. Loumilab Orders helps you sell it."
-        items={[
-          { src: homeChef, alt: "A home chef cooking at the stove in a sunlit kitchen", label: "Prepare", note: "Cook, bake and create on your schedule." },
-          { src: bakerDecorating, alt: "A baker piping frosting onto a cake", label: "Sell", note: "Your menu lives on your own storefront." },
-          { src: reviewingOrders, alt: "An owner reviewing orders on a tablet", label: "Receive orders", note: "Every order lands in one queue." },
-          { src: packing, alt: "A meal-prep owner packing labeled orders into bags", label: "Pack", note: "Notes and pickup times right in front of you." },
-          { src: handoff, alt: "A merchant handing a paper bag order to a customer", label: "Hand off", note: "Pickup or delivery, already paid." },
-        ]}
-      />
-
       {/* Dashboard showcase */}
       <section className="section-padding">
         <div className="section-container">
@@ -343,6 +226,9 @@ const Orders = () => {
               Open the demo dashboard <ArrowRight size={15} />
             </Link>
           </Reveal>
+          <div className="mx-auto mt-8 flex max-w-3xl flex-wrap justify-center gap-2" aria-label="Order stages">
+            {ORDER_STATUSES.map((status) => <OrderStatusBadge key={status} status={status} />)}
+          </div>
 
           <Reveal className="mx-auto mt-12 max-w-6xl">
             <ScreenFrame
@@ -351,42 +237,6 @@ const Orders = () => {
               alt="The Loumilab Orders merchant dashboard showing today's revenue, order count, average order, and a queue of orders marked New, Confirmed, Preparing, Ready and Completed."
             />
           </Reveal>
-        </div>
-      </section>
-
-      {/* Order lifecycle */}
-      <section className="section-padding surface-subtle border-y border-border">
-        <div className="section-container">
-          <Reveal className="max-w-2xl">
-            <Eyebrow>Order management</Eyebrow>
-            <h2 className="mt-5 text-4xl font-semibold leading-tight lg:text-5xl">
-              Always know what needs attention.
-            </h2>
-            <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-              Every order moves through five clear stages. One glance tells you what to cook, what to bag, and what
-              is waiting at the counter.
-            </p>
-          </Reveal>
-
-          <div className="mt-12 grid gap-4 sm:grid-cols-3 lg:grid-cols-5">
-            {ORDER_STATUSES.map((status, i) => (
-              <Reveal
-                key={status}
-                delay={i * 90}
-                className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-soft)]"
-              >
-                <OrderStatusBadge status={status} />
-                <p className="mt-4 font-hero text-2xl font-semibold tracking-tight">0{i + 1}</p>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  {status === "New" && "Just came in and needs a decision."}
-                  {status === "Confirmed" && "Accepted, customer notified."}
-                  {status === "Preparing" && "In the kitchen or being packed."}
-                  {status === "Ready" && "Waiting for pickup."}
-                  {status === "Completed" && "Handed off and closed out."}
-                </p>
-              </Reveal>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -425,10 +275,38 @@ const Orders = () => {
             ))}
           </div>
 
-          <IndustryStrip />
         </div>
       </section>
 
+      {/* Pricing */}
+      <section id="pricing" className="scroll-mt-24 section-padding surface-subtle border-y border-border">
+        <div className="section-container">
+          <Reveal className="max-w-2xl">
+            <Eyebrow>{pricingHeading.eyebrow}</Eyebrow>
+            <h2 className="mt-5 text-4xl font-semibold leading-tight lg:text-5xl">{pricingHeading.title}</h2>
+            <p className="mt-6 text-lg leading-relaxed text-muted-foreground">{pricingHeading.subtitle}</p>
+          </Reveal>
+
+          <div className="mt-10">
+            <FeeAnnouncement />
+          </div>
+          <div className="mt-14">
+            <PricingTable />
+          </div>
+          <p className="mt-6 text-sm text-muted-foreground">{pricingHeading.footnote}</p>
+          <Link to="/orders/pricing" className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-accent hover:underline">See how pricing works <ArrowRight size={15} /></Link>
+          <ol className="mt-10 flex flex-col gap-3 font-display text-sm sm:flex-row sm:items-center sm:gap-6" aria-label="How a store goes live">
+            <li><span className="font-semibold text-foreground">Build</span> <span className="text-muted-foreground">— free, no account</span></li>
+            <li aria-hidden="true" className="hidden text-muted-foreground sm:block">→</li>
+            <li><span className="font-semibold text-foreground">Save</span> <span className="text-muted-foreground">— create an account</span></li>
+            <li aria-hidden="true" className="hidden text-muted-foreground sm:block">→</li>
+            <li><span className="font-semibold text-foreground">Publish</span> <span className="text-muted-foreground">— finish payout setup</span></li>
+          </ol>
+          <Button size="lg" asChild className="mt-8 rounded-full">
+            <Link to={ORDERS_CTA.href} className="dot-action" onClick={() => trackCtaClick("pricing", ORDERS_CTA.variant)}>{ORDERS_CTA.label} <ArrowRight size={18} /></Link>
+          </Button>
+        </div>
+      </section>
 
       {/* Features */}
       <section className="section-padding surface-subtle border-y border-border">
@@ -460,11 +338,6 @@ const Orders = () => {
           </div>
         </div>
       </section>
-
-      <ImmersiveImage
-        image={{ src: teamKitchen, alt: "A small catering team preparing trays of food together in a shared kitchen" }}
-        caption="Small teams, big orders — all in one place."
-      />
 
       {/* Final CTA */}
       <section className="section-container py-20 lg:py-28">
