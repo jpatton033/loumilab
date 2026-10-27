@@ -133,10 +133,10 @@ const Dashboard = () => {
   const { data: calendarEvents, refetch: refetchCalendarEvents } = useJobCalendarEvents(calendarSyncOn ? merchant?.id : null);
   const retriedCalendar = useRef(false);
   useEffect(() => {
-    if (!calendarSyncOn || retriedCalendar.current) return;
+    if (!calendarSyncOn || !merchant?.id || retriedCalendar.current) return;
     retriedCalendar.current = true;
     void retryFailedCalendarSyncs().then(() => refetchCalendarEvents());
-  }, [calendarSyncOn, refetchCalendarEvents]);
+  }, [calendarSyncOn, merchant?.id, refetchCalendarEvents]);
   const { data: setup } = useMerchantSetup(terms.catalog);
 
   const {
