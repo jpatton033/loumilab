@@ -219,6 +219,24 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://loumilab.com/the-dot/issue/convenience-has-a-cost-frictionless-digital-life</loc>
+    <lastmod>2026-10-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://loumilab.com/the-dot/issue/next-generation-entrepreneurs-may-never-hire-developer</loc>
+    <lastmod>2026-10-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://loumilab.com/the-dot/issue/when-everything-becomes-a-subscription-what-do-we-own</loc>
+    <lastmod>2026-10-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://loumilab.com/orders/local/taste-this</loc>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -290,6 +308,12 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://loumilab.com/resources/business-growth/when-growth-becomes-a-problem</loc>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://loumilab.com/resources/security-privacy/your-digital-footprint-is-bigger-than-you-think</loc>
     <lastmod>2026-10-22</lastmod>
     <changefreq>monthly</changefreq>
@@ -315,7 +339,7 @@
   </url>
   <url>
     <loc>https://loumilab.com/resources/templates-tools/order-intake-template</loc>
-    <lastmod>2026-10-26</lastmod>
+    <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -334,6 +358,12 @@
   <url>
     <loc>https://loumilab.com/resources/business-growth/turn-first-time-buyers-into-regulars</loc>
     <lastmod>2026-10-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://loumilab.com/resources/business-growth/technology-is-getting-smarter-are-businesses-getting-better</loc>
+    <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -374,12 +404,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://loumilab.com/resources/business-growth/when-growth-becomes-a-problem</loc>
-    <lastmod>2026-10-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://loumilab.com/resources/business-growth/more-customers-wont-fix-a-broken-business-process</loc>
     <lastmod>2026-10-18</lastmod>
     <changefreq>monthly</changefreq>
@@ -405,7 +429,7 @@
   </url>
   <url>
     <loc>https://loumilab.com/resources/security-privacy/the-next-cybersecurity-attack-may-not-look-like-a-cyberattack</loc>
-    <lastmod>2026-10-25</lastmod>
+    <lastmod>2026-10-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -422,14 +446,14 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://loumilab.com/resources/web-digital/the-internet-is-changing-are-we-losing-control-of-our-digital-experiences</loc>
-    <lastmod>2026-10-22</lastmod>
+    <loc>https://loumilab.com/resources/orders-commerce/the-end-of-the-traditional-customer-journey</loc>
+    <lastmod>2026-10-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://loumilab.com/resources/orders-commerce/the-end-of-the-traditional-customer-journey</loc>
-    <lastmod>2026-10-26</lastmod>
+    <loc>https://loumilab.com/resources/web-digital/the-internet-is-changing-are-we-losing-control-of-our-digital-experiences</loc>
+    <lastmod>2026-10-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
