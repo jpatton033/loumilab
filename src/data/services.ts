@@ -168,7 +168,7 @@ export const servicePages: ServicePage[] = [
     title: "Your domain, set up properly.",
     lede: "We help you get the right domain through an established registrar and configure it for your website and email.",
     image: domainSetup,
-    imageAlt: "A business owner reviewing setup details at her desk",
+    imageAlt: "A shop owner setting up her business website at a laptop near the storefront window",
     delivers: [
       { title: "The right name", body: "Help choosing and securing a domain through an established registrar in your name." },
       { title: "Correct records", body: "Website, email and security records configured and tested." },
