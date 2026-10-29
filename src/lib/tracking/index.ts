@@ -190,6 +190,19 @@ export const trackStoreCreated = (params: Record<string, string | number> = {}) 
   window.dataLayer?.push({ event: "store_created", ...params });
 };
 
+/** The Dot. reading/subscription events (GTM only, never identifiers). */
+export type DotEvent =
+  | "dot_article_view"
+  | "dot_free_read_limit_reached"
+  | "dot_subscription_gate_shown"
+  | "dot_subscription_gate_dismissed"
+  | "dot_subscription_started"
+  | "dot_subscription_completed";
+export const trackDot = (event: DotEvent, params: Record<string, string | number> = {}) => {
+  if (!allowed() || !googleLoaded) return;
+  window.dataLayer?.push({ event, ...params });
+};
+
 /** CTA click (GTM only, so Meta conversions aren't double-counted). */
 export const trackCtaClick = (location: string, variant: string) => {
   if (!allowed() || !googleLoaded) return;
