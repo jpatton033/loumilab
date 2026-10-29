@@ -1,4 +1,8 @@
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import DotSoftGate from "@/components/thedot/DotSoftGate";
+import { loadReadState, markSubscribed, recordRead, saveReads, shouldGate } from "@/lib/thedot/readAllowance";
+import { trackDot } from "@/lib/tracking";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import Reveal from "@/components/Reveal";
@@ -22,6 +26,21 @@ const paragraphs = (text: string | null | undefined): string[] => {
 const IssuePage = () => {
   const { slug } = useParams<{ slug: string }>();
   const { data: issue, isLoading } = useDotIssue(slug);
+  const [gated, setGated] = useState(false);
+
+  useEffect(() => {
+    if (!issue || issue.status !== "published") return;
+    if (new URLSearchParams(window.location.search).get("utm_source") === "the-dot") markSubscribed();
+    const state = loadReadState();
+    const gate = shouldGate(state, issue.slug);
+    setGated(gate);
+    trackDot("dot_article_view", { issue: issue.slug });
+    if (gate) {
+      trackDot("dot_free_read_limit_reached", { issue: issue.slug });
+    } else {
+      saveReads(recordRead(state.reads, issue.slug));
+    }
+  }, [issue]);
 
   if (isLoading) {
     return (
@@ -60,6 +79,12 @@ const IssuePage = () => {
     (issue.story_title ? `${issue.story_title} — A brief from Loumilab on ideas, technology, and what's next.` : "A brief from Loumilab.");
   const storyParas = paragraphs(issue.story_body);
   const rich = issue.content_format === "html";
+  // Split the main story: first two paragraphs stay open, the rest joins the gated area.
+  const richBlocks = rich ? (issue.story_body ?? "").match(/<(p|h[1-6]|ul|ol|blockquote|figure|pre)[\s>][\s\S]*?<\/\1>/gi) ?? [] : [];
+  const richIntro = richBlocks.length > 2 ? richBlocks.slice(0, 2).join("") : issue.story_body ?? "";
+  const richRest = richBlocks.length > 2 ? richBlocks.slice(2).join("") : "";
+  const introParas = storyParas.slice(0, 2);
+  const restParas = storyParas.slice(2);
 
   return (
     <Layout>
@@ -130,11 +155,18 @@ const IssuePage = () => {
             <Reveal className="mt-12">
               <h2 className="text-2xl font-semibold leading-snug lg:text-3xl">{issue.story_title}</h2>
               <div className="mt-6 space-y-5 text-lg leading-relaxed text-foreground/90">
-                {rich ? <IssueRichContent body={issue.story_body ?? ""} /> : storyParas.map((p, i) => (
+                {rich ? <IssueRichContent body={richIntro} /> : introParas.map((p, i) => (
                   <p key={i}>{p}</p>
                 ))}
               </div>
             </Reveal>
+          )}
+
+          <DotSoftGate gated={gated} slug={issue.slug}>
+          {(rich ? richRest : restParas.length > 0) && (
+            <div className="mt-5 space-y-5 text-lg leading-relaxed text-foreground/90">
+              {rich ? <IssueRichContent body={richRest} /> : restParas.map((p, i) => <p key={i}>{p}</p>)}
+            </div>
           )}
 
           {(issue.short_stories ?? []).length > 0 && (
@@ -210,6 +242,8 @@ const IssuePage = () => {
               {rich ? <IssueRichContent body={issue.closing_thought} className="font-display text-xl font-medium leading-relaxed text-foreground lg:text-2xl" /> : <p className="font-display text-xl font-medium leading-relaxed text-foreground lg:text-2xl">{issue.closing_thought}</p>}
             </Reveal>
           )}
+
+          </DotSoftGate>
 
           <div className="mt-16">
             <TheDotSignup source={`the-dot-issue-${issue.slug}`} variant="panel" />

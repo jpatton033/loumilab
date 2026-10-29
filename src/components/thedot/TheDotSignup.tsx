@@ -4,6 +4,8 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { markSubscribed } from "@/lib/thedot/readAllowance";
+import { trackDot } from "@/lib/tracking";
 import { DOT_TOPICS, saveDotInterests, subscribeToTheDot, type SubscribeResult } from "@/lib/thedot/queries";
 
 const emailOk = (v: string) => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.trim()) && v.trim().length <= 255;
@@ -26,6 +28,7 @@ interface TheDotSignupProps {
   heading?: string;
   description?: string;
   className?: string;
+  onSubscribed?: () => void;
 }
 
 const TheDotSignup = ({
@@ -34,6 +37,7 @@ const TheDotSignup = ({
   heading = "Stay connected to what's next.",
   description = "A concise brief from Loumilab — ideas, technology, and shifts worth watching. Twice a month. No noise.",
   className,
+  onSubscribed,
 }: TheDotSignupProps) => {
   const [email, setEmail] = useState("");
   const [state, setState] = useState<"idle" | "submitting" | "done">("idle");
@@ -51,7 +55,11 @@ const TheDotSignup = ({
     }
     setState("submitting");
     try {
+      trackDot("dot_subscription_started", { location: source });
       const result = await subscribeToTheDot(clean, source);
+      markSubscribed();
+      trackDot("dot_subscription_completed", { location: source });
+      onSubscribed?.();
       setAlready(Boolean(result.already));
       setSubscriberEmail(clean);
       setState("done");
