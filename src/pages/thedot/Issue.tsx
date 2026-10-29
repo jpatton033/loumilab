@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import DotSoftGate from "@/components/thedot/DotSoftGate";
-import { loadReadState, markSubscribed, recordRead, saveReads, shouldGate, FREE_READS } from "@/lib/thedot/readAllowance";
+import { loadReadState, markSubscribed, recordRead, saveReads, shouldGate } from "@/lib/thedot/readAllowance";
 import { trackDot } from "@/lib/tracking";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
@@ -37,7 +37,7 @@ const IssuePage = () => {
     trackDot("dot_article_view", { issue: issue.slug });
     if (gate) {
       trackDot("dot_free_read_limit_reached", { issue: issue.slug });
-    } else if (!state.subscribed && !state.dismissed || state.reads.length < FREE_READS) {
+    } else {
       saveReads(recordRead(state.reads, issue.slug));
     }
   }, [issue]);
