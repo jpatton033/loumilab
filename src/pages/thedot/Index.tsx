@@ -59,7 +59,12 @@ const TheDotIndex = () => {
             </p>
           </Reveal>
           <Reveal delay={120} className="mx-auto mt-10 max-w-xl">
-            <TheDotSignup source="the-dot" variant="panel" />
+            <TheDotSignup
+              source="the-dot"
+              variant="panel"
+              heading="Ideas worth staying curious about."
+              description="The Dot. explores the intersection of technology, business, culture, and the changing digital world. Subscribe to receive new perspectives directly in your inbox."
+            />
           </Reveal>
         </div>
       </section>
