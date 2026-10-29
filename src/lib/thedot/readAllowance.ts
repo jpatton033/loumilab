@@ -1,5 +1,5 @@
 /** The Dot. free-read allowance: pure rules + browser storage (no identity, no fingerprinting). */
-export const FREE_READS = 3;
+export const FREE_READS = 1;
 const READS_KEY = "thedot:reads";
 const SUB_KEY = "thedot:subscribed";
 const DISMISS_KEY = "thedot:gate-dismissed";
