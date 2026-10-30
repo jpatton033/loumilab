@@ -25,7 +25,7 @@ describe("The Dot. main story preview", () => {
     for (const part of [intro, rest]) {
       const body = parse(part);
       expect(body.querySelectorAll("li")).toHaveLength(3);
-      expect(body.querySelector("ul > li:last-child")?.textContent).toBe("Last outer item");
+      expect(body.querySelector("ul")?.lastElementChild?.textContent).toBe("Last outer item");
     }
     expect(parse(intro).lastElementChild?.textContent).toBe("Second");
   });
