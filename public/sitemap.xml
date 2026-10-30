@@ -326,14 +326,14 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://loumilab.com/resources/web-digital/website-that-converts</loc>
-    <lastmod>2026-10-26</lastmod>
+    <loc>https://loumilab.com/resources/security-privacy/small-business-security-baseline</loc>
+    <lastmod>2026-10-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://loumilab.com/resources/security-privacy/small-business-security-baseline</loc>
-    <lastmod>2026-10-25</lastmod>
+    <loc>https://loumilab.com/resources/web-digital/website-that-converts</loc>
+    <lastmod>2026-10-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -350,12 +350,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://loumilab.com/resources/business-growth/is-your-business-ready-to-grow</loc>
-    <lastmod>2026-10-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://loumilab.com/resources/business-growth/turn-first-time-buyers-into-regulars</loc>
     <lastmod>2026-10-26</lastmod>
     <changefreq>monthly</changefreq>
@@ -364,6 +358,12 @@
   <url>
     <loc>https://loumilab.com/resources/business-growth/technology-is-getting-smarter-are-businesses-getting-better</loc>
     <lastmod>2026-10-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://loumilab.com/resources/business-growth/is-your-business-ready-to-grow</loc>
+    <lastmod>2026-10-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
