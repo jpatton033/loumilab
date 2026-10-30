@@ -9,6 +9,7 @@ import Reveal from "@/components/Reveal";
 import { Button } from "@/components/ui/button";
 import { DotThread } from "@/components/brand/dot";
 import IssueRichContent from "@/components/thedot/IssueRichContent";
+import { splitStoryPreview } from "@/lib/thedot/storyPreview";
 import TheDotSignup from "@/components/thedot/TheDotSignup";
 import { issueMonthLabel, useDotIssue, type DotShortStory } from "@/lib/thedot/queries";
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
@@ -80,9 +81,9 @@ const IssuePage = () => {
   const storyParas = paragraphs(issue.story_body);
   const rich = issue.content_format === "html";
   // Split the main story: first two paragraphs stay open, the rest joins the gated area.
-  const richBlocks = rich ? (issue.story_body ?? "").match(/<(p|h[1-6]|ul|ol|blockquote|figure|pre)[\s>][\s\S]*?<\/\1>/gi) ?? [] : [];
-  const richIntro = richBlocks.length > 2 ? richBlocks.slice(0, 2).join("") : issue.story_body ?? "";
-  const richRest = richBlocks.length > 2 ? richBlocks.slice(2).join("") : "";
+  const { intro: richIntro, rest: richRest } = rich
+    ? splitStoryPreview(issue.story_body ?? "")
+    : { intro: "", rest: "" };
   const introParas = storyParas.slice(0, 2);
   const restParas = storyParas.slice(2);
 
