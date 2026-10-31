@@ -22,6 +22,9 @@ function summarize(views: View[]) {
   const bounced = [...sessions.values()].filter((l) => l.length === 1).length;
   const mobile = firsts.filter((v) => v.device === "mobile").length;
   const sawPath = (p: string) => [...sessions.values()].filter((l) => l.some((v) => v.path === p || v.path.startsWith(p + "?"))).length;
+  const isDot = (p: string) => p === "/the-dot" || p.startsWith("/the-dot/") || p.startsWith("/the-dot?");
+  const dotViews = views.filter((v) => isDot(v.path));
+  const issueViews = dotViews.filter((v) => v.path.startsWith("/the-dot/"));
   return {
     views: views.length,
     visits: sessions.size,
@@ -31,6 +34,13 @@ function summarize(views: View[]) {
     sources: count((v) => v.referrer_source, firsts),
     orders: sawPath("/orders"),
     getStarted: sawPath("/orders/get-started"),
+    dot: {
+      views: dotViews.length,
+      visits: new Set(dotViews.map((v) => v.session_id)).size,
+      hub: dotViews.length - issueViews.length,
+      issues: issueViews.length,
+      topIssues: count((v) => v.path.split("?")[0].replace("/the-dot/", ""), issueViews),
+    },
   };
 }
 
@@ -68,6 +78,17 @@ export const websiteTrafficCollector: Collector = {
       { label: "Top pages", value: top(cur.pages) },
       { label: "Top sources", value: top(cur.sources) },
     ];
+    const dDelta = (a: number, b: number) => (b ? `${a >= b ? "+" : ""}${Math.round(((a - b) / b) * 100)}%` : a ? "new" : "0%");
+    if (cur.dot.views === 0) {
+      rows.push({ label: "The Dot.", value: "No The Dot. views in this period." });
+    } else {
+      rows.push(
+        { label: "The Dot. views", value: `${formatInt(cur.dot.views)} (${dDelta(cur.dot.views, prev.dot.views)} vs previous)` },
+        { label: "The Dot. visits", value: formatInt(cur.dot.visits) },
+        { label: "The Dot. hub vs issues", value: `${formatInt(cur.dot.hub)} hub · ${formatInt(cur.dot.issues)} issues` },
+        { label: "The Dot. top issues", value: top(cur.dot.topIssues) },
+      );
+    }
 
     if (deep) {
       const wEnd = window.end;
@@ -81,6 +102,9 @@ export const websiteTrafficCollector: Collector = {
         { label: "7-day top sources", value: top(w.sources, 5) },
         { label: "7-day top pages", value: top(w.pages, 5) },
         { label: "Orders funnel (7 days)", value: `${w.orders} visits saw Orders → ${w.getStarted} opened Get Started` },
+        { label: "7-day The Dot. views", value: `${formatInt(w.dot.views)} (${delta(w.dot.views, pw.dot.views)} vs prior week)` },
+        { label: "7-day The Dot. visits", value: `${formatInt(w.dot.visits)} (${delta(w.dot.visits, pw.dot.visits)})` },
+        { label: "7-day The Dot. top issues", value: top(w.dot.topIssues, 5) },
       );
       if (w.orders >= 20 && w.getStarted / w.orders < 0.05) {
         ctx.actions.push({
@@ -104,6 +128,7 @@ export const websiteTrafficCollector: Collector = {
       metrics: [
         metric("Visits", formatInt(cur.visits), { current: cur.visits, previous: prev.visits }),
         metric("Page views", formatInt(cur.views), { current: cur.views, previous: prev.views }),
+        metric("The Dot. views", formatInt(cur.dot.views), { current: cur.dot.views, previous: prev.dot.views }),
       ],
       rows,
       emptyLine: cur.views === 0 ? "No website visits recorded in this period." : undefined,
