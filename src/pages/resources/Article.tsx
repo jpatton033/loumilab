@@ -1,3 +1,4 @@
+import { showPublicViews } from "@/lib/kc/viewCount";
 import { useEffect, useMemo } from "react";
 import { DotProgress } from "@/components/brand/dot";
 import { Link, useParams } from "react-router-dom";
@@ -165,7 +166,7 @@ const ResourceArticle = () => {
                   <span className="inline-flex items-center gap-1.5">
                     <Clock size={14} /> {article.read_minutes} min read
                   </span>
-                  {article.view_count > 0 && (
+                  {showPublicViews(article.view_count) && (
                     <span className="inline-flex items-center gap-1.5">
                       <Eye size={14} /> {article.view_count} views
                     </span>

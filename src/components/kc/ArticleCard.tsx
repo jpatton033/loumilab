@@ -1,3 +1,4 @@
+import { showPublicViews } from "@/lib/kc/viewCount";
 import { Link } from "react-router-dom";
 import { ArrowRight, Clock, Eye } from "lucide-react";
 import type { KcArticleWithRelations } from "@/lib/kc/types";
@@ -26,7 +27,7 @@ const ArticleCard = ({ article, actionMarker = false }: { article: KcArticleWith
         <span className="inline-flex items-center gap-1.5">
           <Clock size={13} /> {article.read_minutes} min read
         </span>
-        {article.view_count > 0 && (
+        {showPublicViews(article.view_count) && (
           <span className="inline-flex items-center gap-1.5">
             <Eye size={13} /> {article.view_count}
           </span>
