@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { isLikelyBot } from "./botDetect";
 
 /** Anonymous first-party page views (no IP, no identity) for the daily brief. */
 const SESSION_KEY = "loumilab-visit";
@@ -38,6 +39,7 @@ export function recordSiteView(path: string) {
   const host = window.location.hostname;
   if (host === "localhost" || host.includes("id-preview") || host.includes("lovableproject")) return;
   if (path.startsWith("/admin") || path.startsWith("/login")) return;
+  if (isLikelyBot(navigator.userAgent, navigator.webdriver === true)) return;
   const v = visit();
   const device = window.matchMedia("(max-width: 767px)").matches ? "mobile" : "desktop";
   supabase.rpc("record_page_view", { _path: path, _referrer: v.source, _session: v.id, _device: device }).then(() => {});
