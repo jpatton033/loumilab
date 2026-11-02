@@ -22,9 +22,10 @@ function summarize(views: View[]) {
   const bounced = [...sessions.values()].filter((l) => l.length === 1).length;
   const mobile = firsts.filter((v) => v.device === "mobile").length;
   const sawPath = (p: string) => [...sessions.values()].filter((l) => l.some((v) => v.path === p || v.path.startsWith(p + "?"))).length;
-  const isDot = (p: string) => p === "/the-dot" || p.startsWith("/the-dot/") || p.startsWith("/the-dot?");
+  const pathname = (p: string) => p.split(/[?#]/)[0].replace(/\/$/, "");
+  const isDot = (p: string) => pathname(p) === "/the-dot" || /^\/the-dot\/issue\/[^/]+$/.test(pathname(p));
   const dotViews = views.filter((v) => isDot(v.path));
-  const issueViews = dotViews.filter((v) => v.path.startsWith("/the-dot/"));
+  const issueViews = dotViews.filter((v) => pathname(v.path).startsWith("/the-dot/issue/"));
   return {
     views: views.length,
     visits: sessions.size,
@@ -39,7 +40,7 @@ function summarize(views: View[]) {
       visits: new Set(dotViews.map((v) => v.session_id)).size,
       hub: dotViews.length - issueViews.length,
       issues: issueViews.length,
-      topIssues: count((v) => v.path.split("?")[0].replace("/the-dot/", ""), issueViews),
+      topIssues: count((v) => pathname(v.path).slice("/the-dot/issue/".length), issueViews),
     },
   };
 }
