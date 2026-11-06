@@ -49,7 +49,7 @@ export const DotProgress = ({ targetId }: { targetId: string }) => {
   return (
     <div aria-hidden="true" className="ldot-progress pointer-events-none" style={{ opacity: p > 0.01 && p < 0.995 ? 1 : 0 }}>
       <span className="ldot-progress-line" style={{ transform: `scaleX(${p})` }} />
-      <span className="ldot-progress-tip" style={{ left: `calc(${p * 100}% - 4px)` }} />
+      <span className="ldot-progress-tip" style={{ left: `calc(${p * 100}% - 2.5px)` }} />
     </div>
   );
 };
