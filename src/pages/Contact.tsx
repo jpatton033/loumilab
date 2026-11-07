@@ -21,7 +21,7 @@ const contactSchema = z.object({
   message: z.string().trim().min(10, "Message must be at least 10 characters").max(2000, "Message must be less than 2000 characters"),
 });
 
-const SERVICES = ["Website development", "Custom software", "AI & automation", "Cybersecurity", "Business email or domain", "Loumilab Orders", "Not sure yet"];
+const SERVICES = ["Website development", "Custom software", "Workflow optimization", "AI & automation", "Cybersecurity", "Business email or domain", "Loumilab Orders", "Not sure yet"];
 const BUDGETS = ["Under $2,500", "$2,500 – $10,000", "$10,000 – $25,000", "$25,000+", "Not sure yet"];
 const selectCls = "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
 
