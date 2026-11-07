@@ -152,7 +152,7 @@ const WorkflowOptimization = () => {
     setKind(k);
     setSent(null);
     setErrors({});
-    track("CTAClick", { content_name: k === "assessment" ? "Optimize Your Workflow" : "Software project", location: where } as never);
+    track("IntakeStart", { content_name: k === "assessment" ? "Optimize Your Workflow" : "Software project", location: where });
     document.getElementById("inquiry")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
