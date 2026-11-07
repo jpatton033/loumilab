@@ -288,7 +288,7 @@ const WorkflowOptimization = () => {
       </section>
 
       {/* Zero-token */}
-      <section className="section-padding bg-surface-inverse text-inverse-foreground">
+      <section className="section-padding bg-surface-inverse text-inverse">
         <div className="container-wide">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">Zero-Token Workflows</p>
           <h2 className="mt-4 max-w-3xl text-3xl font-bold tracking-tight md:text-4xl">Some workflows shouldn't need a single AI token.</h2>
@@ -299,13 +299,13 @@ const WorkflowOptimization = () => {
           <div role="tablist" aria-label="Example scenarios" className="mt-10 flex flex-wrap gap-2">
             {SCENARIOS.map((sc, i) => (
               <button key={sc.name} role="tab" aria-selected={scenario === i} aria-controls="wf-panel" onClick={() => setScenario(i)}
-                className={`min-h-11 rounded-full border px-4 text-sm font-medium transition-colors ${scenario === i ? "border-accent bg-accent text-accent-foreground" : "border-inverse-foreground/20 text-inverse-foreground hover:border-inverse-foreground/50"}`}>
+                className={`min-h-11 rounded-full border px-4 text-sm font-medium transition-colors ${scenario === i ? "border-accent bg-accent text-accent-foreground" : "border-inverse/20 text-inverse hover:border-inverse/50"}`}>
                 {sc.name}
               </button>
             ))}
           </div>
           <div id="wf-panel" role="tabpanel" key={scenario} className="mt-6 grid gap-4 animate-fade-in md:grid-cols-2">
-            <div className="rounded-3xl border border-inverse-foreground/15 p-6">
+            <div className="rounded-3xl border border-inverse/15 p-6">
               <p className="text-xs font-semibold uppercase tracking-[0.14em] text-inverse-muted">Before · AI-dependent</p>
               <p className="mt-3 text-lg">{s.before}</p>
             </div>
@@ -449,13 +449,13 @@ const WorkflowOptimization = () => {
       </section>
 
       {/* Closing */}
-      <section className="section-padding bg-surface-inverse text-inverse-foreground">
+      <section className="section-padding bg-surface-inverse text-inverse">
         <div className="container-wide max-w-3xl text-center">
           <h2 className="text-3xl font-bold tracking-tight md:text-5xl">Your business doesn't need more complexity. It needs better systems.</h2>
           <p className="mx-auto mt-6 max-w-2xl text-inverse-muted">Let's identify what's slowing your business down and build software that makes everyday work simpler, faster, and more efficient.</p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
             <Button size="lg" onClick={() => goForm("assessment", "closing")}>Optimize Your Workflow</Button>
-            <Button size="lg" variant="outline" className="border-inverse-foreground/30 bg-transparent text-inverse-foreground hover:bg-inverse-foreground/10 hover:text-inverse-foreground" onClick={() => goForm("project", "closing")}>Start a Software Project</Button>
+            <Button size="lg" variant="outline" className="border-inverse/30 bg-transparent text-inverse hover:bg-inverse/10 hover:text-inverse" onClick={() => goForm("project", "closing")}>Start a Software Project</Button>
           </div>
         </div>
       </section>
