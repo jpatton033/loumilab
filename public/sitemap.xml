@@ -452,6 +452,12 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://loumilab.com/resources/web-digital/why-your-business-isnt-showing-up-on-google</loc>
+    <lastmod>2026-11-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://loumilab.com/resources/security-privacy/the-next-cybersecurity-attack-may-not-look-like-a-cyberattack</loc>
     <lastmod>2026-11-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -465,7 +471,7 @@
   </url>
   <url>
     <loc>https://loumilab.com/resources/business-growth/turn-first-time-buyers-into-regulars</loc>
-    <lastmod>2026-11-02</lastmod>
+    <lastmod>2026-11-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -484,6 +490,12 @@
   <url>
     <loc>https://loumilab.com/resources/web-digital/what-a-modern-business-website-should-do</loc>
     <lastmod>2026-11-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://loumilab.com/resources/technology-ai/who-pays-for-ai-boom-data-centers-electricity</loc>
+    <lastmod>2026-11-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -512,8 +524,8 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://loumilab.com/resources/web-digital/why-your-business-isnt-showing-up-on-google</loc>
-    <lastmod>2026-11-05</lastmod>
+    <loc>https://loumilab.com/resources/business-growth/cashless-business-debate</loc>
+    <lastmod>2026-11-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -548,8 +560,20 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://loumilab.com/resources/security-privacy/are-passwords-becoming-obsolete-the-rise-of-passkeys</loc>
+    <lastmod>2026-11-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://loumilab.com/resources/business-growth/the-business-you-own-platforms-you-depend-on</loc>
     <lastmod>2026-11-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://loumilab.com/resources/technology-ai/is-ai-replacing-entry-level-jobs</loc>
+    <lastmod>2026-11-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -580,6 +604,12 @@
   <url>
     <loc>https://loumilab.com/resources/web-digital/the-internet-is-changing-are-we-losing-control-of-our-digital-experiences</loc>
     <lastmod>2026-10-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://loumilab.com/resources/orders-commerce/why-online-shopping-returns-are-a-billion-dollar-problem</loc>
+    <lastmod>2026-11-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
