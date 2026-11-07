@@ -16,6 +16,7 @@ export const navMenus: NavMenu[] = [
         items: [
           { label: "Website Development", to: "/services/website-development", desc: "Fast, clear websites built to convert." },
           { label: "Custom Software", to: "/services/custom-software", desc: "Web apps and platforms around how you work." },
+          { label: "Workflow Optimization", to: "/services/workflow-optimization", desc: "Smarter software, less unnecessary AI." },
           { label: "AI & Automation", to: "/services/ai-automation", desc: "Remove repetitive work with practical AI." },
           { label: "Cybersecurity", to: "/services/cybersecurity", desc: "Reviews, hardening and secure-by-default builds." },
         ],

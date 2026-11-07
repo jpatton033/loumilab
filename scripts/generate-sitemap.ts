@@ -23,6 +23,7 @@ const staticEntries: Entry[] = [
   { path: "/services/website-development", changefreq: "monthly", priority: "0.7" },
   { path: "/services/custom-software", changefreq: "monthly", priority: "0.7" },
   { path: "/services/ai-automation", changefreq: "monthly", priority: "0.7" },
+  { path: "/services/workflow-optimization", changefreq: "monthly", priority: "0.7" },
   { path: "/services/cybersecurity", changefreq: "monthly", priority: "0.7" },
   { path: "/services/domains", changefreq: "monthly", priority: "0.7" },
   { path: "/services/business-email", changefreq: "monthly", priority: "0.8" },
