@@ -224,7 +224,7 @@ const WorkflowOptimization = () => {
 
       {/* Hero */}
       <section className="section-padding pt-32 md:pt-40">
-        <div className="container-wide grid items-center gap-12 lg:grid-cols-2">
+        <div className="section-container grid items-center gap-12 lg:grid-cols-2">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">Workflow Optimization</p>
             <h1 className="mt-4 font-hero text-4xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-5xl md:text-6xl">Smarter software. Less unnecessary AI.</h1>
@@ -241,7 +241,7 @@ const WorkflowOptimization = () => {
 
       {/* Intro */}
       <section className="section-padding bg-secondary/40">
-        <div className="container-wide grid gap-12 lg:grid-cols-2">
+        <div className="section-container grid gap-12 lg:grid-cols-2">
           <Reveal>
             <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">Not every task needs AI.</h2>
             <div className="mt-6 space-y-4 leading-relaxed text-muted-foreground">
@@ -269,7 +269,7 @@ const WorkflowOptimization = () => {
 
       {/* Services */}
       <section className="section-padding">
-        <div className="container-wide">
+        <div className="section-container">
           <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">Built around how your business works.</h2>
           <p className="mt-4 max-w-2xl text-muted-foreground">Whether you're improving an existing process or developing something entirely new, Loumilab helps turn operational challenges into practical software solutions.</p>
           <div className="mt-12 grid gap-6 md:grid-cols-2">
@@ -289,7 +289,7 @@ const WorkflowOptimization = () => {
 
       {/* Zero-token */}
       <section className="section-padding bg-surface-inverse text-inverse">
-        <div className="container-wide">
+        <div className="section-container">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">Zero-Token Workflows</p>
           <h2 className="mt-4 max-w-3xl text-3xl font-bold tracking-tight md:text-4xl">Some workflows shouldn't need a single AI token.</h2>
           <div className="mt-6 max-w-3xl space-y-4 leading-relaxed text-inverse-muted">
@@ -321,7 +321,7 @@ const WorkflowOptimization = () => {
 
       {/* How we work */}
       <section className="section-padding">
-        <div className="container-wide">
+        <div className="section-container">
           <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">From inefficient processes to better systems.</h2>
           <ol className="mt-12 grid gap-6 md:grid-cols-5">
             {STEPS.map(([t, d], i) => (
@@ -338,7 +338,7 @@ const WorkflowOptimization = () => {
 
       {/* Applications */}
       <section className="section-padding bg-secondary/40">
-        <div className="container-wide">
+        <div className="section-container">
           <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">Practical solutions for everyday operations.</h2>
           <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {APPS.map(([t, d]) => (
@@ -354,7 +354,7 @@ const WorkflowOptimization = () => {
 
       {/* Why */}
       <section className="section-padding">
-        <div className="container-wide grid gap-12 lg:grid-cols-2">
+        <div className="section-container grid gap-12 lg:grid-cols-2">
           <div>
             <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">Technology should solve problems, not create dependencies.</h2>
             <div className="mt-6 space-y-4 leading-relaxed text-muted-foreground">
@@ -376,7 +376,7 @@ const WorkflowOptimization = () => {
 
       {/* FAQ */}
       <section className="section-padding bg-secondary/40">
-        <div className="container-wide max-w-3xl">
+        <div className="section-container max-w-3xl">
           <h2 className="text-3xl font-bold tracking-tight text-foreground">Questions</h2>
           <div className="mt-8 space-y-3">
             {FAQS.map((f) => (
@@ -391,7 +391,7 @@ const WorkflowOptimization = () => {
 
       {/* Inquiry */}
       <section id="inquiry" className="section-padding scroll-mt-24">
-        <div className="container-wide max-w-3xl">
+        <div className="section-container max-w-3xl">
           <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">Let's talk about your workflow.</h2>
           <div role="tablist" aria-label="Inquiry type" className="mt-8 grid grid-cols-1 gap-2 rounded-2xl border border-border p-1 sm:grid-cols-2">
             {([["assessment", "Request a Workflow Assessment"], ["project", "Discuss a Software Project"]] as const).map(([k, l]) => (
@@ -450,7 +450,7 @@ const WorkflowOptimization = () => {
 
       {/* Closing */}
       <section className="section-padding bg-surface-inverse text-inverse">
-        <div className="container-wide max-w-3xl text-center">
+        <div className="section-container max-w-3xl text-center">
           <h2 className="text-3xl font-bold tracking-tight md:text-5xl">Your business doesn't need more complexity. It needs better systems.</h2>
           <p className="mx-auto mt-6 max-w-2xl text-inverse-muted">Let's identify what's slowing your business down and build software that makes everyday work simpler, faster, and more efficient.</p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
