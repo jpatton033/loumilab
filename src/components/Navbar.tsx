@@ -78,6 +78,7 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [overHero, setOverHero] = useState(false);
+  const heroPath = useLocation().pathname;
   useEffect(() => {
     const check = () => setOverHero(!!document.querySelector("[data-page-hero]"));
     check();
@@ -86,7 +87,7 @@ const Navbar = () => {
     const main = document.querySelector("main");
     if (main) obs.observe(main, { childList: true, subtree: false });
     return () => { window.clearTimeout(t); obs.disconnect(); };
-  }, [location.pathname]);
+  }, [heroPath]);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [mobileMenu, setMobileMenu] = useState<string | null>(null);
   const navRef = useRef<HTMLElement | null>(null);
