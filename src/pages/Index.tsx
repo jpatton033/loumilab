@@ -7,7 +7,7 @@ import { MoreLink } from "@/components/brand/apple/Tiles";
 import { usePublishedArticles } from "@/lib/kc/queries";
 import { usePublishedIssues } from "@/lib/thedot/queries";
 import { ORDERS_CTA } from "@/data/orders/cta";
-import { LayeredStack, LoopVideo, TimedCrossfade, type Frame } from "@/components/brand/story/Horizontal";
+import { AutoMarquee, LayeredStack, LoopVideo, TimedCrossfade, type Frame } from "@/components/brand/story/Horizontal";
 import { FloatingGallery, PreviewScenes, VideoSequence, type FloatItem, type Scene } from "@/components/brand/story/Cinematic";
 import { MockDashboard, MockSchedule, MockSecurity, MockWorkflow } from "@/components/brand/story/mocks";
 import heroCeramic from "@/assets/video/home/hero-ceramic.mp4.asset.json";
@@ -130,11 +130,11 @@ const Index = () => {
       />
 
       {/* 1 Cinematic hero — background film, type, and previews that move on their own */}
-      <section className="relative -mt-16 min-h-[100svh] overflow-hidden bg-ink text-inverse lg:-mt-[72px]" aria-labelledby="hero-title">
+      <section className="relative min-h-[calc(100svh-4rem)] overflow-hidden bg-ink text-inverse" aria-labelledby="hero-title">
         <VideoSequence clips={[heroCeramic.url, heroArchitect.url, heroFlorist.url]} poster={archLight} />
         <div className="absolute inset-0 bg-gradient-to-r from-ink/90 via-ink/60 to-ink/30" aria-hidden />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-ink to-transparent" aria-hidden />
-        <div className="section-container relative grid min-h-[100svh] items-center gap-10 pb-16 pt-32 lg:grid-cols-12 lg:pt-28">
+        <div className="section-container relative grid min-h-[calc(100svh-4rem)] items-center gap-10 py-16 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <h1 id="hero-title" className="font-hero text-[3.2rem] font-bold leading-[0.92] tracking-[-0.05em] text-inverse sm:text-[5rem] lg:text-[6.2rem]">
               We build what's next<span className="text-dot">.</span>
