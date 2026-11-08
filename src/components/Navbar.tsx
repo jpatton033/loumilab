@@ -236,7 +236,7 @@ const Navbar = () => {
           </Button>
         </div>
 
-        <SiteSearch className="ml-auto lg:hidden" />
+        <SiteSearch className="ml-auto lg:hidden" shortcut={false} />
         <button className="-mr-2 ml-2 inline-flex h-11 w-11 items-center justify-center text-foreground lg:hidden" onClick={() => setOpen(!open)} aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} aria-controls="mobile-nav">
           {open ? <X size={24} /> : <Menu size={24} />}
         </button>

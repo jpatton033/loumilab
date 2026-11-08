@@ -17,13 +17,15 @@ const pages: Hit[] = [
 ];
 
 /** Site-wide search: pages, solutions, products, Knowledge Center and The Dot. */
-const SiteSearch = ({ className = "" }: { className?: string }) => {
+/** Only one mounted instance should set `shortcut` so "/" and Cmd/Ctrl+K open a single dialog. */
+const SiteSearch = ({ className = "", shortcut = true }: { className?: string; shortcut?: boolean }) => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const { data: articles = [] } = usePublishedArticles({ limit: 60 });
   const { data: issues = [] } = usePublishedIssues(30);
 
   useEffect(() => {
+    if (!shortcut) return;
     const onKey = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement;
       const typing = t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable);
@@ -31,7 +33,7 @@ const SiteSearch = ({ className = "" }: { className?: string }) => {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, []);
+  }, [shortcut]);
 
   const groups = useMemo(() => {
     const byMenu = navMenus.map((m) => ({ heading: m.label, items: m.groups.flatMap((g) => g.items) as Hit[] }));
