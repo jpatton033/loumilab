@@ -96,7 +96,7 @@ export function MockSecurity({ className = "" }: { className?: string }) {
         ))}
       </div>
       <ul className="mt-4 space-y-1.5 border-t border-inverse/10 pt-3 text-[11px] text-inverse-muted">
-        {[0, 1, 2].map((k) => <li key={k + t} className="animate-fade-in">{`${String(8 + ((t + k) % 10)).padStart(2, "0")}:${String((t * 7 + k * 13) % 60).padStart(2, "0")}`} — {log[(t + k) % log.length]}</li>)}
+        {[0, 1, 2].map((k) => <li key={k + t} className="mock-fade">{`${String(8 + ((t + k) % 10)).padStart(2, "0")}:${String((t * 7 + k * 13) % 60).padStart(2, "0")}`} — {log[(t + k) % log.length]}</li>)}
       </ul>
     </Shell>
   );
