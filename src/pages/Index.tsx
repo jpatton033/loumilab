@@ -41,17 +41,6 @@ const homeJsonLd = {
   ],
 };
 
-/* Opening band: mixed photo, video and real screens, varied sizes */
-type Tile = { kind: "img" | "video"; src: string; alt: string; w: string; poster?: string; offset?: string };
-const openingTiles: Tile[] = [
-  { kind: "video", src: archVideo.url, poster: archLight, alt: "", w: "w-[70vw] sm:w-[36vw] lg:w-[30vw]", offset: "mt-10" },
-  { kind: "img", src: scOrders, alt: "The Loumilab Orders page", w: "w-[60vw] sm:w-[30vw] lg:w-[24vw]" },
-  { kind: "img", src: sculptureDot, alt: "White sculptural forms beside a small blue sphere", w: "w-[46vw] sm:w-[20vw] lg:w-[16vw]", offset: "mt-20" },
-  { kind: "video", src: sketchVideo.url, poster: layoutsHands, alt: "", w: "w-[66vw] sm:w-[34vw] lg:w-[28vw]" },
-  { kind: "img", src: scLocal, alt: "The Loumilab Local discovery page", w: "w-[60vw] sm:w-[30vw] lg:w-[24vw]", offset: "mt-14" },
-  { kind: "img", src: facadeGrid, alt: "A glass building facade at night with a grid of lit windows", w: "w-[46vw] sm:w-[20vw] lg:w-[18vw]" },
-];
-
 const galleryItems: CinematicItem[] = [
   { src: scEmail, alt: "The Business Email service page", label: "Website development", to: "/services/website-development", aspect: 16 / 10 },
   { src: scServices, alt: "The Loumilab Solutions page", label: "Loumilab Solutions", to: "/services", aspect: 4 / 5 },
