@@ -29,7 +29,7 @@ export const useDrift = <T extends HTMLElement>(shift = 40) => {
       raf = 0;
       const r = el.getBoundingClientRect();
       const p = (r.top + r.height / 2 - window.innerHeight / 2) / window.innerHeight;
-      el.style.transform = `translate3d(0, ${Math.max(-1, Math.min(1, p)) * -shift}px, 0)`;
+      el.style.translate = `0 ${Math.max(-1, Math.min(1, p)) * -shift}px`;
     };
     const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
     update();
