@@ -41,6 +41,9 @@ export default {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
         },
+        dot: "hsl(var(--dot))",
+        ink: "hsl(var(--surface-ink))",
+        forest: "hsl(var(--forest))",
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
