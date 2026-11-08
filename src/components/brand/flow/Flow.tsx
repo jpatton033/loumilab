@@ -8,7 +8,9 @@ type Cta = { label: string; to: string; onClick?: () => void };
 /** Squarespace-style hero: big headline, one sentence, one main button, optional quiet link and wide image. */
 export const FlowHero = ({
   title, lede, cta, secondary, image, imageAlt, eyebrow,
-}: { title: ReactNode; lede: ReactNode; cta: Cta; secondary?: Cta; image?: string; imageAlt?: string; eyebrow?: ReactNode }) => (
+}: { title: ReactNode; lede: ReactNode; cta: Cta; secondary?: Cta; image?: string; imageAlt?: string; eyebrow?: ReactNode }) => image ? (
+  <PageHero image={image} imageAlt={imageAlt} title={title} lede={lede} cta={cta} eyebrow={eyebrow} />
+) : (
   <section className="section-container pt-10 pb-16 text-center lg:pt-16 lg:pb-24">
     {eyebrow && <div className="mb-6">{eyebrow}</div>}
     <h1 className="mx-auto max-w-4xl font-hero text-5xl font-semibold leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl">{title}</h1>
