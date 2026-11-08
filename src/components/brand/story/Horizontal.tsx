@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Pause, Play } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export type Frame = { src: string; alt: string; caption?: string };
 
@@ -222,4 +223,78 @@ export function LoopVideo({ src, poster, className = "" }: { src: string; poster
   }, [running, ref]);
   if (!motionOk && poster) return <img src={poster} alt="" className={className} />;
   return <video ref={ref} src={src} poster={poster} muted loop playsInline preload="none" aria-hidden className={className} />;
+}
+
+/* ---------- Cinematic hero gallery: continuous RTL drift, timer-driven ---------- */
+export type CinematicItem = { src: string; alt: string; label: string; to?: string; aspect: number; video?: boolean; poster?: string; status?: string[] };
+
+function StatusTicker({ steps }: { steps: string[] }) {
+  const [i, setI] = useState(0);
+  useEffect(() => { if (reduced()) return; const t = window.setInterval(() => setI((n) => (n + 1) % steps.length), 1800); return () => window.clearInterval(t); }, [steps.length]);
+  return (
+    <span className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-md bg-background px-3 py-1.5 text-xs font-semibold text-foreground shadow-sm">
+      <span className="h-1.5 w-1.5 rounded-full bg-dot" aria-hidden />
+      <span key={i} className="animate-in fade-in-0 slide-in-from-bottom-1 duration-300">{steps[i]}</span>
+    </span>
+  );
+}
+
+/** Previews travel right→left forever; speed eases gently between items. Pauses off-screen, hidden tab, reduced motion, or toggle. */
+export function CinematicGallery({ items, pxPerSec = 70, label = "Loumilab work" }: { items: CinematicItem[]; pxPerSec?: number; label?: string }) {
+  const wrap = useRef<HTMLDivElement>(null);
+  const track = useRef<HTMLDivElement>(null);
+  const [paused, setPaused] = useState(false);
+  const [still] = useState(reduced);
+  useEffect(() => {
+    if (still) return;
+    let visible = true, raf = 0, last = performance.now(), x = 0, t = 0;
+    const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; }, { threshold: 0 });
+    if (wrap.current) io.observe(wrap.current);
+    const loop = (now: number) => {
+      const dt = Math.min(0.05, (now - last) / 1000); last = now;
+      if (visible && !paused && !document.hidden && track.current) {
+        t += dt;
+        const speed = pxPerSec * (1 + 0.18 * Math.sin(t * 0.55)); // gentle breathing between scenes
+        x += speed * dt;
+        const half = track.current.scrollWidth / 2;
+        if (half > 0 && x >= half) x -= half;
+        track.current.style.transform = `translate3d(${-x}px,0,0)`;
+      }
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => { cancelAnimationFrame(raf); io.disconnect(); };
+  }, [paused, still, pxPerSec]);
+
+  const tile = (it: CinematicItem, k: string, hidden: boolean) => {
+    const media = it.video
+      ? <LoopVideo src={it.src} poster={it.poster} className="h-full w-full object-cover" />
+      : <img src={it.src} alt={hidden ? "" : it.alt} loading="lazy" decoding="async" className="h-full w-full object-cover object-top" />;
+    const inner = (
+      <>
+        {media}
+        {it.status && <StatusTicker steps={it.status} />}
+        <span className="pointer-events-none absolute bottom-4 left-4 translate-y-1 rounded-md bg-background px-3 py-1.5 text-xs font-semibold text-foreground opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">{it.label}{it.to ? " →" : ""}</span>
+      </>
+    );
+    const cls = "group relative block h-full shrink-0 overflow-hidden rounded-lg bg-inverse/5 ring-1 ring-inverse/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
+    const style = { aspectRatio: String(it.aspect) };
+    return it.to
+      ? <Link key={k} to={it.to} className={cls} style={style} tabIndex={hidden ? -1 : 0} aria-hidden={hidden || undefined} aria-label={hidden ? undefined : it.label}>{inner}</Link>
+      : <div key={k} className={cls} style={style} aria-hidden={hidden || undefined}>{inner}</div>;
+  };
+
+  return (
+    <div ref={wrap} className="relative overflow-hidden" role="region" aria-label={label}>
+      <div ref={track} className={`flex h-[300px] w-max gap-4 will-change-transform sm:h-[420px] sm:gap-6 lg:h-[clamp(450px,52vh,620px)] ${still ? "overflow-x-auto" : ""}`}>
+        {items.map((it, n) => tile(it, `a${n}`, false))}
+        {!still && items.map((it, n) => tile(it, `b${n}`, true))}
+      </div>
+      {!still && (
+        <button onClick={() => setPaused((p) => !p)} aria-label={paused ? "Play gallery" : "Pause gallery"} className="absolute bottom-4 right-4 grid h-9 w-9 place-items-center rounded-full bg-background/90 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+          {paused ? <Play size={13} /> : <Pause size={13} />}
+        </button>
+      )}
+    </div>
+  );
 }
