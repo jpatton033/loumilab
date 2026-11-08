@@ -170,7 +170,7 @@ const Index = () => {
       </section>
 
       {/* 4 Orders & Local (dark) — layered stack */}
-      <section className="film-grain bg-ink py-24 text-inverse lg:py-32" aria-labelledby="products-title">
+      <section className="film-grain overflow-hidden bg-ink py-24 text-inverse lg:py-32" aria-labelledby="products-title">
         <div className="section-container grid items-center gap-16 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-inverse-muted">Loumilab Products</p>
