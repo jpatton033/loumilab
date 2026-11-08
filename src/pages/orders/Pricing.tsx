@@ -1,3 +1,5 @@
+import heroPricing from "@/assets/heroes/pricing.jpg";
+import { PageHero } from "@/components/brand/flow/Flow";
 import { ClosingCta } from "@/components/brand/flow/Flow";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
@@ -34,14 +36,9 @@ const OrdersPricing = () => {
           mainEntity: FAQ.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })),
         } : undefined}
       />
-      <section className="section-container pt-8 pb-12 lg:pt-12">
-        <Link to="/orders" className="text-sm font-medium text-muted-foreground hover:text-foreground">Loumilab Orders</Link>
-        <Eyebrow className="mt-8 block">{pricingHeading.eyebrow}</Eyebrow>
-        <h1 className="mt-4 font-display text-4xl font-semibold tracking-tight sm:text-5xl">
-          {tiers ? "Your business grows. Our fees shrink." : pricingHeading.title}
-        </h1>
-        <p className="mt-4 max-w-2xl text-lg text-muted-foreground">{pricingHeading.subtitle}</p>
-        {tiers && <div className="mt-8"><FeeAnnouncement showLink={false} /></div>}
+      <PageHero image={heroPricing} imageAlt="Receipts, a brass calculator and a pencil on a travertine table" eyebrow={pricingHeading.eyebrow} title={tiers ? "Your business grows. Our fees shrink." : pricingHeading.title} lede={pricingHeading.subtitle} links={[{ label: "Plans", to: "#plans" }, { label: "Compare", to: "/orders/compare/square" }]} />
+      <section id="plans" className="section-container scroll-mt-24 pt-16 pb-12 lg:pt-24">
+        {tiers && <div><FeeAnnouncement showLink={false} /></div>}
         <div className="mt-12"><PricingTable /></div>
         <p className="mt-6 text-sm text-muted-foreground">{pricingHeading.footnote}</p>
         <p className="mt-3 text-sm text-muted-foreground">Compare: <Link to="/orders/compare/square" className="font-semibold text-foreground hover:text-accent">vs. Square</Link> · <Link to="/orders/compare/shopify" className="font-semibold text-foreground hover:text-accent">vs. Shopify</Link> · <Link to="/orders/compare/toast" className="font-semibold text-foreground hover:text-accent">vs. Toast</Link></p>

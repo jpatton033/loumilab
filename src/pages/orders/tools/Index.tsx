@@ -1,3 +1,5 @@
+import heroTools from "@/assets/heroes/tools.jpg";
+import { PageHero } from "@/components/brand/flow/Flow";
 import { Link } from "react-router-dom";
 import { ArrowRight, Calculator } from "lucide-react";
 import Layout from "@/components/Layout";
@@ -24,15 +26,8 @@ const BusinessTools = () => {
           ],
         }}
       />
-      <section className="section-container pt-8 pb-16 lg:pt-12 lg:pb-24">
-        <Link to="/orders" className="text-sm font-medium text-muted-foreground hover:text-foreground">
-          Loumilab Orders
-        </Link>
-        <Eyebrow className="mt-8 block">Free for everyone</Eyebrow>
-        <h1 className="mt-4 font-display text-4xl font-semibold tracking-tight sm:text-5xl">Business Tools</h1>
-        <p className="mt-4 max-w-xl text-lg text-muted-foreground">
-          Free tools to help you price, plan, and grow your business.
-        </p>
+      <PageHero image={heroTools} imageAlt="Well-worn tools laid out neatly on an oak workbench" eyebrow="Free for everyone" title="Business Tools." lede="Free tools to help you price, plan, and grow your business." />
+      <section className="section-container pt-4 pb-16 lg:pb-24">
 
         <Link
           to={`/orders/tools/${featured.slug}`}
