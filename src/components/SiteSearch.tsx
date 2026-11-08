@@ -59,9 +59,9 @@ const SiteSearch = ({ className = "" }: { className?: string }) => {
           {groups.map((g) => (
             <CommandGroup key={g.heading} heading={g.heading}>
               {g.items.map((h) => (
-                <CommandItem key={g.heading + h.to} value={`${h.label} ${h.desc ?? ""} ${g.heading}`} onSelect={() => go(h)} className="flex flex-col items-start gap-0.5 py-2.5">
-                  <span className="font-medium text-foreground">{h.label}</span>
-                  {h.desc && <span className="line-clamp-1 text-xs text-muted-foreground">{h.desc}</span>}
+                <CommandItem key={g.heading + h.to} value={`${h.label} ${h.desc ?? ""} ${g.heading}`} onSelect={() => go(h)} className="group flex flex-col items-start gap-0.5 py-2.5">
+                  <span className="font-medium text-foreground group-data-[selected=true]:text-accent-foreground">{h.label}</span>
+                  {h.desc && <span className="line-clamp-1 text-xs text-muted-foreground group-data-[selected=true]:text-accent-foreground/80">{h.desc}</span>}
                 </CommandItem>
               ))}
             </CommandGroup>
