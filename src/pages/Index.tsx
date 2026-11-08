@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
-import { MoreLink } from "@/components/brand/apple/Tiles";
+import { ToDark } from "@/components/brand/flow/Flow";
 import { usePublishedArticles } from "@/lib/kc/queries";
 import { usePublishedIssues } from "@/lib/thedot/queries";
 import { ORDERS_CTA } from "@/data/orders/cta";
@@ -135,27 +135,23 @@ const Index = () => {
       />
 
 
-      {/* 1 Cinematic hero — background film, type, and previews that move on their own */}
-      <section className="relative min-h-[calc(100svh-4rem)] overflow-hidden bg-ink text-inverse" aria-labelledby="hero-title">
+      {/* 1 Full-bleed film hero */}
+      <section data-page-hero className="relative isolate -mt-16 overflow-hidden bg-ink text-inverse lg:-mt-20" aria-labelledby="hero-title">
         <VideoSequence clips={[heroCeramic.url, heroArchitect.url, heroFlorist.url]} poster={archLight} />
-        <div className="absolute inset-0 bg-gradient-to-r from-ink/90 via-ink/60 to-ink/30" aria-hidden />
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-ink to-transparent" aria-hidden />
-        <div className="section-container relative grid min-h-[calc(100svh-4rem)] items-center gap-10 py-16 lg:grid-cols-12">
-          <div className="lg:col-span-5">
-            <h1 id="hero-title" className="font-hero text-[3.2rem] font-bold leading-[0.92] tracking-[-0.05em] text-inverse sm:text-[5rem] lg:text-[6.2rem]">
-              We build what's next.
-            </h1>
-            <p className="mt-6 max-w-md text-lg leading-relaxed text-inverse/80 lg:text-xl">
-              Thoughtful technology, distinctive digital experiences, and software built for what's next.
-            </p>
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Button size="lg" asChild className="bg-background text-foreground hover:bg-background/90"><Link to="/services">Explore Our Solutions</Link></Button>
-              <Button size="lg" variant="outline" asChild className="border-inverse/40 bg-transparent text-inverse hover:bg-inverse/10 hover:text-inverse"><a href="#work-gallery">See What We Build</a></Button>
-            </div>
-          </div>
-          <div className="relative h-[340px] sm:h-[460px] lg:col-span-7 lg:h-[560px]">
-            <PreviewScenes scenes={heroScenes} />
-          </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-ink/55 via-ink/35 to-ink/80" aria-hidden />
+        <div className="section-container relative flex min-h-[88svh] flex-col items-center justify-center pb-16 pt-32 text-center lg:pt-40">
+          <h1 id="hero-title" className="mx-auto max-w-5xl font-hero text-[3.2rem] font-bold leading-[0.95] tracking-[-0.04em] text-inverse sm:text-[5rem] lg:text-[7rem]">
+            We build what's next.
+          </h1>
+          <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-inverse/85 lg:text-xl">
+            Thoughtful technology, distinctive digital experiences, and software built for what's next.
+          </p>
+          <Button size="lg" asChild className="mt-10 bg-background text-foreground hover:bg-background/90"><Link to="/services">Explore Our Solutions</Link></Button>
+          <nav aria-label="On this page" className="mt-14 flex flex-wrap justify-center gap-1 rounded-full bg-ink/70 p-1.5">
+            {[["What we build", "#build-title"], ["Work", "#work-gallery"], ["Products", "#products-title"], ["Reading", "#reading-title"]].map(([l, h]) => (
+              <a key={h} href={h} className="inline-flex min-h-11 items-center rounded-full px-4 text-sm font-medium text-inverse/85 transition-colors hover:bg-inverse/10 hover:text-inverse">{l}</a>
+            ))}
+          </nav>
         </div>
       </section>
 
@@ -166,8 +162,24 @@ const Index = () => {
         { src: runPickup, alt: "An owner handing an order to a customer at the door", caption: "Pickup, on time" },
       ]} />
 
+      {/* Companies */}
+      <section className="py-24 lg:py-32" aria-labelledby="companies-title">
+        <div className="section-container grid items-end gap-10 lg:grid-cols-12">
+          <div className="lg:col-span-7">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Loumilab Companies</p>
+            <h2 id="companies-title" className="mt-4 font-hero text-4xl font-bold tracking-tight lg:text-6xl">Vurtti.</h2>
+            <p className="mt-6 max-w-lg text-lg leading-relaxed text-muted-foreground">Compliance, documented and under control. A compliance technology platform helping teams organize and maintain the evidence their standards require.</p>
+          </div>
+          <div className="lg:col-span-5 lg:text-right">
+            <Button size="lg" asChild><a href="https://www.vurttidocs.com" target="_blank" rel="noopener noreferrer">Visit Vurtti</a></Button>
+          </div>
+        </div>
+      </section>
+
+      <ToDark />
+
       {/* 2 What we build — a different composition per area */}
-      <section className="bg-ink py-24 text-inverse lg:py-32" aria-labelledby="build-title">
+      <section className="bg-ink pb-24 pt-8 text-inverse lg:pb-32" aria-labelledby="build-title">
         <div className="section-container">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-inverse-muted">Technology Studio</p>
           <h2 id="build-title" className="mt-4 max-w-3xl font-hero text-4xl font-bold tracking-tight text-inverse lg:text-6xl">What we build.</h2>
@@ -203,11 +215,6 @@ const Index = () => {
       </section>
 
 
-      {/* 3 Statement — timed crossfade */}
-      <section className="section-container py-20 lg:py-28" aria-label="Design. Build. Innovate. Secure.">
-        <TimedCrossfade scenes={statement} className="h-[78vh] min-h-[520px] rounded-[2rem] bg-ink" />
-      </section>
-
       {/* 4 Orders & Local (dark) — layered stack */}
       <section className="film-grain overflow-hidden bg-ink py-24 text-inverse lg:py-32" aria-labelledby="products-title">
         <div className="section-container grid items-center gap-16 lg:grid-cols-12">
@@ -224,42 +231,34 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Companies */}
-      <section className="py-24 lg:py-32" aria-labelledby="companies-title">
-        <div className="section-container grid items-end gap-10 lg:grid-cols-12">
-          <div className="lg:col-span-7">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Loumilab Companies</p>
-            <h2 id="companies-title" className="mt-4 font-hero text-4xl font-bold tracking-tight lg:text-6xl">Vurtti.</h2>
-            <p className="mt-6 max-w-lg text-lg leading-relaxed text-muted-foreground">Compliance, documented and under control. A compliance technology platform helping teams organize and maintain the evidence their standards require.</p>
-          </div>
-          <div className="lg:col-span-5 lg:text-right">
-            <Button size="lg" asChild><a href="https://www.vurttidocs.com" target="_blank" rel="noopener noreferrer">Visit Vurtti</a></Button>
-          </div>
-        </div>
-      </section>
-
-      {/* 5 Knowledge Center & The Dot. — editorial drift */}
+      {/* 5 Knowledge Center & The Dot. — calm editorial grid on the dark band */}
       {reading.length > 0 && (
-        <section className="py-20 lg:py-28" aria-labelledby="reading-title">
-          <div className="section-container flex flex-wrap items-end justify-between gap-4">
-            <h2 id="reading-title" className="font-hero text-4xl font-semibold tracking-tight lg:text-6xl">Ideas worth reading.</h2>
-            <div className="flex gap-6"><MoreLink to="/resources">Knowledge Center</MoreLink><MoreLink to="/the-dot">The Dot.</MoreLink></div>
+        <section className="bg-ink py-24 text-inverse lg:py-32" aria-labelledby="reading-title">
+          <div className="section-container">
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <h2 id="reading-title" className="font-hero text-4xl font-semibold tracking-tight text-inverse lg:text-6xl">Ideas worth reading.</h2>
+              <div className="flex gap-6 text-sm font-semibold">
+                <Link to="/resources" className="text-inverse/75 underline-offset-4 hover:text-inverse hover:underline">Knowledge Center</Link>
+                <Link to="/the-dot" className="text-inverse/75 underline-offset-4 hover:text-inverse hover:underline">The Dot.</Link>
+              </div>
+            </div>
+            <div className="mt-12 grid gap-4 lg:grid-cols-12">
+              {reading.slice(0, 4).map((r, i) => (
+                <Link key={r.key} to={r.to} className={`group flex gap-5 rounded-3xl border border-inverse/10 bg-inverse/[0.03] p-6 transition-colors hover:border-inverse/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${i === 0 ? "flex-col lg:col-span-6 lg:row-span-3 lg:p-8" : "items-center lg:col-span-6"}`}>
+                  {r.img && (
+                    <div className={`shrink-0 overflow-hidden rounded-2xl bg-inverse/5 ${i === 0 ? "w-full" : "h-20 w-24"}`}>
+                      <img src={r.img} alt="" loading="lazy" className={`w-full object-cover grayscale contrast-[1.05] brightness-90 transition-[filter] duration-500 group-hover:grayscale-0 ${i === 0 ? "aspect-[16/10]" : "h-full"}`} />
+                    </div>
+                  )}
+                  <div className="min-w-0">
+                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-inverse-muted">{r.kind}</p>
+                    <h3 className={`mt-2 font-display font-semibold leading-snug text-inverse ${i === 0 ? "text-2xl lg:text-3xl" : "text-lg"}`}>{r.title}</h3>
+                    {i === 0 && r.body && <p className="mt-3 line-clamp-3 text-inverse-muted">{r.body}</p>}
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
-          <AutoMarquee
-            className="mt-12"
-            label="Latest articles and issues"
-            duration={Math.max(40, reading.length * 9)}
-            items={reading.map((r) => (
-              <Link key={r.key} to={r.to} className="group w-[78vw] shrink-0 sm:w-[44vw] lg:w-[28vw] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-3xl">
-                <div className="overflow-hidden rounded-3xl bg-secondary">
-                  {r.img ? <img src={r.img} alt="" loading="lazy" className="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" /> : <div className="aspect-[4/3] w-full" />}
-                </div>
-                <p className="mt-5 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">{r.kind}</p>
-                <h3 className="mt-2 font-display text-xl font-semibold leading-snug">{r.title}</h3>
-                {r.body && <p className="mt-2 line-clamp-2 text-muted-foreground">{r.body}</p>}
-              </Link>
-            ))}
-          />
         </section>
       )}
 

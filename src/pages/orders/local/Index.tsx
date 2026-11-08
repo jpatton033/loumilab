@@ -1,3 +1,5 @@
+import heroLocal from "@/assets/heroes/local.jpg";
+import { PageHero } from "@/components/brand/flow/Flow";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { ArrowRight, MapPin, Search, SlidersHorizontal } from "lucide-react";
@@ -95,19 +97,12 @@ const LocalIndex = () => {
       />
 
       {/* Hero + search */}
-      <section className="section-container pt-7 pb-10 lg:pt-10">
+      <PageHero image={heroLocal} imageAlt="A neighborhood street of independent shops at golden hour" eyebrow="Loumilab Local" title="Discover what's cooking near you." lede="Find local chefs, bakers, meal-prep businesses, caterers and other independent food businesses in your community." links={[{ label: "Search", to: "#local-search" }, { label: "List your business — free", to: "/orders/local/join" }]} />
+      <section id="local-search" className="section-container scroll-mt-24 pt-12 pb-10 lg:pt-16">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="font-display text-lg font-semibold tracking-tight">Loumilab <span className="text-accent">Local</span></p>
           <Link to="/orders/local/join" className="text-sm font-medium text-muted-foreground hover:text-foreground">List your business — free</Link>
         </div>
-        <DotMarker className="mt-8" />
-        <Eyebrow className="mt-8 flex items-center gap-2"><DotPin />Discover local food businesses</Eyebrow>
-        <h1 className="mt-4 max-w-3xl font-hero text-5xl font-semibold leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl">
-          Discover what's cooking near you.
-        </h1>
-        <p className="mt-5 max-w-xl text-lg text-muted-foreground">
-          Find local chefs, bakers, meal-prep businesses, caterers, and other independent food businesses in your community.
-        </p>
 
         <form
           role="search"

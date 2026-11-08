@@ -1,3 +1,5 @@
+import heroDot from "@/assets/heroes/thedot.jpg";
+import { PageHero } from "@/components/brand/flow/Flow";
 import { ClosingCta } from "@/components/brand/flow/Flow";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
@@ -40,20 +42,11 @@ const TheDotIndex = () => {
       />
 
       {/* Masthead */}
-      <section className="border-b border-border bg-surface-subtle">
-        <div className="section-container pt-12 pb-20 lg:pt-16 lg:pb-28">
+      <PageHero image={heroDot} imageAlt="A single circle of skylight falling on a plaster floor in a dark room" eyebrow="A Loumilab Brief" title={<>The Dot<span aria-hidden="true" className="text-dot">.</span></>} lede="Ideas, technology, and what's next." links={[{ label: "Subscribe", to: "#dot-signup" }, { label: "Latest issue", to: "#dot-latest" }]} />
+      <section id="dot-signup" className="scroll-mt-24 border-b border-border">
+        <div className="section-container pt-16 pb-20 lg:pt-20 lg:pb-24">
           <Reveal className="mx-auto max-w-3xl text-center">
-            <DotMarker />
-            <p aria-label="A Loumilab Brief" className="font-display text-[11px] font-semibold uppercase tracking-[0.26em] text-muted-foreground">
-              A Loumilab Brief
-            </p>
-            <h1 className="mt-4 font-hero text-6xl font-semibold tracking-[-0.03em] text-foreground lg:text-8xl">
-              The Dot<span aria-hidden="true" className="text-dot">.</span>
-            </h1>
-            <p className="mt-5 text-lg leading-relaxed text-muted-foreground lg:text-xl">
-              Ideas, technology, and what's next.
-            </p>
-            <p className="mx-auto mt-8 max-w-2xl text-sm leading-relaxed text-muted-foreground lg:text-base">
+            <p className="mx-auto max-w-2xl text-base leading-relaxed text-muted-foreground lg:text-lg">
               The Dot. is a brief from Loumilab exploring the ideas, technology, and shifts shaping how businesses
               work, build, and grow. We focus on what matters, why it matters, and what's worth watching next.
             </p>
@@ -73,7 +66,7 @@ const TheDotIndex = () => {
 
       {/* Latest issue */}
       {latest && (
-        <section className="section-padding">
+        <section id="dot-latest" className="section-padding scroll-mt-24">
           <div className="section-container">
             <Reveal>
               <div className="rounded-3xl border border-border bg-card p-8 shadow-[var(--shadow-soft)] lg:p-12">

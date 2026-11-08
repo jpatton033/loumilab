@@ -1,3 +1,5 @@
+import heroProcess from "@/assets/heroes/how-we-work.jpg";
+import { PageHero } from "@/components/brand/flow/Flow";
 import { ClosingCta } from "@/components/brand/flow/Flow";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
@@ -57,18 +59,7 @@ const HowWeWork = () => (
       path="/how-we-work"
     />
 
-    <section className="relative overflow-hidden pt-16 pb-12 lg:pt-24 lg:pb-16">
-      <div className="pointer-events-none absolute inset-0 hero-wash" aria-hidden="true" />
-      <div className="section-container relative max-w-3xl">
-        <Eyebrow>Process</Eyebrow>
-        <h1 className="mt-5 text-4xl font-semibold leading-tight lg:text-6xl">
-          How we bring products to life.
-        </h1>
-        <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-          Every great idea begins with possibility. Together, we give it purpose, bring it to life, and make room for what comes next.
-        </p>
-      </div>
-    </section>
+    <PageHero image={heroProcess} imageAlt="A designer pinning project sketches in sequence on a sunlit wall" eyebrow="Process" title="How we bring products to life." lede="Every great idea begins with possibility. Together, we give it purpose, bring it to life, and make room for what comes next." />
 
     <section className="section-padding pt-8">
       <div className="section-container">

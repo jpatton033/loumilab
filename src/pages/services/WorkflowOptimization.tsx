@@ -1,3 +1,5 @@
+import heroWorkflow from "@/assets/heroes/workflow.jpg";
+import { PageHero } from "@/components/brand/flow/Flow";
 import { useState } from "react";
 import { z } from "zod";
 import { ArrowRight, ClipboardCheck, Code2, Settings2, Sparkles, Check, RotateCcw } from "lucide-react";
@@ -223,21 +225,11 @@ const WorkflowOptimization = () => {
       `}</style>
 
       {/* Hero */}
-      <section className="section-padding pt-32 md:pt-40">
-        <div className="section-container grid items-center gap-12 lg:grid-cols-2">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">Workflow Optimization</p>
-            <h1 className="mt-4 font-hero text-4xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-5xl md:text-6xl">Smarter software. Less unnecessary AI.</h1>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">We design, build, and optimize business software that simplifies everyday operations, eliminates repetitive tasks, and reduces unnecessary AI dependence. From improving existing systems to developing entirely new solutions, we help businesses work more efficiently with technology built around their needs.</p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Button size="lg" onClick={() => goForm("assessment", "hero")}>Optimize Your Workflow <ArrowRight className="ml-1 h-4 w-4" /></Button>
-              <Button size="lg" variant="outline" onClick={() => goForm("project", "hero")}>Discuss a Software Project</Button>
-            </div>
-            <p className="mt-6 text-sm font-medium text-foreground">AI when valuable. Software when sufficient.</p>
-          </div>
-          <HeroVisual />
-        </div>
-      </section>
+      <PageHero image={heroWorkflow} imageAlt="An operations manager arranging task cards in order at a concrete counter" eyebrow="Workflow Optimization" title="Smarter software. Less unnecessary AI." lede="We design, build and optimize business software that simplifies everyday operations and removes repetitive tasks. AI when valuable. Software when sufficient." actions={<>
+        <Button size="lg" className="bg-background text-foreground hover:bg-background/90" onClick={() => goForm("assessment", "hero")}>Optimize Your Workflow</Button>
+        <Button size="lg" variant="ghost" className="text-inverse hover:bg-inverse/10 hover:text-inverse" onClick={() => goForm("project", "hero")}>Discuss a Software Project</Button>
+      </>} />
+      <section className="section-padding"><div className="section-container"><HeroVisual /></div></section>
 
       {/* Intro */}
       <section className="section-padding bg-secondary/40">

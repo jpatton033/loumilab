@@ -1,3 +1,5 @@
+import heroAbout from "@/assets/heroes/about.jpg";
+import { PageHero } from "@/components/brand/flow/Flow";
 import { ClosingCta } from "@/components/brand/flow/Flow";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
@@ -39,22 +41,7 @@ const About = () => (
       path="/about"
     />
 
-    <section className="relative overflow-hidden pt-16 pb-16 lg:pt-24 lg:pb-20">
-      <div className="pointer-events-none absolute inset-0 hero-wash" aria-hidden="true" />
-      <div className="section-container relative mx-auto max-w-4xl text-center">
-        <div className="flex justify-center"><DotMarker /></div>
-        <Eyebrow>About</Eyebrow>
-        <h1 className="mt-5 font-hero text-5xl font-semibold leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl">
-          A technology partner and a product builder.
-        </h1>
-        <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-          Loumilab is a technology studio that builds digital products, software, and business solutions
-          designed to help companies grow. As a team, we develop ideas into products and
-          ventures—bringing together creativity, technology, and experience to shape how we think,
-          build, and innovate.
-        </p>
-      </div>
-    </section>
+    <PageHero image={heroAbout} imageAlt="The Loumilab team reviewing printed layouts around a studio table" eyebrow="About" title="A technology partner and a product builder." lede="Loumilab is a technology studio that builds digital products, software and business solutions designed to help companies grow." cta={{ label: "Start a Project", to: "/contact" }} />
 
     <DotThread />
 

@@ -1,3 +1,5 @@
+import heroEmail from "@/assets/heroes/business-email.jpg";
+import { PageHero } from "@/components/brand/flow/Flow";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Check, Mail, Globe, Server, ShieldCheck, Lock, Users, Send, LifeBuoy, ChevronRight } from "lucide-react";
@@ -122,44 +124,10 @@ const BusinessEmail = () => {
       />
 
       {/* Hero */}
-      <section className="pt-10 pb-16 lg:pt-14 lg:pb-24">
-        <div className="section-container">
-          <nav aria-label="Breadcrumb" className="mb-8 text-sm text-muted-foreground">
-            <ol className="flex flex-wrap items-center gap-1.5">
-              <li><Link to="/" className="hover:text-foreground">Home</Link></li>
-              <li aria-hidden="true"><ChevronRight size={14} /></li>
-              <li><Link to="/services" className="hover:text-foreground">Services</Link></li>
-              <li aria-hidden="true"><ChevronRight size={14} /></li>
-              <li aria-current="page" className="text-foreground">Business Email &amp; Domain Setup</li>
-            </ol>
-          </nav>
-          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-            <div>
-              <Eyebrow>Business Email &amp; Domain Setup</Eyebrow>
-              <h1 className="mt-5 font-hero text-4xl font-semibold leading-[1.05] sm:text-5xl lg:text-6xl">
-                Professional Business Email. Set Up for You.
-              </h1>
-              <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
-                Give your business a professional email address using your own domain. Loumilab handles the initial purchasing, technical configuration, security settings, and setup, so you can focus on running your business.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Button asChild size="lg">
-                  <Link to={START} onClick={() => pick("hero")}>Get Started <ArrowRight size={18} /></Link>
-                </Button>
-                <Button asChild size="lg" variant="outline">
-                  <a href="#pricing">See pricing</a>
-                </Button>
-              </div>
-            </div>
-            <div className="photo-frame relative aspect-[3/2]">
-              <img src={heroImg} alt="A florist checking business email on her phone at the shop counter" width={1600} height={1072} decoding="async" className="h-full w-full object-cover" />
-            </div>
-          </div>
-        </div>
-      </section>
+      <PageHero image={heroEmail} imageAlt="A business owner writing in a notebook beside her laptop" eyebrow="Business Email & Domain Setup" title="Professional business email, made simple." lede="A professional address on your own domain. Loumilab handles purchasing, configuration, security settings and setup." cta={{ label: "Get Started", to: START, onClick: () => pick("hero") }} links={[{ label: "What we handle", to: "#handle" }, { label: "Pricing", to: "#pricing" }, { label: "FAQ", to: "#faq" }]} />
 
       {/* What we handle */}
-      <section className="section-padding border-t border-border">
+      <section id="handle" className="scroll-mt-24 section-padding border-t border-border">
         <div className="section-container">
           <div className="max-w-2xl">
             <Eyebrow>What we handle</Eyebrow>
@@ -301,7 +269,7 @@ const BusinessEmail = () => {
       </PhotoSplit>
 
       {/* FAQ */}
-      <section className="section-padding border-t border-border">
+      <section id="faq" className="scroll-mt-24 section-padding border-t border-border">
         <div className="section-container max-w-3xl">
           <h2 className="text-3xl font-semibold lg:text-4xl">Frequently asked questions</h2>
           <Accordion type="single" collapsible className="mt-8">

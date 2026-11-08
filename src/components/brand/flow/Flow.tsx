@@ -8,7 +8,9 @@ type Cta = { label: string; to: string; onClick?: () => void };
 /** Squarespace-style hero: big headline, one sentence, one main button, optional quiet link and wide image. */
 export const FlowHero = ({
   title, lede, cta, secondary, image, imageAlt, eyebrow,
-}: { title: ReactNode; lede: ReactNode; cta: Cta; secondary?: Cta; image?: string; imageAlt?: string; eyebrow?: ReactNode }) => (
+}: { title: ReactNode; lede: ReactNode; cta: Cta; secondary?: Cta; image?: string; imageAlt?: string; eyebrow?: ReactNode }) => image ? (
+  <PageHero image={image} imageAlt={imageAlt} title={title} lede={lede} cta={cta} eyebrow={eyebrow} />
+) : (
   <section className="section-container pt-10 pb-16 text-center lg:pt-16 lg:pb-24">
     {eyebrow && <div className="mb-6">{eyebrow}</div>}
     <h1 className="mx-auto max-w-4xl font-hero text-5xl font-semibold leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl">{title}</h1>
@@ -88,3 +90,34 @@ export const ScreenFrame = ({ src, alt, label, className = "" }: { src: string; 
     <img src={src} alt={alt} loading="lazy" className="block w-full" />
   </figure>
 );
+
+/** Full-bleed photo hero that opens every public page: centered headline over a soft dark veil, one button, optional quick links. */
+export const PageHero = ({
+  image, imageAlt = "", title, lede, cta, links, eyebrow, actions,
+}: { image: string; imageAlt?: string; title: ReactNode; lede?: ReactNode; cta?: Cta; links?: { label: string; to: string }[]; eyebrow?: ReactNode; actions?: ReactNode }) => (
+  <section data-page-hero className="relative isolate -mt-16 overflow-hidden bg-ink text-inverse lg:-mt-20" aria-label="Introduction">
+    <img src={image} alt={imageAlt} width={1920} height={1080} fetchPriority="high" className="absolute inset-0 -z-10 h-full w-full object-cover" />
+    <div className="absolute inset-0 -z-10 bg-gradient-to-b from-ink/55 via-ink/35 to-ink/75" aria-hidden />
+    <div className="section-container flex min-h-[78svh] flex-col items-center justify-center pb-16 pt-32 text-center lg:min-h-[88svh] lg:pt-40">
+      {eyebrow && <div className="mb-6 text-xs font-semibold uppercase tracking-[0.16em] text-inverse/80">{eyebrow}</div>}
+      <h1 className="mx-auto max-w-5xl font-hero text-5xl font-semibold leading-[1.02] tracking-tight text-inverse sm:text-6xl lg:text-8xl">{title}</h1>
+      {lede && <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-inverse/85 sm:text-xl">{lede}</p>}
+      {cta && (
+        <Button size="lg" asChild className="mt-10 bg-background text-foreground hover:bg-background/90">
+          <Link to={cta.to} onClick={cta.onClick}>{cta.label}</Link>
+        </Button>
+      )}
+      {actions && <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">{actions}</div>}
+      {links && links.length > 0 && (
+        <nav aria-label="On this page" className="mt-14 flex max-w-full flex-wrap justify-center gap-x-1 gap-y-1 rounded-full bg-ink/70 p-1.5 backdrop-blur-0">
+          {links.map((l) => (
+            <a key={l.to} href={l.to} className="inline-flex min-h-11 items-center rounded-full px-4 text-sm font-medium text-inverse/85 transition-colors hover:bg-inverse/10 hover:text-inverse">{l.label}</a>
+          ))}
+        </nav>
+      )}
+    </div>
+  </section>
+);
+
+/** Soft gradient that carries a light section into the deep-black contrast below. */
+export const ToDark = () => <div aria-hidden className="h-32 bg-gradient-to-b from-background to-ink lg:h-48" />;

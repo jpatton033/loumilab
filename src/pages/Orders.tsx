@@ -1,3 +1,5 @@
+import heroOrders from "@/assets/heroes/orders.jpg";
+import { PageHero } from "@/components/brand/flow/Flow";
 import PromoBanner from "@/components/orders/PromoBanner";
 import { Link } from "react-router-dom";
 import { ORDERS_CTA } from "@/data/orders/cta";
@@ -112,40 +114,11 @@ const Orders = () => {
       />
 
       {/* Hero */}
-      <section className="relative overflow-hidden pb-20 pt-14 lg:pb-28 lg:pt-20">
-        <div className="pointer-events-none absolute inset-0 hero-wash" aria-hidden="true" />
-        <div className="pointer-events-none absolute inset-0 hero-grid" aria-hidden="true" />
+      <PageHero image={heroOrders} imageAlt="A bakery owner handing a wrapped order to a customer at the counter" eyebrow="Loumilab Orders" title="Your business. Your storefront. Your orders." lede="Create a simple storefront, share your link, accept orders, and manage everything in one place." cta={{ label: ORDERS_CTA.label, to: ORDERS_CTA.href, onClick: () => trackCtaClick("hero", ORDERS_CTA.variant) }} links={[{ label: "How it works", to: "#how-it-works" }, { label: "Pricing", to: "/orders/pricing" }, { label: "Dashboard", to: "/orders/dashboard" }]} />
+      <section className="relative overflow-hidden pb-20 pt-16 lg:pb-28 lg:pt-24">
         <div className="section-container relative">
-          <div className="mx-auto max-w-4xl text-center">
-            <div className="flex justify-center"><DotMarker /></div>
-            <Eyebrow>Loumilab Orders</Eyebrow>
-            <h1 className="mt-5 font-hero text-[clamp(2.5rem,7vw,5rem)] font-semibold leading-[0.98] tracking-[-0.03em]">
-              Your business. Your storefront. Your orders.
-            </h1>
-            <p className="mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-              Create a simple storefront, share your link, accept orders, and manage everything in one place.
-              No complicated e-commerce setup required.
-            </p>
-            <div className="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Button size="lg" asChild className="rounded-full">
-                <Link to={ORDERS_CTA.href} className="dot-action" onClick={() => trackCtaClick("hero", ORDERS_CTA.variant)}>
-                  {ORDERS_CTA.label} <ArrowRight size={18} />
-                </Link>
-              </Button>
-              <a href="#how-it-works" className="text-sm font-semibold text-foreground underline-offset-4 hover:text-accent hover:underline">
-                See how it works
-              </a>
-            </div>
-            <p className="mx-auto mt-5 max-w-md text-sm text-muted-foreground">{ORDERS_CTA.support}</p>
-            <p className="mt-3 text-sm text-muted-foreground">
-              Already have a store?{" "}
-              <Link to="/orders/dashboard" className="underline underline-offset-4 hover:text-foreground">
-                Go to dashboard
-              </Link>
-            </p>
-          </div>
-
-          <Reveal className="mx-auto mt-14 hidden max-w-6xl md:block lg:mt-20">
+          <p className="mx-auto max-w-md text-center text-sm text-muted-foreground">{ORDERS_CTA.support}</p>
+          <Reveal className="mx-auto mt-10 hidden max-w-6xl md:block">
             <ScreenFrame
               src={builderShot}
               label="Loumilab Orders — Store builder"

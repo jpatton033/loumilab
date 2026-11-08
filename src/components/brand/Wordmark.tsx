@@ -25,7 +25,7 @@ const Wordmark = ({ size = "sm", animated = false, className, onAnimationComplet
       height={160}
       decoding="async"
       draggable={false}
-      className={cn("block w-auto", sizeMap[size], animated && "logo-img-reveal")}
+      className={cn("brand-logo-img block w-auto", sizeMap[size], animated && "logo-img-reveal")}
       onAnimationEnd={() => onAnimationComplete?.()}
     />
   </span>

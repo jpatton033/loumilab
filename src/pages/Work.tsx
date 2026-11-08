@@ -1,3 +1,5 @@
+import heroWork from "@/assets/story/studio-table.jpg";
+import { PageHero } from "@/components/brand/flow/Flow";
 import { ClosingCta } from "@/components/brand/flow/Flow";
 import { useState } from "react";
 import Layout from "@/components/Layout";
@@ -70,19 +72,7 @@ const Work = () => {
         jsonLd={workJsonLd}
       />
 
-      <section className="relative overflow-hidden pt-16 pb-12 lg:pt-24 lg:pb-16">
-        <div className="pointer-events-none absolute inset-0 hero-wash" aria-hidden="true" />
-        <div className="section-container relative max-w-3xl">
-          <DotMarker />
-          <Eyebrow>Selected work</Eyebrow>
-          <h1 className="mt-5 text-4xl font-semibold leading-tight lg:text-6xl">
-            Work that had to hold up.
-          </h1>
-          <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-            A look at what we&apos;ve designed, built, and shipped — and the difference it made once it was live.
-          </p>
-        </div>
-      </section>
+      <PageHero image={heroWork} imageAlt="A studio table with work in progress" eyebrow="Selected work" title="Work that had to hold up." lede="A look at what we've designed, built and shipped — and the difference it made once it was live." />
 
       <section className="section-padding pt-4">
         <div className="section-container">
