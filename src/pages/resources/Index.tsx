@@ -1,3 +1,5 @@
+import heroResources from "@/assets/heroes/resources.jpg";
+import { PageHero } from "@/components/brand/flow/Flow";
 import { ClosingCta } from "@/components/brand/flow/Flow";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
@@ -57,25 +59,10 @@ const ResourcesIndex = () => {
     <Layout>
       <SEOHead title={TITLE} description={DESCRIPTION} path="/resources" jsonLd={jsonLd} breadcrumbs={[{ name: "Home", path: "/" }, { name: "Resources", path: "/resources" }]} />
 
-      <section className="border-b border-border bg-surface-subtle">
-        <div className="section-container pt-10 pb-20 lg:pt-14 lg:pb-28">
-          <Reveal className="max-w-3xl">
-            <DotMarker />
-            <Eyebrow>Knowledge Center</Eyebrow>
-            <h1 className="mt-5 text-4xl font-semibold leading-[1.05] tracking-tight lg:text-6xl">
-              Guides for building, selling, and securing a modern business.
-            </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-              Plain-language playbooks, checklists, and templates from the Loumilab team — covering growth, order
-              operations, technology and AI, digital presence, and security.
-            </p>
-          </Reveal>
-          <Reveal delay={120} className="photo-frame relative mt-12 aspect-[16/7]">
-            <img src={resourcesReading} alt="An entrepreneur taking notes from a guide at her kitchen table" width={1600} height={912} decoding="async" className="h-full w-full object-cover" />
-            <DotLens />
-          </Reveal>
-
-          <Reveal delay={80} className="mt-10 max-w-xl">
+      <PageHero image={heroResources} imageAlt="A reader with a printed journal in an armchair beside a tall library window" eyebrow="Knowledge Center" title="Guides for building, selling, and securing a modern business." lede="Plain-language playbooks, checklists and templates from the Loumilab team." />
+      <section className="border-b border-border">
+        <div className="section-container pt-12 pb-16 lg:pt-16">
+          <Reveal className="mx-auto max-w-xl">
             <div className="relative">
               <Search size={17} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
               <Input

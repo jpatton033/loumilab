@@ -1,3 +1,5 @@
+import heroContact from "@/assets/heroes/contact.jpg";
+import { PageHero } from "@/components/brand/flow/Flow";
 import { track } from "@/lib/tracking";
 import { useState } from "react";
 import { DotCheck } from "@/components/brand/dot";
@@ -100,17 +102,14 @@ const Contact = () => {
         breadcrumbs={[{ name: "Home", path: "/" }, { name: "Contact", path: "/contact" }]}
         path="/contact"
       />
-      <section className="relative overflow-hidden section-padding pt-16 lg:pt-20">
-        <div className="pointer-events-none absolute inset-0 hero-wash" aria-hidden="true" />
+      <PageHero image={heroContact} imageAlt="A person stepping through a sunlit doorway into a courtyard" eyebrow="Contact" title="Let's turn the idea into something real." lede="Tell us what you're building. We respond to every inquiry within 24 hours." links={[{ label: "Start a project", to: "#contact-form" }]} />
+      <section id="contact-form" className="relative scroll-mt-24 overflow-hidden section-padding pt-16 lg:pt-20">
         <div className="section-container relative">
           <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
             <Reveal>
-              <span className="inline-block font-display text-xs font-semibold uppercase tracking-[0.22em] text-accent mb-4">
-                Contact
-              </span>
-              <h1 className="text-4xl lg:text-6xl font-semibold leading-tight mb-6">
-                Let&apos;s turn the idea into something real.
-              </h1>
+              <h2 className="font-hero text-4xl lg:text-5xl font-semibold leading-tight mb-6">
+                Tell us about it.
+              </h2>
               <p className="text-lg text-muted-foreground leading-relaxed mb-10">
                 Tell us what you&apos;re building — a website, a product, an automation, or a security question.
                 We respond to every inquiry within 24 hours.
