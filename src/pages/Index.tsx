@@ -1,3 +1,4 @@
+import { FontPreview } from "@/components/brand/FontPreview";
 import Layout from "@/components/Layout";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
@@ -128,6 +129,8 @@ const Index = () => {
         path="/"
         jsonLd={homeJsonLd}
       />
+
+      <FontPreview />
 
       {/* 1 Cinematic hero — background film, type, and previews that move on their own */}
       <section className="relative min-h-[calc(100svh-4rem)] overflow-hidden bg-ink text-inverse" aria-labelledby="hero-title">
