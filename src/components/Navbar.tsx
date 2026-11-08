@@ -177,7 +177,7 @@ const Navbar = () => {
   const isActive = (match: string[]) => match.some((m) => location.pathname.startsWith(m));
 
   return (
-    <header className={`fixed left-0 right-0 top-0 z-50 transition-[border-color,background-color] duration-200 ${scrolled || openMenu || open ? "border-b border-border bg-background/95 backdrop-blur-sm" : overHero ? "theme-inverse border-b border-transparent !bg-transparent [&_.brand-logo-img]:invert" : "border-b border-transparent bg-background"}`}>
+    <header className={`fixed left-0 right-0 top-0 z-50 transition-[border-color,background-color] duration-200 ${scrolled || openMenu || open ? "border-b border-border bg-background/95 backdrop-blur-sm" : overHero ? "theme-inverse border-b border-transparent !bg-transparent [&_.brand-logo-img]:invert [&_.brand-logo-img]:hue-rotate-180" : "border-b border-transparent bg-background"}`}>
       <div className="section-container flex h-16 items-center lg:grid lg:h-[72px] lg:grid-cols-[1fr_auto_1fr]">
         <Link to="/" onClick={handleLogoClick} className="flex items-center justify-self-start" aria-label="Loumilab home">
           <Wordmark size="sm" animated={animateLogo} className={logoAnimationComplete ? "brand-wordmark-complete" : undefined} onAnimationComplete={completeLogoAnimation} />
