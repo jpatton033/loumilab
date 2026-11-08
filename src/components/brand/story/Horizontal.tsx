@@ -130,8 +130,8 @@ export function AutoMarquee({ items, duration = 40, gap = "gap-5", tone = "light
         onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
         onFocusCapture={() => setHover(true)} onBlurCapture={() => setHover(false)}>
         <div className={`marquee-track ${gap}`} data-paused={paused} style={{ ["--marquee-dur" as string]: `${duration}s` }}>
-          <div className={`flex shrink-0 ${gap}`}>{items}</div>
-          <div className={`flex shrink-0 ${gap}`} aria-hidden="true" {...{ inert: "" }}>{items}</div>
+          <div className={`flex shrink-0 items-start ${gap}`}>{items}</div>
+          <div className={`flex shrink-0 items-start ${gap}`} aria-hidden="true" {...{ inert: "" }}>{items}</div>
         </div>
       </div>
       {showToggle && <div className="section-container mt-5 flex justify-end"><PauseToggle paused={user} onToggle={() => setUser((u) => !u)} tone={tone} /></div>}
