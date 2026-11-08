@@ -142,7 +142,7 @@ const Navbar = () => {
                 >
                   {menu.label}
                   <ChevronDown size={13} strokeWidth={1.75} className={`opacity-60 transition-transform duration-200 ${expanded ? "rotate-180" : ""}`} />
-                  {isActive(menu.match) && <span aria-hidden="true" className="absolute bottom-0 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-accent" />}
+                  {isActive(menu.match) && <span aria-hidden="true" className="absolute bottom-0 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-dot" />}
                 </button>
                 {expanded && (
                   <div id={`menu-${menu.id}`} role="menu" className={`absolute top-full -mt-2 pt-2 animate-in fade-in-0 slide-in-from-top-1 duration-200 motion-reduce:animate-none ${wide ? "left-0 w-[min(92vw,640px)]" : "left-0 w-[320px]"}`}>
@@ -150,7 +150,7 @@ const Navbar = () => {
                       <div className={`grid gap-4 ${wide ? "sm:grid-cols-2" : ""}`}>
                         {menu.groups.map((g) => (
                           <div key={g.label}>
-                            <p className="flex items-center gap-2 px-3 pt-2 text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-olive"><span aria-hidden className="h-1.5 w-1.5 rounded-full bg-accent" /><span>{g.label}</span></p>
+                            <p className="flex items-center gap-2 px-3 pt-2 text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-olive"><span aria-hidden className="h-1.5 w-1.5 rounded-full bg-dot" /><span>{g.label}</span></p>
                             <div className="mt-2 space-y-0.5">{g.items.map((i) => <MenuLink key={i.to} item={i} />)}</div>
                           </div>
                         ))}
@@ -169,7 +169,7 @@ const Navbar = () => {
             );
           })}
           {navDirectLinks.map((l) => (
-            <Link key={l.to} to={l.to} className={`relative rounded-md px-3 py-2 text-[0.9375rem] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${location.pathname === l.to ? "text-foreground" : "text-foreground/65 hover:text-foreground"}`}>{l.label}{location.pathname === l.to && <span aria-hidden="true" className="absolute bottom-0 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-accent" />}</Link>
+            <Link key={l.to} to={l.to} className={`relative rounded-md px-3 py-2 text-[0.9375rem] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${location.pathname === l.to ? "text-foreground" : "text-foreground/65 hover:text-foreground"}`}>{l.label}{location.pathname === l.to && <span aria-hidden="true" className="absolute bottom-0 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-dot" />}</Link>
           ))}
         </nav>
 

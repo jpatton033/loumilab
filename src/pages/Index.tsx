@@ -16,8 +16,15 @@ import buildImg from "@/assets/story/build.jpg";
 import innovateImg from "@/assets/story/innovate.jpg";
 import secureImg from "@/assets/story/secure.jpg";
 import { useDrift, type Chapter } from "@/components/brand/story/FieldNotes";
-import { AmbientVideo, ExpandingHero, PinnedScenes } from "@/components/brand/story/Immersive";
-import heroVideo from "@/assets/video/studio-hero.mp4.asset.json";
+import { ExpandingHero, PinnedScenes } from "@/components/brand/story/Immersive";
+import { RtlSequence, ScrollRail, type Frame } from "@/components/brand/story/Horizontal";
+import archLight from "@/assets/story/home/arch-light.jpg";
+import sculptureDot from "@/assets/story/home/sculpture-dot.jpg";
+import layoutsHands from "@/assets/story/home/layouts-hands.jpg";
+import facadeGrid from "@/assets/story/home/facade-grid.jpg";
+import storeBuilder from "@/assets/orders/screens/store-builder.jpg";
+import merchantDash from "@/assets/orders/screens/merchant-dashboard.jpg";
+import floristOrder from "@/assets/story/home/florist-order.jpg";
 import market from "@/assets/people/local/market.jpg";
 import officeReview from "@/assets/people/email/office-review.jpg";
 
@@ -48,6 +55,20 @@ const chapters: Chapter[] = [
   { word: "Secure", line: "Security is part of every build, not an add-on at the end.", image: secureImg, alt: "A brass padlock and key resting on a green leather notebook" },
 ];
 
+const intro: Frame[] = [
+  { src: layoutsHands, alt: "Hands arranging printed interface layouts on a black table", caption: "Design" },
+  { src: facadeGrid, alt: "A glass building facade at night with a grid of lit windows", caption: "Build" },
+  { src: floristOrder, alt: "A florist smiling as she packs a customer order", caption: "Innovate" },
+  { src: sculptureDot, alt: "White sculptural forms beside a small blue sphere", caption: "Secure" },
+];
+
+const productRail: Frame[] = [
+  { src: floristOrder, alt: "A florist packing an order placed online", caption: "Orders — customers buy straight from your own storefront." },
+  { src: market, alt: "Neighbors shopping at an outdoor market", caption: "Local — free discovery for neighborhood businesses." },
+  { src: storeBuilder, alt: "The Loumilab Orders store builder", caption: "A store builder that takes minutes, not weeks." },
+  { src: merchantDash, alt: "The Loumilab Orders merchant dashboard", caption: "One dashboard for every order, job and payout." },
+];
+
 const studio = servicePages.filter((s) => s.group === "Technology Studio");
 
 const Index = () => {
@@ -65,11 +86,11 @@ const Index = () => {
 
       {/* 1 Cinematic opening — video contracts into an arch as you scroll */}
       <ExpandingHero
-        media={<AmbientVideo src={heroVideo.url} poster={studioTable} label="A warm studio table with sketchbooks, wireframes and a laptop in drifting afternoon light" />}
+        media={<img src={archLight} alt="A curved concrete staircase cut by raking sunlight and deep shadow" width={1920} height={1088} className="h-full w-full object-cover" />}
         after={<p className="section-container pb-6 text-center font-serif text-xl italic text-foreground lg:text-2xl">Technology, made with care.</p>}
       >
         <div className="section-container">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sand">Loumilab · Technology Studio</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-inverse-muted">Loumilab · Technology Studio</p>
           <h1 className="mt-5 font-hero text-[3.6rem] font-semibold leading-[0.9] tracking-[-0.055em] text-inverse sm:text-[6rem] lg:text-[7.5rem] xl:text-[9rem]">
             We build<br /><span className="font-serif font-normal italic tracking-[-0.02em]">what's</span> next<span className="text-dot">.</span>
           </h1>
@@ -78,12 +99,20 @@ const Index = () => {
               Loumilab designs, builds, and manages digital products and technology solutions that help businesses launch, operate, and grow.
             </p>
             <div className="pointer-events-auto flex flex-wrap items-center gap-5">
-              <Button size="lg" asChild className="bg-accent text-accent-foreground hover:bg-accent/90"><Link to="/services">Explore Solutions</Link></Button>
+              <Button size="lg" asChild className="bg-background text-foreground hover:bg-background/90"><Link to="/services">Explore Solutions</Link></Button>
               <Link to="/contact" className="text-sm font-semibold text-inverse underline-offset-4 hover:underline">Start a Project</Link>
             </div>
           </div>
         </div>
       </ExpandingHero>
+
+      {/* 1b Right-to-left introduction */}
+      <section className="section-container pt-24 lg:pt-36" aria-label="What Loumilab does">
+        <div className="grid items-end gap-10 lg:grid-cols-12">
+          <Reveal className="lg:col-span-4"><p className="font-hero text-3xl font-semibold leading-tight tracking-tight lg:text-4xl">Design, software and security, <span className="font-serif font-normal italic">made to last</span><span className="text-dot">.</span></p></Reveal>
+          <RtlSequence frames={intro} className="aspect-[4/3] lg:col-span-8 lg:aspect-[16/10]" />
+        </div>
+      </section>
 
       {/* 2 Three ways we help — asymmetric spread */}
       <section className="section-container py-24 lg:py-36" aria-labelledby="ways-title">
@@ -91,7 +120,7 @@ const Index = () => {
         <div className="mt-14 grid gap-x-10 gap-y-14 lg:grid-cols-12">
           {pathways.map((p, i) => (
             <Reveal key={p.title} delay={i * 90} className={`flex flex-col border-t border-foreground/70 pt-6 ${i === 0 ? "lg:col-span-6" : i === 1 ? "lg:col-span-4 lg:col-start-8 lg:mt-24" : "lg:col-span-5 lg:col-start-3"}`}>
-              <span className="font-hero text-sm font-semibold text-olive">0{i + 1}</span>
+              <span className="font-hero text-sm font-semibold text-muted-foreground">0{i + 1}</span>
               <h3 className={`mt-3 font-hero font-semibold tracking-tight ${i === 0 ? "text-3xl lg:text-5xl" : "text-2xl lg:text-3xl"}`}>{p.title}</h3>
               <p className="mt-4 max-w-md flex-1 text-lg leading-relaxed text-muted-foreground">{p.body}</p>
               <Link to={p.to} className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-accent underline-offset-4 hover:underline">
@@ -112,9 +141,12 @@ const Index = () => {
       {/* 3 Products (dark) */}
       <section className="film-grain bg-ink py-24 text-inverse lg:py-36" aria-labelledby="products-title">
         <div className="section-container">
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-sand">Loumilab Products</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-inverse-muted">Loumilab Products</p>
           <h2 id="products-title" className="mt-4 max-w-3xl font-hero text-4xl font-semibold tracking-tight text-inverse lg:text-6xl">Less managing. <span className="font-serif font-normal italic">More business.</span></h2>
 
+        </div>
+        <div className="mt-6"><ScrollRail items={productRail} tone="dark" /></div>
+        <div className="section-container">
           <div className="mt-14"><OrdersShowcase /></div>
 
           <div className="mt-20 grid items-center gap-12 border-t border-inverse/15 pt-16 lg:grid-cols-2">
@@ -194,7 +226,7 @@ const Index = () => {
       <section className="section-container pb-24">
         <div className="paper-grain rounded-[2rem] bg-surface-inverse px-6 py-20 text-center text-inverse sm:px-12 lg:py-24">
           <h2 className="mx-auto max-w-3xl font-hero text-4xl font-semibold tracking-tight text-inverse sm:text-5xl lg:text-6xl">Have something in mind? <span className="font-serif font-normal italic">Let's build it.</span></h2>
-          <Button size="lg" asChild className="mt-10 bg-accent text-accent-foreground hover:bg-accent/90"><Link to="/contact">Start a Project</Link></Button>
+          <Button size="lg" asChild className="mt-10 bg-background text-foreground hover:bg-background/90"><Link to="/contact">Start a Project</Link></Button>
         </div>
       </section>
     </Layout>

@@ -7,34 +7,34 @@
 @layer base {
   :root {
     /* Light brand system — white / off-white / light gray surfaces, charcoal type */
-    --background: 41 37% 94%;
-    --foreground: 100 18% 10%;
+    --background: 40 20% 97%;
+    --foreground: 0 0% 5%;
 
-    --card: 42 45% 97%;
-    --card-foreground: 100 18% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 5%;
 
-    --popover: 42 45% 97%;
-    --popover-foreground: 100 18% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 5%;
 
-    --primary: 102 16% 16%;
-    --primary-foreground: 41 37% 95%;
+    --primary: 0 0% 5%;
+    --primary-foreground: 40 20% 98%;
 
-    --secondary: 40 30% 89%;
-    --secondary-foreground: 100 18% 10%;
+    --secondary: 40 10% 93%;
+    --secondary-foreground: 0 0% 5%;
 
-    --muted: 40 24% 87%;
-    --muted-foreground: 90 8% 30%;
+    --muted: 40 8% 92%;
+    --muted-foreground: 0 0% 34%;
 
-    --accent: 18 50% 47%;
-    --accent-foreground: 40 40% 96%;
+    --accent: 0 0% 5%;
+    --accent-foreground: 40 20% 98%;
     --dot: 217 91% 50%;
 
     --destructive: 0 72% 48%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 40 20% 82%;
-    --input: 40 18% 78%;
-    --ring: 18 50% 47%;
+    --border: 40 6% 86%;
+    --input: 40 5% 80%;
+    --ring: 217 91% 50%;
 
     --radius: 1rem;
 
@@ -49,18 +49,18 @@
     --sidebar-ring: 217 91% 60%;
 
     /* Custom tokens */
-    --surface-elevated: 42 45% 97%;
-    --surface-subtle: 40 30% 89%;
-    --surface-inverse: 45 19% 7%;
-    --surface-ink: 30 24% 13%;
-    --forest: 102 16% 20%;
-    --inverse-foreground: 41 37% 94%;
-    --inverse-muted: 60 15% 74%;
-    --olive: 79 24% 39%;
-    --sand: 40 31% 70%;
-    --surface-tint: 40 28% 91%;
-    --accent-glow: 18 55% 58%;
-    --accent-soft: 20 45% 93%;
+    --surface-elevated: 0 0% 100%;
+    --surface-subtle: 40 10% 94%;
+    --surface-inverse: 0 0% 4%;
+    --surface-ink: 0 0% 8%;
+    --forest: 0 0% 6%;
+    --inverse-foreground: 40 20% 97%;
+    --inverse-muted: 0 0% 66%;
+    --olive: 0 0% 30%;
+    --sand: 0 0% 72%;
+    --surface-tint: 40 10% 95%;
+    --accent-glow: 0 0% 25%;
+    --accent-soft: 40 10% 94%;
 
     --gradient-accent: linear-gradient(135deg, hsl(240 6% 12%), hsl(217 91% 50%));
     --gradient-surface: linear-gradient(180deg, hsl(0 0% 100%), hsl(240 20% 97%));
