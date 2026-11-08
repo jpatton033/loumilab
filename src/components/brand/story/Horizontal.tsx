@@ -285,8 +285,8 @@ export function CinematicGallery({ items, pxPerSec = 70, label = "Loumilab work"
   };
 
   return (
-    <div ref={wrap} className="relative overflow-hidden" role="region" aria-label={label}>
-      <div ref={track} className={`flex h-[300px] w-max gap-4 will-change-transform sm:h-[420px] sm:gap-6 lg:h-[clamp(450px,52vh,620px)] ${still ? "overflow-x-auto" : ""}`}>
+    <div ref={wrap} className={`relative ${still ? "overflow-x-auto" : "overflow-hidden"}`} role="region" aria-label={label}>
+      <div ref={track} className={`flex h-[300px] w-max gap-4 will-change-transform sm:h-[420px] sm:gap-6 lg:h-[clamp(450px,52vh,620px)]`}>
         {items.map((it, n) => tile(it, `a${n}`, false))}
         {!still && items.map((it, n) => tile(it, `b${n}`, true))}
       </div>
