@@ -99,9 +99,9 @@ const statement = [
 ];
 
 const productStack: Frame[] = [
-  { src: storeBuilder, alt: "The Loumilab Orders store builder", caption: "Store builder — live in minutes." },
-  { src: scLocal, alt: "Loumilab Local business discovery", caption: "Local — free discovery for neighborhood businesses." },
-  { src: merchantDash, alt: "The Loumilab Orders merchant dashboard", caption: "One dashboard for every order and payout." },
+  { src: storeBuilder, alt: "The Loumilab Orders store builder", caption: "Store builder — live in minutes.", fit: "contain" },
+  { src: scLocal, alt: "Loumilab Local business discovery", caption: "Local — free discovery for neighborhood businesses.", fit: "contain" },
+  { src: merchantDash, alt: "The Loumilab Orders merchant dashboard", caption: "One dashboard for every order and payout.", fit: "contain" },
   { src: market, alt: "Neighbors shopping at an outdoor market", caption: "Built for the businesses on your street." },
 ];
 

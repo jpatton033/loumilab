@@ -321,25 +321,25 @@ const Orders = () => {
             </h2>
           </Reveal>
           <Reveal delay={140}>
-            <p className="mt-6 font-hero text-[clamp(1.75rem,5vw,3.5rem)] font-semibold leading-[1.05] tracking-[-0.03em] text-accent">
+            <p className="mt-6 font-hero text-[clamp(1.75rem,5vw,3.5rem)] font-semibold leading-[1.05] tracking-[-0.03em] text-inverse">
               Start taking Orders.
             </p>
           </Reveal>
           <Reveal delay={260}>
-            <p className="mx-auto mt-8 max-w-md text-lg text-muted-foreground">
+            <p className="mx-auto mt-8 max-w-md text-lg text-inverse-muted">
               Your storefront is only a few minutes away. No sign-up needed to start.
             </p>
           </Reveal>
           <Reveal delay={340} className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
-            <Button size="lg" asChild className="rounded-full bg-accent text-accent-foreground hover:bg-accent/90">
+            <Button size="lg" asChild className="rounded-full bg-foreground text-background hover:bg-foreground/90">
               <Link to={ORDERS_CTA.href} className="dot-action" onClick={() => trackCtaClick("closing", ORDERS_CTA.variant)}>
                 {ORDERS_CTA.label} <ArrowRight size={18} />
               </Link>
             </Button>
-<p className="self-center text-sm text-muted-foreground">
+<p className="self-center text-sm text-inverse-muted">
               Compare alternatives:{" "}
               {COMPETITORS.map((c, i) => (
-                <span key={c.slug}>{i > 0 && " · "}<Link to={`/orders/compare/${c.slug}`} className="font-semibold text-foreground underline-offset-4 hover:text-accent hover:underline">{c.name}</Link></span>
+                <span key={c.slug}>{i > 0 && " · "}<Link to={`/orders/compare/${c.slug}`} className="font-semibold text-inverse underline-offset-4 hover:underline">{c.name}</Link></span>
               ))}
             </p>
           </Reveal>

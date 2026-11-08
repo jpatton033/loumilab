@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Pause, Play } from "lucide-react";
 import { Link } from "react-router-dom";
 
-export type Frame = { src: string; alt: string; caption?: string };
+export type Frame = { src: string; alt: string; caption?: string; fit?: "cover" | "contain" };
 
 const reduced = () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -192,17 +192,17 @@ export function LayeredStack({ frames, interval = 3400, className = "" }: { fram
   const L = frames.length;
   return (
     <div className={className}>
-      <div ref={ref} className="relative aspect-[4/3] w-full" onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+      <div ref={ref} className="relative aspect-[16/10] w-full" onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
         {frames.map((f, n) => {
           const d = (n - i + L) % L; // 0 = front, 1 = next (right), L-1 = leaving (left)
           const pos = d === 0 ? "translate-x-0 rotate-0 scale-100 opacity-100 z-30"
-            : d === 1 ? "translate-x-[14%] rotate-[3deg] scale-[0.9] opacity-80 z-20"
+            : d === 1 ? "translate-x-[8%] rotate-[3deg] scale-[0.9] opacity-80 z-20"
             : d === L - 1 ? "-translate-x-[60%] -rotate-[4deg] scale-[0.85] opacity-0 z-10"
             : "translate-x-[40%] rotate-[5deg] scale-[0.82] opacity-0 z-0";
           return (
             <figure key={f.src} aria-hidden={d !== 0} className={`absolute inset-0 transition-all duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${pos}`}>
               <div className="h-full overflow-hidden rounded-3xl border border-inverse/15 shadow-[0_40px_80px_-30px_hsl(var(--surface-ink)/0.8)]">
-                <img src={f.src} alt={f.alt} loading="lazy" className="h-full w-full object-cover object-top" />
+                <img src={f.src} alt={f.alt} loading="lazy" className={`h-full w-full ${f.fit === "contain" ? "object-contain object-center bg-background p-3" : "object-cover object-top"}`} />
               </div>
               {f.caption && <figcaption className="absolute -bottom-10 left-0 text-sm text-inverse-muted">{f.caption}</figcaption>}
             </figure>
