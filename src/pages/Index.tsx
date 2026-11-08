@@ -41,33 +41,7 @@ const homeJsonLd = {
   ],
 };
 
-const galleryItems: CinematicItem[] = [
-  { src: scEmail, alt: "The Business Email service page", label: "Website development", to: "/services/website-development", aspect: 16 / 10 },
-  { src: scServices, alt: "The Loumilab Solutions page", label: "Loumilab Solutions", to: "/services", aspect: 4 / 5 },
-  { src: merchantDash, alt: "The Orders merchant dashboard", label: "Custom software", to: "/services/custom-software", aspect: 16 / 10, status: ["New order", "Preparing", "Ready for pickup", "Completed"] },
-  { src: storeBuilder, alt: "The Orders store builder", label: "Loumilab Orders", to: "/orders", aspect: 4 / 3 },
-  { src: scPricing, alt: "Orders pricing calculator", label: "Orders pricing", to: "/orders/pricing", aspect: 3 / 4 },
-  { src: scWorkflow, alt: "The Workflow Optimization page", label: "AI & automation", to: "/services/workflow-optimization", aspect: 16 / 10 },
-  { src: scLocal, alt: "Loumilab Local business discovery", label: "Loumilab Local", to: "/orders/local", aspect: 4 / 5 },
-  { src: scResources, alt: "The Knowledge Center", label: "Knowledge Center", to: "/resources", aspect: 16 / 10 },
-  { src: scDot, alt: "The Dot. newsletter", label: "The Dot.", to: "/the-dot", aspect: 3 / 4 },
-  { src: archVideo.url, poster: archLight, video: true, alt: "", label: "The studio", aspect: 16 / 9 },
-];
-
-const lanes: { name: string; to: string; line: string; frames: Frame[]; duration: number }[] = [
-  { name: "Websites", to: "/services/website-development", line: "Fast, clear sites people enjoy using.", duration: 34, frames: [
-    { src: scOrders, alt: "Loumilab Orders website" }, { src: scLocal, alt: "Loumilab Local website" }, { src: scResources, alt: "Loumilab Knowledge Center" }, { src: scEmail, alt: "Business Email service page" }, { src: scServices, alt: "Loumilab Solutions page" },
-  ] },
-  { name: "Custom software", to: "/services/custom-software", line: "Tools shaped around how you work.", duration: 42, frames: [
-    { src: storeBuilder, alt: "The Orders store builder" }, { src: merchantDash, alt: "The Orders merchant dashboard" }, { src: scPricing, alt: "Orders pricing calculator" }, { src: layoutsHands, alt: "Interface layouts arranged on a table" },
-  ] },
-  { name: "AI & automation", to: "/services/ai-automation", line: "AI when valuable. Software when sufficient.", duration: 30, frames: [
-    { src: scWorkflow, alt: "Workflow Optimization page" }, { src: engineer, alt: "An engineer reviewing an automated workflow" }, { src: sculptureDot, alt: "Sculptural forms with a blue sphere" }, { src: scDot, alt: "The Dot. newsletter" },
-  ] },
-  { name: "Cybersecurity", to: "/services/cybersecurity", line: "Security built in from the first line.", duration: 38, frames: [
-    { src: facadeGrid, alt: "A lit glass facade at night" }, { src: archLight, alt: "A staircase cut by raking light" }, { src: scEmail, alt: "Secured business email setup" }, { src: merchantDash, alt: "Protected merchant dashboard" },
-  ] },
-];
+__DATA__
 
 const statement = [
   { word: "Design", line: "Clear, considered experiences — shaped with people, not just pixels.", media: <LoopVideo src={sketchVideo.url} poster={layoutsHands} className="h-full w-full object-cover" /> },
@@ -108,49 +82,7 @@ const Index = () => {
         jsonLd={homeJsonLd}
       />
 
-      {/* 1 Opening — centered headline, then a hard cut into the black cinematic gallery */}
-      <section className="pt-16 lg:pt-24" aria-labelledby="hero-title">
-        <div className="section-container text-center">
-          <h1 id="hero-title" className="mx-auto font-hero text-[3.4rem] font-semibold leading-[0.92] tracking-[-0.055em] sm:text-[5.5rem] lg:text-[7.5rem]">
-            We build what's next<span className="text-dot">.</span>
-          </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground lg:text-xl">
-            Thoughtful technology, distinctive digital experiences, and software built for what's next.
-          </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <Button size="lg" asChild><Link to="/services">Explore Our Solutions</Link></Button>
-            <Button size="lg" variant="outline" asChild><a href="#work-gallery">See What We Build</a></Button>
-          </div>
-        </div>
-        <div id="work-gallery" className="mt-12 scroll-mt-20 bg-ink py-10 lg:mt-16 lg:py-14">
-          <CinematicGallery items={galleryItems} label="A moving gallery of Loumilab work" />
-        </div>
-      </section>
-
-      {/* 2 What we build — four moving lanes (dark) */}
-      <section className="film-grain bg-ink py-24 text-inverse lg:py-32" aria-labelledby="build-title">
-        <div className="section-container">
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-inverse-muted">Technology Studio</p>
-          <h2 id="build-title" className="mt-4 max-w-3xl font-hero text-4xl font-semibold tracking-tight text-inverse lg:text-6xl">What we <span className="font-serif font-normal italic">build</span><span className="text-dot">.</span></h2>
-        </div>
-        <div className="mt-14 space-y-14 lg:space-y-20">
-          {lanes.map((l, n) => (
-            <div key={l.name} className={n > 1 ? "hidden md:block" : ""}>
-              <div className="section-container mb-5 flex flex-wrap items-baseline justify-between gap-3 border-t border-inverse/15 pt-5">
-                <h3 className="font-hero text-2xl font-semibold tracking-tight text-inverse lg:text-4xl">{l.name}</h3>
-                <p className="text-inverse-muted">{l.line}</p>
-                <Link to={l.to} className="inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-inverse underline-offset-4 hover:underline">Learn more <ArrowRight size={14} aria-hidden /></Link>
-              </div>
-              <AutoMarquee label={`${l.name} previews`} tone="dark" duration={l.duration} showToggle={n === 0} items={l.frames.map((f) => <Shot key={f.src + l.name} f={f} dark />)} />
-            </div>
-          ))}
-          <div className="section-container md:hidden">
-            {lanes.slice(2).map((l) => (
-              <Link key={l.name} to={l.to} className="flex min-h-11 items-center justify-between border-t border-inverse/15 py-4 font-hero text-xl font-semibold text-inverse">{l.name} <ArrowRight size={16} aria-hidden /></Link>
-            ))}
-          </div>
-        </div>
-      </section>
+__HERO__
 
       {/* 3 Statement — timed crossfade */}
       <section className="section-container py-20 lg:py-28" aria-label="Design. Build. Innovate. Secure.">
