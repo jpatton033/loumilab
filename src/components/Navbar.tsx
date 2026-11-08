@@ -150,7 +150,7 @@ const Navbar = () => {
                       <div className={`grid gap-4 ${wide ? "sm:grid-cols-2" : ""}`}>
                         {menu.groups.map((g) => (
                           <div key={g.label}>
-                            <p className="flex items-center gap-2 px-3 pt-2 text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-olive"><span aria-hidden className="h-1.5 w-1.5 rounded-full bg-accent" /><span">{g.label}</span></p>
+                            <p className="flex items-center gap-2 px-3 pt-2 text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-olive"><span aria-hidden className="h-1.5 w-1.5 rounded-full bg-accent" /><span>{g.label}</span></p>
                             <div className="mt-2 space-y-0.5">{g.items.map((i) => <MenuLink key={i.to} item={i} />)}</div>
                           </div>
                         ))}
