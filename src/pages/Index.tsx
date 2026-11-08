@@ -70,7 +70,7 @@ const Index = () => {
       >
         <div className="section-container">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sand">Loumilab · Technology Studio</p>
-          <h1 className="mt-5 font-hero text-[3.6rem] font-semibold leading-[0.9] tracking-[-0.055em] text-inverse sm:text-[6rem] lg:text-[9rem] xl:text-[11rem]">
+          <h1 className="mt-5 font-hero text-[3.6rem] font-semibold leading-[0.9] tracking-[-0.055em] text-inverse sm:text-[6rem] lg:text-[7.5rem] xl:text-[9rem]">
             We build<br /><span className="font-serif font-normal italic tracking-[-0.02em]">what's</span> next<span className="text-dot">.</span>
           </h1>
           <div className="mt-8 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
