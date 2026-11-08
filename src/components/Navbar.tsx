@@ -63,7 +63,7 @@ const MegaPanel = ({ menuId, onEnter, onLeave }: { menuId: string | null; onEnte
               </div>
             ))}
             <div className="border-l border-inverse/15 pl-10">
-              <p className="font-serif text-2xl italic text-inverse">{menu.label}<span className="text-dot">.</span></p>
+              <p className="font-hero text-2xl font-bold tracking-tight text-inverse">{menu.label}<span className="text-dot">.</span></p>
               <p className="mt-3 text-sm leading-relaxed text-inverse-muted">{menu.id === "solutions" ? "Design, build and run the technology your business depends on." : menu.id === "products" ? "Software we build and operate ourselves." : "Ideas, guides and free tools for growing businesses."}</p>
               {menu.footer && <Link to={menu.footer.to} role="menuitem" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-inverse hover:text-inverse/75">{menu.footer.label} <ArrowRight size={14} /></Link>}
             </div>

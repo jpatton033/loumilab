@@ -35,7 +35,14 @@ const SiteSearch = ({ className = "" }: { className?: string }) => {
 
   const groups = useMemo(() => {
     const byMenu = navMenus.map((m) => ({ heading: m.label, items: m.groups.flatMap((g) => g.items) as Hit[] }));
+    const suggested: Hit[] = [
+      { label: "Loumilab Orders", to: "/orders", desc: "Your storefront, orders and payouts." },
+      { label: "Business Email", to: "/services/business-email", desc: "Professional email on your own domain." },
+      { label: "Domains", to: "/services/domains", desc: "Domains and DNS, set up properly." },
+      { label: "Workflow Optimization", to: "/services/workflow-optimization", desc: "AI when valuable. Software when sufficient." },
+    ];
     return [
+      { heading: "Suggested", items: suggested },
       ...byMenu,
       { heading: "Knowledge Center", items: articles.map((a) => ({ label: a.title, desc: a.summary ?? undefined, to: `/resources/${a.kc_sections?.slug ?? "guides"}/${a.slug}` })) },
       { heading: "The Dot.", items: issues.map((i) => ({ label: `Issue ${String(i.issue_number).padStart(3, "0")} — ${i.title}`, desc: i.subtitle ?? undefined, to: `/the-dot/issue/${i.slug}` })) },

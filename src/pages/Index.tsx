@@ -1,4 +1,8 @@
-import { FontPreview } from "@/components/brand/FontPreview";
+import { Pathways } from "@/components/brand/story/Pathways";
+import runBakery from "@/assets/story/run/bakery-packing.jpg";
+import runRetail from "@/assets/story/run/retail-counter.jpg";
+import runService from "@/assets/story/run/service-work.jpg";
+import runPickup from "@/assets/story/run/customer-pickup.jpg";
 import Layout from "@/components/Layout";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
@@ -130,7 +134,6 @@ const Index = () => {
         jsonLd={homeJsonLd}
       />
 
-      <FontPreview />
 
       {/* 1 Cinematic hero — background film, type, and previews that move on their own */}
       <section className="relative min-h-[calc(100svh-4rem)] overflow-hidden bg-ink text-inverse" aria-labelledby="hero-title">
@@ -140,7 +143,7 @@ const Index = () => {
         <div className="section-container relative grid min-h-[calc(100svh-4rem)] items-center gap-10 py-16 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <h1 id="hero-title" className="font-hero text-[3.2rem] font-bold leading-[0.92] tracking-[-0.05em] text-inverse sm:text-[5rem] lg:text-[6.2rem]">
-              We build what's next
+              We build what's next.
             </h1>
             <p className="mt-6 max-w-md text-lg leading-relaxed text-inverse/80 lg:text-xl">
               Thoughtful technology, distinctive digital experiences, and software built for what's next.
@@ -156,11 +159,18 @@ const Index = () => {
         </div>
       </section>
 
+      <Pathways runFrames={[
+        { src: runBakery, alt: "A baker packing pastry boxes for orders", caption: "Orders packed and ready" },
+        { src: runRetail, alt: "A shopkeeper handing a wrapped purchase to a customer", caption: "Sales at the counter" },
+        { src: runService, alt: "A carpenter working in a client's home", caption: "Jobs scheduled and done" },
+        { src: runPickup, alt: "An owner handing an order to a customer at the door", caption: "Pickup, on time" },
+      ]} />
+
       {/* 2 What we build — a different composition per area */}
       <section className="bg-ink py-24 text-inverse lg:py-32" aria-labelledby="build-title">
         <div className="section-container">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-inverse-muted">Technology Studio</p>
-          <h2 id="build-title" className="mt-4 max-w-3xl font-hero text-4xl font-bold tracking-tight text-inverse lg:text-6xl">What we build<span className="text-dot">.</span></h2>
+          <h2 id="build-title" className="mt-4 max-w-3xl font-hero text-4xl font-bold tracking-tight text-inverse lg:text-6xl">What we build.</h2>
 
           <div className="mt-20 space-y-28 lg:space-y-36">
             <BuildRow name="Websites" to="/services/website-development" line="Fast, clear sites people enjoy using — for shops, studios, firms and brands.">
@@ -186,7 +196,7 @@ const Index = () => {
       {/* 2b Floating gallery */}
       <section id="work-gallery" className="scroll-mt-20 overflow-hidden bg-ink py-20 text-inverse lg:py-28" aria-labelledby="gallery-title">
         <div className="section-container text-center">
-          <h2 id="gallery-title" className="font-hero text-4xl font-bold tracking-tight text-inverse lg:text-6xl">A range of work<span className="text-dot">.</span></h2>
+          <h2 id="gallery-title" className="font-hero text-4xl font-bold tracking-tight text-inverse lg:text-6xl">A range of work.</h2>
           <p className="mx-auto mt-4 max-w-lg text-inverse-muted">Websites, software and products — point at one to see what it is.</p>
         </div>
         <div className="mt-10"><FloatingGallery items={floatItems} /></div>
@@ -203,7 +213,7 @@ const Index = () => {
         <div className="section-container grid items-center gap-16 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-inverse-muted">Loumilab Products</p>
-            <h2 id="products-title" className="mt-4 font-hero text-4xl font-semibold tracking-tight text-inverse lg:text-6xl">Less managing. More business.</h2>
+            <h2 id="products-title" className="mt-4 font-hero text-4xl font-semibold tracking-tight text-inverse lg:text-6xl">Orders & Local.</h2>
             <p className="mt-6 max-w-md text-lg leading-relaxed text-inverse-muted">Orders gives you your own storefront and dashboard. Local helps neighbors find you — free.</p>
             <div className="mt-8 flex flex-wrap items-center gap-5">
               <Button size="lg" asChild className="bg-background text-foreground hover:bg-background/90"><Link to={ORDERS_CTA.href}>{ORDERS_CTA.label}</Link></Button>
@@ -214,11 +224,25 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Companies */}
+      <section className="py-24 lg:py-32" aria-labelledby="companies-title">
+        <div className="section-container grid items-end gap-10 lg:grid-cols-12">
+          <div className="lg:col-span-7">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Loumilab Companies</p>
+            <h2 id="companies-title" className="mt-4 font-hero text-4xl font-bold tracking-tight lg:text-6xl">Vurtti.</h2>
+            <p className="mt-6 max-w-lg text-lg leading-relaxed text-muted-foreground">Compliance, documented and under control. A compliance technology platform helping teams organize and maintain the evidence their standards require.</p>
+          </div>
+          <div className="lg:col-span-5 lg:text-right">
+            <Button size="lg" asChild><a href="https://www.vurttidocs.com" target="_blank" rel="noopener noreferrer">Visit Vurtti</a></Button>
+          </div>
+        </div>
+      </section>
+
       {/* 5 Knowledge Center & The Dot. — editorial drift */}
       {reading.length > 0 && (
         <section className="py-20 lg:py-28" aria-labelledby="reading-title">
           <div className="section-container flex flex-wrap items-end justify-between gap-4">
-            <h2 id="reading-title" className="font-hero text-4xl font-semibold tracking-tight lg:text-6xl">Ideas worth reading<span className="text-dot">.</span></h2>
+            <h2 id="reading-title" className="font-hero text-4xl font-semibold tracking-tight lg:text-6xl">Ideas worth reading.</h2>
             <div className="flex gap-6"><MoreLink to="/resources">Knowledge Center</MoreLink><MoreLink to="/the-dot">The Dot.</MoreLink></div>
           </div>
           <AutoMarquee

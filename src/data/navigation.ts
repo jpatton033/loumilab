@@ -12,6 +12,14 @@ export const navMenus: NavMenu[] = [
     match: ["/services", "/how-we-work", "/work"],
     groups: [
       {
+        label: "Start here",
+        items: [
+          { label: "Business Email", to: "/services/business-email", desc: "Email on your own domain, set up for you." },
+          { label: "Domains", to: "/services/domains", desc: "Find, connect and manage your domain." },
+          { label: "Workflow Optimization", to: "/services/workflow-optimization", desc: "Turn scattered tasks into one process." },
+        ],
+      },
+      {
         label: "Technology Studio",
         items: [
           { label: "Website Development", to: "/services/website-development", desc: "Fast, clear websites built to convert." },
