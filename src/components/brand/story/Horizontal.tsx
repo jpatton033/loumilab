@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Pause, Play } from "lucide-react";
 
 export type Frame = { src: string; alt: string; caption?: string };
@@ -115,7 +115,7 @@ function PauseToggle({ paused, onToggle, tone }: { paused: boolean; onToggle: ()
 
 /** Seamless right-to-left loop. Items are duplicated once; the copy is hidden from assistive tech. */
 export function AutoMarquee({ items, duration = 40, gap = "gap-5", tone = "light", label, showToggle = true, className = "" }: {
-  items: React.ReactNode[]; duration?: number; gap?: string; tone?: "light" | "dark"; label: string; showToggle?: boolean; className?: string;
+  items: ReactNode[]; duration?: number; gap?: string; tone?: "light" | "dark"; label: string; showToggle?: boolean; className?: string;
 }) {
   const { ref, running, motionOk } = useAutoMotion<HTMLDivElement>();
   const [user, setUser] = useState(false);
@@ -131,7 +131,7 @@ export function AutoMarquee({ items, duration = 40, gap = "gap-5", tone = "light
         onFocusCapture={() => setHover(true)} onBlurCapture={() => setHover(false)}>
         <div className={`marquee-track ${gap}`} data-paused={paused} style={{ ["--marquee-dur" as string]: `${duration}s` }}>
           <div className={`flex shrink-0 ${gap}`}>{items}</div>
-          <div className={`flex shrink-0 ${gap}`} aria-hidden="true" inert={"" as unknown as boolean}>{items}</div>
+          <div className={`flex shrink-0 ${gap}`} aria-hidden="true" {...{ inert: "" }}>{items}</div>
         </div>
       </div>
       {showToggle && <div className="section-container mt-5 flex justify-end"><PauseToggle paused={user} onToggle={() => setUser((u) => !u)} tone={tone} /></div>}
@@ -141,7 +141,7 @@ export function AutoMarquee({ items, duration = 40, gap = "gap-5", tone = "light
 
 /** Timed crossfade: words and media change on a timer, independent of scroll. */
 export function TimedCrossfade({ scenes, interval = 3200, className = "" }: {
-  scenes: { word: string; line: string; media: React.ReactNode }[]; interval?: number; className?: string;
+  scenes: { word: string; line: string; media: ReactNode }[]; interval?: number; className?: string;
 }) {
   const { ref, running } = useAutoMotion<HTMLDivElement>();
   const [i, setI] = useState(0);
@@ -200,7 +200,7 @@ export function LayeredStack({ frames, interval = 3400, className = "" }: { fram
             : "translate-x-[40%] rotate-[5deg] scale-[0.82] opacity-0 z-0";
           return (
             <figure key={f.src} aria-hidden={d !== 0} className={`absolute inset-0 transition-all duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${pos}`}>
-              <div className="h-full overflow-hidden rounded-3xl border border-inverse/15 shadow-[0_40px_80px_-30px_hsl(var(--ink)/0.8)]">
+              <div className="h-full overflow-hidden rounded-3xl border border-inverse/15 shadow-[0_40px_80px_-30px_hsl(var(--surface-ink)/0.8)]">
                 <img src={f.src} alt={f.alt} loading="lazy" className="h-full w-full object-cover object-top" />
               </div>
               {f.caption && <figcaption className="absolute -bottom-10 left-0 text-sm text-inverse-muted">{f.caption}</figcaption>}
