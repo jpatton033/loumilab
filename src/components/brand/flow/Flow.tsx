@@ -93,8 +93,8 @@ export const ScreenFrame = ({ src, alt, label, className = "" }: { src: string; 
 
 /** Full-bleed photo hero that opens every public page: centered headline over a soft dark veil, one button, optional quick links. */
 export const PageHero = ({
-  image, imageAlt = "", title, lede, cta, links, eyebrow,
-}: { image: string; imageAlt?: string; title: ReactNode; lede?: ReactNode; cta?: Cta; links?: { label: string; to: string }[]; eyebrow?: ReactNode }) => (
+  image, imageAlt = "", title, lede, cta, links, eyebrow, actions,
+}: { image: string; imageAlt?: string; title: ReactNode; lede?: ReactNode; cta?: Cta; links?: { label: string; to: string }[]; eyebrow?: ReactNode; actions?: ReactNode }) => (
   <section data-page-hero className="relative isolate -mt-16 overflow-hidden bg-ink text-inverse lg:-mt-20" aria-label="Introduction">
     <img src={image} alt={imageAlt} width={1920} height={1080} fetchPriority="high" className="absolute inset-0 -z-10 h-full w-full object-cover" />
     <div className="absolute inset-0 -z-10 bg-gradient-to-b from-ink/55 via-ink/35 to-ink/75" aria-hidden />
@@ -107,6 +107,7 @@ export const PageHero = ({
           <Link to={cta.to} onClick={cta.onClick}>{cta.label}</Link>
         </Button>
       )}
+      {actions && <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">{actions}</div>}
       {links && links.length > 0 && (
         <nav aria-label="On this page" className="mt-14 flex max-w-full flex-wrap justify-center gap-x-1 gap-y-1 rounded-full bg-ink/70 p-1.5 backdrop-blur-0">
           {links.map((l) => (
