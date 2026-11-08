@@ -77,6 +77,16 @@ const MegaPanel = ({ menuId, onEnter, onLeave }: { menuId: string | null; onEnte
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [overHero, setOverHero] = useState(false);
+  useEffect(() => {
+    const check = () => setOverHero(!!document.querySelector("[data-page-hero]"));
+    check();
+    const t = window.setTimeout(check, 300);
+    const obs = new MutationObserver(check);
+    const main = document.querySelector("main");
+    if (main) obs.observe(main, { childList: true, subtree: false });
+    return () => { window.clearTimeout(t); obs.disconnect(); };
+  }, [location.pathname]);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [mobileMenu, setMobileMenu] = useState<string | null>(null);
   const navRef = useRef<HTMLElement | null>(null);
@@ -122,7 +132,7 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    const onScroll = () => { setScrolled(window.scrollY > 8); setOverHero(!!document.querySelector("[data-page-hero]")); };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -166,7 +176,7 @@ const Navbar = () => {
   const isActive = (match: string[]) => match.some((m) => location.pathname.startsWith(m));
 
   return (
-    <header className={`fixed left-0 right-0 top-0 z-50 transition-[border-color,background-color] duration-200 ${scrolled || openMenu ? "border-b border-border bg-background/95 backdrop-blur-sm" : "border-b border-transparent bg-background"}`}>
+    <header className={`fixed left-0 right-0 top-0 z-50 transition-[border-color,background-color] duration-200 ${scrolled || openMenu || open ? "border-b border-border bg-background/95 backdrop-blur-sm" : overHero ? "theme-inverse border-b border-transparent !bg-transparent [&_.brand-logo-img]:invert" : "border-b border-transparent bg-background"}`}>
       <div className="section-container flex h-16 items-center lg:grid lg:h-[72px] lg:grid-cols-[1fr_auto_1fr]">
         <Link to="/" onClick={handleLogoClick} className="flex items-center justify-self-start" aria-label="Loumilab home">
           <Wordmark size="sm" animated={animateLogo} className={logoAnimationComplete ? "brand-wordmark-complete" : undefined} onAnimationComplete={completeLogoAnimation} />

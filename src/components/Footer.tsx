@@ -3,7 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 import Wordmark from "@/components/brand/Wordmark";
 import { footerCompany, navMenus, type NavLinkItem } from "@/data/navigation";
 
-const linkCls = "inline-flex w-fit items-center gap-1.5 text-sm text-foreground/70 transition-colors hover:text-accent";
+const linkCls = "inline-flex w-fit items-center gap-1.5 text-sm text-foreground/70 underline-offset-4 transition-colors hover:text-foreground hover:underline";
 const FLink = ({ item }: { item: NavLinkItem }) =>
   item.external ? (
     <a href={item.to} target="_blank" rel="noopener noreferrer" className={linkCls}>{item.label} <ArrowUpRight size={13} /></a>
@@ -28,7 +28,7 @@ const Footer = () => {
       <div className="section-container py-16 lg:py-20">
         <div className="grid grid-cols-2 gap-10 md:grid-cols-3 lg:grid-cols-6">
           <div className="col-span-2 md:col-span-3 lg:col-span-1">
-            <Link to="/" className="mb-4 inline-flex items-center rounded-full bg-foreground px-4 py-2.5" aria-label="Loumilab home"><Wordmark size="md" /></Link>
+            <Link to="/" className="mb-4 inline-flex items-center py-2" aria-label="Loumilab home"><Wordmark size="md" className="[&_img]:invert" /></Link>
             <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">A technology studio for digital products.</p>
             <a href="mailto:hello@loumilab.com" className={`${linkCls} mt-4`}>hello@loumilab.com</a>
           </div>
@@ -41,9 +41,9 @@ const Footer = () => {
         <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 text-sm text-muted-foreground sm:flex-row">
           <span>© {new Date().getFullYear()} Loumilab — Building Secure Digital Innovations.</span>
           <span className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs">
-            <Link to="/orders/terms" className="underline-offset-4 hover:text-accent hover:underline">Terms of Service</Link>
-            <Link to="/orders/privacy" className="underline-offset-4 hover:text-accent hover:underline">Privacy Policy</Link>
-            <button type="button" className="underline-offset-4 hover:text-accent hover:underline" onClick={() => window.dispatchEvent(new Event("loumilab:open-cookie-settings"))}>Cookie settings</button>
+            <Link to="/orders/terms" className="underline-offset-4 hover:text-foreground hover:underline">Terms of Service</Link>
+            <Link to="/orders/privacy" className="underline-offset-4 hover:text-foreground hover:underline">Privacy Policy</Link>
+            <button type="button" className="underline-offset-4 hover:text-foreground hover:underline" onClick={() => window.dispatchEvent(new Event("loumilab:open-cookie-settings"))}>Cookie settings</button>
           </span>
         </div>
       </div>
