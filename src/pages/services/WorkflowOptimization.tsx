@@ -282,8 +282,8 @@ const WorkflowOptimization = () => {
       {/* Zero-token */}
       <section className="section-padding bg-surface-inverse text-inverse">
         <div className="section-container">
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">Zero-Token Workflows</p>
-          <h2 className="mt-4 max-w-3xl text-3xl font-bold tracking-tight md:text-4xl">Some workflows shouldn't need a single AI token.</h2>
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-inverse-muted">Zero-Token Workflows</p>
+          <h2 className="mt-4 max-w-3xl text-3xl font-bold tracking-tight md:text-4xl text-inverse">Some workflows shouldn't need a single AI token.</h2>
           <div className="mt-6 max-w-3xl space-y-4 leading-relaxed text-inverse-muted">
             <p>Many everyday business activities can be completed without relying on generative AI. Publishing content, updating records, generating routine reports, processing forms, managing orders, and coordinating internal tasks can often be handled more efficiently through purpose-built software.</p>
             <p>Loumilab develops workflows designed to perform these operations without requiring recurring AI model calls. We call these Zero-Token Workflows.</p>
@@ -291,7 +291,7 @@ const WorkflowOptimization = () => {
           <div role="tablist" aria-label="Example scenarios" className="mt-10 flex flex-wrap gap-2">
             {SCENARIOS.map((sc, i) => (
               <button key={sc.name} role="tab" aria-selected={scenario === i} aria-controls="wf-panel" onClick={() => setScenario(i)}
-                className={`min-h-11 rounded-full border px-4 text-sm font-medium transition-colors ${scenario === i ? "border-accent bg-accent text-accent-foreground" : "border-inverse/20 text-inverse hover:border-inverse/50"}`}>
+                className={`min-h-11 rounded-full border px-4 text-sm font-medium transition-colors ${scenario === i ? "border-inverse bg-inverse text-surface-inverse" : "border-inverse/20 text-inverse hover:border-inverse/50"}`}>
                 {sc.name}
               </button>
             ))}
@@ -301,10 +301,10 @@ const WorkflowOptimization = () => {
               <p className="text-xs font-semibold uppercase tracking-[0.14em] text-inverse-muted">Before · AI-dependent</p>
               <p className="mt-3 text-lg">{s.before}</p>
             </div>
-            <div className="rounded-3xl border border-accent/50 bg-accent/10 p-6">
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-accent">After · Optimized</p>
+            <div className="rounded-3xl border border-inverse/40 bg-inverse/5 p-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-inverse">After · Optimized</p>
               <p className="mt-3 text-lg">{s.after}</p>
-              <p className="mt-4 flex gap-2 text-sm text-inverse-muted"><Check className="h-4 w-4 shrink-0 text-accent" aria-hidden />{s.outcome}</p>
+              <p className="mt-4 flex gap-2 text-sm text-inverse-muted"><Check className="h-4 w-4 shrink-0 text-inverse" aria-hidden />{s.outcome}</p>
             </div>
           </div>
           <p className="mt-6 max-w-3xl text-sm text-inverse-muted">Illustrative examples, not customer projects. A Zero-Token Workflow does not mean the software has no operating costs or that AI is never available. It means the workflow's defined routine operations can execute without consuming generative AI tokens.</p>
