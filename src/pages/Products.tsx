@@ -1,3 +1,5 @@
+import heroProducts from "@/assets/heroes/products.jpg";
+import { PageHero } from "@/components/brand/flow/Flow";
 import { ClosingCta } from "@/components/brand/flow/Flow";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
@@ -39,20 +41,7 @@ const Products = () => (
       jsonLd={productsJsonLd}
     />
 
-    <section className="relative overflow-hidden pt-16 pb-16 lg:pt-24 lg:pb-20">
-      <div className="pointer-events-none absolute inset-0 hero-wash" aria-hidden="true" />
-      <div className="section-container relative mx-auto max-w-4xl text-center">
-        <div className="flex justify-center"><DotMarker /></div>
-        <Eyebrow>Ecosystem</Eyebrow>
-        <h1 className="mt-5 font-hero text-5xl font-semibold leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl">
-          Products and companies built by Loumilab.
-        </h1>
-        <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-          We build technology for clients and we build our own. Each product below is designed, engineered,
-          and secured by the same team.
-        </p>
-      </div>
-    </section>
+    <PageHero image={heroProducts} imageAlt="A sculptural curved staircase in light and shadow" eyebrow="Products" title="Products and companies built by Loumilab." lede="We build technology for clients and we build our own — designed, engineered and secured by the same team." />
 
     <DotThread />
 

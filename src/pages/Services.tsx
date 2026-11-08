@@ -1,3 +1,5 @@
+import heroSolutions from "@/assets/heroes/solutions.jpg";
+import { PageHero } from "@/components/brand/flow/Flow";
 import { ClosingCta } from "@/components/brand/flow/Flow";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
@@ -82,20 +84,7 @@ const Services = () => (
       jsonLd={servicesJsonLd}
     />
 
-    <section className="relative overflow-hidden pt-16 pb-16 lg:pt-24 lg:pb-20">
-      <div className="pointer-events-none absolute inset-0 hero-wash" aria-hidden="true" />
-      <div className="section-container relative max-w-3xl">
-        <DotMarker />
-        <Eyebrow>Services</Eyebrow>
-        <h1 className="mt-5 text-4xl font-semibold leading-tight lg:text-6xl">
-          Everything it takes to design, build, and secure it.
-        </h1>
-        <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-          Four disciplines, one accountable team. We work end to end so strategy, design, engineering, and
-          security stay aligned instead of being split across vendors.
-        </p>
-      </div>
-    </section>
+    <PageHero image={heroSolutions} imageAlt="A calm studio table with a laptop and website sketches in afternoon light" eyebrow="Solutions" title="Everything it takes to design, build, and secure it." lede="Four disciplines, one accountable team — strategy, design, engineering and security stay aligned." cta={{ label: "Start a Project", to: "/contact" }} />
 
     <section className="section-padding pt-8">
       <div className="section-container space-y-6">
