@@ -137,7 +137,7 @@ const Navbar = () => {
       const id = openMenu; setOpenMenu(null);
       document.getElementById(`menu-btn-${id}`)?.focus();
     };
-    const onClick = (e: MouseEvent) => { if (navRef.current && !navRef.current.contains(e.target as Node)) setOpenMenu(null); };
+    const onClick = (e: MouseEvent) => { if (!(e.target as HTMLElement).closest?.("header")) setOpenMenu(null); };
     document.addEventListener("keydown", onKey);
     document.addEventListener("mousedown", onClick);
     return () => { document.removeEventListener("keydown", onKey); document.removeEventListener("mousedown", onClick); };
