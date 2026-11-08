@@ -82,7 +82,7 @@ export function Pathways({ runFrames }: { runFrames: Frame[] }) {
   }, []);
 
   const chapter = (i: number, dark: boolean, kicker: string, title: string, body: string, ctas: { label: string; to: string }[], visual: JSX.Element) => (
-    <section ref={(el) => (refs.current[i] = el)} data-idx={i} id={STEPS[i].id} className={`scroll-mt-28 py-24 lg:py-32 ${dark ? "bg-ink text-inverse" : ""}`} aria-labelledby={`${STEPS[i].id}-title`}>
+    <section ref={(el) => (refs.current[i] = el)} data-idx={i} id={STEPS[i].id} className={`scroll-mt-28 overflow-hidden py-24 lg:py-32 ${dark ? "bg-ink text-inverse" : ""}`} aria-labelledby={`${STEPS[i].id}-title`}>
       <div className="section-container grid items-center gap-12 lg:grid-cols-12">
         <div className="lg:col-span-5">
           <p className={`text-xs font-semibold uppercase tracking-[0.16em] ${dark ? "text-inverse-muted" : "text-muted-foreground"}`}>{kicker}</p>
