@@ -48,7 +48,7 @@ const TheDotIndex = () => {
               A Loumilab Brief
             </p>
             <h1 className="mt-4 font-hero text-6xl font-semibold tracking-[-0.03em] text-foreground lg:text-8xl">
-              The Dot<span aria-hidden="true" className="text-accent">.</span>
+              The Dot<span aria-hidden="true" className="text-dot">.</span>
             </h1>
             <p className="mt-5 text-lg leading-relaxed text-muted-foreground lg:text-xl">
               Ideas, technology, and what's next.

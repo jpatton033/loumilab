@@ -18,7 +18,7 @@ export const DotMasthead = ({ className }: { className?: string }) => (
       className,
     )}
   >
-    The Dot<span aria-hidden="true" className="text-accent">.</span> — A Loumilab Brief
+    The Dot<span aria-hidden="true" className="text-dot">.</span> — A Loumilab Brief
   </p>
 );
 

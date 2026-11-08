@@ -69,7 +69,7 @@ export const ChapterSequence = ({ chapters }: { chapters: Chapter[] }) => {
             <div className="relative mt-6 h-[5.5rem] sm:h-[8rem] lg:h-[10rem]">
               {chapters.map((c, i) => (
                 <h3 key={c.word} aria-hidden={i !== active} className={`absolute inset-0 font-hero text-[4.5rem] font-semibold leading-none tracking-[-0.04em] transition-all duration-700 motion-reduce:transition-none sm:text-[7rem] lg:text-[9rem] ${i === active ? "translate-y-0 opacity-100" : i < active ? "-translate-y-6 opacity-0" : "translate-y-6 opacity-0"}`}>
-                  {c.word}<span className="text-accent">.</span>
+                  {c.word}<span className="text-dot">.</span>
                 </h3>
               ))}
             </div>

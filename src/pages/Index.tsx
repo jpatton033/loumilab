@@ -66,7 +66,7 @@ const Index = () => {
         <div className="section-container">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-olive">Loumilab · Technology Studio</p>
           <h1 className="mt-6 max-w-5xl font-hero text-[3rem] font-semibold leading-[0.98] tracking-[-0.045em] text-foreground sm:text-[4.75rem] xl:text-[6.5rem]">
-            We build what's next<span className="text-accent">.</span>
+            We build what's next<span className="text-dot">.</span>
           </h1>
           <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
             <p className="max-w-xl text-lg leading-relaxed text-muted-foreground lg:text-xl">

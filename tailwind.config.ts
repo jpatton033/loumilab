@@ -17,6 +17,7 @@ export default {
         display: ['"Space Grotesk"', 'system-ui', 'sans-serif'],
         body: ['"Inter"', 'system-ui', 'sans-serif'],
         headline: ['"Neue Haas Grotesk Display Pro"', '"Inter Tight"', '"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif'],
+        serif: ['"Instrument Serif"', 'Georgia', 'serif'],
         hero: ['Urbanist', 'system-ui', '-apple-system', 'sans-serif'],
       },
       colors: {
