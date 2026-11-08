@@ -28,11 +28,11 @@ const Footer = () => {
       <div className="section-container py-16 lg:py-20">
         <div className="grid grid-cols-2 gap-10 md:grid-cols-3 lg:grid-cols-6">
           <div className="col-span-2 md:col-span-3 lg:col-span-1">
-            <Link to="/" className="mb-4 flex items-center" aria-label="Loumilab home"><Wordmark size="md" /></Link>
+            <Link to="/" className="mb-4 inline-flex items-center rounded-full bg-foreground px-4 py-2.5" aria-label="Loumilab home"><Wordmark size="md" /></Link>
             <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">A technology studio for digital products.</p>
             <a href="mailto:hello@loumilab.com" className={`${linkCls} mt-4`}>hello@loumilab.com</a>
           </div>
-          {solutions.groups.map((g) => <Col key={g.label} title={g.label} items={g.items} />)}
+          {solutions.groups.filter((g) => g.label !== "Start here").map((g) => <Col key={g.label} title={g.label} items={g.items} />)}
           <Col title="Products" items={[...products.groups.flatMap((g) => g.items).filter((i) => i.to !== "/orders/tools"), { label: "All products", to: products.footer?.to ?? "/products" }]} />
           <Col title="Resources" items={resources.groups.flatMap((g) => g.items)} />
           <Col title="Company" items={footerCompany} />
