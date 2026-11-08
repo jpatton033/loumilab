@@ -22,6 +22,8 @@ import archLight from "@/assets/story/home/arch-light.jpg";
 import sculptureDot from "@/assets/story/home/sculpture-dot.jpg";
 import layoutsHands from "@/assets/story/home/layouts-hands.jpg";
 import facadeGrid from "@/assets/story/home/facade-grid.jpg";
+import storeBuilder from "@/assets/orders/screens/store-builder.jpg";
+import merchantDash from "@/assets/orders/screens/merchant-dashboard.jpg";
 import floristOrder from "@/assets/story/home/florist-order.jpg";
 import market from "@/assets/people/local/market.jpg";
 import officeReview from "@/assets/people/email/office-review.jpg";
@@ -63,8 +65,8 @@ const intro: Frame[] = [
 const productRail: Frame[] = [
   { src: floristOrder, alt: "A florist packing an order placed online", caption: "Orders — customers buy straight from your own storefront." },
   { src: market, alt: "Neighbors shopping at an outdoor market", caption: "Local — free discovery for neighborhood businesses." },
-  { src: layoutsHands, alt: "Storefront layouts being reviewed", caption: "A store builder that takes minutes, not weeks." },
-  { src: facadeGrid, alt: "A grid of lit windows at night", caption: "One dashboard for every order, job and payout." },
+  { src: storeBuilder, alt: "The Loumilab Orders store builder", caption: "A store builder that takes minutes, not weeks." },
+  { src: merchantDash, alt: "The Loumilab Orders merchant dashboard", caption: "One dashboard for every order, job and payout." },
 ];
 
 const studio = servicePages.filter((s) => s.group === "Technology Studio");
