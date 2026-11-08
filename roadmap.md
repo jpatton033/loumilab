@@ -23,3 +23,11 @@
 - [ ] Immersive phase 3: Products (Orders, Local) + Companies (Vurtti)
 - [ ] Immersive phase 4: Knowledge Center + The Dot.
 - [ ] Immersive phase 5: About, Contact, legal, tablet/phone + speed pass
+
+## Establish. Run. Improve. refinement (2026-11-08)
+- [x] Satoshi headlines + matching period; italic accents removed; font preview removed
+- [x] Homepage Establish / Run / Improve story with new photos; Vurtti section
+- [x] Solutions menu "Start here" row; search suggestions; deep-black footer
+- [ ] Refine Business Email / Domains pages; tasks motion atop Workflow Optimization
+- [ ] Replace cropped screenshots on Orders pages; new photos per page
+- [ ] Apply hover system and imagery to remaining pages
