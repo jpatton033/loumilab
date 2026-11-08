@@ -17,6 +17,7 @@ export default {
         display: ['"Space Grotesk"', 'system-ui', 'sans-serif'],
         body: ['"Inter"', 'system-ui', 'sans-serif'],
         headline: ['"Neue Haas Grotesk Display Pro"', '"Inter Tight"', '"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif'],
+        serif: ['"Instrument Serif"', 'Georgia', 'serif'],
         hero: ['Urbanist', 'system-ui', '-apple-system', 'sans-serif'],
       },
       colors: {
@@ -41,6 +42,9 @@ export default {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
         },
+        dot: "hsl(var(--dot))",
+        ink: "hsl(var(--surface-ink))",
+        forest: "hsl(var(--forest))",
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",

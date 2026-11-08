@@ -79,7 +79,7 @@ export default function DotSoftGate({ gated, slug, children }: { gated: boolean;
           You've explored The Dot. Now stay connected to the ideas shaping business, technology, and what's next.
         </p>
         <p className="mt-4 font-display font-semibold text-foreground">
-          Join The Dot<span className="text-accent">.</span> — It's free.
+          Join The Dot<span className="text-dot">.</span> — It's free.
         </p>
         <form onSubmit={submit} className="mt-5 flex max-w-lg flex-col gap-3 sm:flex-row">
           <Input

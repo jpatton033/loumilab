@@ -15,7 +15,9 @@ import designImg from "@/assets/story/design.jpg";
 import buildImg from "@/assets/story/build.jpg";
 import innovateImg from "@/assets/story/innovate.jpg";
 import secureImg from "@/assets/story/secure.jpg";
-import { ChapterSequence, UnmaskImage, useDrift, type Chapter } from "@/components/brand/story/FieldNotes";
+import { useDrift, type Chapter } from "@/components/brand/story/FieldNotes";
+import { AmbientVideo, ExpandingHero, PinnedScenes } from "@/components/brand/story/Immersive";
+import heroVideo from "@/assets/video/studio-hero.mp4.asset.json";
 import market from "@/assets/people/local/market.jpg";
 import officeReview from "@/assets/people/email/office-review.jpg";
 
@@ -61,28 +63,31 @@ const Index = () => {
         jsonLd={homeJsonLd}
       />
 
-      {/* 1 Hero — headline, then an image that unmasks */}
-      <section className="paper-grain overflow-hidden pt-12 lg:pt-20">
+      {/* 1 Cinematic opening — video contracts into an arch as you scroll */}
+      <ExpandingHero
+        media={<AmbientVideo src={heroVideo.url} poster={studioTable} label="A warm studio table with sketchbooks, wireframes and a laptop in drifting afternoon light" />}
+        after={<p className="section-container pb-6 text-center font-serif text-xl italic text-foreground lg:text-2xl">Technology, made with care.</p>}
+      >
         <div className="section-container">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-olive">Loumilab · Technology Studio</p>
-          <h1 className="mt-6 max-w-5xl font-hero text-[3rem] font-semibold leading-[0.98] tracking-[-0.045em] text-foreground sm:text-[4.75rem] xl:text-[6.5rem]">
-            We build what's next<span className="text-accent">.</span>
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sand">Loumilab · Technology Studio</p>
+          <h1 className="mt-5 font-hero text-[3.6rem] font-semibold leading-[0.9] tracking-[-0.055em] text-inverse sm:text-[6rem] lg:text-[7.5rem] xl:text-[9rem]">
+            We build<br /><span className="font-serif font-normal italic tracking-[-0.02em]">what's</span> next<span className="text-dot">.</span>
           </h1>
-          <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
-            <p className="max-w-xl text-lg leading-relaxed text-muted-foreground lg:text-xl">
+          <div className="mt-8 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <p className="max-w-xl text-lg leading-relaxed text-inverse/80 lg:text-xl">
               Loumilab designs, builds, and manages digital products and technology solutions that help businesses launch, operate, and grow.
             </p>
-            <TileActions primary={{ label: "Explore Solutions", to: "/services" }} secondary={{ label: "Start a Project", to: "/contact" }} className="!mt-0 lg:justify-end" />
+            <div className="pointer-events-auto flex flex-wrap items-center gap-5">
+              <Button size="lg" asChild className="bg-accent text-accent-foreground hover:bg-accent/90"><Link to="/services">Explore Solutions</Link></Button>
+              <Link to="/contact" className="text-sm font-semibold text-inverse underline-offset-4 hover:underline">Start a Project</Link>
+            </div>
           </div>
         </div>
-        <div className="mx-auto mt-12 max-w-[96rem] px-3 sm:px-6 lg:mt-16">
-          <UnmaskImage src={studioTable} alt="A warm studio table with sketchbooks, wireframes, a laptop and an olive branch in afternoon light" width={1920} height={1088} fetchPriority="high" decoding="async" className="aspect-[4/5] sm:aspect-[16/8]" />
-        </div>
-      </section>
+      </ExpandingHero>
 
       {/* 2 Three ways we help — asymmetric spread */}
       <section className="section-container py-24 lg:py-36" aria-labelledby="ways-title">
-        <Reveal><h2 id="ways-title" className="max-w-3xl font-hero text-4xl font-semibold tracking-tight lg:text-6xl">Three ways we help.</h2></Reveal>
+        <Reveal><h2 id="ways-title" className="max-w-3xl font-hero text-4xl font-semibold tracking-tight lg:text-6xl">Three ways <span className="font-serif font-normal italic">we help</span><span className="text-dot">.</span></h2></Reveal>
         <div className="mt-14 grid gap-x-10 gap-y-14 lg:grid-cols-12">
           {pathways.map((p, i) => (
             <Reveal key={p.title} delay={i * 90} className={`flex flex-col border-t border-foreground/70 pt-6 ${i === 0 ? "lg:col-span-6" : i === 1 ? "lg:col-span-4 lg:col-start-8 lg:mt-24" : "lg:col-span-5 lg:col-start-3"}`}>
@@ -97,18 +102,18 @@ const Index = () => {
         </div>
       </section>
 
-      {/* 2b Chapters — pinned scroll sequence */}
-      <section aria-labelledby="chapters-title" className="border-t border-border bg-secondary/60">
+      {/* 2b Chapters — dark pinned scenes */}
+      <section aria-labelledby="chapters-title">
         <h2 id="chapters-title" className="sr-only">Design. Build. Innovate. Secure.</h2>
         <ul className="sr-only">{chapters.map((c) => <li key={c.word}>{c.word}: {c.line}</li>)}</ul>
-        <ChapterSequence chapters={chapters} />
+        <PinnedScenes scenes={chapters} eyebrow="How we work" />
       </section>
 
       {/* 3 Products (dark) */}
-      <section className="bg-surface-inverse py-20 text-inverse lg:py-28" aria-labelledby="products-title">
+      <section className="film-grain bg-ink py-24 text-inverse lg:py-36" aria-labelledby="products-title">
         <div className="section-container">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-sand">Loumilab Products</p>
-          <h2 id="products-title" className="mt-4 max-w-3xl font-hero text-4xl font-semibold tracking-tight text-inverse lg:text-6xl">Less managing. More business.</h2>
+          <h2 id="products-title" className="mt-4 max-w-3xl font-hero text-4xl font-semibold tracking-tight text-inverse lg:text-6xl">Less managing. <span className="font-serif font-normal italic">More business.</span></h2>
 
           <div className="mt-14"><OrdersShowcase /></div>
 
@@ -188,7 +193,7 @@ const Index = () => {
       {/* 7 Closing (dark) */}
       <section className="section-container pb-24">
         <div className="paper-grain rounded-[2rem] bg-surface-inverse px-6 py-20 text-center text-inverse sm:px-12 lg:py-24">
-          <h2 className="mx-auto max-w-3xl font-hero text-4xl font-semibold tracking-tight text-inverse sm:text-5xl lg:text-6xl">Have something in mind? Let's build it.</h2>
+          <h2 className="mx-auto max-w-3xl font-hero text-4xl font-semibold tracking-tight text-inverse sm:text-5xl lg:text-6xl">Have something in mind? <span className="font-serif font-normal italic">Let's build it.</span></h2>
           <Button size="lg" asChild className="mt-10 bg-accent text-accent-foreground hover:bg-accent/90"><Link to="/contact">Start a Project</Link></Button>
         </div>
       </section>

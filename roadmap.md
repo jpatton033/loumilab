@@ -17,3 +17,9 @@
 - [x] Website refinement: homepage "What do you need?" paths; Services menu grouped (Studio / Managed Business Technology)
 - [x] Redesign: navigation (Solutions/Products/Resources/About), footer, homepage, dark section tokens, 5 new service pages (web, software, AI, security, domains)
 - [x] Redesign: Orders (centered opening, real builder/dashboard screenshots, cleaner pricing cards), Local, Business Email, Products, About, Contact, Resources, The Dot.; Start a Project form service/budget fields
+- [x] Immersive redesign phase 1: palette, serif accent, film grain, video opening, dark pinned scenes on homepage
+- [ ] Immersive phase 1b: scroll-aware header, full-screen search overlay, more homepage clips
+- [ ] Immersive phase 2: Solutions + service pages
+- [ ] Immersive phase 3: Products (Orders, Local) + Companies (Vurtti)
+- [ ] Immersive phase 4: Knowledge Center + The Dot.
+- [ ] Immersive phase 5: About, Contact, legal, tablet/phone + speed pass
