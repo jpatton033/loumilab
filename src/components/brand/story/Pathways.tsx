@@ -27,12 +27,12 @@ function IdentityMorph() {
   const [name, slug] = names[n];
   const rows = [name, `${slug}.com`, `hello@${slug}.com`];
   return (
-    <div ref={ref} className="rounded-3xl border border-border bg-card p-8 shadow-sm sm:p-10" aria-label="A business name becoming a domain and email address">
+    <div ref={ref} className="rounded-3xl border border-border bg-card p-6 shadow-sm sm:p-10" aria-label="A business name becoming a domain and email address">
       <ol className="space-y-5">
         {rows.map((r, i) => (
           <li key={i} className={`flex items-center gap-4 transition-all duration-700 ${i <= stage ? "translate-x-0 opacity-100" : "translate-x-6 opacity-20"}`}>
-            <span className="w-16 shrink-0 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">{["Name", "Domain", "Email"][i]}</span>
-            <span className={`font-hero font-bold tracking-tight text-foreground ${i === 0 ? "text-3xl sm:text-4xl" : "text-xl sm:text-2xl"}`}>{r}</span>
+            <span className="w-14 shrink-0 text-[0.625rem] sm:w-16 sm:text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">{["Name", "Domain", "Email"][i]}</span>
+            <span className={`min-w-0 break-all font-hero font-bold tracking-tight text-foreground ${i === 0 ? "text-2xl sm:text-4xl" : "text-base sm:text-2xl"}`}>{r}</span>
           </li>
         ))}
       </ol>
