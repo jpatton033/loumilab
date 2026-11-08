@@ -18,7 +18,7 @@ export default {
         body: ['"Inter"', 'system-ui', 'sans-serif'],
         headline: ['"Neue Haas Grotesk Display Pro"', '"Inter Tight"', '"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif'],
         serif: ['"Instrument Serif"', 'Georgia', 'serif'],
-        hero: ['Urbanist', 'system-ui', '-apple-system', 'sans-serif'],
+        hero: ['Satoshi', 'system-ui', '-apple-system', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",

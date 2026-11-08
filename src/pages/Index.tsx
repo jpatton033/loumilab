@@ -1,4 +1,3 @@
-import { FontPreview } from "@/components/brand/FontPreview";
 import Layout from "@/components/Layout";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
@@ -130,7 +129,6 @@ const Index = () => {
         jsonLd={homeJsonLd}
       />
 
-      <FontPreview />
 
       {/* 1 Cinematic hero — background film, type, and previews that move on their own */}
       <section className="relative min-h-[calc(100svh-4rem)] overflow-hidden bg-ink text-inverse" aria-labelledby="hero-title">
@@ -140,7 +138,7 @@ const Index = () => {
         <div className="section-container relative grid min-h-[calc(100svh-4rem)] items-center gap-10 py-16 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <h1 id="hero-title" className="font-hero text-[3.2rem] font-bold leading-[0.92] tracking-[-0.05em] text-inverse sm:text-[5rem] lg:text-[6.2rem]">
-              We build what's next
+              We build what's next.
             </h1>
             <p className="mt-6 max-w-md text-lg leading-relaxed text-inverse/80 lg:text-xl">
               Thoughtful technology, distinctive digital experiences, and software built for what's next.
