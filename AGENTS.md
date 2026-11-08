@@ -30,3 +30,4 @@
 - Immersive scroll blocks (ExpandingHero, PinnedScenes, AmbientVideo) live in src/components/brand/story/Immersive.tsx; the Blue Dot uses the `dot` token, never `accent` — keeps blue reserved for the Dot while accent can change.
 
 - Image motion lives only in src/components/brand/story (Horizontal.tsx, Cinematic.tsx, mocks/); pages pass their own imagery — one motion system.
+- Public pages open with the shared PageHero (src/components/brand/flow/Flow.tsx, data-page-hero makes the header transparent) and move light→dark via ToDark — one consistent page flow.

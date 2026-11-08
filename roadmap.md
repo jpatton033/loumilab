@@ -31,3 +31,5 @@
 - [ ] Refine Business Email / Domains pages; tasks motion atop Workflow Optimization
 - [ ] Replace cropped screenshots on Orders pages; new photos per page
 - [ ] Apply hover system and imagery to remaining pages
+
+- [x] Footer logo/hover fix, homepage reading section, photo heroes on all public pages (2026-11-08)
