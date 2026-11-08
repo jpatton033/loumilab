@@ -2,31 +2,31 @@ import Layout from "@/components/Layout";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import SEOHead from "@/components/SEOHead";
-import Reveal from "@/components/Reveal";
-import ArticleCard from "@/components/kc/ArticleCard";
-import { MoreLink, TileActions } from "@/components/brand/apple/Tiles";
 import { Button } from "@/components/ui/button";
+import { MoreLink } from "@/components/brand/apple/Tiles";
 import { usePublishedArticles } from "@/lib/kc/queries";
-import OrdersShowcase from "@/components/orders/OrdersShowcase";
+import { usePublishedIssues } from "@/lib/thedot/queries";
 import { ORDERS_CTA } from "@/data/orders/cta";
-import { servicePages } from "@/data/services";
-import studioTable from "@/assets/story/studio-table.jpg";
-import designImg from "@/assets/story/design.jpg";
-import buildImg from "@/assets/story/build.jpg";
-import innovateImg from "@/assets/story/innovate.jpg";
-import secureImg from "@/assets/story/secure.jpg";
-import { useDrift, type Chapter } from "@/components/brand/story/FieldNotes";
-import { ExpandingHero, PinnedScenes } from "@/components/brand/story/Immersive";
-import { RtlSequence, ScrollRail, type Frame } from "@/components/brand/story/Horizontal";
+import { AutoMarquee, LayeredStack, LoopVideo, TimedCrossfade, type Frame } from "@/components/brand/story/Horizontal";
+import archVideo from "@/assets/video/home/arch-light.mp4.asset.json";
+import sketchVideo from "@/assets/video/home/sketch-layout.mp4.asset.json";
 import archLight from "@/assets/story/home/arch-light.jpg";
 import sculptureDot from "@/assets/story/home/sculpture-dot.jpg";
 import layoutsHands from "@/assets/story/home/layouts-hands.jpg";
 import facadeGrid from "@/assets/story/home/facade-grid.jpg";
+import floristOrder from "@/assets/story/home/florist-order.jpg";
 import storeBuilder from "@/assets/orders/screens/store-builder.jpg";
 import merchantDash from "@/assets/orders/screens/merchant-dashboard.jpg";
-import floristOrder from "@/assets/story/home/florist-order.jpg";
 import market from "@/assets/people/local/market.jpg";
-import officeReview from "@/assets/people/email/office-review.jpg";
+import engineer from "@/assets/people/studio/engineer.jpg";
+import scOrders from "@/assets/story/screens/orders.jpg";
+import scLocal from "@/assets/story/screens/local.jpg";
+import scResources from "@/assets/story/screens/resources.jpg";
+import scDot from "@/assets/story/screens/thedot.jpg";
+import scServices from "@/assets/story/screens/services.jpg";
+import scPricing from "@/assets/story/screens/pricing.jpg";
+import scWorkflow from "@/assets/story/screens/workflow.jpg";
+import scEmail from "@/assets/story/screens/email.jpg";
 
 const homeJsonLd = {
   "@context": "https://schema.org",
@@ -35,45 +35,67 @@ const homeJsonLd = {
   url: "https://loumilab.com",
   email: "hello@loumilab.com",
   description: "Loumilab designs, builds, and manages digital products and technology solutions that help businesses launch, operate, and grow.",
-  subOrganization: [{ "@type": "Organization", name: "Vurtti", url: "https://www.vurttidocs.com" }],
   owns: [
     { "@type": "Product", name: "Loumilab Orders", url: "https://loumilab.com/orders" },
     { "@type": "Product", name: "Loumilab Local", url: "https://loumilab.com/orders/local" },
   ],
 };
 
-const pathways = [
-  { title: "Technology Studio", body: "Websites, custom software, AI automation, and cybersecurity solutions designed around business needs.", cta: "Explore Studio Services", to: "/services" },
-  { title: "Loumilab Products", body: "Purpose-built digital products that help businesses sell, operate, and connect with customers.", cta: "Explore Products", to: "/products" },
-  { title: "Managed Business Technology", body: "Professional setup, configuration, and management of essential business technology.", cta: "Explore Managed Services", to: "/services/business-email" },
+/* Opening band: mixed photo, video and real screens, varied sizes */
+type Tile = { kind: "img" | "video"; src: string; alt: string; w: string; poster?: string; offset?: string };
+const openingTiles: Tile[] = [
+  { kind: "video", src: archVideo.url, poster: archLight, alt: "", w: "w-[70vw] sm:w-[36vw] lg:w-[30vw]", offset: "mt-10" },
+  { kind: "img", src: scOrders, alt: "The Loumilab Orders page", w: "w-[60vw] sm:w-[30vw] lg:w-[24vw]" },
+  { kind: "img", src: sculptureDot, alt: "White sculptural forms beside a small blue sphere", w: "w-[46vw] sm:w-[20vw] lg:w-[16vw]", offset: "mt-20" },
+  { kind: "video", src: sketchVideo.url, poster: layoutsHands, alt: "", w: "w-[66vw] sm:w-[34vw] lg:w-[28vw]" },
+  { kind: "img", src: scLocal, alt: "The Loumilab Local discovery page", w: "w-[60vw] sm:w-[30vw] lg:w-[24vw]", offset: "mt-14" },
+  { kind: "img", src: facadeGrid, alt: "A glass building facade at night with a grid of lit windows", w: "w-[46vw] sm:w-[20vw] lg:w-[18vw]" },
 ];
 
-const chapters: Chapter[] = [
-  { word: "Design", line: "We start with paper, people and the problem — then shape clear, considered experiences.", image: designImg, alt: "Hands sketching interface layouts in pencil on cream paper" },
-  { word: "Build", line: "Fast, dependable websites and software, built carefully and handed over in your name.", image: buildImg, alt: "A developer working on a laptop at a wooden desk by lamplight" },
-  { word: "Innovate", line: "Products like Loumilab Orders help small businesses sell to their own customers.", image: innovateImg, alt: "A bakery owner arranging fresh loaves beside a tablet showing orders" },
-  { word: "Secure", line: "Security is part of every build, not an add-on at the end.", image: secureImg, alt: "A brass padlock and key resting on a green leather notebook" },
+const lanes: { name: string; to: string; line: string; frames: Frame[]; duration: number }[] = [
+  { name: "Websites", to: "/services/website-development", line: "Fast, clear sites people enjoy using.", duration: 34, frames: [
+    { src: scOrders, alt: "Loumilab Orders website" }, { src: scLocal, alt: "Loumilab Local website" }, { src: scResources, alt: "Loumilab Knowledge Center" }, { src: scEmail, alt: "Business Email service page" }, { src: scServices, alt: "Loumilab Solutions page" },
+  ] },
+  { name: "Custom software", to: "/services/custom-software", line: "Tools shaped around how you work.", duration: 42, frames: [
+    { src: storeBuilder, alt: "The Orders store builder" }, { src: merchantDash, alt: "The Orders merchant dashboard" }, { src: scPricing, alt: "Orders pricing calculator" }, { src: layoutsHands, alt: "Interface layouts arranged on a table" },
+  ] },
+  { name: "AI & automation", to: "/services/ai-automation", line: "AI when valuable. Software when sufficient.", duration: 30, frames: [
+    { src: scWorkflow, alt: "Workflow Optimization page" }, { src: engineer, alt: "An engineer reviewing an automated workflow" }, { src: sculptureDot, alt: "Sculptural forms with a blue sphere" }, { src: scDot, alt: "The Dot. newsletter" },
+  ] },
+  { name: "Cybersecurity", to: "/services/cybersecurity", line: "Security built in from the first line.", duration: 38, frames: [
+    { src: facadeGrid, alt: "A lit glass facade at night" }, { src: archLight, alt: "A staircase cut by raking light" }, { src: scEmail, alt: "Secured business email setup" }, { src: merchantDash, alt: "Protected merchant dashboard" },
+  ] },
 ];
 
-const intro: Frame[] = [
-  { src: layoutsHands, alt: "Hands arranging printed interface layouts on a black table", caption: "Design" },
-  { src: facadeGrid, alt: "A glass building facade at night with a grid of lit windows", caption: "Build" },
-  { src: floristOrder, alt: "A florist smiling as she packs a customer order", caption: "Innovate" },
-  { src: sculptureDot, alt: "White sculptural forms beside a small blue sphere", caption: "Secure" },
+const statement = [
+  { word: "Design", line: "Clear, considered experiences — shaped with people, not just pixels.", media: <LoopVideo src={sketchVideo.url} poster={layoutsHands} className="h-full w-full object-cover" /> },
+  { word: "Build", line: "Fast, dependable websites and software, handed over in your name.", media: <img src={facadeGrid} alt="" loading="lazy" className="h-full w-full object-cover" /> },
+  { word: "Innovate", line: "Products like Loumilab Orders help small businesses sell directly.", media: <img src={floristOrder} alt="" loading="lazy" className="h-full w-full object-cover" /> },
+  { word: "Secure", line: "Security is part of every build, not an add-on at the end.", media: <LoopVideo src={archVideo.url} poster={archLight} className="h-full w-full object-cover" /> },
 ];
 
-const productRail: Frame[] = [
-  { src: floristOrder, alt: "A florist packing an order placed online", caption: "Orders — customers buy straight from your own storefront." },
-  { src: market, alt: "Neighbors shopping at an outdoor market", caption: "Local — free discovery for neighborhood businesses." },
-  { src: storeBuilder, alt: "The Loumilab Orders store builder", caption: "A store builder that takes minutes, not weeks." },
-  { src: merchantDash, alt: "The Loumilab Orders merchant dashboard", caption: "One dashboard for every order, job and payout." },
+const productStack: Frame[] = [
+  { src: storeBuilder, alt: "The Loumilab Orders store builder", caption: "Store builder — live in minutes." },
+  { src: scLocal, alt: "Loumilab Local business discovery", caption: "Local — free discovery for neighborhood businesses." },
+  { src: merchantDash, alt: "The Loumilab Orders merchant dashboard", caption: "One dashboard for every order and payout." },
+  { src: market, alt: "Neighbors shopping at an outdoor market", caption: "Built for the businesses on your street." },
+  { src: scPricing, alt: "Orders progressive pricing", caption: "Fees that go down as you grow." },
 ];
 
-const studio = servicePages.filter((s) => s.group === "Technology Studio");
+const Shot = ({ f, dark }: { f: Frame; dark?: boolean }) => (
+  <div className={`w-[72vw] shrink-0 overflow-hidden rounded-2xl border sm:w-[38vw] lg:w-[26vw] ${dark ? "border-inverse/15" : "border-border"}`}>
+    <img src={f.src} alt={f.alt} loading="lazy" className="aspect-[4/3] w-full object-cover object-top" />
+  </div>
+);
 
 const Index = () => {
-  const { data: articles = [] } = usePublishedArticles({ limit: 3 });
-  const drift = useDrift<HTMLImageElement>(28);
+  const { data: articles = [] } = usePublishedArticles({ limit: 6 });
+  const { data: issues = [] } = usePublishedIssues(4);
+
+  const reading = [
+    ...articles.map((a) => ({ key: `a-${a.id}`, to: `/resources/${a.kc_sections?.slug ?? "articles"}/${a.slug}`, kind: "Knowledge Center", title: a.title, body: a.summary, img: a.hero_image_url })),
+    ...issues.map((i) => ({ key: `d-${i.id}`, to: `/the-dot/${i.slug}`, kind: `The Dot. · Issue ${String(i.issue_number).padStart(3, "0")}`, title: i.title, body: i.subtitle, img: i.cover_image_url })),
+  ];
 
   return (
     <Layout>
@@ -84,148 +106,115 @@ const Index = () => {
         jsonLd={homeJsonLd}
       />
 
-      {/* 1 Cinematic opening — video contracts into an arch as you scroll */}
-      <ExpandingHero
-        media={<img src={archLight} alt="A curved concrete staircase cut by raking sunlight and deep shadow" width={1920} height={1088} className="h-full w-full object-cover" />}
-        after={<p className="section-container pb-6 text-center font-serif text-xl italic text-foreground lg:text-2xl">Technology, made with care.</p>}
-      >
-        <div className="section-container">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-inverse-muted">Loumilab · Technology Studio</p>
-          <h1 className="mt-5 font-hero text-[3.6rem] font-semibold leading-[0.9] tracking-[-0.055em] text-inverse sm:text-[6rem] lg:text-[7.5rem] xl:text-[9rem]">
-            We build<br /><span className="font-serif font-normal italic tracking-[-0.02em]">what's</span> next<span className="text-dot">.</span>
+      {/* 1 Opening — headline over an always-moving band */}
+      <section className="relative overflow-hidden pb-16 pt-16 lg:pb-24 lg:pt-24" aria-labelledby="hero-title">
+        <div className="section-container relative z-10">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">Loumilab · Technology Studio</p>
+          <h1 id="hero-title" className="mt-5 font-hero text-[3.8rem] font-semibold leading-[0.88] tracking-[-0.055em] sm:text-[6.5rem] lg:text-[9rem] xl:text-[10.5rem]">
+            We build <span className="font-serif font-normal italic tracking-[-0.02em]">what's</span><br />next<span className="text-dot">.</span>
           </h1>
-          <div className="mt-8 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <p className="max-w-xl text-lg leading-relaxed text-inverse/80 lg:text-xl">
-              Loumilab designs, builds, and manages digital products and technology solutions that help businesses launch, operate, and grow.
-            </p>
-            <div className="pointer-events-auto flex flex-wrap items-center gap-5">
-              <Button size="lg" asChild className="bg-background text-foreground hover:bg-background/90"><Link to="/services">Explore Solutions</Link></Button>
-              <Link to="/contact" className="text-sm font-semibold text-inverse underline-offset-4 hover:underline">Start a Project</Link>
-            </div>
-          </div>
         </div>
-      </ExpandingHero>
-
-      {/* 1b Right-to-left introduction */}
-      <section className="section-container pt-24 lg:pt-36" aria-label="What Loumilab does">
-        <div className="grid items-end gap-10 lg:grid-cols-12">
-          <Reveal className="lg:col-span-4"><p className="font-hero text-3xl font-semibold leading-tight tracking-tight lg:text-4xl">Design, software and security, <span className="font-serif font-normal italic">made to last</span><span className="text-dot">.</span></p></Reveal>
-          <RtlSequence frames={intro} className="aspect-[4/3] lg:col-span-8 lg:aspect-[16/10]" />
-        </div>
-      </section>
-
-      {/* 2 Three ways we help — asymmetric spread */}
-      <section className="section-container py-24 lg:py-36" aria-labelledby="ways-title">
-        <Reveal><h2 id="ways-title" className="max-w-3xl font-hero text-4xl font-semibold tracking-tight lg:text-6xl">Three ways <span className="font-serif font-normal italic">we help</span><span className="text-dot">.</span></h2></Reveal>
-        <div className="mt-14 grid gap-x-10 gap-y-14 lg:grid-cols-12">
-          {pathways.map((p, i) => (
-            <Reveal key={p.title} delay={i * 90} className={`flex flex-col border-t border-foreground/70 pt-6 ${i === 0 ? "lg:col-span-6" : i === 1 ? "lg:col-span-4 lg:col-start-8 lg:mt-24" : "lg:col-span-5 lg:col-start-3"}`}>
-              <span className="font-hero text-sm font-semibold text-muted-foreground">0{i + 1}</span>
-              <h3 className={`mt-3 font-hero font-semibold tracking-tight ${i === 0 ? "text-3xl lg:text-5xl" : "text-2xl lg:text-3xl"}`}>{p.title}</h3>
-              <p className="mt-4 max-w-md flex-1 text-lg leading-relaxed text-muted-foreground">{p.body}</p>
-              <Link to={p.to} className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-accent underline-offset-4 hover:underline">
-                {p.cta} <ArrowRight size={14} aria-hidden />
-              </Link>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      {/* 2b Chapters — dark pinned scenes */}
-      <section aria-labelledby="chapters-title">
-        <h2 id="chapters-title" className="sr-only">Design. Build. Innovate. Secure.</h2>
-        <ul className="sr-only">{chapters.map((c) => <li key={c.word}>{c.word}: {c.line}</li>)}</ul>
-        <PinnedScenes scenes={chapters} eyebrow="How we work" />
-      </section>
-
-      {/* 3 Products (dark) */}
-      <section className="film-grain bg-ink py-24 text-inverse lg:py-36" aria-labelledby="products-title">
-        <div className="section-container">
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-inverse-muted">Loumilab Products</p>
-          <h2 id="products-title" className="mt-4 max-w-3xl font-hero text-4xl font-semibold tracking-tight text-inverse lg:text-6xl">Less managing. <span className="font-serif font-normal italic">More business.</span></h2>
-
-        </div>
-        <div className="mt-6"><ScrollRail items={productRail} tone="dark" /></div>
-        <div className="section-container">
-          <div className="mt-14"><OrdersShowcase /></div>
-
-          <div className="mt-20 grid items-center gap-12 border-t border-inverse/15 pt-16 lg:grid-cols-2">
-            <div className="order-2 lg:order-1 overflow-hidden rounded-3xl">
-              <img ref={drift} src={market} alt="Neighbors shopping at a busy outdoor farmers' market" width={1200} height={900} loading="lazy" className="aspect-[4/3] w-full scale-110 object-cover will-change-transform" />
-            </div>
-            <div className="order-1 lg:order-2">
-              <h3 className="font-display text-3xl font-semibold text-inverse">Loumilab Local</h3>
-              <p className="mt-4 max-w-md text-lg leading-relaxed text-inverse-muted">
-                Free discovery for home chefs, bakers and neighborhood favorites. Customers find you; listing your business costs nothing.
-              </p>
-              <div className="mt-8 flex flex-wrap items-center gap-5">
-                <Button size="lg" variant="outline" asChild className="border-inverse/40 bg-transparent text-inverse hover:bg-inverse/10 hover:text-inverse"><Link to="/orders/local">Explore Local</Link></Button>
-                <Link to="/orders/local/join" className="text-sm font-semibold text-inverse underline-offset-4 hover:underline">List Your Business</Link>
+        <div className="relative -mt-6 lg:-mt-16">
+          <AutoMarquee
+            label="Loumilab work and imagery"
+            duration={36}
+            gap="gap-4 lg:gap-6"
+            items={openingTiles.map((t) => (
+              <div key={t.src} className={`${t.w} ${t.offset ?? ""} shrink-0 overflow-hidden rounded-3xl bg-secondary`}>
+                {t.kind === "video"
+                  ? <LoopVideo src={t.src} poster={t.poster} className="aspect-[4/5] h-full w-full object-cover" />
+                  : <img src={t.src} alt={t.alt} loading="eager" className="aspect-[4/5] w-full object-cover object-top" />}
               </div>
-            </div>
+            ))}
+          />
+        </div>
+        <div className="section-container mt-4 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <p className="max-w-xl text-lg leading-relaxed text-muted-foreground lg:text-xl">
+            Loumilab designs, builds, and manages digital products and technology solutions that help businesses launch, operate, and grow.
+          </p>
+          <div className="flex flex-wrap items-center gap-5">
+            <Button size="lg" asChild><Link to="/services">Explore Solutions</Link></Button>
+            <Link to="/contact" className="text-sm font-semibold underline-offset-4 hover:underline">Start a Project</Link>
           </div>
         </div>
       </section>
 
-      {/* 4 Studio services */}
-      <section className="section-container py-20 lg:py-28" aria-labelledby="studio-title">
-        <Reveal className="flex flex-wrap items-end justify-between gap-4">
-          <h2 id="studio-title" className="font-hero text-4xl font-semibold tracking-tight lg:text-6xl">Technology Studio.</h2>
-          <MoreLink to="/services">All solutions</MoreLink>
-        </Reveal>
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {studio.map((s) => (
-            <Link key={s.slug} to={`/services/${s.slug}`} className="group overflow-hidden rounded-3xl border border-border bg-card transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-              <img src={s.image} alt="" width={800} height={600} loading="lazy" className="aspect-[4/3] w-full object-cover" />
-              <div className="p-6">
-                <h3 className="font-display text-lg font-semibold">{s.name}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.lede}</p>
-                <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-accent">Learn more <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" /></span>
+      {/* 2 What we build — four moving lanes (dark) */}
+      <section className="film-grain bg-ink py-24 text-inverse lg:py-32" aria-labelledby="build-title">
+        <div className="section-container">
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-inverse-muted">Technology Studio</p>
+          <h2 id="build-title" className="mt-4 max-w-3xl font-hero text-4xl font-semibold tracking-tight text-inverse lg:text-6xl">What we <span className="font-serif font-normal italic">build</span><span className="text-dot">.</span></h2>
+        </div>
+        <div className="mt-14 space-y-14 lg:space-y-20">
+          {lanes.map((l, n) => (
+            <div key={l.name} className={n > 1 ? "hidden md:block" : ""}>
+              <div className="section-container mb-5 flex flex-wrap items-baseline justify-between gap-3 border-t border-inverse/15 pt-5">
+                <h3 className="font-hero text-2xl font-semibold tracking-tight text-inverse lg:text-4xl">{l.name}</h3>
+                <p className="text-inverse-muted">{l.line}</p>
+                <Link to={l.to} className="inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-inverse underline-offset-4 hover:underline">Learn more <ArrowRight size={14} aria-hidden /></Link>
               </div>
-            </Link>
+              <AutoMarquee label={`${l.name} previews`} tone="dark" duration={l.duration} showToggle={n === 0} items={l.frames.map((f) => <Shot key={f.src + l.name} f={f} dark />)} />
+            </div>
           ))}
+          <div className="section-container md:hidden">
+            {lanes.slice(2).map((l) => (
+              <Link key={l.name} to={l.to} className="flex min-h-11 items-center justify-between border-t border-inverse/15 py-4 font-hero text-xl font-semibold text-inverse">{l.name} <ArrowRight size={16} aria-hidden /></Link>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* 5 Managed */}
-      <section className="border-y border-border bg-secondary/70 py-20 lg:py-28">
-        <div className="section-container grid items-center gap-12 lg:grid-cols-2">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">Managed Business Technology</p>
-            <h2 className="mt-4 font-hero text-4xl font-semibold tracking-tight lg:text-5xl">Business email and domains, handled.</h2>
-            <p className="mt-5 max-w-lg text-lg leading-relaxed text-muted-foreground">
-              We set up and support professional email and domains with established providers like Google Workspace, Microsoft 365 and Zoho — configured, secured and handed over in your name.
-            </p>
+      {/* 3 Statement — timed crossfade */}
+      <section className="section-container py-20 lg:py-28" aria-label="Design. Build. Innovate. Secure.">
+        <TimedCrossfade scenes={statement} className="h-[78vh] min-h-[520px] rounded-[2rem] bg-ink" />
+      </section>
+
+      {/* 4 Orders & Local (dark) — layered stack */}
+      <section className="film-grain overflow-hidden bg-ink py-24 text-inverse lg:py-32" aria-labelledby="products-title">
+        <div className="section-container grid items-center gap-16 lg:grid-cols-12">
+          <div className="lg:col-span-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-inverse-muted">Loumilab Products</p>
+            <h2 id="products-title" className="mt-4 font-hero text-4xl font-semibold tracking-tight text-inverse lg:text-6xl">Less managing. <span className="font-serif font-normal italic">More business.</span></h2>
+            <p className="mt-6 max-w-md text-lg leading-relaxed text-inverse-muted">Orders gives you your own storefront and dashboard. Local helps neighbors find you — free.</p>
             <div className="mt-8 flex flex-wrap items-center gap-5">
-              <Button size="lg" asChild><Link to="/services/business-email">Explore Managed Services</Link></Button>
-              <Link to="/services/domains" className="text-sm font-semibold underline-offset-4 hover:text-accent hover:underline">Domain setup</Link>
+              <Button size="lg" asChild className="bg-background text-foreground hover:bg-background/90"><Link to={ORDERS_CTA.href}>{ORDERS_CTA.label}</Link></Button>
+              <Link to="/orders/local" className="text-sm font-semibold text-inverse underline-offset-4 hover:underline">Explore Local</Link>
             </div>
           </div>
-          <div className="overflow-hidden rounded-3xl">
-            <img src={officeReview} alt="A business owner reviewing email setup details at her desk" width={1200} height={900} loading="lazy" className="aspect-[4/3] w-full object-cover" />
+          <LayeredStack frames={productStack} className="lg:col-span-7" />
+        </div>
+      </section>
+
+      {/* 5 Knowledge Center & The Dot. — editorial drift */}
+      {reading.length > 0 && (
+        <section className="py-20 lg:py-28" aria-labelledby="reading-title">
+          <div className="section-container flex flex-wrap items-end justify-between gap-4">
+            <h2 id="reading-title" className="font-hero text-4xl font-semibold tracking-tight lg:text-6xl">Ideas <span className="font-serif font-normal italic">worth reading</span><span className="text-dot">.</span></h2>
+            <div className="flex gap-6"><MoreLink to="/resources">Knowledge Center</MoreLink><MoreLink to="/the-dot">The Dot.</MoreLink></div>
           </div>
-        </div>
-      </section>
+          <AutoMarquee
+            className="mt-12"
+            label="Latest articles and issues"
+            duration={Math.max(40, reading.length * 9)}
+            items={reading.map((r) => (
+              <Link key={r.key} to={r.to} className="group w-[78vw] shrink-0 sm:w-[44vw] lg:w-[28vw] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-3xl">
+                <div className="overflow-hidden rounded-3xl bg-secondary">
+                  {r.img ? <img src={r.img} alt="" loading="lazy" className="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" /> : <div className="aspect-[4/3] w-full" />}
+                </div>
+                <p className="mt-5 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">{r.kind}</p>
+                <h3 className="mt-2 font-display text-xl font-semibold leading-snug">{r.title}</h3>
+                {r.body && <p className="mt-2 line-clamp-2 text-muted-foreground">{r.body}</p>}
+              </Link>
+            ))}
+          />
+        </section>
+      )}
 
-      {/* 6 Resources */}
-      <section className="section-container py-20 lg:py-28" aria-labelledby="resources-title">
-        <Reveal className="flex flex-wrap items-end justify-between gap-4">
-          <h2 id="resources-title" className="font-hero text-4xl font-semibold tracking-tight lg:text-6xl">Resources and insights.</h2>
-          <MoreLink to="/resources">Visit Resources</MoreLink>
-        </Reveal>
-        {articles.length > 0 && <div className="mt-10 grid gap-5 md:grid-cols-3">{articles.map((a) => <ArticleCard key={a.id} article={a} />)}</div>}
-        <div className="mt-10 grid gap-5">
-          <Link to="/orders/tools" className="rounded-3xl border border-border p-8 transition-colors hover:border-accent/50">
-            <h3 className="font-display text-xl font-semibold">Free Business Tools</h3>
-            <p className="mt-2 text-muted-foreground">Price your products with confidence. No sign-up needed.</p>
-          </Link>
-        </div>
-      </section>
-
-      {/* 7 Closing (dark) */}
-      <section className="section-container pb-24">
-        <div className="paper-grain rounded-[2rem] bg-surface-inverse px-6 py-20 text-center text-inverse sm:px-12 lg:py-24">
-          <h2 className="mx-auto max-w-3xl font-hero text-4xl font-semibold tracking-tight text-inverse sm:text-5xl lg:text-6xl">Have something in mind? <span className="font-serif font-normal italic">Let's build it.</span></h2>
+      {/* 6 Closing (dark) with looping clip */}
+      <section className="relative overflow-hidden bg-ink text-inverse" aria-labelledby="close-title">
+        <LoopVideo src={archVideo.url} poster={archLight} className="absolute inset-0 h-full w-full object-cover opacity-40" />
+        <div className="section-container relative py-28 text-center lg:py-40">
+          <h2 id="close-title" className="mx-auto max-w-3xl font-hero text-4xl font-semibold tracking-tight text-inverse sm:text-5xl lg:text-7xl">Have something in mind? <span className="font-serif font-normal italic">Let's build it.</span></h2>
           <Button size="lg" asChild className="mt-10 bg-background text-foreground hover:bg-background/90"><Link to="/contact">Start a Project</Link></Button>
         </div>
       </section>
