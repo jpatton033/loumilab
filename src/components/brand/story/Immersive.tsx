@@ -97,7 +97,7 @@ export const PinnedScenes = ({ scenes, eyebrow }: { scenes: Scene[]; eyebrow: st
               </h3>
             ))}
           </div>
-          <p className="mt-6 max-w-md font-serif text-2xl italic leading-snug text-inverse/85 lg:text-3xl">{scenes[active].line}</p>
+          <p className="mt-6 max-w-md font-hero text-2xl font-medium leading-snug text-inverse/85 lg:text-3xl">{scenes[active].line}</p>
         </div>
       </div>
     </div>

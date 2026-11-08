@@ -158,7 +158,7 @@ const Index = () => {
       <section className="bg-ink py-24 text-inverse lg:py-32" aria-labelledby="build-title">
         <div className="section-container">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-inverse-muted">Technology Studio</p>
-          <h2 id="build-title" className="mt-4 max-w-3xl font-hero text-4xl font-bold tracking-tight text-inverse lg:text-6xl">What we build<span className="text-dot">.</span></h2>
+          <h2 id="build-title" className="mt-4 max-w-3xl font-hero text-4xl font-bold tracking-tight text-inverse lg:text-6xl">What we build.</h2>
 
           <div className="mt-20 space-y-28 lg:space-y-36">
             <BuildRow name="Websites" to="/services/website-development" line="Fast, clear sites people enjoy using — for shops, studios, firms and brands.">
@@ -184,7 +184,7 @@ const Index = () => {
       {/* 2b Floating gallery */}
       <section id="work-gallery" className="scroll-mt-20 overflow-hidden bg-ink py-20 text-inverse lg:py-28" aria-labelledby="gallery-title">
         <div className="section-container text-center">
-          <h2 id="gallery-title" className="font-hero text-4xl font-bold tracking-tight text-inverse lg:text-6xl">A range of work<span className="text-dot">.</span></h2>
+          <h2 id="gallery-title" className="font-hero text-4xl font-bold tracking-tight text-inverse lg:text-6xl">A range of work.</h2>
           <p className="mx-auto mt-4 max-w-lg text-inverse-muted">Websites, software and products — point at one to see what it is.</p>
         </div>
         <div className="mt-10"><FloatingGallery items={floatItems} /></div>
@@ -216,7 +216,7 @@ const Index = () => {
       {reading.length > 0 && (
         <section className="py-20 lg:py-28" aria-labelledby="reading-title">
           <div className="section-container flex flex-wrap items-end justify-between gap-4">
-            <h2 id="reading-title" className="font-hero text-4xl font-semibold tracking-tight lg:text-6xl">Ideas worth reading<span className="text-dot">.</span></h2>
+            <h2 id="reading-title" className="font-hero text-4xl font-semibold tracking-tight lg:text-6xl">Ideas worth reading.</h2>
             <div className="flex gap-6"><MoreLink to="/resources">Knowledge Center</MoreLink><MoreLink to="/the-dot">The Dot.</MoreLink></div>
           </div>
           <AutoMarquee
