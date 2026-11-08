@@ -675,3 +675,15 @@
 .marquee-track { display: flex; width: max-content; animation: marquee-rtl var(--marquee-dur, 40s) linear infinite; will-change: transform; }
 .marquee-track[data-paused="true"] { animation-play-state: paused; }
 @media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; } }
+
+/* Homepage cinematic hero + floating gallery */
+@keyframes mock-fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.mock-fade { animation: mock-fade .6s ease-out both; }
+@keyframes float-drift {
+  0% { transform: translate3d(0,0,0); }
+  50% { transform: translate3d(calc(var(--drift, 40px) * -1), var(--bob, 12px), 0); }
+  100% { transform: translate3d(0,0,0); }
+}
+.float-item { animation: float-drift var(--float-dur, 18s) ease-in-out infinite; animation-delay: var(--float-delay, 0s); }
+.float-stage[data-paused="true"] .float-item { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) { .float-item, .mock-fade { animation: none; } }

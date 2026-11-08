@@ -11,9 +11,9 @@ import { navDirectLinks, navMenus, type NavLinkItem } from "@/data/navigation";
 const MenuLink = ({ item, compact }: { item: NavLinkItem; compact?: boolean }) => {
   const body = (
     <>
-      <span className="flex items-center gap-1.5 font-display text-sm font-medium text-foreground">
+      <span className={`flex items-center gap-1.5 font-display text-sm font-medium ${compact ? "text-inverse" : "text-foreground"}`}>
         {item.label}
-        {item.external ? <ArrowUpRight size={13} className="text-muted-foreground" /> : null}
+        {item.external ? <ArrowUpRight size={13} className={compact ? "text-inverse-muted" : "text-muted-foreground"} /> : null}
       </span>
       {!compact && item.desc && <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground">{item.desc}</span>}
     </>
@@ -189,6 +189,7 @@ const Navbar = () => {
                 >
                   {menu.label}
                   <ChevronDown size={13} strokeWidth={1.75} className={`opacity-60 transition-transform duration-200 ${expanded ? "rotate-180" : ""}`} />
+                  <span aria-hidden="true" className={`absolute inset-x-3 -bottom-px h-px origin-left bg-foreground transition-transform duration-300 ease-out ${expanded ? "scale-x-100" : "scale-x-0"}`} />
                   {isActive(menu.match) && <span aria-hidden="true" className="absolute bottom-0 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-dot" />}
                 </button>
               </div>
@@ -233,7 +234,7 @@ const Navbar = () => {
       <MegaPanel menuId={openMenu} onEnter={cancelClose} onLeave={hoverLeave} />
 
       {open && (
-        <nav id="mobile-nav" aria-label="Mobile" className="max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain border-b border-border bg-background lg:hidden">
+        <nav id="mobile-nav" aria-label="Mobile" className="max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain bg-ink text-inverse lg:hidden">
           <div className="section-container flex flex-col gap-1 py-6">
             {navMenus.map((menu) => {
               const expanded = mobileMenu === menu.id;
@@ -244,14 +245,14 @@ const Navbar = () => {
                     <ChevronDown size={16} className={`transition-transform ${expanded ? "rotate-180" : ""}`} />
                   </button>
                   {expanded && (
-                    <div className="mb-2 space-y-4 rounded-2xl bg-secondary p-4">
+                    <div className="mb-2 space-y-4 rounded-2xl border border-inverse/10 p-4">
                       {menu.groups.map((g) => (
                         <div key={g.label}>
-                          <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground">{g.label}</p>
+                          <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-inverse-muted">{g.label}</p>
                           <div className="mt-1">{g.items.map((i) => <MenuLink key={i.to} item={i} compact />)}</div>
                         </div>
                       ))}
-                      {menu.footer && <Link to={menu.footer.to} className="block text-sm font-semibold text-accent">{menu.footer.label}</Link>}
+                      {menu.footer && <Link to={menu.footer.to} className="block text-sm font-semibold text-inverse underline underline-offset-4">{menu.footer.label}</Link>}
                     </div>
                   )}
                 </div>
@@ -260,11 +261,11 @@ const Navbar = () => {
             {navDirectLinks.map((l) => <Link key={l.to} to={l.to} className="flex min-h-11 items-center text-base font-medium">{l.label}</Link>)}
             <Link to="/contact" className="flex min-h-11 items-center text-base font-medium">Contact</Link>
             {user ? (
-              <button type="button" onClick={handleSignOut} className="flex items-center gap-2 py-3 text-base font-medium text-muted-foreground"><LogOut size={18} /> Sign out</button>
+              <button type="button" onClick={handleSignOut} className="flex items-center gap-2 py-3 text-base font-medium text-inverse-muted"><LogOut size={18} /> Sign out</button>
             ) : (
-              <Link to="/sign-in" className="flex items-center gap-2 py-3 text-base font-medium text-accent"><LogIn size={18} /> Sign in</Link>
+              <Link to="/sign-in" className="flex items-center gap-2 py-3 text-base font-medium text-inverse"><LogIn size={18} /> Sign in</Link>
             )}
-            <Button size="lg" asChild className="mt-4 w-full rounded-lg bg-accent text-accent-foreground hover:bg-accent/90"><Link to="/contact">Start a Project</Link></Button>
+            <Button size="lg" asChild className="mt-4 w-full rounded-lg bg-background text-foreground hover:bg-background/90"><Link to="/contact">Start a Project</Link></Button>
           </div>
         </nav>
       )}

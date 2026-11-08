@@ -29,4 +29,4 @@
 - The Dot. rich story preview splits only at top-level paragraph boundaries through storyPreview.ts and retains all parsed nodes; both parts still use IssueRichContent sanitization — prevents media loss and broken nested content.
 - Immersive scroll blocks (ExpandingHero, PinnedScenes, AmbientVideo) live in src/components/brand/story/Immersive.tsx; the Blue Dot uses the `dot` token, never `accent` — keeps blue reserved for the Dot while accent can change.
 
-- RTL image motion (RtlSequence, ScrollRail) lives only in src/components/brand/story/Horizontal.tsx; pages pass their own imagery — one motion system.
+- Image motion lives only in src/components/brand/story (Horizontal.tsx, Cinematic.tsx, mocks/); pages pass their own imagery — one motion system.
