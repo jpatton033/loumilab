@@ -52,12 +52,12 @@ export const ExpandingHero = ({ media, children, after }: { media: ReactNode; ch
   const inset = e * 14; // vw
   const radius = e * 50; // vw-ish arch top
   return (
-    <div ref={ref} className="relative h-[180svh] bg-inverse">
+    <div ref={ref} className="relative h-[180svh] bg-surface-inverse">
       <div className="sticky top-0 h-[100svh] overflow-hidden" style={{ backgroundColor: `hsl(var(--background) / ${e})` }}>
         <div className="absolute overflow-hidden will-change-[inset]"
           style={{ inset: `${e * 9}svh ${inset}vw ${e * 6}svh`, borderRadius: `${radius}vw ${radius}vw 1.5rem 1.5rem` }}>
           {media}
-          <div className="absolute inset-0 bg-gradient-to-t from-inverse/80 via-inverse/20 to-inverse/40" style={{ opacity: 1 - e * 0.6 }} />
+          <div className="absolute inset-0 bg-gradient-to-t from-surface-inverse/80 via-surface-inverse/20 to-surface-inverse/40" style={{ opacity: 1 - e * 0.6 }} />
         </div>
         <div className="film-grain pointer-events-none absolute inset-0" />
         <div className="relative z-10 flex h-full flex-col justify-end pb-[10svh]" style={{ opacity: 1 - Math.min(1, p * 2.2), transform: `translateY(${-p * 60}px)` }}>
@@ -78,13 +78,13 @@ export const PinnedScenes = ({ scenes, eyebrow }: { scenes: Scene[]; eyebrow: st
   const [ref, p] = useScrollProgress<HTMLDivElement>();
   const active = Math.min(scenes.length - 1, Math.floor(p * scenes.length));
   return (
-    <div ref={ref} className="relative bg-inverse text-inverse" style={{ height: `${scenes.length * 90 + 30}svh` }}>
+    <div ref={ref} className="relative bg-surface-inverse text-inverse" style={{ height: `${scenes.length * 90 + 30}svh` }}>
       <div className="film-grain sticky top-0 h-[100svh] overflow-hidden">
         {scenes.map((s, i) => (
           <img key={s.word} src={s.image} alt={i === active ? s.alt : ""} loading="lazy" width={1200} height={1504}
             className={`absolute inset-0 h-full w-full object-cover transition-[opacity,transform] duration-[1400ms] ease-out motion-reduce:transition-none ${i === active ? "scale-100 opacity-60" : "scale-[1.06] opacity-0"}`} />
         ))}
-        <div className="absolute inset-0 bg-gradient-to-r from-inverse via-inverse/50 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-surface-inverse via-surface-inverse/50 to-transparent" />
         <div className="section-container relative z-10 flex h-full flex-col justify-center">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-sand">{eyebrow}</p>
           <ol className="mt-6 flex gap-4 text-xs font-semibold tracking-[0.16em] text-inverse-muted" aria-hidden>
@@ -104,7 +104,3 @@ export const PinnedScenes = ({ scenes, eyebrow }: { scenes: Scene[]; eyebrow: st
   );
 };
 
-/** Section whose background eases between two tones as it scrolls in. */
-export const LayeredParallax = ({ children, className = "" }: { children: ReactNode; className?: string }) => (
-  <div className={`relative overflow-hidden ${className}`}>{children}</div>
-);
