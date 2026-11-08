@@ -27,3 +27,4 @@
 - Header dropdowns and footer columns read only src/data/navigation.ts; studio/managed service pages render from src/data/services.ts via one ServiceDetail route — one place to add a solution.
 - The Dot. free-read allowance lives only in src/lib/thedot/readAllowance.ts (browser storage, no identity); the soft gate keeps full issue text in the page and only blurs it — prevents cloaking and keeps the gate soft rather than a paywall.
 - The Dot. rich story preview splits only at top-level paragraph boundaries through storyPreview.ts and retains all parsed nodes; both parts still use IssueRichContent sanitization — prevents media loss and broken nested content.
+- Immersive scroll blocks (ExpandingHero, PinnedScenes, AmbientVideo) live in src/components/brand/story/Immersive.tsx; the Blue Dot uses the `dot` token, never `accent` — keeps blue reserved for the Dot while accent can change.
