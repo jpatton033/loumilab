@@ -53,6 +53,8 @@ export default {
           tint: "hsl(var(--surface-tint))",
           inverse: "hsl(var(--surface-inverse))",
         },
+        olive: "hsl(var(--olive))",
+        sand: "hsl(var(--sand))",
         inverse: {
           DEFAULT: "hsl(var(--inverse-foreground))",
           muted: "hsl(var(--inverse-muted))",
