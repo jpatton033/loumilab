@@ -26,6 +26,54 @@ const MenuLink = ({ item, compact }: { item: NavLinkItem; compact?: boolean }) =
   );
 };
 
+/** One shared deep-black panel under the header; content crossfades when switching menus, height animates. */
+const MegaPanel = ({ menuId, onEnter, onLeave }: { menuId: string | null; onEnter: () => void; onLeave: (e: React.PointerEvent) => void }) => {
+  const inner = useRef<HTMLDivElement>(null);
+  const [h, setH] = useState(0);
+  const [shown, setShown] = useState<string | null>(menuId);
+  useEffect(() => { if (menuId) setShown(menuId); }, [menuId]);
+  useEffect(() => {
+    if (!inner.current) return;
+    const ro = new ResizeObserver(() => setH(inner.current?.offsetHeight ?? 0));
+    ro.observe(inner.current);
+    return () => ro.disconnect();
+  }, []);
+  const menu = navMenus.find((m) => m.id === shown);
+  const open = !!menuId;
+  return (
+    <div
+      className={`absolute inset-x-0 top-full hidden overflow-hidden bg-ink text-inverse transition-[height,opacity] duration-[280ms] ease-out motion-reduce:transition-none lg:block ${open ? "opacity-100" : "pointer-events-none opacity-0"}`}
+      style={{ height: open ? h : 0 }}
+      onPointerEnter={(e) => { if (e.pointerType === "mouse") onEnter(); }}
+      onPointerLeave={onLeave}
+    >
+      <div ref={inner}>
+        {menu && (
+          <div key={menu.id} id={`menu-${menu.id}`} role="menu" aria-label={menu.label} className="section-container grid gap-12 py-12 animate-in fade-in-0 slide-in-from-top-2 duration-200 motion-reduce:animate-none" style={{ gridTemplateColumns: `repeat(${menu.groups.length}, minmax(0,1fr)) minmax(0,0.8fr)` }}>
+            {menu.groups.map((g) => (
+              <div key={g.label}>
+                <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.18em] text-inverse-muted">{g.label}</p>
+                <ul className="mt-5 space-y-4">
+                  {g.items.map((i) => {
+                    const body = (<><span className="flex items-center gap-1.5 font-hero text-xl font-semibold tracking-tight text-inverse transition-colors group-hover:text-inverse/75">{i.label}{i.external && <ArrowUpRight size={15} className="text-inverse-muted" />}</span>{i.desc && <span className="mt-1 block text-sm leading-relaxed text-inverse-muted">{i.desc}</span>}</>);
+                    const cls = "group block rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
+                    return <li key={i.to}>{i.external ? <a href={i.to} target="_blank" rel="noopener noreferrer" role="menuitem" className={cls}>{body}</a> : <Link to={i.to} role="menuitem" className={cls}>{body}</Link>}</li>;
+                  })}
+                </ul>
+              </div>
+            ))}
+            <div className="border-l border-inverse/15 pl-10">
+              <p className="font-serif text-2xl italic text-inverse">{menu.label}<span className="text-dot">.</span></p>
+              <p className="mt-3 text-sm leading-relaxed text-inverse-muted">{menu.id === "solutions" ? "Design, build and run the technology your business depends on." : menu.id === "products" ? "Software we build and operate ourselves." : "Ideas, guides and free tools for growing businesses."}</p>
+              {menu.footer && <Link to={menu.footer.to} role="menuitem" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-inverse hover:text-inverse/75">{menu.footer.label} <ArrowRight size={14} /></Link>}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -35,7 +83,7 @@ const Navbar = () => {
   const closeTimer = useRef<number | null>(null);
   const cancelClose = () => { if (closeTimer.current) { window.clearTimeout(closeTimer.current); closeTimer.current = null; } };
   const hoverOpen = (id: string) => (e: React.PointerEvent) => { if (e.pointerType !== "mouse") return; cancelClose(); setOpenMenu(id); };
-  const hoverLeave = (e: React.PointerEvent) => { if (e.pointerType !== "mouse") return; cancelClose(); closeTimer.current = window.setTimeout(() => setOpenMenu(null), 150); };
+  const hoverLeave = (e: React.PointerEvent) => { if (e.pointerType !== "mouse") return; cancelClose(); closeTimer.current = window.setTimeout(() => setOpenMenu(null), 220); };
   const [user, setUser] = useState<{ id: string; email?: string } | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
@@ -89,7 +137,7 @@ const Navbar = () => {
       const id = openMenu; setOpenMenu(null);
       document.getElementById(`menu-btn-${id}`)?.focus();
     };
-    const onClick = (e: MouseEvent) => { if (navRef.current && !navRef.current.contains(e.target as Node)) setOpenMenu(null); };
+    const onClick = (e: MouseEvent) => { if (!(e.target as HTMLElement).closest?.("header")) setOpenMenu(null); };
     document.addEventListener("keydown", onKey);
     document.addEventListener("mousedown", onClick);
     return () => { document.removeEventListener("keydown", onKey); document.removeEventListener("mousedown", onClick); };
@@ -127,8 +175,7 @@ const Navbar = () => {
         <nav ref={navRef} className="hidden h-full items-center gap-1 lg:flex" aria-label="Main">
           {navMenus.map((menu) => {
             const expanded = openMenu === menu.id;
-            const wide = menu.groups.length > 1;
-            return (
+                        return (
               <div key={menu.id} className="relative flex h-full items-center" onPointerEnter={hoverOpen(menu.id)} onPointerLeave={hoverLeave}>
                 <button
                   type="button"
@@ -144,27 +191,6 @@ const Navbar = () => {
                   <ChevronDown size={13} strokeWidth={1.75} className={`opacity-60 transition-transform duration-200 ${expanded ? "rotate-180" : ""}`} />
                   {isActive(menu.match) && <span aria-hidden="true" className="absolute bottom-0 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-dot" />}
                 </button>
-                {expanded && (
-                  <div id={`menu-${menu.id}`} role="menu" className={`absolute top-full -mt-2 pt-2 animate-in fade-in-0 slide-in-from-top-1 duration-200 motion-reduce:animate-none ${wide ? "left-0 w-[min(92vw,640px)]" : "left-0 w-[320px]"}`}>
-                    <div className="rounded-3xl border border-border bg-popover p-4 shadow-[var(--shadow-lift)]">
-                      <div className={`grid gap-4 ${wide ? "sm:grid-cols-2" : ""}`}>
-                        {menu.groups.map((g) => (
-                          <div key={g.label}>
-                            <p className="flex items-center gap-2 px-3 pt-2 text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-olive"><span aria-hidden className="h-1.5 w-1.5 rounded-full bg-dot" /><span>{g.label}</span></p>
-                            <div className="mt-2 space-y-0.5">{g.items.map((i) => <MenuLink key={i.to} item={i} />)}</div>
-                          </div>
-                        ))}
-                      </div>
-                      {menu.footer && (
-                        <div className="mt-3 border-t border-border px-3 pb-1 pt-3">
-                          <Link to={menu.footer.to} role="menuitem" className="inline-flex items-center gap-2 text-sm font-semibold text-foreground hover:text-accent">
-                            {menu.footer.label} <ArrowRight size={14} />
-                          </Link>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
               </div>
             );
           })}
@@ -203,6 +229,8 @@ const Navbar = () => {
           {open ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
+
+      <MegaPanel menuId={openMenu} onEnter={cancelClose} onLeave={hoverLeave} />
 
       {open && (
         <nav id="mobile-nav" aria-label="Mobile" className="max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain border-b border-border bg-background lg:hidden">

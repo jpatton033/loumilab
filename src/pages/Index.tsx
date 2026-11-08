@@ -7,7 +7,7 @@ import { MoreLink } from "@/components/brand/apple/Tiles";
 import { usePublishedArticles } from "@/lib/kc/queries";
 import { usePublishedIssues } from "@/lib/thedot/queries";
 import { ORDERS_CTA } from "@/data/orders/cta";
-import { AutoMarquee, LayeredStack, LoopVideo, TimedCrossfade, type Frame } from "@/components/brand/story/Horizontal";
+import { AutoMarquee, CinematicGallery, type CinematicItem, LayeredStack, LoopVideo, TimedCrossfade, type Frame } from "@/components/brand/story/Horizontal";
 import archVideo from "@/assets/video/home/arch-light.mp4.asset.json";
 import sketchVideo from "@/assets/video/home/sketch-layout.mp4.asset.json";
 import archLight from "@/assets/story/home/arch-light.jpg";
@@ -41,15 +41,17 @@ const homeJsonLd = {
   ],
 };
 
-/* Opening band: mixed photo, video and real screens, varied sizes */
-type Tile = { kind: "img" | "video"; src: string; alt: string; w: string; poster?: string; offset?: string };
-const openingTiles: Tile[] = [
-  { kind: "video", src: archVideo.url, poster: archLight, alt: "", w: "w-[70vw] sm:w-[36vw] lg:w-[30vw]", offset: "mt-10" },
-  { kind: "img", src: scOrders, alt: "The Loumilab Orders page", w: "w-[60vw] sm:w-[30vw] lg:w-[24vw]" },
-  { kind: "img", src: sculptureDot, alt: "White sculptural forms beside a small blue sphere", w: "w-[46vw] sm:w-[20vw] lg:w-[16vw]", offset: "mt-20" },
-  { kind: "video", src: sketchVideo.url, poster: layoutsHands, alt: "", w: "w-[66vw] sm:w-[34vw] lg:w-[28vw]" },
-  { kind: "img", src: scLocal, alt: "The Loumilab Local discovery page", w: "w-[60vw] sm:w-[30vw] lg:w-[24vw]", offset: "mt-14" },
-  { kind: "img", src: facadeGrid, alt: "A glass building facade at night with a grid of lit windows", w: "w-[46vw] sm:w-[20vw] lg:w-[18vw]" },
+const galleryItems: CinematicItem[] = [
+  { src: scEmail, alt: "The Business Email service page", label: "Website development", to: "/services/website-development", aspect: 16 / 10 },
+  { src: scServices, alt: "The Loumilab Solutions page", label: "Loumilab Solutions", to: "/services", aspect: 4 / 5 },
+  { src: merchantDash, alt: "The Orders merchant dashboard", label: "Custom software", to: "/services/custom-software", aspect: 16 / 10, status: ["New order", "Preparing", "Ready for pickup", "Completed"] },
+  { src: storeBuilder, alt: "The Orders store builder", label: "Loumilab Orders", to: "/orders", aspect: 4 / 3 },
+  { src: scPricing, alt: "Orders pricing calculator", label: "Orders pricing", to: "/orders/pricing", aspect: 3 / 4 },
+  { src: scWorkflow, alt: "The Workflow Optimization page", label: "AI & automation", to: "/services/workflow-optimization", aspect: 16 / 10 },
+  { src: scLocal, alt: "Loumilab Local business discovery", label: "Loumilab Local", to: "/orders/local", aspect: 4 / 5 },
+  { src: scResources, alt: "The Knowledge Center", label: "Knowledge Center", to: "/resources", aspect: 16 / 10 },
+  { src: scDot, alt: "The Dot. newsletter", label: "The Dot.", to: "/the-dot", aspect: 3 / 4 },
+  { src: archVideo.url, poster: archLight, video: true, alt: "", label: "The studio", aspect: 16 / 9 },
 ];
 
 const lanes: { name: string; to: string; line: string; frames: Frame[]; duration: number }[] = [
@@ -106,36 +108,22 @@ const Index = () => {
         jsonLd={homeJsonLd}
       />
 
-      {/* 1 Opening — headline over an always-moving band */}
-      <section className="relative overflow-hidden pb-16 pt-16 lg:pb-24 lg:pt-24" aria-labelledby="hero-title">
-        <div className="section-container relative z-10">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">Loumilab · Technology Studio</p>
-          <h1 id="hero-title" className="mt-5 font-hero text-[3.8rem] font-semibold leading-[0.88] tracking-[-0.055em] sm:text-[6.5rem] lg:text-[9rem] xl:text-[10.5rem]">
-            We build <span className="font-serif font-normal italic tracking-[-0.02em]">what's</span><br />next<span className="text-dot">.</span>
+      {/* 1 Opening — centered headline, then a hard cut into the black cinematic gallery */}
+      <section className="pt-16 lg:pt-24" aria-labelledby="hero-title">
+        <div className="section-container text-center">
+          <h1 id="hero-title" className="mx-auto font-hero text-[3.4rem] font-semibold leading-[0.92] tracking-[-0.055em] sm:text-[5.5rem] lg:text-[7.5rem]">
+            We build what's next<span className="text-dot">.</span>
           </h1>
-        </div>
-        <div className="relative -mt-6 lg:-mt-16">
-          <AutoMarquee
-            label="Loumilab work and imagery"
-            duration={36}
-            gap="gap-4 lg:gap-6"
-            items={openingTiles.map((t) => (
-              <div key={t.src} className={`${t.w} ${t.offset ?? ""} shrink-0 overflow-hidden rounded-3xl bg-secondary`}>
-                {t.kind === "video"
-                  ? <LoopVideo src={t.src} poster={t.poster} className="aspect-[4/5] h-full w-full object-cover" />
-                  : <img src={t.src} alt={t.alt} loading="eager" className="aspect-[4/5] w-full object-cover object-top" />}
-              </div>
-            ))}
-          />
-        </div>
-        <div className="section-container mt-4 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <p className="max-w-xl text-lg leading-relaxed text-muted-foreground lg:text-xl">
-            Loumilab designs, builds, and manages digital products and technology solutions that help businesses launch, operate, and grow.
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground lg:text-xl">
+            Thoughtful technology, distinctive digital experiences, and software built for what's next.
           </p>
-          <div className="flex flex-wrap items-center gap-5">
-            <Button size="lg" asChild><Link to="/services">Explore Solutions</Link></Button>
-            <Link to="/contact" className="text-sm font-semibold underline-offset-4 hover:underline">Start a Project</Link>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <Button size="lg" asChild><Link to="/services">Explore Our Solutions</Link></Button>
+            <Button size="lg" variant="outline" asChild><a href="#work-gallery">See What We Build</a></Button>
           </div>
+        </div>
+        <div id="work-gallery" className="mt-12 scroll-mt-20 bg-ink py-10 lg:mt-16 lg:py-14">
+          <CinematicGallery items={galleryItems} label="A moving gallery of Loumilab work" />
         </div>
       </section>
 
