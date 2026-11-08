@@ -687,3 +687,20 @@
 .float-item { animation: float-drift var(--float-dur, 18s) ease-in-out infinite; animation-delay: var(--float-delay, 0s); }
 .float-stage[data-paused="true"] .float-item { animation-play-state: paused; }
 @media (prefers-reduced-motion: reduce) { .float-item, .mock-fade { animation: none; } }
+
+/* Scoped inverse theme (deep black #080808) — used by the footer. */
+@layer base {
+  .theme-inverse {
+    --background: 0 0% 3%;
+    --foreground: 40 20% 96%;
+    --card: 0 0% 6%;
+    --primary: 40 20% 96%;
+    --primary-foreground: 0 0% 5%;
+    --secondary: 0 0% 10%;
+    --muted-foreground: 0 0% 62%;
+    --border: 0 0% 16%;
+    --surface-subtle: 0 0% 3%;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+}
