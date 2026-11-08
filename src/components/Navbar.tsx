@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Menu, X, ChevronDown, ArrowUpRight, ArrowRight, LogIn, LogOut, UserRound } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import SiteSearch from "@/components/SiteSearch";
 import Wordmark from "@/components/brand/Wordmark";
 import { navDirectLinks, navMenus, type NavLinkItem } from "@/data/navigation";
 
@@ -145,11 +146,11 @@ const Navbar = () => {
                 </button>
                 {expanded && (
                   <div id={`menu-${menu.id}`} role="menu" className={`absolute top-full -mt-2 pt-2 animate-in fade-in-0 slide-in-from-top-1 duration-200 motion-reduce:animate-none ${wide ? "left-0 w-[min(92vw,640px)]" : "left-0 w-[320px]"}`}>
-                    <div className="rounded-2xl border border-border bg-popover p-3 shadow-[var(--shadow-lift)]">
+                    <div className="rounded-3xl border border-border bg-popover p-4 shadow-[var(--shadow-lift)]">
                       <div className={`grid gap-4 ${wide ? "sm:grid-cols-2" : ""}`}>
                         {menu.groups.map((g) => (
                           <div key={g.label}>
-                            <p className="px-3 pt-2 text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground">{g.label}</p>
+                            <p className="flex items-center gap-2 px-3 pt-2 text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-olive"><span aria-hidden className="h-1.5 w-1.5 rounded-full bg-accent" /><span>{g.label}</span></p>
                             <div className="mt-2 space-y-0.5">{g.items.map((i) => <MenuLink key={i.to} item={i} />)}</div>
                           </div>
                         ))}
@@ -173,6 +174,7 @@ const Navbar = () => {
         </nav>
 
         <div className="ml-auto hidden items-center gap-2 justify-self-end lg:flex">
+          <SiteSearch />
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <button type="button" aria-label="Account" className="inline-flex h-10 w-10 items-center justify-center rounded-md text-foreground/65 transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
@@ -196,7 +198,8 @@ const Navbar = () => {
           </Button>
         </div>
 
-        <button className="-mr-2 ml-auto inline-flex h-11 w-11 items-center justify-center text-foreground lg:hidden" onClick={() => setOpen(!open)} aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} aria-controls="mobile-nav">
+        <SiteSearch className="ml-auto lg:hidden" />
+        <button className="-mr-2 ml-2 inline-flex h-11 w-11 items-center justify-center text-foreground lg:hidden" onClick={() => setOpen(!open)} aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} aria-controls="mobile-nav">
           {open ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
