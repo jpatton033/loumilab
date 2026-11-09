@@ -443,10 +443,10 @@ const WorkflowOptimization = () => {
       {/* Closing */}
       <section className="section-padding bg-surface-inverse text-inverse">
         <div className="section-container max-w-3xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight md:text-5xl">Your business doesn't need more complexity. It needs better systems.</h2>
+          <h2 className="text-3xl font-bold tracking-tight text-inverse md:text-5xl">Your business doesn't need more complexity. It needs better systems.</h2>
           <p className="mx-auto mt-6 max-w-2xl text-inverse-muted">Let's identify what's slowing your business down and build software that makes everyday work simpler, faster, and more efficient.</p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <Button size="lg" onClick={() => goForm("assessment", "closing")}>Optimize Your Workflow</Button>
+            <Button size="lg" className="bg-inverse text-surface-inverse hover:bg-inverse/90" onClick={() => goForm("assessment", "closing")}>Optimize Your Workflow</Button>
             <Button size="lg" variant="outline" className="border-inverse/30 bg-transparent text-inverse hover:bg-inverse/10 hover:text-inverse" onClick={() => goForm("project", "closing")}>Start a Software Project</Button>
           </div>
         </div>
