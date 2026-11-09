@@ -225,7 +225,7 @@ const WorkflowOptimization = () => {
       `}</style>
 
       {/* Hero */}
-      <PageHero image={heroWorkflow} imageAlt="An operations manager arranging task cards in order at a concrete counter" eyebrow="Workflow Optimization" title="Smarter software. Less unnecessary AI." lede="We design, build and optimize business software that simplifies everyday operations and removes repetitive tasks. AI when valuable. Software when sufficient." actions={<>
+      <PageHero image={heroWorkflow} imageAlt="An operations manager arranging task cards in order at a concrete counter" eyebrow="Workflow Optimization" title={<>Smarter software.<span className="mt-4 block font-hero text-2xl font-medium tracking-tight text-inverse/85 sm:text-3xl lg:text-4xl">Less unnecessary AI.</span></>} lede="We design, build and optimize business software that simplifies everyday operations and removes repetitive tasks. AI when valuable. Software when sufficient." actions={<>
         <Button size="lg" className="bg-background text-foreground hover:bg-background/90" onClick={() => goForm("assessment", "hero")}>Optimize Your Workflow</Button>
         <Button size="lg" variant="ghost" className="text-inverse hover:bg-inverse/10 hover:text-inverse" onClick={() => goForm("project", "hero")}>Discuss a Software Project</Button>
       </>} />
