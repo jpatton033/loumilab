@@ -403,20 +403,14 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://loumilab.com/resources/technology-ai/is-ai-replacing-entry-level-jobs</loc>
-    <lastmod>2026-11-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://loumilab.com/resources/web-digital/does-your-business-still-need-a-website</loc>
     <lastmod>2026-11-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://loumilab.com/resources/business-growth/the-new-economics-of-starting-a-business</loc>
-    <lastmod>2026-11-06</lastmod>
+    <loc>https://loumilab.com/resources/technology-ai/is-ai-replacing-entry-level-jobs</loc>
+    <lastmod>2026-11-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -427,8 +421,8 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://loumilab.com/resources/security-privacy/your-digital-footprint-is-bigger-than-you-think</loc>
-    <lastmod>2026-10-22</lastmod>
+    <loc>https://loumilab.com/resources/business-growth/the-new-economics-of-starting-a-business</loc>
+    <lastmod>2026-11-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -445,20 +439,26 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://loumilab.com/resources/web-digital/website-that-converts</loc>
-    <lastmod>2026-10-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://loumilab.com/resources/templates-tools/order-intake-template</loc>
-    <lastmod>2026-10-27</lastmod>
+    <lastmod>2026-11-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://loumilab.com/resources/technology-ai/who-is-responsible-when-ai-makes-the-wrong-decision</loc>
-    <lastmod>2026-11-01</lastmod>
+    <loc>https://loumilab.com/resources/security-privacy/your-digital-footprint-is-bigger-than-you-think</loc>
+    <lastmod>2026-11-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://loumilab.com/resources/web-digital/website-that-converts</loc>
+    <lastmod>2026-11-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://loumilab.com/resources/business-growth/turn-first-time-buyers-into-regulars</loc>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -475,7 +475,13 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://loumilab.com/resources/orders-commerce/why-online-shopping-returns-are-a-billion-dollar-problem</loc>
+    <loc>https://loumilab.com/resources/business-growth/cashless-business-debate</loc>
+    <lastmod>2026-11-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://loumilab.com/resources/technology-ai/who-is-responsible-when-ai-makes-the-wrong-decision</loc>
     <lastmod>2026-11-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -493,31 +499,25 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://loumilab.com/resources/business-growth/is-your-business-ready-to-grow</loc>
-    <lastmod>2026-11-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://loumilab.com/resources/business-growth/turn-first-time-buyers-into-regulars</loc>
-    <lastmod>2026-11-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://loumilab.com/resources/technology-ai/who-pays-for-ai-boom-data-centers-electricity</loc>
     <lastmod>2026-11-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://loumilab.com/resources/orders-commerce/are-dms-costing-your-business-sales</loc>
+    <loc>https://loumilab.com/resources/business-growth/is-your-business-ready-to-grow</loc>
     <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://loumilab.com/resources/web-digital/what-a-modern-business-website-should-do</loc>
+    <lastmod>2026-11-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://loumilab.com/resources/orders-commerce/are-dms-costing-your-business-sales</loc>
     <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -535,19 +535,19 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://loumilab.com/resources/orders-commerce/from-instagram-to-checkout</loc>
-    <lastmod>2026-11-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://loumilab.com/resources/business-growth/more-customers-wont-fix-a-broken-business-process</loc>
     <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://loumilab.com/resources/business-growth/cashless-business-debate</loc>
+    <loc>https://loumilab.com/resources/orders-commerce/from-instagram-to-checkout</loc>
+    <lastmod>2026-11-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://loumilab.com/resources/orders-commerce/why-online-shopping-returns-are-a-billion-dollar-problem</loc>
     <lastmod>2026-11-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -566,7 +566,7 @@
   </url>
   <url>
     <loc>https://loumilab.com/resources/security-privacy/small-business-cybersecurity-checklist</loc>
-    <lastmod>2026-11-04</lastmod>
+    <lastmod>2026-11-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -583,13 +583,13 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://loumilab.com/resources/business-growth/the-business-you-own-platforms-you-depend-on</loc>
-    <lastmod>2026-11-01</lastmod>
+    <loc>https://loumilab.com/resources/security-privacy/are-passwords-becoming-obsolete-the-rise-of-passkeys</loc>
+    <lastmod>2026-11-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://loumilab.com/resources/security-privacy/are-passwords-becoming-obsolete-the-rise-of-passkeys</loc>
+    <loc>https://loumilab.com/resources/business-growth/the-business-you-own-platforms-you-depend-on</loc>
     <lastmod>2026-11-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -607,13 +607,13 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://loumilab.com/resources/orders-commerce/the-end-of-the-traditional-customer-journey</loc>
-    <lastmod>2026-11-01</lastmod>
+    <loc>https://loumilab.com/resources/web-digital/the-internet-is-changing-are-we-losing-control-of-our-digital-experiences</loc>
+    <lastmod>2026-11-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://loumilab.com/resources/web-digital/the-internet-is-changing-are-we-losing-control-of-our-digital-experiences</loc>
+    <loc>https://loumilab.com/resources/orders-commerce/the-end-of-the-traditional-customer-journey</loc>
     <lastmod>2026-11-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
