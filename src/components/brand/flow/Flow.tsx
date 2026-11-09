@@ -96,7 +96,7 @@ export const PageHero = ({
   image, imageAlt = "", title, lede, cta, links, eyebrow, actions,
 }: { image: string; imageAlt?: string; title: ReactNode; lede?: ReactNode; cta?: Cta; links?: { label: string; to: string }[]; eyebrow?: ReactNode; actions?: ReactNode }) => (
   <section data-page-hero className="relative isolate -mt-16 overflow-hidden bg-ink text-inverse lg:-mt-20" aria-label="Introduction">
-    <img src={image} alt={imageAlt} width={1920} height={1080} fetchPriority="high" className="absolute inset-0 -z-10 h-full w-full object-cover" />
+    <img src={image} alt={imageAlt} width={1920} height={1080} fetchPriority="high" decoding="async" className="absolute inset-0 -z-10 h-full w-full object-cover" />
     <div className="absolute inset-0 -z-10 bg-gradient-to-b from-ink/55 via-ink/35 to-ink/75" aria-hidden />
     <div className="section-container flex min-h-[78svh] flex-col items-center justify-center pb-16 pt-32 text-center lg:min-h-[88svh] lg:pt-40">
       {eyebrow && <div className="mb-6 text-xs font-semibold uppercase tracking-[0.16em] text-inverse/80">{eyebrow}</div>}
