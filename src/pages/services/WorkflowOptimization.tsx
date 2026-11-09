@@ -225,11 +225,19 @@ const WorkflowOptimization = () => {
       `}</style>
 
       {/* Hero */}
-      <PageHero image={heroWorkflow} imageAlt="An operations manager arranging task cards in order at a concrete counter" eyebrow="Workflow Optimization" title={<>Smarter software.<span className="mt-4 block font-hero text-2xl font-medium tracking-tight text-inverse/85 sm:text-3xl lg:text-4xl">Less unnecessary AI.</span></>} lede="We design, build and optimize business software that simplifies everyday operations and removes repetitive tasks. AI when valuable. Software when sufficient." actions={<>
+      <PageHero image={heroWorkflow} imageAlt="An operations manager arranging task cards in order at a concrete counter" eyebrow="Workflow Optimization" title="Smarter software." lede="We design, build and optimize business software that simplifies everyday operations and removes repetitive tasks." actions={<>
         <Button size="lg" className="bg-background text-foreground hover:bg-background/90" onClick={() => goForm("assessment", "hero")}>Optimize Your Workflow</Button>
         <Button size="lg" variant="ghost" className="text-inverse hover:bg-inverse/10 hover:text-inverse" onClick={() => goForm("project", "hero")}>Discuss a Software Project</Button>
       </>} />
-      <section className="section-padding"><div className="section-container"><HeroVisual /></div></section>
+      <section className="section-padding"><div className="section-container">
+        <Reveal>
+          <div className="mx-auto mb-12 max-w-3xl text-center lg:mb-16">
+            <h2 className="font-hero text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:text-6xl">Less unnecessary AI.</h2>
+            <p className="mt-4 text-lg text-muted-foreground">AI when valuable. Software when sufficient.</p>
+          </div>
+        </Reveal>
+        <HeroVisual />
+      </div></section>
 
       {/* Intro */}
       <section className="section-padding bg-secondary/40">
