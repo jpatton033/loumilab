@@ -122,7 +122,7 @@ const Index = () => {
 
   const reading = [
     ...articles.map((a) => ({ key: `a-${a.id}`, to: `/resources/${a.kc_sections?.slug ?? "articles"}/${a.slug}`, kind: "Knowledge Center", title: a.title, body: a.summary, img: a.hero_image_url })),
-    ...issues.map((i) => ({ key: `d-${i.id}`, to: `/the-dot/${i.slug}`, kind: `The Dot. · Issue ${String(i.issue_number).padStart(3, "0")}`, title: i.title, body: i.subtitle, img: i.cover_image_url })),
+    ...issues.map((i) => ({ key: `d-${i.id}`, to: `/the-dot/issue/${i.slug}`, kind: `The Dot. · Issue ${String(i.issue_number).padStart(3, "0")}`, title: i.title, body: i.subtitle, img: i.cover_image_url })),
   ];
 
   return (
