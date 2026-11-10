@@ -246,8 +246,8 @@ const Index = () => {
               {reading.slice(0, 4).map((r, i) => (
                 <Link key={r.key} to={r.to} className={`group flex gap-5 rounded-3xl border border-inverse/10 bg-inverse/[0.03] p-6 transition-colors hover:border-inverse/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${i === 0 ? "flex-col lg:col-span-6 lg:row-span-3 lg:p-8" : "items-center lg:col-span-6"}`}>
                   {r.img && (
-                    <div className={`shrink-0 overflow-hidden rounded-2xl bg-inverse/5 ${i === 0 ? "w-full" : "h-20 w-24"}`}>
-                      <img src={r.img} alt="" loading="lazy" className={`w-full object-cover grayscale contrast-[1.05] brightness-90 transition-[filter] duration-500 group-hover:grayscale-0 ${i === 0 ? "aspect-[16/10]" : "h-full"}`} />
+                    <div className={`shrink-0 overflow-hidden rounded-2xl bg-inverse/5 ${i === 0 ? "w-full" : "aspect-video w-32"}`}>
+                      <img src={r.img} alt="" loading="lazy" className={`w-full object-contain grayscale contrast-[1.05] brightness-90 transition-[filter] duration-500 group-hover:grayscale-0 ${i === 0 ? "aspect-[16/10]" : "h-full"}`} />
                     </div>
                   )}
                   <div className="min-w-0">
