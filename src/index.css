@@ -711,7 +711,7 @@
   .scene-hero .scene-hero-media { transform: scale(calc(1 + var(--p) * 0.1)); transform-origin: center; will-change: transform; }
   .scene-hero .scene-hero-copy { transform: translate3d(0, calc(var(--p) * -80px), 0); opacity: calc(1 - var(--p) * 1.4); will-change: transform, opacity; }
   .scene-hero .scene-hero-dim { opacity: calc(var(--p) * 0.7); }
-  .scene-rise { --p: 1; transform: translate3d(0, calc((1 - var(--p)) * 64px), 0); opacity: calc(0.25 + var(--p) * 0.75); }
+  .scene-rise { --p: 1; transform: translate3d(0, calc((1 - var(--p)) * 64px), 0); }
   .scene-overlap { --p: 1; transform: translate3d(0, calc((1 - var(--p)) * 96px), 0) scale(calc(0.95 + var(--p) * 0.05)); transform-origin: top center; }
   .scene-expand { --p: 1; clip-path: inset(calc((1 - var(--p)) * 7%) round 1.5rem); transform: scale(calc(0.94 + var(--p) * 0.06)); }
   .scene-drift { --p: 1; transform: translate3d(calc((1 - var(--p)) * 80px), 0, 0); }

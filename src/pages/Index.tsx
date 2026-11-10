@@ -8,7 +8,6 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
-import { ToDark } from "@/components/brand/flow/Flow";
 import { Scene as CineScene, useSceneProgress } from "@/components/brand/story/Scene";
 import { usePublishedArticles } from "@/lib/kc/queries";
 import { usePublishedIssues } from "@/lib/thedot/queries";
@@ -166,23 +165,31 @@ const Index = () => {
       ]} />
 
       {/* Companies */}
-      <section className="py-24 lg:py-32" aria-labelledby="companies-title">
-        <div className="section-container grid items-end gap-10 lg:grid-cols-12">
-          <div className="lg:col-span-7">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Loumilab Companies</p>
-            <h2 id="companies-title" className="mt-4 font-hero text-4xl font-bold tracking-tight lg:text-6xl">Vurtti.</h2>
-            <p className="mt-6 max-w-lg text-lg leading-relaxed text-muted-foreground">Compliance, documented and under control. A compliance technology platform helping teams organize and maintain the evidence their standards require.</p>
-          </div>
-          <div className="lg:col-span-5 lg:text-right">
-            <Button size="lg" asChild><a href="https://www.vurttidocs.com" target="_blank" rel="noopener noreferrer">Visit Vurtti</a></Button>
+      <section className="border-t border-border pb-32 pt-24 lg:pb-44 lg:pt-32" aria-labelledby="companies-title">
+        <div className="section-container">
+          <div className="grid items-center gap-10 rounded-3xl border border-border bg-card p-8 shadow-sm sm:p-12 lg:grid-cols-12 lg:p-16">
+            <div className="lg:col-span-7">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Loumilab Companies</p>
+              <h2 id="companies-title" className="mt-4 font-hero text-4xl font-bold tracking-tight lg:text-6xl">Vurtti.</h2>
+              <p className="mt-6 max-w-lg text-lg leading-relaxed text-muted-foreground">Compliance, documented and under control. Evidence organized and maintained for the standards your team follows.</p>
+              <Button size="lg" asChild className="mt-8"><a href="https://www.vurttidocs.com" target="_blank" rel="noopener noreferrer">Visit Vurtti</a></Button>
+            </div>
+            <div className="lg:col-span-5" aria-hidden>
+              <div className="rounded-2xl border border-border bg-background p-5">
+                {[["Access control policy", "Current"], ["Vendor review", "Current"], ["Incident response plan", "Due in 12 days"], ["Backup test evidence", "Current"]].map(([n, st]) => (
+                  <div key={n} className="flex items-center justify-between border-b border-border py-3 text-sm last:border-0">
+                    <span className="font-medium">{n}</span>
+                    <span className="text-muted-foreground">{st}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      <ToDark />
-
       {/* 2 What we build — a different composition per area */}
-      <section className="bg-ink pb-24 pt-8 text-inverse lg:pb-32" aria-labelledby="build-title">
+      <section className="relative z-10 -mt-10 rounded-t-[2.5rem] bg-ink pb-24 pt-24 text-inverse lg:-mt-16 lg:rounded-t-[3.5rem] lg:pb-32 lg:pt-32" aria-labelledby="build-title">
         <div className="section-container">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-inverse-muted">Technology Studio</p>
           <h2 id="build-title" className="mt-4 max-w-3xl font-hero text-4xl font-bold tracking-tight text-inverse lg:text-6xl">What we build.</h2>

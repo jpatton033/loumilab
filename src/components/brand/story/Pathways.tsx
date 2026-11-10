@@ -82,7 +82,7 @@ export function Pathways({ runFrames }: { runFrames: Frame[] }) {
   }, []);
 
   const chapter = (i: number, dark: boolean, kicker: string, title: string, body: string, ctas: { label: string; to: string }[], visual: JSX.Element) => (
-    <section ref={(el) => (refs.current[i] = el)} data-idx={i} id={STEPS[i].id} className={`scroll-mt-28 overflow-hidden py-24 lg:py-32 ${dark ? "bg-ink text-inverse" : ""}`} aria-labelledby={`${STEPS[i].id}-title`}>
+    <section ref={(el) => (refs.current[i] = el)} data-idx={i} id={STEPS[i].id} className={`scroll-mt-28 overflow-hidden border-t border-border py-24 lg:py-32 ${dark ? "bg-ink text-inverse" : ""}`} aria-labelledby={`${STEPS[i].id}-title`}>
       <div className="section-container grid items-center gap-12 lg:grid-cols-12">
         <div className="lg:col-span-5">
           <p className={`text-xs font-semibold uppercase tracking-[0.16em] ${dark ? "text-inverse-muted" : "text-muted-foreground"}`}>{kicker}</p>
@@ -118,7 +118,7 @@ export function Pathways({ runFrames }: { runFrames: Frame[] }) {
       </nav>
       {chapter(0, false, "Establish", "Establish your business.", "Your name, your domain, and email that matches — set up properly from day one.",
         [{ label: "Business Email", to: "/services/business-email" }, { label: "Domains", to: "/services/domains" }], <IdentityMorph />)}
-      {chapter(1, true, "Run", "Less managing. More business.", "Your own storefront, orders and pickups in one place, so the day runs itself.",
+      {chapter(1, false, "Run", "Less managing. More business.", "Your own storefront, orders and pickups in one place, so the day runs itself.",
         [{ label: "Explore Orders", to: "/orders" }], <RtlSequence frames={runFrames} className="aspect-[4/3]" />)}
       {chapter(2, false, "Improve", "Improve your business.", "Spreadsheets, notes, emails and invoices — drawn together into one simple process.",
         [{ label: "Workflow Optimization", to: "/services/workflow-optimization" }], <TasksConverge />)}
