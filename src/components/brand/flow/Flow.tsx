@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
+import { Scene, useSceneProgress, LightsDown } from "@/components/brand/story/Scene";
 
 type Cta = { label: string; to: string; onClick?: () => void };
 
@@ -36,7 +37,7 @@ export const FlowHero = ({
 /** Three short, even benefit blocks. */
 export const BenefitTrio = ({ items }: { items: { title: string; body: string }[] }) => (
   <section className="section-container py-16 lg:py-24">
-    <div className="grid gap-12 md:grid-cols-3 md:gap-10">
+    <Scene variant="rise" className="grid gap-12 md:grid-cols-3 md:gap-10">
       {items.map((b) => (
         <div key={b.title}>
           <h2 className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">{b.title}</h2>
@@ -94,11 +95,14 @@ export const ScreenFrame = ({ src, alt, label, className = "" }: { src: string; 
 /** Full-bleed photo hero that opens every public page: centered headline over a soft dark veil, one button, optional quick links. */
 export const PageHero = ({
   image, imageAlt = "", title, lede, cta, links, eyebrow, actions,
-}: { image: string; imageAlt?: string; title: ReactNode; lede?: ReactNode; cta?: Cta; links?: { label: string; to: string }[]; eyebrow?: ReactNode; actions?: ReactNode }) => (
-  <section data-page-hero className="relative isolate -mt-16 overflow-hidden bg-ink text-inverse lg:-mt-20" aria-label="Introduction">
-    <img src={image} alt={imageAlt} width={1920} height={1080} fetchPriority="high" decoding="async" className="absolute inset-0 -z-10 h-full w-full object-cover" />
+}: { image: string; imageAlt?: string; title: ReactNode; lede?: ReactNode; cta?: Cta; links?: { label: string; to: string }[]; eyebrow?: ReactNode; actions?: ReactNode }) => {
+  const ref = useSceneProgress<HTMLElement>("exit");
+  return (
+  <section ref={ref} data-page-hero className="scene-hero relative isolate -mt-16 overflow-hidden bg-ink text-inverse lg:-mt-20" aria-label="Introduction">
+    <img src={image} alt={imageAlt} width={1920} height={1080} fetchPriority="high" decoding="async" className="scene-hero-media absolute inset-0 -z-10 h-full w-full object-cover" />
     <div className="absolute inset-0 -z-10 bg-gradient-to-b from-ink/55 via-ink/35 to-ink/75" aria-hidden />
-    <div className="section-container flex min-h-[78svh] flex-col items-center justify-center pb-16 pt-32 text-center lg:min-h-[88svh] lg:pt-40">
+    <div className="scene-hero-dim pointer-events-none absolute inset-0 -z-10 bg-ink" aria-hidden />
+    <div className="scene-hero-copy section-container flex min-h-[78svh] flex-col items-center justify-center pb-16 pt-32 text-center lg:min-h-[88svh] lg:pt-40">
       {eyebrow && <div className="mb-6 text-xs font-semibold uppercase tracking-[0.16em] text-inverse/80">{eyebrow}</div>}
       <h1 className="mx-auto max-w-5xl font-hero text-5xl font-semibold leading-[1.02] tracking-tight text-inverse sm:text-6xl lg:text-8xl">{title}</h1>
       {lede && <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-inverse/85 sm:text-xl">{lede}</p>}
@@ -117,7 +121,8 @@ export const PageHero = ({
       )}
     </div>
   </section>
-);
+  );
+};
 
 /** Soft gradient that carries a light section into the deep-black contrast below. */
-export const ToDark = () => <div aria-hidden className="h-32 bg-gradient-to-b from-background to-ink lg:h-48" />;
+export const ToDark = () => <LightsDown />;
