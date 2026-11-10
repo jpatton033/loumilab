@@ -33,3 +33,10 @@
 - [ ] Apply hover system and imagery to remaining pages
 
 - [x] Footer logo/hover fix, homepage reading section, photo heroes on all public pages (2026-11-08)
+
+## Cinematic motion (Nov 2026)
+- [x] Shared scroll scenes + every page's opening photo zooms/dims as you scroll
+- [x] Homepage scenes (hero exit, lights-down, rise/drift/expand/overlap)
+- [ ] Homepage Orders: replace screenshots with photo scene + animated reveals
+- [ ] Dedicated homepage Workflow "messy to simple" sequence
+- [ ] Per-page scene tuning beyond shared blocks (Solutions, Email, Products, KC)
