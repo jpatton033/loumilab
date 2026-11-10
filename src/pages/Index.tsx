@@ -9,6 +9,7 @@ import { ArrowRight } from "lucide-react";
 import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { ToDark } from "@/components/brand/flow/Flow";
+import { Scene as CineScene, useSceneProgress } from "@/components/brand/story/Scene";
 import { usePublishedArticles } from "@/lib/kc/queries";
 import { usePublishedIssues } from "@/lib/thedot/queries";
 import { ORDERS_CTA } from "@/data/orders/cta";
@@ -117,6 +118,7 @@ const BuildRow = ({ name, to, line, flip, children }: { name: string; to: string
 );
 
 const Index = () => {
+  const heroRef = useSceneProgress<HTMLElement>("exit");
   const { data: articles = [] } = usePublishedArticles({ limit: 6 });
   const { data: issues = [] } = usePublishedIssues(4);
 
@@ -136,10 +138,11 @@ const Index = () => {
 
 
       {/* 1 Full-bleed film hero */}
-      <section data-page-hero className="relative isolate -mt-16 overflow-hidden bg-ink text-inverse lg:-mt-20" aria-labelledby="hero-title">
-        <VideoSequence clips={[heroCeramic.url, heroArchitect.url, heroFlorist.url]} poster={archLight} />
+      <section ref={heroRef} data-page-hero className="scene-hero relative isolate -mt-16 overflow-hidden bg-ink text-inverse lg:-mt-20" aria-labelledby="hero-title">
+        <div className="scene-hero-media absolute inset-0"><VideoSequence clips={[heroCeramic.url, heroArchitect.url, heroFlorist.url]} poster={archLight} /></div>
         <div className="absolute inset-0 bg-gradient-to-b from-ink/55 via-ink/35 to-ink/80" aria-hidden />
-        <div className="section-container relative flex min-h-[88svh] flex-col items-center justify-center pb-16 pt-32 text-center lg:pt-40">
+        <div className="scene-hero-dim pointer-events-none absolute inset-0 bg-ink" aria-hidden />
+        <div className="scene-hero-copy section-container relative flex min-h-[88svh] flex-col items-center justify-center pb-16 pt-32 text-center lg:pt-40">
           <h1 id="hero-title" className="mx-auto max-w-5xl font-hero text-[3.2rem] font-bold leading-[0.95] tracking-[-0.04em] text-inverse sm:text-[5rem] lg:text-[7rem]">
             We build what's next.
           </h1>
@@ -184,7 +187,7 @@ const Index = () => {
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-inverse-muted">Technology Studio</p>
           <h2 id="build-title" className="mt-4 max-w-3xl font-hero text-4xl font-bold tracking-tight text-inverse lg:text-6xl">What we build.</h2>
 
-          <div className="mt-20 space-y-28 lg:space-y-36">
+          <CineScene variant="rise" className="mt-20 space-y-28 lg:space-y-36">
             <BuildRow name="Websites" to="/services/website-development" line="Fast, clear sites people enjoy using — for shops, studios, firms and brands.">
               <div className="relative pb-[18%]">
                 <Pic src={siteHotel} alt="A boutique hotel website design" />
@@ -201,7 +204,7 @@ const Index = () => {
             <BuildRow flip name="Cybersecurity" to="/services/cybersecurity" line="Calm, visible protection for every system you rely on.">
               <MockSecurity />
             </BuildRow>
-          </div>
+          </CineScene>
         </div>
       </section>
 
@@ -211,7 +214,7 @@ const Index = () => {
           <h2 id="gallery-title" className="font-hero text-4xl font-bold tracking-tight text-inverse lg:text-6xl">A range of work.</h2>
           <p className="mx-auto mt-4 max-w-lg text-inverse-muted">Websites, software and products — point at one to see what it is.</p>
         </div>
-        <div className="mt-10"><FloatingGallery items={floatItems} /></div>
+        <CineScene variant="drift" className="mt-10"><FloatingGallery items={floatItems} /></CineScene>
       </section>
 
 
@@ -227,7 +230,7 @@ const Index = () => {
               <Link to="/orders/local" className="text-sm font-semibold text-inverse underline-offset-4 hover:underline">Explore Local</Link>
             </div>
           </div>
-          <LayeredStack frames={productStack} className="lg:col-span-7" />
+          <CineScene variant="expand" className="lg:col-span-7"><LayeredStack frames={productStack} /></CineScene>
         </div>
       </section>
 
@@ -242,7 +245,7 @@ const Index = () => {
                 <Link to="/the-dot" className="text-inverse/75 underline-offset-4 hover:text-inverse hover:underline">The Dot.</Link>
               </div>
             </div>
-            <div className="mt-12 grid gap-4 lg:grid-cols-12">
+            <CineScene variant="rise" className="mt-12 grid gap-4 lg:grid-cols-12">
               {reading.slice(0, 4).map((r, i) => (
                 <Link key={r.key} to={r.to} className={`group flex gap-5 rounded-3xl border border-inverse/10 bg-inverse/[0.03] p-6 transition-colors hover:border-inverse/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${i === 0 ? "flex-col lg:col-span-6 lg:row-span-3 lg:p-8" : "items-center lg:col-span-6"}`}>
                   {r.img && (
@@ -257,7 +260,7 @@ const Index = () => {
                   </div>
                 </Link>
               ))}
-            </div>
+            </CineScene>
           </div>
         </section>
       )}
@@ -265,10 +268,10 @@ const Index = () => {
       {/* 6 Closing (dark) with looping clip */}
       <section className="relative overflow-hidden bg-ink text-inverse" aria-labelledby="close-title">
         <LoopVideo src={heroArchitect.url} poster={archLight} className="absolute inset-0 h-full w-full object-cover opacity-40" />
-        <div className="section-container relative py-28 text-center lg:py-40">
+        <CineScene variant="overlap" className="section-container relative py-28 text-center lg:py-40">
           <h2 id="close-title" className="mx-auto max-w-3xl font-hero text-4xl font-semibold tracking-tight text-inverse sm:text-5xl lg:text-7xl">Have something in mind? Let's build it.</h2>
           <Button size="lg" asChild className="mt-10 bg-background text-foreground hover:bg-background/90"><Link to="/contact">Start a Project</Link></Button>
-        </div>
+        </CineScene>
       </section>
     </Layout>
   );

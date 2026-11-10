@@ -31,3 +31,4 @@
 
 - Image motion lives only in src/components/brand/story; pages pass their own imagery — one motion system.
 - Public pages open with Flow.tsx PageHero — one page flow.
+- Cinematic scroll scenes (Scene, LightsDown/LightsUp, hero exit) live in src/components/brand/story/Scene.tsx and only write a --p CSS var consumed by .scene-* utilities (transform/opacity/clip only, disabled for reduced motion) — keeps motion cheap, non-blocking and consistent.
