@@ -118,6 +118,7 @@ const BuildRow = ({ name, to, line, flip, children }: { name: string; to: string
 );
 
 const Index = () => {
+  const heroRef = useSceneProgress<HTMLElement>("exit");
   const { data: articles = [] } = usePublishedArticles({ limit: 6 });
   const { data: issues = [] } = usePublishedIssues(4);
 
