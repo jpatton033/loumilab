@@ -136,7 +136,7 @@ const Index = () => {
 
 
       {/* 1 Full-bleed film hero */}
-      <section data-page-hero className="relative isolate -mt-16 overflow-hidden bg-ink text-inverse lg:-mt-20" aria-labelledby="hero-title">
+      <HomeHero> -mt-16 overflow-hidden bg-ink text-inverse lg:-mt-20" aria-labelledby="hero-title">
         <VideoSequence clips={[heroCeramic.url, heroArchitect.url, heroFlorist.url]} poster={archLight} />
         <div className="absolute inset-0 bg-gradient-to-b from-ink/55 via-ink/35 to-ink/80" aria-hidden />
         <div className="section-container relative flex min-h-[88svh] flex-col items-center justify-center pb-16 pt-32 text-center lg:pt-40">
