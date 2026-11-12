@@ -44,6 +44,18 @@ export const productGroups: ProductGroup[] = [
         status: "Coming Soon",
       },
       {
+        id: "spaces",
+        name: "Loumilab Spaces",
+        category: "Software Platform",
+        tagline: "The home for software built anywhere.",
+        description:
+          "Deploy, own, share and maintain your applications — with a permanent Passport, portable export and a private Library.",
+        href: "/spaces",
+        badge: "Built by Loumilab",
+        cta: "Explore Spaces",
+        status: "Beta",
+      },
+      {
         id: "loumilab-local",
         name: "Loumilab Local",
         category: "Discovery",
