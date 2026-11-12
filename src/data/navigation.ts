@@ -66,7 +66,7 @@ export const navMenus: NavMenu[] = [
   },
 ];
 
-export const navDirectLinks: NavLinkItem[] = [{ label: "About", to: "/about" }];
+export const navDirectLinks: NavLinkItem[] = [{ label: "Spaces", to: "/spaces" }, { label: "About", to: "/about" }];
 
 export const footerCompany: NavLinkItem[] = [
   { label: "About", to: "/about" },

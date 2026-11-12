@@ -207,7 +207,7 @@ const Navbar = () => {
             );
           })}
           {navDirectLinks.map((l) => (
-            <Link key={l.to} to={l.to} className={`relative rounded-md px-3 py-2 text-[0.9375rem] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${location.pathname === l.to ? "text-foreground" : "text-foreground/65 hover:text-foreground"}`}>{l.label}{location.pathname === l.to && <span aria-hidden="true" className="absolute bottom-0 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-dot" />}</Link>
+            <Link key={l.to} to={l.to} className={`relative rounded-md px-3 py-2 text-[0.9375rem] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${location.pathname.startsWith(l.to) ? "text-foreground" : "text-foreground/65 hover:text-foreground"}`}>{l.label}{location.pathname.startsWith(l.to) && <span aria-hidden="true" className="absolute bottom-0 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-dot" />}</Link>
           ))}
         </nav>
 
