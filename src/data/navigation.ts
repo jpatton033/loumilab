@@ -42,7 +42,7 @@ export const navMenus: NavMenu[] = [
   {
     id: "products",
     label: "Products",
-    match: ["/products", "/orders", "/spaces"],
+    match: ["/products", "/orders"],
     groups: productGroups.map((g) => ({
       label: g.label,
       items: g.items.filter((p) => p.href !== "/orders/tools").map((p) => ({ label: p.name, to: p.href, desc: p.tagline, external: p.external })),
@@ -66,7 +66,7 @@ export const navMenus: NavMenu[] = [
   },
 ];
 
-export const navDirectLinks: NavLinkItem[] = [{ label: "About", to: "/about" }];
+export const navDirectLinks: NavLinkItem[] = [{ label: "Spaces", to: "/spaces" }, { label: "About", to: "/about" }];
 
 export const footerCompany: NavLinkItem[] = [
   { label: "About", to: "/about" },
