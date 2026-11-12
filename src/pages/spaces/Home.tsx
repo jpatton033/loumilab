@@ -38,7 +38,7 @@ export default function SpacesHome() {
         </div>
       </section>
       {/* Carry the film's copper/burgundy atmosphere into the page */}
-      <div aria-hidden="true" className="h-24 bg-gradient-to-b from-ink via-[hsl(15_35%_14%)] to-background lg:h-32" />
+      <div aria-hidden="true" className="h-24 bg-gradient-to-b from-ink to-background lg:h-32" />
 
       {/* 2 — Problem */}
       <section id="problem" className="section-padding overflow-hidden">
