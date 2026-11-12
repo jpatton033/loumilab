@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://loumilab.com/spaces/spaces.schema.json",
+  "title": "Spaces App Specification manifest",
+  "description": "spaces.json describes a static or compiled frontend application so it can be deployed, preserved and moved between hosts.",
+  "type": "object",
+  "required": ["specVersion", "name", "version", "type", "entry"],
+  "additionalProperties": true,
+  "properties": {
+    "$schema": { "type": "string" },
+    "specVersion": { "const": "1.0" },
+    "name": { "type": "string", "minLength": 1, "maxLength": 80 },
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+([-+][\\w.-]+)?$" },
+    "description": { "type": "string", "maxLength": 500 },
+    "type": { "const": "static", "description": "Only static and compiled frontend apps are supported in v1." },
+    "entry": { "type": "string", "pattern": "\\.html$", "default": "index.html" },
+    "builtWith": { "enum": ["traditional", "ai-assisted", "hybrid", "open-source", "unspecified"] },
+    "routing": { "enum": ["hash", "none"], "description": "Use hash routing (#/page) for single-page apps." },
+    "build": { "type": "object", "properties": { "command": { "type": "string" }, "output": { "type": "string" } } },
+    "dependencies": {
+      "type": "object",
+      "properties": {
+        "external": { "type": "array", "items": { "type": "object", "required": ["name"], "properties": { "name": { "type": "string" }, "url": { "type": "string" }, "purpose": { "type": "string" } } } }
+      }
+    },
+    "license": { "type": "string" },
+    "repository": { "type": "string" }
+  }
+}

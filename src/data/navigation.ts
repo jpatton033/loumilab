@@ -42,7 +42,7 @@ export const navMenus: NavMenu[] = [
   {
     id: "products",
     label: "Products",
-    match: ["/products", "/orders"],
+    match: ["/products", "/orders", "/spaces"],
     groups: productGroups.map((g) => ({
       label: g.label,
       items: g.items.filter((p) => p.href !== "/orders/tools").map((p) => ({ label: p.name, to: p.href, desc: p.tagline, external: p.external })),

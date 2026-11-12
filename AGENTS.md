@@ -32,3 +32,4 @@
 - Image motion lives only in src/components/brand/story; pages pass their own imagery — one motion system.
 - Public pages open with Flow.tsx PageHero — one page flow.
 - Cinematic scroll scenes (Scene, LightsDown/LightsUp, hero exit) live in src/components/brand/story/Scene.tsx and only write a --p CSS var consumed by .scene-* utilities (transform/opacity/clip only, disabled for reduced motion) — keeps motion cheap, non-blocking and consistent.
+- Loumilab Spaces: uploaded customer code never runs on the loumilab.com origin — /spaces/a/:slug renders the entry HTML in a sandboxed srcdoc iframe (no allow-same-origin) with files from `spaces-serve` behind per-request signed expiring tokens; deploy/rollback/export/version pointers go only through `spaces-api`, permissions only via spaces_can_view_app/spaces_can_manage_app, validation only in _shared/spacesSpec.ts — keeps Loumilab sessions safe and one source of rules.

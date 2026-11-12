@@ -12,6 +12,12 @@ import HowWeWork from "./pages/HowWeWork";
 import Products from "./pages/Products";
 import Orders from "./pages/Orders";
 import OrdersGetStarted from "./pages/orders/GetStarted";
+const SpacesHome = lazy(() => import("./pages/spaces/Home"));
+const SpacesSpec = lazy(() => import("./pages/spaces/Specification"));
+const SpacesPricing = lazy(() => import("./pages/spaces/Pricing"));
+const SpacesDashboard = lazy(() => import("./pages/spaces/Dashboard"));
+const SpacesRun = lazy(() => import("./pages/spaces/Run"));
+const SpacesInvite = lazy(() => import("./pages/spaces/Invite"));
 const OrdersDashboard = lazy(() => import("./pages/orders/Dashboard"));
 import OrdersStorefront from "./pages/orders/Storefront";
 import OrdersReceipt from "./pages/orders/Receipt";
@@ -103,6 +109,12 @@ const App = () => (
           <Route path="/how-we-work" element={<HowWeWork />} />
           <Route path="/products" element={<Products />} />
           <Route path="/orders" element={<Orders />} />
+          <Route path="/spaces" element={<SpacesHome />} />
+          <Route path="/spaces/specification" element={<SpacesSpec />} />
+          <Route path="/spaces/pricing" element={<SpacesPricing />} />
+          <Route path="/spaces/app/*" element={<SpacesDashboard />} />
+          <Route path="/spaces/a/:slug" element={<SpacesRun />} />
+          <Route path="/spaces/invite/:token" element={<SpacesInvite />} />
           <Route path="/orders/get-started" element={<OrdersGetStarted />} />
           <Route path="/orders/dashboard" element={<OrdersDashboard />} />
           <Route path="/orders/store/:slug" element={<OrdersStorefront />} />
