@@ -4141,6 +4141,283 @@ export type Database = {
         }
         Relationships: []
       }
+      spaces_apps: {
+        Row: {
+          built_with: string
+          created_at: string
+          created_by: string
+          current_version_id: string | null
+          description: string | null
+          folder: string | null
+          id: string
+          name: string
+          slug: string
+          status: string
+          tags: string[]
+          updated_at: string
+          visibility: string
+          workspace_id: string
+        }
+        Insert: {
+          built_with?: string
+          created_at?: string
+          created_by: string
+          current_version_id?: string | null
+          description?: string | null
+          folder?: string | null
+          id?: string
+          name: string
+          slug: string
+          status?: string
+          tags?: string[]
+          updated_at?: string
+          visibility?: string
+          workspace_id: string
+        }
+        Update: {
+          built_with?: string
+          created_at?: string
+          created_by?: string
+          current_version_id?: string | null
+          description?: string | null
+          folder?: string | null
+          id?: string
+          name?: string
+          slug?: string
+          status?: string
+          tags?: string[]
+          updated_at?: string
+          visibility?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "spaces_apps_current_fk"
+            columns: ["current_version_id"]
+            isOneToOne: false
+            referencedRelation: "spaces_versions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "spaces_apps_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "spaces_workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      spaces_favorites: {
+        Row: {
+          app_id: string
+          created_at: string
+          user_id: string
+        }
+        Insert: {
+          app_id: string
+          created_at?: string
+          user_id: string
+        }
+        Update: {
+          app_id?: string
+          created_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "spaces_favorites_app_id_fkey"
+            columns: ["app_id"]
+            isOneToOne: false
+            referencedRelation: "spaces_apps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      spaces_invites: {
+        Row: {
+          accepted_at: string | null
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+          invited_by: string
+          role: string
+          token_hash: string
+          workspace_id: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          created_at?: string
+          email: string
+          expires_at?: string
+          id?: string
+          invited_by: string
+          role: string
+          token_hash: string
+          workspace_id: string
+        }
+        Update: {
+          accepted_at?: string | null
+          created_at?: string
+          email?: string
+          expires_at?: string
+          id?: string
+          invited_by?: string
+          role?: string
+          token_hash?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "spaces_invites_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "spaces_workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      spaces_members: {
+        Row: {
+          created_at: string
+          email: string | null
+          role: string
+          user_id: string
+          workspace_id: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          role: string
+          user_id: string
+          workspace_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          role?: string
+          user_id?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "spaces_members_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "spaces_workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      spaces_passport_events: {
+        Row: {
+          actor_id: string | null
+          app_id: string
+          created_at: string
+          detail: Json
+          id: string
+          kind: string
+          workspace_id: string
+        }
+        Insert: {
+          actor_id?: string | null
+          app_id: string
+          created_at?: string
+          detail?: Json
+          id?: string
+          kind: string
+          workspace_id: string
+        }
+        Update: {
+          actor_id?: string | null
+          app_id?: string
+          created_at?: string
+          detail?: Json
+          id?: string
+          kind?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "spaces_passport_events_app_id_fkey"
+            columns: ["app_id"]
+            isOneToOne: false
+            referencedRelation: "spaces_apps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      spaces_versions: {
+        Row: {
+          app_id: string
+          created_at: string
+          created_by: string | null
+          file_count: number
+          id: string
+          manifest: Json | null
+          notes: string | null
+          number: number
+          status: string
+          total_bytes: number
+          validation: Json
+        }
+        Insert: {
+          app_id: string
+          created_at?: string
+          created_by?: string | null
+          file_count?: number
+          id?: string
+          manifest?: Json | null
+          notes?: string | null
+          number: number
+          status: string
+          total_bytes?: number
+          validation?: Json
+        }
+        Update: {
+          app_id?: string
+          created_at?: string
+          created_by?: string | null
+          file_count?: number
+          id?: string
+          manifest?: Json | null
+          notes?: string | null
+          number?: number
+          status?: string
+          total_bytes?: number
+          validation?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "spaces_versions_app_id_fkey"
+            columns: ["app_id"]
+            isOneToOne: false
+            referencedRelation: "spaces_apps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      spaces_workspaces: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          owner_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          owner_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          owner_id?: string
+        }
+        Relationships: []
+      }
       stripe_webhook_events: {
         Row: {
           account_id: string | null
@@ -4646,6 +4923,22 @@ export type Database = {
         Args: { _body: string; _token: string }
         Returns: Json
       }
+      spaces_accept_invite: { Args: { _token: string }; Returns: string }
+      spaces_can_manage_app: {
+        Args: { _app: string; _uid: string }
+        Returns: boolean
+      }
+      spaces_can_view_app: {
+        Args: { _app: string; _uid: string }
+        Returns: boolean
+      }
+      spaces_create_invite: {
+        Args: { _email: string; _role: string; _ws: string }
+        Returns: string
+      }
+      spaces_create_workspace: { Args: { _name: string }; Returns: string }
+      spaces_rank: { Args: { _role: string }; Returns: number }
+      spaces_role_rank: { Args: { _uid: string; _ws: string }; Returns: number }
       storefront_can_publish: {
         Args: { _storefront_id: string }
         Returns: boolean
