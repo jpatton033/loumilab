@@ -24,16 +24,21 @@ export default function SpacesHome() {
       {/* 1 — Hero */}
       <section data-page-hero className="relative isolate -mt-16 overflow-hidden bg-ink text-inverse lg:-mt-20" aria-label="Introduction">
         <SpacesHeroFilm />
-        <div className="section-container flex min-h-[100svh] flex-col items-center justify-center pb-24 pt-32 text-center">
-          <p className="mb-6 text-xs font-semibold uppercase tracking-[0.18em] text-inverse/70">Loumilab Spaces · Beta</p>
-          <h1 className="mx-auto max-w-5xl font-hero text-5xl font-semibold leading-[1.02] tracking-tight text-inverse sm:text-6xl lg:text-8xl">The home for software built anywhere.</h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-inverse/80 sm:text-xl">Deploy, own, share, and maintain your applications—regardless of how or where they were created.</p>
-          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-            <Button size="lg" asChild className="bg-background text-foreground hover:bg-background/90"><Link to="/spaces/app">Get Started</Link></Button>
-            <Button size="lg" variant="outline" asChild className="border-inverse/30 bg-transparent text-inverse hover:bg-inverse/10 hover:text-inverse"><a href="#problem">Explore Spaces</a></Button>
+        <div className="section-container flex min-h-[100svh] flex-col justify-end pb-20 pt-32 lg:pb-28">
+          <div className="max-w-3xl">
+            <p className="mb-6 text-xs font-semibold uppercase tracking-[0.18em] text-inverse/70">Loumilab Spaces · Built by People</p>
+            <h1 className="font-hero text-5xl font-semibold leading-[1.0] tracking-tight text-inverse sm:text-7xl lg:text-8xl">Create without limits.</h1>
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-inverse/85 sm:text-xl">Build anywhere. Own what you build. Run it with Spaces.</p>
+            <p className="mt-4 max-w-lg text-sm leading-relaxed text-inverse/60">Loumilab Spaces is a home for deploying, preserving, sharing, and managing software built anywhere.</p>
+            <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+              <Button size="lg" asChild className="bg-background text-foreground hover:bg-background/90"><Link to="/spaces/app">Get Started</Link></Button>
+              <Button size="lg" variant="outline" asChild className="border-inverse/30 bg-transparent text-inverse hover:bg-inverse/10 hover:text-inverse"><a href="#problem">Explore Spaces</a></Button>
+            </div>
           </div>
         </div>
       </section>
+      {/* Carry the film's copper/burgundy atmosphere into the page */}
+      <div aria-hidden="true" className="h-24 bg-gradient-to-b from-ink via-[hsl(15_35%_14%)] to-background lg:h-32" />
 
       {/* 2 — Problem */}
       <section id="problem" className="section-padding overflow-hidden">
