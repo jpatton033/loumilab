@@ -43,7 +43,7 @@ export const SpacesHeroFilm = () => {
   }, []);
 
   return (
-    <div ref={ref} className="pointer-events-none absolute inset-0 -z-10 overflow-hidden bg-ink" aria-hidden>
+    <div ref={ref} className="pointer-events-none absolute inset-0 -z-10 overflow-hidden bg-ink [contain:paint]" aria-hidden>
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_55%,hsl(var(--inverse-foreground)/0.07),transparent_60%)]" />
       <div className="absolute left-1/2 top-[56%] h-[min(70vh,640px)] w-[min(92vw,1100px)] -translate-x-1/2 -translate-y-1/2 [perspective:1400px]">
         {/* The Space frame appears from scene 2 onward */}

@@ -36,7 +36,7 @@ export default function SpacesHome() {
       </section>
 
       {/* 2 — Problem */}
-      <section id="problem" className="section-padding">
+      <section id="problem" className="section-padding overflow-hidden">
         <div className="section-container grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-7"><Label>The problem</Label><H2>Building software has changed. Managing it hasn't.</H2></div>
           <p className="self-end text-lg leading-relaxed text-muted-foreground lg:col-span-5">Apps now come from traditional development, AI-assisted coding, open source and custom work. Yet where they run, who owns the source, who can open them and how they're maintained is still scattered across accounts, inboxes and old laptops.</p>
