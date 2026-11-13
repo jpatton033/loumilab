@@ -188,7 +188,7 @@ const BusinessEmail = () => {
               ))}
             </dl>
             <p className="mt-5 text-sm leading-relaxed text-muted-foreground">
-              More complex requests receive a custom quote before payment. Applicable taxes are paid separately. Every setup includes seven days of limited post-setup support for correcting configuration issues caused by our work.
+              More complex requests receive a custom quote before payment. Applicable taxes are paid separately. Every setup includes seven days of limited post-setup support for correcting any/all configuration issues.
             </p>
           </div>
         </div>
