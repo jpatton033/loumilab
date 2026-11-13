@@ -729,3 +729,25 @@
     .scene-hero .scene-hero-dim { opacity: 0; }
   }
 }
+
+/* Loumilab Spaces homepage atmosphere — scoped to .spaces-theme only */
+.spaces-theme {
+  --spaces-obsidian: 210 12% 3%;
+  --spaces-charcoal: 216 10% 8%;
+  --spaces-midnight: 217 52% 13%;
+  --spaces-forest: 154 33% 12%;
+  --spaces-teal: 189 53% 15%;
+  --spaces-burgundy: 342 39% 16%;
+  --spaces-copper: 19 42% 31%;
+  --spaces-ivory: 38 26% 88%;
+  --spaces-ivory-muted: 38 10% 64%;
+  background-color: hsl(var(--spaces-obsidian));
+  color: hsl(var(--spaces-ivory));
+}
+.spaces-glow { position: absolute; pointer-events: none; border-radius: 9999px; filter: blur(90px); opacity: .55; will-change: transform; animation: spaces-drift 22s ease-in-out infinite alternate; }
+@keyframes spaces-drift { from { transform: translate3d(-3%, 0, 0) scale(1); } to { transform: translate3d(3%, -4%, 0) scale(1.06); } }
+.spaces-img-drift { transition: transform 1.2s cubic-bezier(.22,1,.36,1); }
+.group:hover .spaces-img-drift { transform: scale(1.03); }
+.spaces-grain { position: absolute; inset: 0; pointer-events: none; opacity: .06; background-image: radial-gradient(hsl(var(--spaces-ivory)) 1px, transparent 1px); background-size: 3px 3px; mix-blend-mode: overlay; }
+@media (prefers-reduced-motion: reduce) { .spaces-glow { animation: none; } .spaces-img-drift { transition: none; } }
+@media (max-width: 640px) { .spaces-glow { filter: blur(60px); animation-duration: 34s; } }
