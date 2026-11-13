@@ -40,3 +40,10 @@
 - [ ] Homepage Orders: replace screenshots with photo scene + animated reveals
 - [ ] Dedicated homepage Workflow "messy to simple" sequence
 - [ ] Per-page scene tuning beyond shared blocks (Solutions, Email, Products, KC)
+
+## Cinematic Continuity refinement (2026-11-13)
+- [x] Phase 1: shared dark palette + atmosphere pieces, homepage below hero
+- [ ] Phase 2: Studio pages, Workflow, Orders, Business Email/Domains (muralist photo ready)
+- [ ] Phase 3: remaining public pages
+- [ ] Phase 4: The Dot. + Knowledge Center (light reading area)
+- [ ] Phase 5: full consistency check (computer/tablet/phone)
