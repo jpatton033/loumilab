@@ -731,16 +731,33 @@
 }
 
 /* Loumilab Spaces homepage atmosphere — scoped to .spaces-theme only */
+:root {
+  --atmo-obsidian: 210 12% 3%;
+  --atmo-charcoal: 216 10% 8%;
+  --atmo-midnight: 217 52% 13%;
+  --atmo-forest: 154 33% 12%;
+  --atmo-teal: 189 53% 15%;
+  --atmo-burgundy: 342 39% 16%;
+  --atmo-copper: 19 42% 31%;
+  --atmo-ivory: 38 26% 88%;
+  --atmo-ivory-muted: 38 10% 64%;
+}
+/* Site-wide atmospheric glow (shared with Spaces) */
+.atmo-glow { position: absolute; pointer-events: none; border-radius: 9999px; filter: blur(110px); opacity: .5; will-change: transform; animation: spaces-drift 26s ease-in-out infinite alternate; }
+.atmo-img { transition: transform 1.4s cubic-bezier(.22,1,.36,1); }
+.group:hover .atmo-img { transform: scale(1.03); }
+@media (prefers-reduced-motion: reduce) { .atmo-glow { animation: none; } .atmo-img { transition: none; } }
+@media (max-width: 640px) { .atmo-glow { filter: blur(70px); } }
 .spaces-theme {
-  --spaces-obsidian: 210 12% 3%;
-  --spaces-charcoal: 216 10% 8%;
-  --spaces-midnight: 217 52% 13%;
-  --spaces-forest: 154 33% 12%;
-  --spaces-teal: 189 53% 15%;
-  --spaces-burgundy: 342 39% 16%;
-  --spaces-copper: 19 42% 31%;
-  --spaces-ivory: 38 26% 88%;
-  --spaces-ivory-muted: 38 10% 64%;
+  --spaces-obsidian: var(--atmo-obsidian);
+  --spaces-charcoal: var(--atmo-charcoal);
+  --spaces-midnight: var(--atmo-midnight);
+  --spaces-forest: var(--atmo-forest);
+  --spaces-teal: var(--atmo-teal);
+  --spaces-burgundy: var(--atmo-burgundy);
+  --spaces-copper: var(--atmo-copper);
+  --spaces-ivory: var(--atmo-ivory);
+  --spaces-ivory-muted: var(--atmo-ivory-muted);
   background-color: hsl(var(--spaces-obsidian));
   color: hsl(var(--spaces-ivory));
 }
