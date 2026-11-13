@@ -4884,6 +4884,7 @@ export type Database = {
         Args: { _cents: number; _merchant_id: string }
         Returns: Json
       }
+      resolve_customer_slug: { Args: { _slug: string }; Returns: string }
       respond_to_quote: {
         Args: { _approve: boolean; _token: string }
         Returns: Json
