@@ -105,7 +105,7 @@ export default function SpacesHome() {
             </div>
             <Scene variant="rise" className="relative lg:col-span-7">
               <CinemaFrame src={developer} alt="A developer working late, lit by his screens" w={1024} h={1280} className="ml-auto aspect-[4/5] w-3/4 sm:w-2/3" />
-              <Surface title="Deploy · client-portal" className="absolute bottom-[-2rem] left-0 w-[85%] sm:w-[70%]">
+              <Surface title="Deploy · client-portal" className="relative -mt-16 w-[92%] sm:absolute sm:bottom-[-2rem] sm:left-0 sm:mt-0 sm:w-[70%]">
                 <ul className="space-y-3 font-mono text-xs">
                   <li className="flex justify-between"><span>build.zip received</span><span className={muted}>42 files</span></li>
                   <li className="flex justify-between"><span>spaces.json valid</span><span className={muted}>✓</span></li>
@@ -122,9 +122,9 @@ export default function SpacesHome() {
           <Glow tone="copper" className="right-[-8rem] top-0 h-[32rem] w-[32rem] opacity-45" />
           <Glow tone="burgundy" className="left-1/4 bottom-[-6rem] h-[24rem] w-[24rem]" />
           <div className="section-container relative grid items-center gap-14 lg:grid-cols-12">
-            <Scene variant="expand" className="relative order-2 lg:order-1 lg:col-span-6">
+            <Scene variant="rise" className="relative order-2 lg:order-1 lg:col-span-6">
               <CinemaFrame src={craftsman} alt="A woodworker inspecting a handmade chair in his workshop" w={1024} h={1280} className="aspect-[4/5] w-4/5" />
-              <Surface title="passport.json" className="absolute -bottom-8 right-0 w-[78%] font-mono text-xs leading-7">
+              <Surface title="passport.json" className="relative -mt-16 ml-auto w-[92%] font-mono text-xs leading-7 sm:absolute sm:-bottom-8 sm:right-0 sm:mt-0 sm:w-[78%]">
                 <p>app.id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 7f3c…a91e</p><p>builtWith&nbsp; hybrid</p><p>versions&nbsp;&nbsp; 1.0.0 → 1.1.0 → 1.2.0</p>
                 <p className={muted}>created · deployed · exported · rolled back</p>
               </Surface>
