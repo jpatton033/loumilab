@@ -28,7 +28,7 @@ const body = (businessName: string, slug: string) => {
       Your store link
     </p>
     <a href="${url}" style="font-size:15px;font-weight:600;color:#18181b;text-decoration:none;word-break:break-all">
-      ${escapeHtml(url)}
+      ${escapeHtml(`${slug}.loumilab.com`)}
     </a>
   </div>
   <p style="margin:0 0 10px;font-size:14px;font-weight:600">Share it anywhere</p>
