@@ -1,3 +1,4 @@
+import { customerHost, customerHref, customerUrl } from "@/lib/siteAddress";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Copy, Download, ExternalLink, Send } from "lucide-react";
@@ -77,8 +78,8 @@ const Detail = ({ r }: { r: DirectoryRow }) => {
             <Button size="sm" variant="outline" asChild><Link to={`/admin/mail?to=${encodeURIComponent(r.account_email)}`}><Send className="h-4 w-4" /> Email in Loumilab Mail</Link></Button>
           </>
         )}
-        {r.listing_slug && <Button size="sm" variant="outline" asChild><a href={`/orders/local/${r.listing_slug}`} target="_blank" rel="noreferrer"><ExternalLink className="h-4 w-4" /> Local listing</a></Button>}
-        {r.store_slug && <Button size="sm" variant="outline" asChild><a href={`/orders/store/${r.store_slug}`} target="_blank" rel="noreferrer"><ExternalLink className="h-4 w-4" /> Storefront</a></Button>}
+        {r.listing_slug && <Button size="sm" variant="outline" asChild><a href={customerHref("local", r.listing_slug)} target="_blank" rel="noreferrer"><ExternalLink className="h-4 w-4" /> Local listing</a></Button>}
+        {r.store_slug && <Button size="sm" variant="outline" asChild><a href={customerHref("store", r.store_slug)} target="_blank" rel="noreferrer"><ExternalLink className="h-4 w-4" /> Storefront</a></Button>}
         {r.merchant_id && <Button size="sm" variant="outline" asChild><Link to={`/admin/support/merchant/${r.merchant_id}`}>Support view</Link></Button>}
         {r.merchant_id && <Button size="sm" variant="ghost" asChild><Link to="/admin/orders">Edit contact details</Link></Button>}
       </div>

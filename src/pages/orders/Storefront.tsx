@@ -1,3 +1,4 @@
+import { customerHost, customerHref, customerUrl } from "@/lib/siteAddress";
 import { useEffect, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
@@ -24,7 +25,7 @@ const storeJsonLd = (
   store: { name: string; slug: string; description: string; location: string; products: { name: string; description: string; priceCents: number; availability: string }[] },
   isFood: boolean,
 ) => {
-  const url = `https://loumilab.com/orders/store/${store.slug}`;
+  const url = customerUrl(store.slug);
   const key = `${url}|${isFood}|${store.products.length}|${store.name}|${store.location}`;
   const hit = jsonLdCache.get(key);
   if (hit) return hit;

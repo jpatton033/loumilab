@@ -1,3 +1,4 @@
+import { customerHost, customerHref, customerUrl } from "@/lib/siteAddress";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import AdminShell from "@/components/admin/AdminShell";
@@ -335,7 +336,7 @@ const Published = () => {
               </div>
               <Badge variant={p.ownership_status === "claimed" ? "default" : "outline"}>{p.ownership_status === "claimed" ? "Claimed" : "Unclaimed"}</Badge>
               {!p.is_listed && <Badge variant="secondary">Hidden</Badge>}
-              {p.is_listed && <Button asChild size="sm" variant="ghost"><Link to={`/orders/local/${p.slug}`} target="_blank">View</Link></Button>}
+              {p.is_listed && <Button asChild size="sm" variant="ghost"><Link to={customerHref("local", p.slug)} target="_blank">View</Link></Button>}
               {p.is_listed && <Button size="sm" variant="outline" onClick={async () => {
                 const reason = prompt("Reason for removing and suppressing this listing?"); if (reason === null) return;
                 try { await suppress.mutateAsync({ id: p.id, reason }); toast({ title: "Unpublished and suppressed" }); } catch (e) { toast({ title: "Failed", description: errMsg(e), variant: "destructive" }); }

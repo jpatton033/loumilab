@@ -1,3 +1,4 @@
+import { customerHost, customerHref, customerUrl } from "@/lib/siteAddress";
 import {
   ArrowRight,
   Copy,
@@ -91,7 +92,7 @@ const LiveOrderQueue = ({
         </p>
         {storeSlug && (
           <Button variant="outline" asChild className="mt-5 rounded-full">
-            <Link to={`/orders/store/${storeSlug}`}>Open your storefront</Link>
+            <Link to={customerHref("store", storeSlug)}>Open your storefront</Link>
           </Button>
         )}
       </div>

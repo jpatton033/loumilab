@@ -1,3 +1,4 @@
+import { customerHost, customerHref, customerUrl } from "@/lib/siteAddress";
 import PromoBanner from "@/components/orders/PromoBanner";
 import { track, trackBuilderStarted } from "@/lib/tracking";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -648,7 +649,7 @@ const GetStarted = () => {
                     <div className="rounded-2xl border border-border bg-secondary p-4 text-sm">
                       <p className="text-muted-foreground">Your store link will be</p>
                       <p className="mt-1 font-display font-semibold">
-                        loumilab.com/orders/store/{setup?.slug ?? slug}
+                        {customerHost(setup?.slug ?? slug)}
                       </p>
                     </div>
                   </>

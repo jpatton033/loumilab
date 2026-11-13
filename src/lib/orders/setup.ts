@@ -1,3 +1,4 @@
+import { customerHost, customerHref, customerUrl } from "@/lib/siteAddress";
 import { useQuery } from "@tanstack/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -18,10 +19,10 @@ export type StorefrontStatus = "setup" | "ready" | "published" | "paused" | "res
 export const STORE_ORIGIN = "https://loumilab.com";
 
 /** In-app route for the storefront (preview or live). */
-export const storePath = (slug: string) => `/orders/store/${slug}`;
+export const storePath = (slug: string) => customerHref("store", slug);
 
 /** Full, shareable customer URL for a storefront. */
-export const storeUrl = (slug: string) => `${STORE_ORIGIN}${storePath(slug)}`;
+export const storeUrl = (slug: string) => customerUrl(slug);
 
 /** Wizard step index for each setup task, so "Finish" lands in the right place. */
 export const SETUP_STEP_INDEX: Record<SetupStepId, number> = {
