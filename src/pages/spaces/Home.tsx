@@ -13,6 +13,18 @@ import craftsman from "@/assets/spaces/craftsman-workshop.jpg";
 import team from "@/assets/spaces/team-night.jpg";
 import musician from "@/assets/spaces/musician-blue.jpg";
 import mural from "@/assets/spaces/mural-texture.jpg";
+import libAnalytics from "@/assets/spaces/library-analytics.jpg";
+import libProjects from "@/assets/spaces/library-projects.jpg";
+import libBooking from "@/assets/spaces/library-booking.jpg";
+import libInventory from "@/assets/spaces/library-inventory.jpg";
+
+/** Demonstration applications only — no live deployments, links or usage. */
+const demos = [
+  { name: "Analytics Dashboard", category: "Analytics", desc: "Track business performance, visualize key metrics, and monitor trends.", img: libAnalytics, alt: "Analytics dashboard with KPI cards, a revenue line chart and channel bar chart" },
+  { name: "Project Tracker", category: "Productivity", desc: "Manage projects, organize tasks, assign responsibilities, and monitor progress.", img: libProjects, alt: "Project tracker Kanban board with task columns and priority tags" },
+  { name: "Booking Manager", category: "Scheduling", desc: "Manage appointments, availability, customer bookings, and schedules.", img: libBooking, alt: "Booking manager weekly calendar with appointments and booking details" },
+  { name: "Inventory Manager", category: "Operations", desc: "Track inventory levels, monitor stock movement, and manage product records.", img: libInventory, alt: "Inventory manager with stock summary tiles, product table and stock movements" },
+];
 
 const ivory = "text-[hsl(var(--spaces-ivory))]";
 const muted = "text-[hsl(var(--spaces-ivory-muted))]";
@@ -177,13 +189,17 @@ export default function SpacesHome() {
             <Scene variant="rise" className="mt-14">
               <Surface title="Library · Studio workspace">
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                  {[["Client portal", "Live · v2.3.0", "teal"], ["Pricing calculator", "Live · v1.4.1", "copper"], ["Onboarding guide", "Archived", "burgundy"], ["Field checklist", "Live · v0.9.0", "forest"]].map(([n, s, tone]) => (
-                    <div key={n} className={`rounded-xl border ${line} p-4`}>
-                      <div className="mb-6 aspect-[16/10] rounded-lg" style={{ background: `linear-gradient(135deg, hsl(var(--spaces-${tone})), hsl(var(--spaces-obsidian)))` }} />
-                      <p className={`font-medium ${ivory}`}>{n}</p><p className={`mt-1 text-xs ${muted}`}>{s}</p>
+                  {demos.map((d) => (
+                    <div key={d.name} className={`overflow-hidden rounded-xl border ${line}`}>
+                      <img src={d.img} alt={d.alt} width={1536} height={1152} loading="lazy" decoding="async" className="aspect-[4/3] w-full object-cover object-left-top" />
+                      <div className="p-4">
+                        <div className="flex items-center justify-between gap-2"><p className={`text-xs uppercase tracking-[0.14em] ${muted}`}>{d.category}</p><span className={`rounded-full border ${line} px-2 py-0.5 text-[10px] uppercase tracking-wider ${muted}`}>Demo</span></div>
+                        <p className={`mt-2 font-medium ${ivory}`}>{d.name}</p><p className={`mt-1 text-sm ${muted}`}>{d.desc}</p>
+                      </div>
                     </div>
                   ))}
                 </div>
+                <p className={`mt-4 text-xs ${muted}`}>Demonstration applications.</p>
               </Surface>
             </Scene>
           </div>
