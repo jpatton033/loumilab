@@ -1,3 +1,4 @@
+import { customerHost, customerHref, customerUrl } from "@/lib/siteAddress";
 import { Link } from "react-router-dom";
 import { ArrowRight, MapPin } from "lucide-react";
 import { categoryLabel, type LocalBusiness } from "@/lib/orders/local";
@@ -79,7 +80,7 @@ const LocalBusinessCard = ({ business: b, preview, className }: Props) => {
 
   if (preview) return body;
   return (
-    <Link to={`/orders/local/${b.slug}`} className="block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-3xl">
+    <Link to={customerHref("local", b.slug)} className="block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-3xl">
       {body}
     </Link>
   );

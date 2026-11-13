@@ -1,3 +1,4 @@
+import { customerHost, customerHref, customerUrl } from "@/lib/siteAddress";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, Navigate, Route, Routes, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
@@ -166,7 +167,7 @@ function NewApp({ ws, uid, open, onOpenChange }: { ws: Ws; uid: string; open: bo
         <DialogHeader><DialogTitle>New app</DialogTitle></DialogHeader>
         <div className="space-y-4">
           <label className="block text-sm">Name<Input className="mt-1" value={name} maxLength={80} onChange={(e) => { setName(e.target.value); setSlug(slugify(e.target.value)); }} /></label>
-          <label className="block text-sm">Address<div className="mt-1 flex items-center gap-1 text-muted-foreground"><span className="text-xs">loumilab.com/spaces/a/</span><Input value={slug} onChange={(e) => setSlug(slugify(e.target.value))} /></div></label>
+          <label className="block text-sm">Address<div className="mt-1 flex items-center gap-1 text-muted-foreground"><Input value={slug} onChange={(e) => setSlug(slugify(e.target.value))} /><span className="text-xs">.loumilab.com</span></div></label>
           <label className="block text-sm">How it was built<select className={`${sel} mt-1 w-full`} value={built} onChange={(e) => setBuilt(e.target.value)}>{BUILT.map((b) => <option key={b}>{b}</option>)}</select></label>
           <label className="block text-sm">Who can open it<select className={`${sel} mt-1 w-full`} value={vis} onChange={(e) => setVis(e.target.value)}>{Object.entries(VIS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select></label>
         </div>
@@ -218,9 +219,9 @@ function AppDetail({ ws }: { ws: Ws }) {
     <>
       <Link to="/spaces/app" className="text-sm text-muted-foreground hover:text-foreground">← Library</Link>
       <div className="mt-4 flex flex-wrap items-end justify-between gap-4">
-        <div><h1 className="font-hero text-4xl font-semibold text-foreground">{app.name}.</h1><p className="mt-2 text-sm text-muted-foreground">loumilab.com/spaces/a/{app.slug} · {app.built_with} · {app.status}</p></div>
+        <div><h1 className="font-hero text-4xl font-semibold text-foreground">{app.name}.</h1><p className="mt-2 text-sm text-muted-foreground">{customerHost(app.slug)} · {app.built_with} · {app.status}</p></div>
         <div className="flex flex-wrap gap-2">
-          {live && app.status === "active" && <Button asChild><a href={`/spaces/a/${app.slug}`} target="_blank" rel="noreferrer">Open app</a></Button>}
+          {live && app.status === "active" && <Button asChild><a href={customerHref("space", app.slug)} target="_blank" rel="noreferrer">Open app</a></Button>}
           {canManage && live && <Button variant="outline" onClick={exportZip}>Export</Button>}
         </div>
       </div>

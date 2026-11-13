@@ -1,6 +1,8 @@
 import ConsentAndTracking from "./components/tracking/ConsentAndTracking";
 import CalendarOAuthReturn from "./pages/orders/CalendarOAuthReturn";
 import { lazy, Suspense } from "react";
+import CustomerSite from "./components/CustomerSite";
+import { slugFromHost } from "./lib/siteAddress";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -83,18 +85,10 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import ScrollToTop from "./components/ScrollToTop";
 import BackToTop from "./components/BackToTop";
 
+const customerSlug = typeof window !== "undefined" ? slugFromHost(window.location.hostname) : null;
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <ScrollToTop />
-        <ConsentAndTracking />
-        <Suspense fallback={null}>
-        <Routes>
+const routes = (<>
           <Route path="/" element={<Index />} />
           <Route path="/services" element={<Services />} />
           <Route path="/services/website-development" element={<ServiceDetail />} />
@@ -180,7 +174,18 @@ const App = () => (
           <Route path="/admin/knowledge" element={<ProtectedRoute><AdminKnowledgeCenter /></ProtectedRoute>} />
           <Route path="/admin/knowledge/:id" element={<ProtectedRoute><AdminArticleEditor /></ProtectedRoute>} />
           <Route path="*" element={<NotFound />} />
-        </Routes>
+        </>);
+
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <ScrollToTop />
+        <ConsentAndTracking />
+        <Suspense fallback={null}>
+        {customerSlug ? <CustomerSite slug={customerSlug}>{routes}</CustomerSite> : <Routes>{routes}</Routes>}
         </Suspense>
         <BackToTop />
       </BrowserRouter>

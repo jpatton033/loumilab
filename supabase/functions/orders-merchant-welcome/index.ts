@@ -28,7 +28,7 @@ const body = (businessName: string, slug: string | null) => `
              Your store link
            </p>
            <a href="${SITE}/orders/store/${slug}" style="font-size:15px;font-weight:600;color:#18181b;text-decoration:none;word-break:break-all">
-             ${escapeHtml(`${SITE}/orders/store/${slug}`)}
+             ${escapeHtml(`${slug}.loumilab.com`)}
            </a>
            <p style="margin:8px 0 0;font-size:12px;color:#71717a">
              Reserved for you and not visible to customers yet.

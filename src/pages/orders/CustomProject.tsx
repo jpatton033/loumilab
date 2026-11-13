@@ -210,7 +210,7 @@ const CustomProject = () => {
                   label="Current storefront URL"
                   value={form.storefront_url}
                   onChange={set("storefront_url")}
-                  placeholder="loumilab.com/orders/store/…"
+                  placeholder="yourbusiness.loumilab.com"
                 />
                 <Field
                   label="Business type"

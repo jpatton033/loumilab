@@ -1,3 +1,4 @@
+import { customerHost, customerHref, customerUrl } from "@/lib/siteAddress";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ExternalLink, Trash2 } from "lucide-react";
@@ -82,7 +83,7 @@ const StorePanel = ({ merchantId, businessName, catalogLabel, itemLabel, priceOp
           create.mutate(
             { name: name.trim(), slug },
             {
-              onSuccess: () => toast.success("Storefront created", { description: `loumilab.com/orders/store/${slug}` }),
+              onSuccess: () => toast.success("Storefront created", { description: customerHost(slug) }),
               onError: (err) =>
                 toast.error("Couldn't create your storefront", {
                   description: err instanceof Error ? err.message : "Please try again.",
@@ -99,7 +100,7 @@ const StorePanel = ({ merchantId, businessName, catalogLabel, itemLabel, priceOp
         <div className="mt-5 space-y-2">
           <Label htmlFor="store-name">Store name</Label>
           <Input id="store-name" value={name} onChange={(e) => setName(e.target.value)} maxLength={80} />
-          {name && <p className="text-xs text-muted-foreground">/orders/store/{slugify(name)}</p>}
+          {name && <p className="text-xs text-muted-foreground">{customerHost(slugify(name))}</p>}
         </div>
         <Button type="submit" disabled={create.isPending} className="mt-5 rounded-full">
           {create.isPending ? "Creating…" : "Create storefront"}
@@ -116,11 +117,11 @@ const StorePanel = ({ merchantId, businessName, catalogLabel, itemLabel, priceOp
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="font-display font-semibold">{store.name}</p>
-            <p className="mt-1 text-sm text-muted-foreground">/orders/store/{store.slug}</p>
+            <p className="mt-1 text-sm text-muted-foreground">{customerHost(store.slug)}</p>
             <StoreStatusBadge className="mt-3" status={(store.status ?? "setup") as StorefrontStatus} />
           </div>
           <Button asChild variant="outline" size="sm" className="rounded-full">
-            <Link to={`/orders/store/${store.slug}`}>
+            <Link to={customerHref("store", store.slug)}>
               {store.status === "published" ? "View" : "Preview"} <ExternalLink size={14} />
             </Link>
           </Button>

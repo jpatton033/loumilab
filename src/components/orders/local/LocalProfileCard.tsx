@@ -1,3 +1,4 @@
+import { customerHost, customerHref, customerUrl } from "@/lib/siteAddress";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
@@ -171,7 +172,7 @@ const LocalProfileCard = ({ merchantId, standalone }: { merchantId: string; stan
       )}
       {form.is_listed && profile?.slug && (!hasStore || s!.is_published) && (
         <p className="mt-4 text-sm">
-          <Link to={`/orders/local/${profile.slug}`} className="font-medium underline underline-offset-4">View your Local listing</Link>
+          <Link to={customerHref("local", profile.slug)} className="font-medium underline underline-offset-4">View your Local listing</Link>
         </p>
       )}
 

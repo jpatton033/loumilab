@@ -1,3 +1,4 @@
+import { customerHost, customerHref, customerUrl } from "@/lib/siteAddress";
 import { useLocalAdminFlags, useSetLocalFeatured } from "@/lib/orders/local";
 import AdminShell from "@/components/admin/AdminShell";
 import OrderConversationsPanel from "@/components/admin/OrderConversationsPanel";
@@ -128,7 +129,7 @@ const MerchantCard = ({ merchant: m, onEdit }: { merchant: AdminMerchantRow; onE
         <MerchantKindBadge merchantId={m.id} hasStore={!!m.storefrontSlug} />
         {m.storefrontSlug && m.isPublished && (
           <Button variant="ghost" size="sm" asChild>
-            <Link to={`/orders/store/${m.storefrontSlug}`} aria-label={`View ${m.businessName}`}>
+            <Link to={customerHref("store", m.storefrontSlug)} aria-label={`View ${m.businessName}`}>
               <ExternalLink size={14} />
             </Link>
           </Button>

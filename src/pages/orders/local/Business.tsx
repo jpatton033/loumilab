@@ -1,3 +1,4 @@
+import { customerHost, customerHref, customerUrl } from "@/lib/siteAddress";
 import { Link, useParams } from "react-router-dom";
 import { ArrowRight, Globe, Mail, MapPin, Phone } from "lucide-react";
 import Layout from "@/components/Layout";
@@ -41,7 +42,7 @@ const LocalBusinessPage = () => {
         jsonLd={{
           "@context": "https://schema.org", "@type": "FoodEstablishment", name: b.name,
           description: b.description ?? undefined, image: b.image_url ?? undefined,
-          url: `https://loumilab.com/orders/local/${b.slug}`,
+          url: b.store_slug ? customerUrl(b.store_slug) : customerUrl(b.slug),
           areaServed: b.area ?? undefined, telephone: b.public_phone ?? undefined,
           sameAs: [b.website_url, ...socials.map((k) => b.social_links[k])].filter(Boolean),
         } as never}
@@ -87,7 +88,7 @@ const LocalBusinessPage = () => {
             {b.store_slug ? (
               <>
                 <Button asChild size="lg" className="w-full rounded-full">
-                  <Link to={`/orders/store/${b.store_slug}?from=local`}>Order Online <ArrowRight size={16} /></Link>
+                  <Link to={customerHref("store", b.store_slug, "?from=local")}>Order Online <ArrowRight size={16} /></Link>
                 </Button>
                 <p className="mt-2 text-center text-xs text-muted-foreground">
                   {b.accepting ? "Accepting orders now" : "Not accepting orders right now — you can still browse the menu"}
