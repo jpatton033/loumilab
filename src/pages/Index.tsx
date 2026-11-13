@@ -1,4 +1,7 @@
-import { Pathways } from "@/components/brand/story/Pathways";
+import { Atmosphere, Glow, Kicker, Statement, Lede, EditorialImage, Surface } from "@/components/brand/atmosphere";
+import stairLight from "@/assets/atmosphere/stair-light.jpg";
+import textileOwner from "@/assets/atmosphere/textile-owner.jpg";
+import shopOffice from "@/assets/atmosphere/shop-office.jpg";
 import runBakery from "@/assets/story/run/bakery-packing.jpg";
 import runRetail from "@/assets/story/run/retail-counter.jpg";
 import runService from "@/assets/story/run/service-work.jpg";
@@ -116,6 +119,21 @@ const BuildRow = ({ name, to, line, flip, children }: { name: string; to: string
   </div>
 );
 
+const studio = [
+  { name: "Websites", to: "/services/website-development", line: "Fast, clear sites for shops, studios, firms and brands." },
+  { name: "Custom software", to: "/services/custom-software", line: "Dashboards and tools shaped around how your team works." },
+  { name: "AI & automation", to: "/services/ai-automation", line: "AI when valuable. Software when sufficient." },
+  { name: "Cybersecurity", to: "/services/cybersecurity", line: "Calm, visible protection for the systems you rely on." },
+  { name: "Workflow optimization", to: "/services/workflow-optimization", line: "Simpler processes and better use of the tools you have." },
+];
+
+const family: { name: string; kind: string; line: string; tone: string; to?: string; href?: string }[] = [
+  { name: "Orders", kind: "Product", line: "Storefront, orders and payouts.", tone: "burgundy", to: "/orders" },
+  { name: "Local", kind: "Product", line: "Free discovery for neighborhood businesses.", tone: "forest", to: "/orders/local" },
+  { name: "Spaces", kind: "Product · Beta", line: "Publish and share the apps you create.", tone: "teal", to: "/spaces" },
+  { name: "Vurtti", kind: "Company", line: "Compliance, documented and under control.", tone: "copper", href: "https://www.vurttidocs.com" },
+];
+
 const Index = () => {
   const heroRef = useSceneProgress<HTMLElement>("exit");
   const { data: articles = [] } = usePublishedArticles({ limit: 6 });
@@ -139,7 +157,7 @@ const Index = () => {
       {/* 1 Full-bleed film hero */}
       <section ref={heroRef} data-page-hero className="scene-hero relative isolate -mt-16 overflow-hidden bg-ink text-inverse lg:-mt-20" aria-labelledby="hero-title">
         <div className="scene-hero-media absolute inset-0"><VideoSequence clips={[heroCeramic.url, heroArchitect.url, heroFlorist.url]} poster={archLight} /></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-ink/55 via-ink/35 to-ink/80" aria-hidden />
+        <div className="absolute inset-0 bg-gradient-to-b from-ink/55 via-ink/35 to-[hsl(var(--atmo-obsidian))]" aria-hidden />
         <div className="scene-hero-dim pointer-events-none absolute inset-0 bg-ink" aria-hidden />
         <div className="scene-hero-copy section-container relative flex min-h-[88svh] flex-col items-center justify-center pb-16 pt-32 text-center lg:pt-40">
           <h1 id="hero-title" className="mx-auto max-w-5xl font-hero text-[3.2rem] font-bold leading-[0.95] tracking-[-0.04em] text-inverse sm:text-[5rem] lg:text-[7rem]">
@@ -157,93 +175,131 @@ const Index = () => {
         </div>
       </section>
 
-      <Pathways runFrames={[
-        { src: runBakery, alt: "A baker packing pastry boxes for orders", caption: "Orders packed and ready" },
-        { src: runRetail, alt: "A shopkeeper handing a wrapped purchase to a customer", caption: "Sales at the counter" },
-        { src: runService, alt: "A carpenter working in a client's home", caption: "Jobs scheduled and done" },
-        { src: runPickup, alt: "An owner handing an order to a customer at the door", caption: "Pickup, on time" },
-      ]} />
+      <Atmosphere>
+        {/* Hero light carries straight into the studio chapter */}
+        <Glow tone="midnight" className="-top-40 left-[-10%] h-[38rem] w-[38rem]" />
+        <Glow tone="teal" className="top-[22rem] right-[-12%] h-[30rem] w-[30rem] opacity-40" />
 
-      {/* Companies */}
-      <section className="border-t border-border py-24 lg:py-32" aria-labelledby="companies-title">
-        <div className="section-container">
-          <div className="grid items-center gap-12 lg:grid-cols-12">
-            <div className="lg:col-span-7">
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Loumilab Companies</p>
-              <h2 id="companies-title" className="mt-4 font-hero text-4xl font-bold tracking-tight lg:text-6xl">Vurtti.</h2>
-              <p className="mt-6 max-w-lg text-lg leading-relaxed text-muted-foreground">Compliance, documented and under control. Evidence organized and maintained for the standards your team follows.</p>
-              <Button size="lg" asChild className="mt-8"><a href="https://www.vurttidocs.com" target="_blank" rel="noopener noreferrer">Visit Vurtti</a></Button>
+        {/* 01 Technology Studio — editorial list */}
+        <section className="section-container relative pb-24 pt-24 lg:pb-36 lg:pt-32" aria-labelledby="build-title">
+          <div className="grid gap-14 lg:grid-cols-12">
+            <div className="lg:col-span-5 lg:sticky lg:top-28 lg:self-start">
+              <Kicker n="01">Technology Studio</Kicker>
+              <Statement id="build-title">What we build.</Statement>
+              <Lede>Websites, software, automation and security, designed and built by one studio and handed over in your name.</Lede>
+              <EditorialImage src={stairLight} alt="Light falling across a concrete stairwell" w={1600} h={1008} className="mt-10 hidden aspect-[4/3] rounded-3xl lg:block" fade="bottom" />
             </div>
-            <div className="lg:col-span-5" aria-hidden>
-              <div className="border-t border-border">
-                {[["Access control policy", "Current"], ["Vendor review", "Current"], ["Incident response plan", "Due in 12 days"], ["Backup test evidence", "Current"]].map(([n, st]) => (
-                  <div key={n} className="flex items-center justify-between border-b border-border py-3 text-sm last:border-0">
-                    <span className="font-medium">{n}</span>
-                    <span className="text-muted-foreground">{st}</span>
-                  </div>
+            <ol className="lg:col-span-7">
+              {studio.map((s, i) => (
+                <li key={s.to} className="border-t border-atmo-ivory/12 last:border-b">
+                  <Link to={s.to} className="group grid grid-cols-[3rem_1fr_auto] items-baseline gap-4 py-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:py-10">
+                    <span className="font-mono text-xs text-atmo-ivory-muted">{String(i + 1).padStart(2, "0")}</span>
+                    <span>
+                      <span className="block font-hero text-3xl font-bold tracking-tight text-atmo-ivory transition-transform duration-500 group-hover:translate-x-2 lg:text-5xl">{s.name}</span>
+                      <span className="mt-3 block max-w-md text-atmo-ivory-muted">{s.line}</span>
+                    </span>
+                    <ArrowRight className="text-atmo-ivory/50 transition-colors group-hover:text-atmo-ivory" size={20} aria-hidden />
+                  </Link>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        {/* 02 Workflow Optimization — complexity becoming clarity */}
+        <section className="relative py-24 lg:py-36" aria-labelledby="workflow-title">
+          <Glow tone="forest" className="left-[20%] top-10 h-[32rem] w-[44rem] opacity-45" />
+          <div className="section-container relative grid items-center gap-14 lg:grid-cols-12">
+            <div className="lg:col-span-5">
+              <Kicker n="02">Workflow Optimization</Kicker>
+              <Statement id="workflow-title">Fewer steps. Clearer work.</Statement>
+              <Lede>We simplify processes, improve the systems you already use, build custom tools where they help, and use AI only when it adds real value.</Lede>
+              <Button size="lg" asChild className="mt-10 bg-atmo-ivory text-atmo-obsidian hover:bg-atmo-ivory/90"><Link to="/services/workflow-optimization">See how it works</Link></Button>
+            </div>
+            <CineScene variant="expand" className="lg:col-span-7">
+              <div className="grid gap-4 sm:grid-cols-2" aria-hidden>
+                <Surface title="Before">
+                  <ul className="space-y-2">{["Order arrives by text", "Copied to a spreadsheet", "Re-typed into invoices", "Reminder written by hand", "Payment checked manually", "Status sent by email"].map((t) => <li key={t} className="flex items-center gap-2 text-atmo-ivory/60"><span className="h-1.5 w-1.5 rounded-full bg-atmo-copper" />{t}</li>)}</ul>
+                </Surface>
+                <Surface title="After" className="sm:mt-12">
+                  <ul className="space-y-3">{["Order recorded once", "Invoice and reminder sent", "Paid — customer notified"].map((t) => <li key={t} className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-atmo-ivory" />{t}</li>)}</ul>
+                </Surface>
+              </div>
+            </CineScene>
+          </div>
+        </section>
+
+        {/* 03 Orders — human side + one product view */}
+        <section className="relative py-24 lg:py-36" aria-labelledby="products-title">
+          <Glow tone="burgundy" className="right-[-8%] top-0 h-[36rem] w-[36rem] opacity-50" />
+          <div className="section-container relative grid items-center gap-12 lg:grid-cols-12">
+            <div className="relative lg:col-span-6">
+              <EditorialImage src={textileOwner} alt="A textile shop owner folding fabric orders" w={1408} h={1600} className="aspect-[4/5] rounded-3xl" fade="none" />
+              <div className="absolute -bottom-10 right-[-4%] w-[70%] sm:w-[60%]"><Pic src={merchantDash} alt="The Loumilab Orders merchant dashboard" /></div>
+            </div>
+            <div className="lg:col-span-5 lg:col-start-8">
+              <Kicker n="03">Loumilab Orders</Kicker>
+              <Statement>Less managing. More business.</Statement>
+              <Lede>Your own storefront, orders, pickup and payouts in one place, with no upfront fees. You get back to the work you love.</Lede>
+              <div className="mt-10 flex flex-wrap items-center gap-6">
+                <Button size="lg" asChild className="bg-atmo-ivory text-atmo-obsidian hover:bg-atmo-ivory/90"><Link to={ORDERS_CTA.href}>{ORDERS_CTA.label}</Link></Button>
+                <Link to="/orders" className="text-sm font-semibold text-atmo-ivory underline-offset-4 hover:underline">Explore Orders</Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 04 Managed Business Technology */}
+        <section className="relative py-24 lg:py-36" aria-labelledby="managed-title">
+          <Glow tone="copper" className="left-[-10%] top-20 h-[30rem] w-[30rem] opacity-35" />
+          <div className="section-container relative grid items-center gap-12 lg:grid-cols-12">
+            <div className="lg:col-span-5">
+              <Kicker n="04">Managed Business Technology</Kicker>
+              <Statement id="managed-title">Email and domains, handled.</Statement>
+              <Lede>We set up professional business email and your domain, connect it properly, and can keep it maintained, so your name looks right everywhere.</Lede>
+              <div className="mt-10 grid max-w-md gap-px overflow-hidden rounded-2xl border border-atmo-ivory/12">
+                {[["Business Email Setup", "/services/business-email"], ["All solutions", "/services"]].map(([l, to]) => (
+                  <Link key={to} to={to} className="group flex items-center justify-between bg-atmo-charcoal/70 px-5 py-4 font-medium text-atmo-ivory transition-colors hover:bg-atmo-charcoal">{l}<ArrowRight size={16} className="transition-transform group-hover:translate-x-1" aria-hidden /></Link>
                 ))}
               </div>
             </div>
+            <EditorialImage src={shopOffice} alt="Two people reviewing plans at a farm-supply store counter" w={1408} h={1600} className="aspect-[4/5] rounded-3xl lg:col-span-6 lg:col-start-7" fade="none" />
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* 2 What we build — a different composition per area */}
-      <section className="bg-ink py-28 text-inverse lg:py-40" aria-labelledby="build-title">
-        <div className="section-container">
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-inverse-muted">Technology Studio</p>
-          <h2 id="build-title" className="mt-4 max-w-3xl font-hero text-4xl font-bold tracking-tight text-inverse lg:text-6xl">What we build.</h2>
-
-          <CineScene variant="rise" className="mt-20 space-y-28 lg:space-y-36">
-            <BuildRow name="Websites" to="/services/website-development" line="Fast, clear sites people enjoy using — for shops, studios, firms and brands.">
-              <div className="relative pb-[18%]">
-                <Pic src={siteHotel} alt="A boutique hotel website design" />
-                <div className="absolute -bottom-2 right-[4%] w-[34%] rotate-2"><Pic src={siteFashion} alt="A fashion retail website design" aspect="aspect-[4/5]" /></div>
-                <div className="absolute -bottom-6 left-[8%] w-[40%] -rotate-1"><Pic src={siteArch} alt="An architecture studio website design" /></div>
-              </div>
-            </BuildRow>
-            <BuildRow flip name="Custom software" to="/services/custom-software" line="Dashboards and tools shaped around how your team actually works.">
-              <MockDashboard />
-            </BuildRow>
-            <BuildRow name="AI & automation" to="/services/ai-automation" line="AI when valuable. Software when sufficient. Steps that run themselves.">
-              <div className="space-y-4"><MockWorkflow /><MockSchedule className="ml-auto w-[80%]" /></div>
-            </BuildRow>
-            <BuildRow flip name="Cybersecurity" to="/services/cybersecurity" line="Calm, visible protection for every system you rely on.">
-              <MockSecurity />
-            </BuildRow>
-          </CineScene>
-        </div>
-      </section>
-
-      {/* 2b Floating gallery */}
-      <section id="work-gallery" className="scroll-mt-20 overflow-hidden bg-ink py-20 text-inverse lg:py-28" aria-labelledby="gallery-title">
-        <div className="section-container text-center">
-          <h2 id="gallery-title" className="font-hero text-4xl font-bold tracking-tight text-inverse lg:text-6xl">A range of work.</h2>
-          <p className="mx-auto mt-4 max-w-lg text-inverse-muted">Websites, software and products — point at one to see what it is.</p>
-        </div>
-        <CineScene variant="drift" className="mt-10"><FloatingGallery items={floatItems} /></CineScene>
-      </section>
-
-
-      {/* 4 Orders & Local (dark) — layered stack */}
-      <section className="film-grain overflow-hidden bg-ink py-24 text-inverse lg:py-32" aria-labelledby="products-title">
-        <div className="section-container grid items-center gap-16 lg:grid-cols-12">
-          <div className="lg:col-span-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-inverse-muted">Loumilab Products</p>
-            <h2 id="products-title" className="mt-4 font-hero text-4xl font-semibold tracking-tight text-inverse lg:text-6xl">Orders & Local.</h2>
-            <p className="mt-6 max-w-md text-lg leading-relaxed text-inverse-muted">Orders gives you your own storefront and dashboard. Local helps neighbors find you — free.</p>
-            <div className="mt-8 flex flex-wrap items-center gap-5">
-              <Button size="lg" asChild className="bg-background text-foreground hover:bg-background/90"><Link to={ORDERS_CTA.href}>{ORDERS_CTA.label}</Link></Button>
-              <Link to="/orders/local" className="text-sm font-semibold text-inverse underline-offset-4 hover:underline">Explore Local</Link>
+        {/* 05 Products & companies */}
+        <section className="relative py-24 lg:py-32" aria-labelledby="family-title">
+          <div className="section-container relative">
+            <Kicker n="05">Products & Companies</Kicker>
+            <Statement id="family-title">Built by Loumilab.</Statement>
+            <div className="mt-14 grid gap-px overflow-hidden rounded-3xl border border-atmo-ivory/12 sm:grid-cols-2 lg:grid-cols-4">
+              {family.map((f) => {
+                const inner = (<>
+                  <span className="h-1 w-10 rounded-full" style={{ background: `hsl(var(--atmo-${f.tone}))` }} />
+                  <span className="mt-8 block text-xs uppercase tracking-[0.16em] text-atmo-ivory-muted">{f.kind}</span>
+                  <span className="mt-2 block font-hero text-3xl font-bold text-atmo-ivory">{f.name}</span>
+                  <span className="mt-3 block text-sm text-atmo-ivory-muted">{f.line}</span>
+                </>);
+                const cls = "group block min-h-60 bg-atmo-charcoal/60 p-7 transition-colors hover:bg-atmo-charcoal";
+                return f.href ? <a key={f.name} href={f.href} target="_blank" rel="noopener noreferrer" className={cls}>{inner}</a> : <Link key={f.name} to={f.to!} className={cls}>{inner}</Link>;
+              })}
             </div>
           </div>
-          <CineScene variant="expand" className="lg:col-span-7"><LayeredStack frames={productStack} /></CineScene>
-        </div>
-      </section>
+        </section>
+
+        {/* Gallery of work */}
+        <section id="work-gallery" className="relative scroll-mt-20 py-20 lg:py-28" aria-labelledby="gallery-title">
+          <div className="section-container text-center">
+            <h2 id="gallery-title" className="font-hero text-4xl font-bold tracking-tight text-atmo-ivory lg:text-6xl">A range of work.</h2>
+            <p className="mx-auto mt-4 max-w-lg text-atmo-ivory-muted">Websites, software and products. Point at one to see what it is.</p>
+          </div>
+          <CineScene variant="drift" className="mt-10"><FloatingGallery items={floatItems} /></CineScene>
+        </section>
+      </Atmosphere>
 
       {/* 5 Knowledge Center & The Dot. — calm editorial grid on the dark band */}
       {reading.length > 0 && (
-        <section className="bg-ink py-24 text-inverse lg:py-32" aria-labelledby="reading-title">
+        <section className="relative bg-atmo-obsidian py-24 text-atmo-ivory lg:py-32" aria-labelledby="reading-title">
           <div className="section-container">
             <div className="flex flex-wrap items-end justify-between gap-4">
               <h2 id="reading-title" className="font-hero text-4xl font-semibold tracking-tight text-inverse lg:text-6xl">Ideas worth reading.</h2>
@@ -254,7 +310,7 @@ const Index = () => {
             </div>
             <CineScene variant="rise" className="mt-12 grid gap-4 lg:grid-cols-12">
               {reading.slice(0, 4).map((r, i) => (
-                <Link key={r.key} to={r.to} className={`group flex gap-5 rounded-3xl border border-inverse/10 bg-inverse/[0.03] p-6 transition-colors hover:border-inverse/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${i === 0 ? "flex-col lg:col-span-6 lg:row-span-3 lg:p-8" : "items-center lg:col-span-6"}`}>
+                <Link key={r.key} to={r.to} className={`group flex gap-5 rounded-3xl border border-atmo-ivory/10 bg-atmo-charcoal/50 p-6 transition-colors hover:border-inverse/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${i === 0 ? "flex-col lg:col-span-6 lg:row-span-3 lg:p-8" : "items-center lg:col-span-6"}`}>
                   {r.img && (
                     <div className={`shrink-0 overflow-hidden rounded-2xl bg-inverse/5 ${i === 0 ? "w-full" : "aspect-video w-32"}`}>
                       <img src={r.img} alt="" loading="lazy" className={`w-full object-contain grayscale contrast-[1.05] brightness-90 transition-[filter] duration-500 group-hover:grayscale-0 ${i === 0 ? "aspect-[16/10]" : "h-full"}`} />
@@ -273,7 +329,8 @@ const Index = () => {
       )}
 
       {/* 6 Closing (dark) with looping clip */}
-      <section className="relative overflow-hidden bg-ink text-inverse" aria-labelledby="close-title">
+      <section className="relative overflow-hidden bg-atmo-obsidian text-inverse" aria-labelledby="close-title">
+        <Glow tone="midnight" className="left-[10%] top-0 h-[28rem] w-[40rem]" />
         <LoopVideo src={heroArchitect.url} poster={archLight} className="absolute inset-0 h-full w-full object-cover opacity-40" />
         <CineScene variant="overlap" className="section-container relative py-28 text-center lg:py-40">
           <h2 id="close-title" className="mx-auto max-w-3xl font-hero text-4xl font-semibold tracking-tight text-inverse sm:text-5xl lg:text-7xl">Have something in mind? Let's build it.</h2>

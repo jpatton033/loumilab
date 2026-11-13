@@ -44,6 +44,11 @@ export default {
         },
         dot: "hsl(var(--dot))",
         ink: "hsl(var(--surface-ink))",
+        atmo: {
+          obsidian: "hsl(var(--atmo-obsidian))", charcoal: "hsl(var(--atmo-charcoal))", midnight: "hsl(var(--atmo-midnight))",
+          forest: "hsl(var(--atmo-forest))", teal: "hsl(var(--atmo-teal))", burgundy: "hsl(var(--atmo-burgundy))",
+          copper: "hsl(var(--atmo-copper))", ivory: "hsl(var(--atmo-ivory))", "ivory-muted": "hsl(var(--atmo-ivory-muted))",
+        },
         forest: "hsl(var(--forest))",
         accent: {
           DEFAULT: "hsl(var(--accent))",
