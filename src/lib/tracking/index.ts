@@ -11,6 +11,13 @@
 export const META_PIXEL_ID = "1096079062830163";
 /** Google Tag Manager container ID (GTM-…). Empty = Google tag off. */
 export const GOOGLE_TAG_ID = "GTM-M69KVPPK";
+/** Google Ads account tag (AW-…), loaded beside GTM. Empty = Google Ads conversions off. */
+export const GOOGLE_ADS_ID = "AW-18575154769";
+/** Google Ads conversion send_to targets (from Google Ads → Goals → Conversions). */
+export const GOOGLE_ADS_CONVERSIONS = {
+  setupStarted: "AW-18575154769/zsaICNnis7gdENG8qZlF",
+  storePublished: "AW-18575154769/XzS6CNzis7gdENG8qZlF",
+} as const;
 
 export const CONSENT_KEY = "loumilab-ad-consent";
 export const CONSENT_NOTICE_VERSION = "2026-10-14";
@@ -127,6 +134,15 @@ const loadGoogle = () => {
     s.async = true;
     s.src = `https://www.googletagmanager.com/gtm.js?id=${GOOGLE_TAG_ID}`;
     document.head.appendChild(s);
+    if (GOOGLE_ADS_ID) {
+      window.gtag("set", "developer_id.dZjgwMW", true);
+      window.gtag("js", new Date());
+      window.gtag("config", GOOGLE_ADS_ID);
+      const a = document.createElement("script");
+      a.async = true;
+      a.src = `https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_ID}`;
+      document.head.appendChild(a);
+    }
   } else {
     // Direct Google tag (G-… or AW-…).
     window.gtag("set", "developer_id.dZjgwMW", true);
@@ -188,6 +204,13 @@ export const track = (name: ConversionName, params: Record<string, string | numb
 export const trackStoreCreated = (params: Record<string, string | number> = {}) => {
   if (!allowed() || !googleLoaded) return;
   window.dataLayer?.push({ event: "store_created", ...params });
+  reportAdsConversion("storePublished");
+};
+
+/** Google Ads conversion (no identifiers, no value). Only after consent allows. */
+const reportAdsConversion = (key: keyof typeof GOOGLE_ADS_CONVERSIONS) => {
+  if (!GOOGLE_ADS_ID || !allowed() || !googleLoaded) return;
+  window.gtag?.("event", "conversion", { send_to: GOOGLE_ADS_CONVERSIONS[key] });
 };
 
 /** The Dot. reading/subscription events (GTM only, never identifiers). */
@@ -228,4 +251,5 @@ export const trackBuilderStarted = () => {
     sessionStorage.setItem("loumilab-builder-started", "1");
   } catch { /* storage blocked: still send */ }
   window.dataLayer?.push({ event: "builder_started" });
+  reportAdsConversion("setupStarted");
 };
