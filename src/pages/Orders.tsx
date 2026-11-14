@@ -22,7 +22,7 @@ import { Button } from "@/components/ui/button";
 import LivePreviewPicker from "@/components/orders/LivePreviewPicker";
 import OrderStatusBadge from "@/components/orders/OrderStatusBadge";
 import PricingTable from "@/components/orders/PricingTable";
-import { FeeAnnouncement } from "@/components/orders/ProgressiveFees";
+import { FeeAnnouncement, FeeKeepLine } from "@/components/orders/ProgressiveFees";
 import OrdersShowcase from "@/components/orders/OrdersShowcase";
 import OrdersHeroSlideshow from "@/components/orders/OrdersHeroSlideshow";
 import { ORDER_STATUSES } from "@/data/orders/dashboard";
@@ -114,7 +114,17 @@ const Orders = () => {
       />
 
       {/* Hero */}
-      <PageHero image={heroOrders} imageAlt="A bakery owner handing a wrapped order to a customer at the counter" eyebrow="Loumilab Orders" title="Your business. Your storefront. Your orders." lede="Create a simple storefront, share your link, accept orders, and manage everything in one place." cta={{ label: ORDERS_CTA.label, to: ORDERS_CTA.href, onClick: () => trackCtaClick("hero", ORDERS_CTA.variant) }} links={[{ label: "How it works", to: "#how-it-works" }, { label: "Pricing", to: "/orders/pricing" }, { label: "Dashboard", to: "/orders/dashboard" }]} />
+      <PageHero image={heroOrders} imageAlt="A bakery owner handing a wrapped order to a customer at the counter" eyebrow="Loumilab Orders" title="Your business. Your storefront. Your orders." lede={<>Build your menu, share your link, get paid orders — no more DMs and Venmo notes.<span className="mt-3 block text-base font-semibold text-inverse sm:text-lg"><FeeKeepLine /></span></>} actions={<>
+        <Button size="lg" asChild className="bg-background text-foreground hover:bg-background/90"><Link to={ORDERS_CTA.href} onClick={() => trackCtaClick("hero", ORDERS_CTA.variant)}>{ORDERS_CTA.label}</Link></Button>
+        <Link to="/orders/pricing" className="inline-flex min-h-11 items-center gap-1.5 px-3 text-sm font-medium text-inverse/85 underline-offset-4 hover:text-inverse hover:underline">See how pricing works <ArrowRight className="h-4 w-4" aria-hidden /></Link>
+      </>} />
+      <section aria-label="How it works in three steps" className="border-b border-border">
+        <ol className="section-container grid gap-6 py-8 sm:grid-cols-3">
+          {["Build your menu", "Share your link", "Get paid orders"].map((t, i) => (
+            <li key={t} className="flex items-center gap-3 font-display text-base font-semibold"><span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border text-sm">{i + 1}</span>{t}</li>
+          ))}
+        </ol>
+      </section>
       <section className="relative overflow-hidden pb-20 pt-16 lg:pb-28 lg:pt-24">
         <div className="section-container relative">
           <p className="mx-auto max-w-md text-center text-sm text-muted-foreground">{ORDERS_CTA.support}</p>

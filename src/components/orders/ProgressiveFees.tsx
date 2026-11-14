@@ -212,3 +212,14 @@ const ProgressiveFees = () => {
 };
 
 export default ProgressiveFees;
+
+/** One-line live take-home for a $100 sale on the $0 plan (e.g. "keep about $93.30"). */
+export const FeeKeepLine = () => {
+  const { tiers } = useLiveFeeSchedule();
+  const { data: plans = [] } = usePublicPlans();
+  const bps = tiers?.rates?.launch?.[0] ?? plans.find((p) => p.slug === "launch")?.platform_fee_bps;
+  if (bps == null) return null;
+  const b = saleBreakdown(10000, bps);
+  const v = (b.proceeds / 100).toLocaleString("en-US", { style: "currency", currency: "USD" });
+  return <>Sell $100, keep about {v} after fees. No monthly fee to start.</>;
+};

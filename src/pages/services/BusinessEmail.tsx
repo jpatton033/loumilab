@@ -11,7 +11,7 @@ import PhotoSplit from "@/components/brand/PhotoSplit";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { track } from "@/lib/tracking";
-import { MANAGEMENT_PLANS } from "@/lib/services/emailSetup";
+import { MANAGEMENT_PLANS, PACKAGE_PRICES } from "@/lib/services/emailSetup";
 import heroImg from "@/assets/people/email/shop-owner.jpg";
 import ownershipImg from "@/assets/people/email/office-review.jpg";
 
@@ -124,7 +124,7 @@ const BusinessEmail = () => {
       />
 
       {/* Hero */}
-      <PageHero image={heroEmail} imageAlt="A business owner writing in a notebook beside her laptop" eyebrow="Business Email & Domain Setup" title="Professional business email, made simple." lede="A professional address on your own domain. Loumilab handles purchasing, configuration, security settings and setup." cta={{ label: "Get Started", to: START, onClick: () => pick("hero") }} links={[{ label: "What we handle", to: "#handle" }, { label: "Pricing", to: "#pricing" }, { label: "FAQ", to: "#faq" }]} />
+      <PageHero image={heroEmail} imageAlt="A business owner writing in a notebook beside her laptop" eyebrow="Business Email & Domain Setup" title="Professional email, without breaking your website." lede={<>A professional address on your own domain. We handle the DNS records, security settings and setup for you.<span className="mt-3 block text-base font-semibold text-inverse sm:text-lg">{`$${PACKAGE_PRICES.email / 100} one-time · we do the DNS for you · 7 days of support`}</span></>} cta={{ label: "Get Started", to: START, onClick: () => pick("hero") }} links={[{ label: "What we handle", to: "#handle" }, { label: "Pricing", to: "#pricing" }, { label: "FAQ", to: "#faq" }]} />
 
       {/* What we handle */}
       <section id="handle" className="scroll-mt-24 section-padding border-t border-border">
