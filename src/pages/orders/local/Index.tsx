@@ -1,4 +1,4 @@
-import { customerHost, customerHref, customerUrl } from "@/lib/siteAddress";
+import { customerHost, customerHref, customerUrl, customerShareUrl } from "@/lib/siteAddress";
 import heroLocal from "@/assets/heroes/local.jpg";
 import { PageHero } from "@/components/brand/flow/Flow";
 import { useEffect, useMemo, useState } from "react";
@@ -91,7 +91,7 @@ const LocalIndex = () => {
               "@type": "ListItem",
               position: i + 1,
               name: b.name,
-              url: customerUrl(b.slug),
+              url: customerShareUrl("local", b.slug),
             })),
           },
         ] as never}

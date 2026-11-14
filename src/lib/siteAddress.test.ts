@@ -11,3 +11,14 @@ describe("customer subdomains", () => {
   });
   it("reserves admin", () => expect(isReservedSlug("admin")).toBe(true));
 });
+
+describe("shareable links before subdomains are live", async () => {
+  const { customerShareUrl, SUBDOMAINS_LIVE } = await import("./siteAddress");
+  const { storeUrl } = await import("./orders/setup");
+  it.skipIf(SUBDOMAINS_LIVE)("copied store link uses the working loumilab.com path", () => {
+    expect(storeUrl("bakery")).toBe("https://loumilab.com/orders/store/bakery");
+  });
+  it.skipIf(SUBDOMAINS_LIVE)("local listing link uses the working path", () => {
+    expect(customerShareUrl("local", "bakery")).toBe("https://loumilab.com/orders/local/bakery");
+  });
+});
