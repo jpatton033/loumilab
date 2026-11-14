@@ -1,4 +1,4 @@
-import { customerHost, customerHref, customerUrl } from "@/lib/siteAddress";
+import { customerHost, customerHref, customerUrl, customerShareUrl } from "@/lib/siteAddress";
 import { Link, useParams } from "react-router-dom";
 import { ArrowRight, Globe, Mail, MapPin, Phone } from "lucide-react";
 import Layout from "@/components/Layout";
@@ -42,7 +42,7 @@ const LocalBusinessPage = () => {
         jsonLd={{
           "@context": "https://schema.org", "@type": "FoodEstablishment", name: b.name,
           description: b.description ?? undefined, image: b.image_url ?? undefined,
-          url: b.store_slug ? customerUrl(b.store_slug) : customerUrl(b.slug),
+          url: b.store_slug ? customerShareUrl("store", b.store_slug) : customerShareUrl("local", b.slug),
           areaServed: b.area ?? undefined, telephone: b.public_phone ?? undefined,
           sameAs: [b.website_url, ...socials.map((k) => b.social_links[k])].filter(Boolean),
         } as never}

@@ -23,6 +23,10 @@ export const customerHost = (slug: string) => `${slug || "your-name"}.${ROOT_DOM
 /** Canonical public URL. */
 export const customerUrl = (slug: string, path = "") => `https://${customerHost(slug)}${path}`;
 
+/** Full shareable URL that works today: subdomain once live, otherwise loumilab.com + old path. */
+export const customerShareUrl = (kind: CustomerKind, slug: string, path = "") =>
+  SUBDOMAINS_LIVE ? customerUrl(slug, path) : `https://${ROOT_DOMAIN}${legacyPath(kind, slug)}${path}`;
+
 /** Old in-app path for a customer site. */
 export const legacyPath = (kind: CustomerKind, slug: string) =>
   kind === "store" ? `/orders/store/${slug}` : kind === "space" ? `/spaces/a/${slug}` : `/orders/local/${slug}`;
