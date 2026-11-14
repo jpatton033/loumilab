@@ -425,13 +425,13 @@
   </url>
   <url>
     <loc>https://loumilab.com/resources/orders-commerce/order-management-that-scales</loc>
-    <lastmod>2026-11-10</lastmod>
+    <lastmod>2026-11-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://loumilab.com/resources/business-growth/when-growth-becomes-a-problem</loc>
-    <lastmod>2026-11-09</lastmod>
+    <lastmod>2026-11-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -454,14 +454,26 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://loumilab.com/resources/technology-ai/practical-ai-for-small-businesses</loc>
+    <lastmod>2026-11-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://loumilab.com/resources/templates-tools/order-intake-template</loc>
     <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://loumilab.com/resources/technology-ai/practical-ai-for-small-businesses</loc>
-    <lastmod>2026-10-26</lastmod>
+    <loc>https://loumilab.com/resources/technology-ai/where-ai-actually-helps-businesses</loc>
+    <lastmod>2026-11-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://loumilab.com/resources/technology-ai/who-is-responsible-when-ai-makes-the-wrong-decision</loc>
+    <lastmod>2026-11-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -478,32 +490,14 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://loumilab.com/resources/technology-ai/using-ai-the-right-way-smarter-business-workflows</loc>
-    <lastmod>2026-11-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://loumilab.com/resources/technology-ai/who-is-responsible-when-ai-makes-the-wrong-decision</loc>
-    <lastmod>2026-11-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://loumilab.com/resources/business-growth/technology-is-getting-smarter-are-businesses-getting-better</loc>
     <lastmod>2026-11-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://loumilab.com/resources/technology-ai/the-real-cost-of-using-ai-token-usage</loc>
-    <lastmod>2026-11-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://loumilab.com/resources/business-growth/is-your-business-ready-to-grow</loc>
-    <lastmod>2026-11-04</lastmod>
+    <lastmod>2026-11-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -516,6 +510,12 @@
   <url>
     <loc>https://loumilab.com/resources/orders-commerce/are-dms-costing-your-business-sales</loc>
     <lastmod>2026-11-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://loumilab.com/resources/technology-ai/using-ai-the-right-way-smarter-business-workflows</loc>
+    <lastmod>2026-11-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -533,19 +533,19 @@
   </url>
   <url>
     <loc>https://loumilab.com/resources/technology-ai/should-your-business-be-using-ai</loc>
-    <lastmod>2026-11-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://loumilab.com/resources/business-growth/more-customers-wont-fix-a-broken-business-process</loc>
-    <lastmod>2026-11-10</lastmod>
+    <lastmod>2026-11-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://loumilab.com/resources/business-growth/the-new-economics-of-starting-a-business</loc>
     <lastmod>2026-11-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://loumilab.com/resources/business-growth/more-customers-wont-fix-a-broken-business-process</loc>
+    <lastmod>2026-11-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -563,12 +563,6 @@
   </url>
   <url>
     <loc>https://loumilab.com/resources/security-privacy/your-business-collects-more-customer-data-than-you-think</loc>
-    <lastmod>2026-11-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://loumilab.com/resources/technology-ai/where-ai-actually-helps-businesses</loc>
     <lastmod>2026-11-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -592,6 +586,12 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://loumilab.com/resources/technology-ai/the-real-cost-of-using-ai-token-usage</loc>
+    <lastmod>2026-11-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://loumilab.com/resources/business-growth/the-business-you-own-platforms-you-depend-on</loc>
     <lastmod>2026-11-12</lastmod>
     <changefreq>monthly</changefreq>
@@ -599,7 +599,7 @@
   </url>
   <url>
     <loc>https://loumilab.com/resources/technology-ai/the-quiet-disappearance-of-the-human-internet</loc>
-    <lastmod>2026-11-12</lastmod>
+    <lastmod>2026-11-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -622,12 +622,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://loumilab.com/resources/technology-ai/is-ai-replacing-entry-level-jobs</loc>
-    <lastmod>2026-11-09</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://loumilab.com/resources/orders-commerce/the-end-of-the-traditional-customer-journey</loc>
     <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
@@ -635,13 +629,19 @@
   </url>
   <url>
     <loc>https://loumilab.com/resources/technology-ai/the-illusion-of-choice-in-the-digital-economy</loc>
-    <lastmod>2026-11-09</lastmod>
+    <lastmod>2026-11-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://loumilab.com/resources/business-growth/cashless-business-debate</loc>
     <lastmod>2026-11-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://loumilab.com/resources/technology-ai/is-ai-replacing-entry-level-jobs</loc>
+    <lastmod>2026-11-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
