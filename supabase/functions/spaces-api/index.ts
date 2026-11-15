@@ -3,7 +3,7 @@ import { z } from "npm:zod@3";
 import { unzipSync, zipSync, strToU8, strFromU8 } from "npm:fflate@0.8.2";
 import { admin, requireUser } from "../_shared/auth.ts";
 import { signServe } from "../_shared/spacesToken.ts";
-import { validateManifest, validateFiles, checkEntryHtml, contentType, LIMITS, SPEC_VERSION } from "../_shared/spacesSpec.ts";
+import { validateManifest, validateFiles, checkEntryHtml, contentType, LIMITS, SPEC_VERSION, classifyArchive, checkZipEntry, preservable, statusForKind, UNZIP_LIMITS, type Classification } from "../_shared/spacesSpec.ts";
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
