@@ -44,7 +44,7 @@ export const SpacesHeroFilm = () => {
       )}
       {/* Readability shade from the bottom-left, then into the page below */}
       <div className="absolute inset-0 bg-gradient-to-tr from-ink/90 via-ink/40 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-ink" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-ink" />
     </div>
   );
 };
