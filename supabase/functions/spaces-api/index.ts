@@ -38,6 +38,18 @@ async function buildPassport(appId: string) {
     app: { id: app.id, slug: app.slug, name: app.name, description: app.description, builtWith: app.built_with, tags: app.tags, createdAt: app.created_at, currentVersionId: app.current_version_id },
     versions: versions ?? [],
     history: events ?? [],
+    ownership: await (async () => {
+      const { data: d } = await admin.from("spaces_official_designations").select("product_name,verified_at,revoked_at").eq("app_id", appId).maybeSingle();
+      const official = !!d && !d.revoked_at;
+      return {
+        verified: true,
+        official,
+        owner: official ? "Loumilab" : "Independent (workspace owner)",
+        hostingProvider: "Loumilab Spaces",
+        note: "Hosting on Loumilab Spaces does not make an app an official Loumilab product.",
+        ...(official ? { product: d!.product_name, verificationAuthority: "Loumilab", verifiedAt: d!.verified_at } : {}),
+      };
+    })(),
   };
 }
 

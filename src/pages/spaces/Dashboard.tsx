@@ -12,6 +12,8 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 import { fmtBytes, ROLE_RANK, slugify, spacesApi, useSessionUser, type Role } from "@/lib/spaces/client";
+import { useDesignation } from "@/lib/spaces/designation";
+import { OfficialBadge } from "@/components/spaces/OfficialBadge";
 import { LIMITS, KIND_LABEL, STATUS_LABEL, type ArchiveKind, type VersionStatus } from "@/lib/spaces/spec";
 
 type App = Tables<"spaces_apps">;
@@ -189,6 +191,7 @@ function AppDetail({ ws }: { ws: Ws }) {
   const [versions, setVersions] = useState<Version[]>([]);
   const [events, setEvents] = useState<Ev[]>([]);
   const [canManage, setCanManage] = useState(false);
+  const designation = useDesignation(id);
   const load = useCallback(async () => {
     const { data: a } = await supabase.from("spaces_apps").select("*").eq("id", id).maybeSingle();
     setApp(a);
@@ -220,7 +223,7 @@ function AppDetail({ ws }: { ws: Ws }) {
     <>
       <Link to="/spaces/app" className="text-sm text-muted-foreground hover:text-foreground">← Library</Link>
       <div className="mt-4 flex flex-wrap items-end justify-between gap-4">
-        <div><h1 className="font-hero text-4xl font-semibold text-foreground">{app.name}.</h1><p className="mt-2 text-sm text-muted-foreground">{customerHost(app.slug)} · {app.built_with} · {app.status}</p></div>
+        <div><h1 className="font-hero text-4xl font-semibold text-foreground">{app.name}.</h1><p className="mt-2 text-sm text-muted-foreground">{customerHost(app.slug)} · {app.built_with} · {app.status}</p><div className="mt-2"><OfficialBadge d={designation} owner={ws.name} /></div></div>
         <div className="flex flex-wrap gap-2">
           {live && app.status === "active" && <Button asChild><a href={customerHref("space", app.slug)} target="_blank" rel="noreferrer">Open app</a></Button>}
           {canManage && live && <Button variant="outline" onClick={exportZip}>Export</Button>}
@@ -253,6 +256,15 @@ function AppDetail({ ws }: { ws: Ws }) {
         </TabsContent>
         <TabsContent value="passport">
           <div className="flex flex-wrap items-center justify-between gap-3"><p className="text-sm text-muted-foreground">Permanent ID <span className="font-mono text-foreground">{app.id}</span> · created {new Date(app.created_at).toLocaleDateString()}</p><Button variant="outline" size="sm" onClick={passport}>Download passport.json</Button></div>
+          <dl className="mt-6 grid gap-px overflow-hidden rounded-2xl border border-border bg-border text-sm sm:grid-cols-2">
+            {[
+              ["Owner", designation?.official ? "Loumilab" : ws.name],
+              ["Publisher", designation?.official ? `Loumilab${designation.product_name ? ` · ${designation.product_name}` : ""}` : ws.name],
+              ["Hosting provider", "Hosted on Loumilab Spaces"],
+              ["Loumilab verification", designation?.official ? `Official Loumilab Project · verified ${designation.verified_at ? new Date(designation.verified_at).toLocaleDateString() : ""}` : "Independent project (not an official Loumilab product)"],
+            ].map(([k, v]) => (<div key={k} className="bg-background p-4"><dt className="text-muted-foreground">{k}</dt><dd className="mt-1 text-foreground">{v}</dd></div>))}
+          </dl>
+          <p className="mt-2 text-xs text-muted-foreground">Ownership and hosting are separate: being hosted on Spaces doesn't make an app an official Loumilab product. Only Loumilab can verify official projects.</p>
           <ol className="mt-6 border-l border-border pl-6">
             {events.map((e) => (
               <li key={e.id} className="relative pb-6"><span className="absolute -left-[29px] top-1.5 h-2 w-2 rounded-full bg-foreground" />
