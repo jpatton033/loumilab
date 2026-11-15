@@ -12,7 +12,7 @@ export const RESERVED_SLUGS = new Set([
   "www", "app", "apps", "admin", "api", "mail", "email", "smtp", "imap", "ftp", "cdn", "static", "assets",
   "spaces", "orders", "local", "help", "support", "status", "docs", "blog", "news", "the-dot", "thedot",
   "resources", "store", "shop", "auth", "login", "sign-in", "signup", "account", "dashboard", "billing",
-  "pay", "payments", "checkout", "dev", "staging", "preview", "test", "loumilab", "vurtti", "id", "m",
+  "pay", "payments", "checkout", "dev", "staging", "preview", "test", "loumilab", "vurtti", "id", "m", "deploy",
 ]);
 
 export const isReservedSlug = (slug: string) => RESERVED_SLUGS.has(slug.trim().toLowerCase());

@@ -3,6 +3,7 @@ import { z } from "npm:zod@3";
 import { unzipSync, zipSync, strToU8, strFromU8 } from "npm:fflate@0.8.2";
 import { admin, requireUser } from "../_shared/auth.ts";
 import { signServe } from "../_shared/spacesToken.ts";
+import { syncEdge, recheckEdge, edgeUrl } from "../_shared/spacesEdge.ts";
 import { validateManifest, validateFiles, checkEntryHtml, contentType, LIMITS, SPEC_VERSION, classifyArchive, checkZipEntry, preservable, statusForKind, UNZIP_LIMITS, type Classification } from "../_shared/spacesSpec.ts";
 
 const json = (body: unknown, status = 200) =>
@@ -16,6 +17,8 @@ const Body = z.discriminatedUnion("action", [
   z.object({ action: z.literal("export"), app_id: z.string().uuid() }),
   z.object({ action: z.literal("passport"), app_id: z.string().uuid() }),
   z.object({ action: z.literal("open"), slug: z.string().max(60) }),
+  z.object({ action: z.literal("edge_sync"), app_id: z.string().uuid() }),
+  z.object({ action: z.literal("edge_check"), app_id: z.string().uuid() }),
 ]);
 
 async function canManage(app: string, uid: string) {
@@ -175,6 +178,9 @@ Deno.serve(async (req) => {
     if (publish) {
       await admin.from("spaces_apps").update({ current_version_id: ver.id }).eq("id", app.id);
       await event(app, isExport ? "imported" : "deployed", { number, files: fv!.kept.length, bytes: total, version: manifest?.version ?? null }, user.id);
+      const edge = await syncEdge(app, ver.id, (manifest?.entry as string) ?? "index.html");
+      await event(app, "edge_" + edge.edge_status, { number, url: edgeUrl(app.slug) }, user.id);
+      return json({ ok: true, published: true, status, kind: cls.kind, reasons: cls.reasons, version_id: ver.id, number, warnings, edge });
     } else await event(app, "preserved", { number, kind: cls.kind, files: Object.keys(preserveSet).length }, user.id);
     return json({ ok: true, published: publish, status, kind: cls.kind, reasons: cls.reasons, version_id: ver.id, number, warnings });
   }
@@ -184,8 +190,16 @@ Deno.serve(async (req) => {
     if (!ver || ver.status !== "ready") return json({ error: "That version can't be restored." }, 400);
     await admin.from("spaces_apps").update({ current_version_id: ver.id }).eq("id", app.id);
     await event(app, "rolled_back", { number: ver.number }, user.id);
-    return json({ ok: true });
+    const { data: v2 } = await admin.from("spaces_versions").select("manifest").eq("id", ver.id).single();
+    const edge = await syncEdge(app, ver.id, (v2?.manifest as { entry?: string } | null)?.entry ?? "index.html");
+    return json({ ok: true, edge });
   }
+
+  if (body.action === "edge_sync") {
+    const { data: v } = app.current_version_id ? await admin.from("spaces_versions").select("manifest").eq("id", app.current_version_id).single() : { data: null };
+    return json(await syncEdge(app, app.current_version_id, (v?.manifest as { entry?: string } | null)?.entry ?? "index.html"));
+  }
+  if (body.action === "edge_check") return json(await recheckEdge(app));
 
   // export
   if (!app.current_version_id) return json({ error: "Deploy a version before exporting." }, 400);
