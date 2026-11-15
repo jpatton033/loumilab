@@ -30,7 +30,20 @@ export interface DestinationInput {
   next: string | null;
   hasMerchant: boolean;
   isAdmin: boolean;
+  /** Belongs to at least one Spaces workspace. */
+  hasSpaces?: boolean;
+  /** Product last used in this browser (no identity stored). */
+  lastPortal?: Portal | null;
 }
+
+/** Returned when someone uses both products and didn't pick one: show a chooser. */
+export const CHOOSE_PORTAL = "choose" as const;
+
+const LAST_KEY = "loumilab.lastPortal";
+export const getLastPortal = (): Portal | null => {
+  try { return parsePortal(localStorage.getItem(LAST_KEY)); } catch { return null; }
+};
+export const setLastPortal = (p: Portal) => { try { localStorage.setItem(LAST_KEY, p); } catch { /* ignore */ } };
 
 /**
  * Where to send someone after they sign in. Access itself is still enforced
@@ -38,11 +51,13 @@ export interface DestinationInput {
  * setup (saved answers resume there); Spaces without a workspace lands in the
  * Library, which shows workspace creation.
  */
-export const resolvePostAuthDestination = ({ portal, next, hasMerchant, isAdmin }: DestinationInput): string => {
+export const resolvePostAuthDestination = ({ portal, next, hasMerchant, isAdmin, hasSpaces = false }: DestinationInput): string => {
   const n = safeNext(next);
   if (n) return n;
   if (portal === "spaces") return PORTALS.spaces.landing;
   if (portal === "orders") return hasMerchant ? PORTALS.orders.landing : "/orders/get-started";
   if (isAdmin) return "/admin/overview";
+  if (hasSpaces && hasMerchant) return CHOOSE_PORTAL;
+  if (hasSpaces) return PORTALS.spaces.landing;
   return hasMerchant ? PORTALS.orders.landing : "/orders/get-started";
 };

@@ -6,6 +6,7 @@ import { Menu, X, ChevronDown, ArrowUpRight, ArrowRight, LogIn, LogOut, UserRoun
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import SiteSearch from "@/components/SiteSearch";
 import Wordmark from "@/components/brand/Wordmark";
+import { portalForPath, portalSignInPath } from "@/lib/portal";
 import { navDirectLinks, navMenus, type NavLinkItem } from "@/data/navigation";
 
 const MenuLink = ({ item, compact }: { item: NavLinkItem; compact?: boolean }) => {
@@ -174,6 +175,8 @@ const Navbar = () => {
 
   const handleSignOut = async () => { await supabase.auth.signOut(); setUser(null); navigate("/", { replace: true }); };
   const handleLogoClick = () => { if (location.pathname === "/") window.scrollTo({ top: 0, behavior: "smooth" }); };
+  const signInPortal = portalForPath(location.pathname);
+  const signInPath = signInPortal ? portalSignInPath(signInPortal) : "/sign-in";
   const isActive = (match: string[]) => match.some((m) => location.pathname.startsWith(m));
 
   return (
@@ -227,7 +230,7 @@ const Navbar = () => {
                   <DropdownMenuItem onSelect={handleSignOut}><LogOut className="mr-2 h-4 w-4" /> Sign out</DropdownMenuItem>
                 </>
               ) : (
-                <DropdownMenuItem asChild><Link to="/sign-in"><LogIn className="mr-2 h-4 w-4" /> Sign in</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild><Link to={signInPath}><LogIn className="mr-2 h-4 w-4" /> Sign in</Link></DropdownMenuItem>
               )}
             </DropdownMenuContent>
           </DropdownMenu>
@@ -274,7 +277,7 @@ const Navbar = () => {
             {user ? (
               <button type="button" onClick={handleSignOut} className="flex items-center gap-2 py-3 text-base font-medium text-inverse-muted"><LogOut size={18} /> Sign out</button>
             ) : (
-              <Link to="/sign-in" className="flex items-center gap-2 py-3 text-base font-medium text-inverse"><LogIn size={18} /> Sign in</Link>
+              <Link to={signInPath} className="flex items-center gap-2 py-3 text-base font-medium text-inverse"><LogIn size={18} /> Sign in</Link>
             )}
             <Button size="lg" asChild className="mt-4 w-full rounded-lg bg-background text-foreground hover:bg-background/90"><Link to="/contact">Start a Project</Link></Button>
           </div>
