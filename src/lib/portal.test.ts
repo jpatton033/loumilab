@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { resolvePostAuthDestination as r, safeNext, portalSignInPath } from "./portal";
+import { CHOOSE_PORTAL, describe, it, expect } from "vitest";
+import { CHOOSE_PORTAL, resolvePostAuthDestination as r, safeNext, portalSignInPath } from "./portal";
 
 describe("post sign-in destination", () => {
   it("Spaces sign-in lands in the Library", () => {
@@ -24,5 +24,17 @@ describe("post sign-in destination", () => {
   });
   it("builds product sign-in links", () => {
     expect(portalSignInPath("spaces", "/spaces/app")).toBe("/spaces/sign-in?next=%2Fspaces%2Fapp");
+  });
+});
+
+describe("multi-product accounts", () => {
+  it("asks where to go when the account uses Spaces and Orders", () => {
+    expect(resolvePostAuthDestination({ portal: null, next: null, hasMerchant: true, hasSpaces: true, isAdmin: false })).toBe(CHOOSE_PORTAL);
+  });
+  it("Spaces-only account lands in the Library", () => {
+    expect(resolvePostAuthDestination({ portal: null, next: null, hasMerchant: false, hasSpaces: true, isAdmin: false })).toBe("/spaces/app");
+  });
+  it("Spaces sign-in goes to Spaces even with a store", () => {
+    expect(resolvePostAuthDestination({ portal: "spaces", next: null, hasMerchant: true, hasSpaces: true, isAdmin: false })).toBe("/spaces/app");
   });
 });

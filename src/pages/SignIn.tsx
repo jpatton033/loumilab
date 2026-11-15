@@ -10,7 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import SEOHead from "@/components/SEOHead";
 import { passwordResetRedirectUrl } from "@/lib/authRedirect";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { parsePortal, portalForPath, portalSignInPath, resolvePostAuthDestination, safeNext, PORTALS, type Portal } from "@/lib/portal";
+import { CHOOSE_PORTAL, getLastPortal, setLastPortal, parsePortal, portalForPath, portalSignInPath, resolvePostAuthDestination, safeNext, PORTALS, type Portal } from "@/lib/portal";
 import { Link } from "react-router-dom";
 import { LogIn, Mail, KeyRound, ArrowRight, Loader2 } from "lucide-react";
 
@@ -37,6 +37,7 @@ const SignIn = ({ portal: portalProp }: { portal?: Portal } = {}) => {
   const [loading, setLoading] = useState(false);
   const [checkingSession, setCheckingSession] = useState(true);
   const [confirmed, setConfirmed] = useState(false);
+  const [choosing, setChoosing] = useState(false);
 
   useEffect(() => {
     const check = async () => {
@@ -51,16 +52,22 @@ const SignIn = ({ portal: portalProp }: { portal?: Portal } = {}) => {
   }, []);
 
   const routeByRole = async (userId: string) => {
-    const [{ data: roles }, { data: merchant }] = await Promise.all([
+    const [{ data: roles }, { data: merchant }, { data: spaces }] = await Promise.all([
       supabase.from("user_roles").select("role").eq("user_id", userId),
       supabase.from("merchants").select("id").eq("owner_id", userId).maybeSingle(),
+      supabase.from("spaces_members").select("workspace_id").eq("user_id", userId).limit(1),
     ]);
-    navigate(resolvePostAuthDestination({
+    const dest = resolvePostAuthDestination({
       portal,
       next: nextPath,
       hasMerchant: !!merchant,
+      hasSpaces: !!spaces?.length,
       isAdmin: !!roles?.some((r: { role: string }) => r.role === "admin"),
-    }), { replace: true });
+    });
+    if (dest === CHOOSE_PORTAL) { setChoosing(true); setCheckingSession(false); return; }
+    const used = portal ?? portalForPath(dest);
+    if (used) setLastPortal(used);
+    navigate(dest, { replace: true });
   };
 
   const validatePassword = (value: string) => {
@@ -160,6 +167,29 @@ const SignIn = ({ portal: portalProp }: { portal?: Portal } = {}) => {
       description: "If an account exists for that address, a password reset link is on its way.",
     });
   };
+
+  const pick = (p: Portal) => { setLastPortal(p); navigate(PORTALS[p].landing, { replace: true }); };
+
+  if (choosing) {
+    const last = getLastPortal();
+    const order: Portal[] = last === "orders" ? ["orders", "spaces"] : ["spaces", "orders"];
+    return (
+      <Layout>
+        <SEOHead title="Choose a product — Loumilab" description="Choose where to go." path="/sign-in" noindex />
+        <section className="mx-auto max-w-md px-6 py-28 text-center">
+          <h1 className="font-hero text-3xl font-semibold text-foreground">Where to?</h1>
+          <p className="mt-3 text-muted-foreground">Your account uses more than one Loumilab product.</p>
+          <div className="mt-8 grid gap-3">
+            {order.map((p, i) => (
+              <Button key={p} size="lg" variant={i === 0 ? "default" : "outline"} className="rounded-full" onClick={() => pick(p)}>
+                {PORTALS[p].name}
+              </Button>
+            ))}
+          </div>
+        </section>
+      </Layout>
+    );
+  }
 
   if (checkingSession) {
     return (
