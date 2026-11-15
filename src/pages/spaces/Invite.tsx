@@ -11,7 +11,7 @@ export default function SpacesInvite() {
   const user = useSessionUser();
   const nav = useNavigate();
   const [err, setErr] = useState<string | null>(null);
-  if (user === null) return <Navigate to={`/sign-in?next=/spaces/invite/${token}`} replace />;
+  if (user === null) return <Navigate to={`/spaces/sign-in?next=/spaces/invite/${token}`} replace />;
   const accept = async () => {
     const { data, error } = await supabase.rpc("spaces_accept_invite", { _token: token });
     if (error) return setErr(error.message);

@@ -145,6 +145,8 @@ const routes = (<>
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/spaces/sign-in" element={<SignIn key="spaces" portal="spaces" />} />
+          <Route path="/orders/sign-in" element={<SignIn key="orders" portal="orders" />} />
           <Route path="/sign-out" element={<SignOut />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />

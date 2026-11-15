@@ -282,6 +282,9 @@ const Dashboard = () => {
                 <StoreLink slug={setup.slug} isPublic={setup.isPublic} variant="inline" />
               )}
               {merchant && <HelpDrawer merchantId={merchant.id} />}
+              <Button asChild variant="ghost" size="lg" className="rounded-full">
+                <Link to={merchant ? "/sign-out?portal=orders" : "/orders/sign-in?next=/orders/dashboard"}>{merchant ? "Sign out" : "Sign in"}</Link>
+              </Button>
             </div>
           </div>
 

@@ -365,7 +365,7 @@ const GetStarted = () => {
   };
 
   const goToSignIn = (mode: "signup" | "signin") =>
-    navigate(`/sign-in?${mode === "signup" ? "mode=signup&" : ""}next=${encodeURIComponent("/orders/get-started?step=6")}`);
+    navigate(`/orders/sign-in?${mode === "signup" ? "mode=signup&" : ""}next=${encodeURIComponent("/orders/get-started?step=6")}`);
 
   const advance = async () => {
     if (step === 6 && agreed && !agreementStatus?.accepted) {

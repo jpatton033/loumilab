@@ -35,7 +35,7 @@ export default function SpacesRun() {
       </div>
       {err ? (
         <div className="grid flex-1 place-items-center p-8 text-center">
-          <div><p className="font-hero text-3xl font-semibold text-foreground">This app isn't available.</p><p className="mt-3 text-muted-foreground">{err} If it's private, <Link className="underline" to={`/sign-in?next=/spaces/a/${slug}`}>sign in</Link> with an account that has access.</p></div>
+          <div><p className="font-hero text-3xl font-semibold text-foreground">This app isn't available.</p><p className="mt-3 text-muted-foreground">{err} If it's private, <Link className="underline" to={`/spaces/sign-in?next=/spaces/a/${slug}`}>sign in</Link> with an account that has access.</p></div>
         </div>
       ) : doc ? (
         <iframe title={name} srcDoc={doc} sandbox="allow-scripts allow-forms allow-popups allow-modals" referrerPolicy="no-referrer" className="w-full flex-1 border-0 bg-white" />
