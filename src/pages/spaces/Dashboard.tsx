@@ -372,7 +372,7 @@ function Settings({ app, ws, onSaved, onDeleted }: { app: App; ws: Ws; onSaved: 
           <AlertDialogHeader><AlertDialogTitle>Delete {app.name}?</AlertDialogTitle><AlertDialogDescription>This removes the app, its versions and its Passport for everyone. Export it first if you may need it. Type <strong>{app.slug}</strong> to confirm.</AlertDialogDescription></AlertDialogHeader>
           <Input value={confirm} onChange={(e) => setConfirm(e.target.value)} />
           <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction disabled={confirm !== app.slug} onClick={async () => { const { error } = await supabase.from("spaces_apps").delete().eq("id", app.id); if (error) toast.error(error.message); else onDeleted(); }}>Delete</AlertDialogAction></AlertDialogFooter>
+            <AlertDialogAction disabled={confirm !== app.slug} onClick={async () => { await supabase.from("spaces_apps").update({ status: "archived" }).eq("id", app.id); try { await spacesApi({ action: "edge_sync", app_id: app.id }); } catch { /* offline best effort */ } const { error } = await supabase.from("spaces_apps").delete().eq("id", app.id); if (error) toast.error(error.message); else onDeleted(); }}>Delete</AlertDialogAction></AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </div>
