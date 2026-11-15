@@ -176,6 +176,13 @@
       "when": 1794767646900,
       "tag": "0024_spaces_apps_select_direct",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1794770635033,
+      "tag": "0025_spaces_versions_classification",
+      "breakpoints": true
     }
   ]
 }
