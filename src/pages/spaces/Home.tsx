@@ -57,7 +57,7 @@ export default function SpacesHome() {
             </div>
           </div>
           {/* Film light continues into the page instead of ending at an edge */}
-          <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-[hsl(var(--spaces-obsidian))]" />
+          <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-[hsl(var(--spaces-obsidian))]" />
         </section>
 
         {/* Problem — a large typographic moment, overlapping the film's warmth */}
