@@ -12,7 +12,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 import { fmtBytes, ROLE_RANK, slugify, spacesApi, useSessionUser, type Role } from "@/lib/spaces/client";
-import { LIMITS } from "@/lib/spaces/spec";
+import { LIMITS, KIND_LABEL, STATUS_LABEL, type ArchiveKind, type VersionStatus } from "@/lib/spaces/spec";
 
 type App = Tables<"spaces_apps">;
 type Version = Tables<"spaces_versions">;
@@ -180,7 +180,7 @@ function NewApp({ ws, uid, open, onOpenChange }: { ws: Ws; uid: string; open: bo
 
 /* ---------------- App detail ---------------- */
 type Ev = Tables<"spaces_passport_events">;
-const EV: Record<string, string> = { created: "Created", deployed: "Deployed", deploy_failed: "Deploy failed", rolled_back: "Rolled back", exported: "Exported", imported: "Imported", updated: "Updated" };
+const EV: Record<string, string> = { created: "Created", deployed: "Deployed", deploy_failed: "Deploy failed", rolled_back: "Rolled back", exported: "Exported", imported: "Imported", updated: "Updated", preserved: "Preserved" };
 
 function AppDetail({ ws }: { ws: Ws }) {
   const { id = "" } = useParams();
@@ -204,7 +204,7 @@ function AppDetail({ ws }: { ws: Ws }) {
   if (app === undefined) return <p className="text-sm text-muted-foreground">Loading…</p>;
   if (app === null) return <p className="text-muted-foreground">This app doesn't exist or you don't have access. <Link className="underline" to="/spaces/app">Back to Library</Link></p>;
   const live = versions.find((v) => v.id === app.current_version_id);
-  const storage = versions.filter((v) => v.status === "ready").reduce((s, v) => s + Number(v.total_bytes), 0);
+  const storage = versions.filter((v) => v.status !== "failed").reduce((s, v) => s + Number(v.total_bytes), 0);
   const exportZip = async () => {
     try { const r = await spacesApi<{ url: string }>({ action: "export", app_id: app.id }); window.location.href = r.url; load(); }
     catch (e) { toast.error((e as Error).message); }
@@ -241,7 +241,8 @@ function AppDetail({ ws }: { ws: Ws }) {
               return (
                 <li key={v.id} className="flex flex-wrap items-center gap-4 p-5 text-sm">
                   <span className="font-medium text-foreground">#{v.number}</span>
-                  <span className={v.status === "ready" ? "text-foreground" : "text-destructive"}>{v.id === app.current_version_id ? "Live" : v.status === "ready" ? "Ready" : "Failed"}</span>
+                  <span className={v.status === "failed" ? "text-destructive" : "text-foreground"}>{v.id === app.current_version_id ? "Live" : STATUS_LABEL[v.status as VersionStatus] ?? v.status}</span>
+                  <span className="text-muted-foreground">{KIND_LABEL[v.kind as ArchiveKind] ?? v.kind} · Compiled files: {v.has_compiled ? "yes" : "no"}{v.source_path ? " · Source kept" : ""}</span>
                   <span className="text-muted-foreground">{v.file_count} files · {fmtBytes(Number(v.total_bytes))} · {new Date(v.created_at).toLocaleString()}</span>
                   {val?.errors?.length ? <span className="w-full text-xs text-destructive">{val.errors.slice(0, 3).join(" · ")}</span> : null}
                   {canManage && v.status === "ready" && v.id !== app.current_version_id && (
@@ -271,7 +272,8 @@ const summary = (d: unknown) => {
 
 function Deploy({ app, onDone }: { app: App; onDone: () => void }) {
   const [file, setFile] = useState<File | null>(null); const [notes, setNotes] = useState(""); const [busy, setBusy] = useState(false);
-  const [result, setResult] = useState<{ ok?: boolean; errors?: string[]; warnings?: string[] } | null>(null);
+  const [mode, setMode] = useState<"publish" | "preserve">("publish");
+  const [result, setResult] = useState<{ ok?: boolean; published?: boolean; status?: VersionStatus; kind?: ArchiveKind; reasons?: string[]; errors?: string[]; warnings?: string[] } | null>(null);
   const go = async () => {
     if (!file) return;
     if (file.size > LIMITS.maxZipBytes) return toast.error("The ZIP is over 50 MB.");
@@ -279,19 +281,25 @@ function Deploy({ app, onDone }: { app: App; onDone: () => void }) {
     const path = `uploads/${app.id}/${crypto.randomUUID()}.zip`;
     const { error } = await supabase.storage.from("spaces-artifacts").upload(path, file, { contentType: "application/zip" });
     if (error) { setBusy(false); return toast.error(error.message); }
-    try { const r = await spacesApi<{ ok: boolean; errors?: string[]; warnings?: string[] }>({ action: "deploy", app_id: app.id, upload_path: path, notes: notes || undefined }); setResult(r); if (r.ok) toast.success("Deployed."); }
+    try { const r = await spacesApi<NonNullable<typeof result>>({ action: "deploy", app_id: app.id, upload_path: path, mode, notes: notes || undefined }); setResult(r); if (r.ok) toast.success(r.published ? "Published." : "Saved."); }
     catch (e) { setResult({ ok: false, errors: [(e as Error).message] }); }
     setBusy(false); onDone();
   };
   return (
     <div className="max-w-2xl space-y-5">
-      <p className="text-sm text-muted-foreground">Upload a ZIP of your <strong className="text-foreground">built</strong> app (the folder with index.html, often dist/). A Spaces export ZIP works too — that's how you import. Use relative paths and hash routing. <Link to="/spaces/specification" className="underline">Read the rules</Link>.</p>
+      <p className="text-sm text-muted-foreground">Upload a ZIP of your app. Spaces inspects it without running anything and tells you what it is: a <strong className="text-foreground">static app</strong> (built output with index.html, often dist/) can go live now; React/Vite source is saved as <strong className="text-foreground">Build Required</strong> until the build service is available; other projects are preserved. A Spaces export ZIP works too. <Link to="/spaces/specification" className="underline">Read the rules</Link>.</p>
+      <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="What to do with this upload">
+        {([["publish", "Publish if it's a static app"], ["preserve", "Preserve only"]] as const).map(([k, l]) => (
+          <Button key={k} type="button" role="radio" aria-checked={mode === k} size="sm" variant={mode === k ? "default" : "outline"} onClick={() => setMode(k)}>{l}</Button>))}
+      </div>
       <Input type="file" accept=".zip,application/zip" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
       <Textarea placeholder="Release notes (optional)" maxLength={500} value={notes} onChange={(e) => setNotes(e.target.value)} />
-      <Button onClick={go} disabled={!file || busy}>{busy ? "Checking and publishing…" : "Validate & deploy"}</Button>
+      <Button onClick={go} disabled={!file || busy}>{busy ? "Inspecting…" : mode === "publish" ? "Inspect & publish" : "Inspect & preserve"}</Button>
       {result && (
         <div className={`rounded-2xl border p-5 text-sm ${result.ok ? "border-border" : "border-destructive/50"}`}>
-          <p className="font-medium text-foreground">{result.ok ? "Live." : "Not deployed."}</p>
+          <p className="font-medium text-foreground">{!result.ok ? "Not saved." : result.published ? "Live." : `${STATUS_LABEL[result.status!] ?? "Saved"}.`}</p>
+          {result.kind && <p className="mt-1 text-muted-foreground">Detected: {KIND_LABEL[result.kind]}</p>}
+          {result.reasons?.map((r) => <p key={r} className="mt-2 text-foreground">{r}</p>)}
           {result.errors?.map((e) => <p key={e} className="mt-2 text-destructive">{e}</p>)}
           {result.warnings?.map((w) => <p key={w} className="mt-2 text-muted-foreground">Note: {w}</p>)}
         </div>

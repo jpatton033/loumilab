@@ -4350,39 +4350,51 @@ export type Database = {
       spaces_versions: {
         Row: {
           app_id: string
+          classification: Json | null
           created_at: string
           created_by: string | null
           file_count: number
+          has_compiled: boolean
           id: string
+          kind: string
           manifest: Json | null
           notes: string | null
           number: number
+          source_path: string | null
           status: string
           total_bytes: number
           validation: Json
         }
         Insert: {
           app_id: string
+          classification?: Json | null
           created_at?: string
           created_by?: string | null
           file_count?: number
+          has_compiled?: boolean
           id?: string
+          kind?: string
           manifest?: Json | null
           notes?: string | null
           number: number
+          source_path?: string | null
           status: string
           total_bytes?: number
           validation?: Json
         }
         Update: {
           app_id?: string
+          classification?: Json | null
           created_at?: string
           created_by?: string | null
           file_count?: number
+          has_compiled?: boolean
           id?: string
+          kind?: string
           manifest?: Json | null
           notes?: string | null
           number?: number
+          source_path?: string | null
           status?: string
           total_bytes?: number
           validation?: Json
