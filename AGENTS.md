@@ -9,7 +9,7 @@
 - Homepage product/grid tiles use the shared components in src/components/brand/apple/Tiles.tsx — keeps the Apple-style homepage consistent.
 - Per-page SEO (title, description, canonical, og/twitter, WebPage + BreadcrumbList JSON-LD) goes only through SEOHead props; article overrides live on kc_articles SEO columns with automatic fallbacks — one place for head tags.
 - Raw-HTML SEO for public routes comes from scripts/prerender-heads.ts (postbuild), which writes dist/<route>/index.html with per-route head tags and an sr-only H1; add new public routes to its staticMeta and to generate-sitemap — crawlers that skip JS otherwise see only the homepage head.
-- Header logo motion is an optional `Wordmark` state that plays once per browser session and respects reduced motion — keeps the canonical logo reusable and avoids a loading-screen dependency.
+- Header logo motion is an optional `Wordmark` state that plays once per page load (in-memory window flag) and respects reduced motion — keeps the canonical logo reusable and avoids a loading-screen dependency.
 - The brand dot motion system lives in src/components/brand/dot (shared tokens in tokens.ts): calm ease-out, no bounce, no full-screen fills or scale bursts, small movements, scroll-triggered once, at most three moments per page, never replacing ordinary punctuation — keeps the dot present but quiet.
 - The Dot. issue emails go only through the admin-only `dot-issue-blast` function (Resend), claimed once per issue via `dot_issues.emailed_at` — prevents duplicate blasts and keeps newsletter mail off the transactional sender.
 - The Dot. editorial sections reuse MailEditor; content_format explicitly separates legacy plain text from sanitized rich HTML, and dot_issue_templates stores admin-only content without issue/send metadata — preserves legacy rendering and keeps templates from triggering broadcasts.
@@ -37,4 +37,3 @@
 - Customer site addresses (stores, Spaces apps, Local listings) are built only through src/lib/siteAddress.ts: displays always show <name>.loumilab.com, links use old paths until SUBDOMAINS_LIVE; subdomain hosts resolve via the resolve_customer_slug RPC and names are guarded cross-product by the guard_customer_slug trigger — one address rule and no collisions.
 - Post sign-in routing goes only through resolvePostAuthDestination in src/lib/portal.ts; Spaces and Orders use /spaces/sign-in and /orders/sign-in on one shared account and session — keeps each product its own portal without duplicate identities.
 - Spaces official status lives only in staff-only spaces_official_designations, changed only via spaces_grant/revoke_official RPCs (super admins or staff in spaces_verifier_grants), never from spaces.json or imports — keeps ownership separate from hosting.
-
