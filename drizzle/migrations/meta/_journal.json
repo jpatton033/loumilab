@@ -169,6 +169,13 @@
       "when": 1794538394596,
       "tag": "0023_migration",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1794767646900,
+      "tag": "0024_spaces_apps_select_direct",
+      "breakpoints": true
     }
   ]
 }
