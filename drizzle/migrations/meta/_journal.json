@@ -204,6 +204,13 @@
       "when": 1794774982880,
       "tag": "0028_spaces_edge_hosting",
       "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "7",
+      "when": 1794774994506,
+      "tag": "0029_spaces_edge_guard",
+      "breakpoints": true
     }
   ]
 }
