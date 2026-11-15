@@ -12,7 +12,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 import { fmtBytes, ROLE_RANK, slugify, spacesApi, useSessionUser, type Role } from "@/lib/spaces/client";
-import { LIMITS } from "@/lib/spaces/spec";
+import { LIMITS, KIND_LABEL, STATUS_LABEL, type ArchiveKind, type VersionStatus } from "@/lib/spaces/spec";
 
 type App = Tables<"spaces_apps">;
 type Version = Tables<"spaces_versions">;
