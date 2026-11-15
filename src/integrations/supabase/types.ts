@@ -4148,6 +4148,10 @@ export type Database = {
           created_by: string
           current_version_id: string | null
           description: string | null
+          edge_checked_at: string | null
+          edge_error: string | null
+          edge_status: string
+          edge_version_id: string | null
           folder: string | null
           id: string
           name: string
@@ -4164,6 +4168,10 @@ export type Database = {
           created_by: string
           current_version_id?: string | null
           description?: string | null
+          edge_checked_at?: string | null
+          edge_error?: string | null
+          edge_status?: string
+          edge_version_id?: string | null
           folder?: string | null
           id?: string
           name: string
@@ -4180,6 +4188,10 @@ export type Database = {
           created_by?: string
           current_version_id?: string | null
           description?: string | null
+          edge_checked_at?: string | null
+          edge_error?: string | null
+          edge_status?: string
+          edge_version_id?: string | null
           folder?: string | null
           id?: string
           name?: string

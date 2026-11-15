@@ -197,6 +197,13 @@
       "when": 1794772701617,
       "tag": "0027_spaces_official_super_admin_check",
       "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "7",
+      "when": 1794774982880,
+      "tag": "0028_spaces_edge_hosting",
+      "breakpoints": true
     }
   ]
 }
