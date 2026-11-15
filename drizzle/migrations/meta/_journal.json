@@ -183,6 +183,13 @@
       "when": 1794770635033,
       "tag": "0025_spaces_versions_classification",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1794772566592,
+      "tag": "0026_spaces_official_designation",
+      "breakpoints": true
     }
   ]
 }

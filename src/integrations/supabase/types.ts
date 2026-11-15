@@ -4207,6 +4207,36 @@ export type Database = {
           },
         ]
       }
+      spaces_designation_events: {
+        Row: {
+          action: string
+          actor_id: string
+          app_id: string
+          created_at: string
+          details: Json
+          id: string
+          note: string | null
+        }
+        Insert: {
+          action: string
+          actor_id: string
+          app_id: string
+          created_at?: string
+          details?: Json
+          id?: string
+          note?: string | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string
+          app_id?: string
+          created_at?: string
+          details?: Json
+          id?: string
+          note?: string | null
+        }
+        Relationships: []
+      }
       spaces_favorites: {
         Row: {
           app_id: string
@@ -4309,6 +4339,50 @@ export type Database = {
           },
         ]
       }
+      spaces_official_designations: {
+        Row: {
+          app_id: string
+          note: string | null
+          ownership_ref: string
+          product_name: string
+          responsible: string
+          revoked_at: string | null
+          revoked_by: string | null
+          verified_at: string
+          verified_by: string
+        }
+        Insert: {
+          app_id: string
+          note?: string | null
+          ownership_ref: string
+          product_name: string
+          responsible: string
+          revoked_at?: string | null
+          revoked_by?: string | null
+          verified_at?: string
+          verified_by: string
+        }
+        Update: {
+          app_id?: string
+          note?: string | null
+          ownership_ref?: string
+          product_name?: string
+          responsible?: string
+          revoked_at?: string | null
+          revoked_by?: string | null
+          verified_at?: string
+          verified_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "spaces_official_designations_app_id_fkey"
+            columns: ["app_id"]
+            isOneToOne: true
+            referencedRelation: "spaces_apps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       spaces_passport_events: {
         Row: {
           actor_id: string | null
@@ -4346,6 +4420,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      spaces_reserved_name_approvals: {
+        Row: {
+          approved_by: string
+          created_at: string
+          slug: string
+          workspace_id: string
+        }
+        Insert: {
+          approved_by: string
+          created_at?: string
+          slug: string
+          workspace_id: string
+        }
+        Update: {
+          approved_by?: string
+          created_at?: string
+          slug?: string
+          workspace_id?: string
+        }
+        Relationships: []
+      }
+      spaces_verifier_grants: {
+        Row: {
+          created_at: string
+          granted_by: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          granted_by: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          granted_by?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       spaces_versions: {
         Row: {
@@ -4937,10 +5050,41 @@ export type Database = {
         Returns: Json
       }
       spaces_accept_invite: { Args: { _token: string }; Returns: string }
+      spaces_admin_projects: {
+        Args: never
+        Returns: {
+          app_id: string
+          created_at: string
+          name: string
+          official: boolean
+          owner_email: string
+          ownership_ref: string
+          product_name: string
+          reserved_name_ok: boolean
+          responsible: string
+          revoked_at: string
+          slug: string
+          verified_at: string
+          workspace_name: string
+        }[]
+      }
+      spaces_app_designation: {
+        Args: { _app_id: string }
+        Returns: {
+          official: boolean
+          product_name: string
+          verified_at: string
+        }[]
+      }
+      spaces_approve_reserved_name: {
+        Args: { _app_id: string; _slug: string }
+        Returns: undefined
+      }
       spaces_can_manage_app: {
         Args: { _app: string; _uid: string }
         Returns: boolean
       }
+      spaces_can_verify: { Args: { _uid: string }; Returns: boolean }
       spaces_can_view_app: {
         Args: { _app: string; _uid: string }
         Returns: boolean
@@ -4950,8 +5094,34 @@ export type Database = {
         Returns: string
       }
       spaces_create_workspace: { Args: { _name: string }; Returns: string }
+      spaces_grant_official: {
+        Args: {
+          _app_id: string
+          _note: string
+          _ownership_ref: string
+          _product: string
+          _responsible: string
+        }
+        Returns: undefined
+      }
+      spaces_list_verifiers: {
+        Args: never
+        Returns: {
+          created_at: string
+          email: string
+          user_id: string
+        }[]
+      }
       spaces_rank: { Args: { _role: string }; Returns: number }
+      spaces_revoke_official: {
+        Args: { _app_id: string; _note: string }
+        Returns: undefined
+      }
       spaces_role_rank: { Args: { _uid: string; _ws: string }; Returns: number }
+      spaces_set_verifier: {
+        Args: { _allow: boolean; _user_email: string }
+        Returns: undefined
+      }
       storefront_can_publish: {
         Args: { _storefront_id: string }
         Returns: boolean
