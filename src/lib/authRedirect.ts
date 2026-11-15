@@ -17,4 +17,5 @@ export const authEmailOrigin = (): string => {
   return window.location.origin;
 };
 
-export const passwordResetRedirectUrl = (): string => `${authEmailOrigin()}/reset-password`;
+export const passwordResetRedirectUrl = (portal?: "spaces" | "orders" | null): string =>
+  `${authEmailOrigin()}/reset-password${portal ? `?portal=${portal}` : ""}`;

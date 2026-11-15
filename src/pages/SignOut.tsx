@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
+import { parsePortal, PORTALS } from "@/lib/portal";
 import { supabase } from "@/integrations/supabase/client";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
@@ -7,16 +9,21 @@ import { Loader2 } from "lucide-react";
 
 const SignOut = () => {
   const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const portal = parsePortal(params.get("portal"));
+  const qc = useQueryClient();
   const [status, setStatus] = useState("Signing you out…");
 
   useEffect(() => {
     const signOut = async () => {
       await supabase.auth.signOut();
-      setStatus("You have been signed out.");
-      setTimeout(() => navigate("/", { replace: true }), 800);
+      qc.clear();
+      try { localStorage.removeItem("spaces.ws"); } catch { /* storage unavailable */ }
+      setStatus("You've been signed out of all Loumilab products.");
+      setTimeout(() => navigate(portal ? `/${portal}/sign-in` : "/", { replace: true }), 900);
     };
     signOut();
-  }, [navigate]);
+  }, [navigate, portal, qc]);
 
   return (
     <Layout>

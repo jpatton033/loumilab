@@ -10,15 +10,22 @@ import { useToast } from "@/hooks/use-toast";
 import SEOHead from "@/components/SEOHead";
 import { passwordResetRedirectUrl } from "@/lib/authRedirect";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { parsePortal, portalForPath, portalSignInPath, resolvePostAuthDestination, safeNext, PORTALS, type Portal } from "@/lib/portal";
+import { Link } from "react-router-dom";
 import { LogIn, Mail, KeyRound, ArrowRight, Loader2 } from "lucide-react";
 
-const SignIn = () => {
+const SignIn = ({ portal: portalProp }: { portal?: Portal } = {}) => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [searchParams] = useSearchParams();
   const modeParam = searchParams.get("mode");
   const nextParam = searchParams.get("next");
-  const nextPath = nextParam && nextParam.startsWith("/") ? nextParam : null;
+  const nextPath = safeNext(nextParam);
+  const portal: Portal | null = portalProp ?? parsePortal(searchParams.get("portal")) ?? portalForPath(nextPath);
+  const info = portal ? PORTALS[portal] : null;
+  const expired = searchParams.get("expired") === "1";
+  /** Where emailed and Google links come back to: this portal's sign-in, which then routes onward. */
+  const returnPath = portal ? portalSignInPath(portal, nextPath) : nextPath ?? "";
   const defaultTab = modeParam === "signup" ? "signup" : modeParam === "forgot" ? "forgot" : "signin";
 
 
@@ -44,23 +51,17 @@ const SignIn = () => {
   }, []);
 
   const routeByRole = async (userId: string) => {
-    if (nextPath) {
-      navigate(nextPath, { replace: true });
-      return;
-    }
-
-    const { data: roles } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", userId);
-
-    if (roles?.some((r: { role: string }) => r.role === "admin")) {
-      navigate("/admin/overview", { replace: true });
-    } else {
-      navigate("/orders/dashboard", { replace: true });
-    }
+    const [{ data: roles }, { data: merchant }] = await Promise.all([
+      supabase.from("user_roles").select("role").eq("user_id", userId),
+      supabase.from("merchants").select("id").eq("owner_id", userId).maybeSingle(),
+    ]);
+    navigate(resolvePostAuthDestination({
+      portal,
+      next: nextPath,
+      hasMerchant: !!merchant,
+      isAdmin: !!roles?.some((r: { role: string }) => r.role === "admin"),
+    }), { replace: true });
   };
-
 
   const validatePassword = (value: string) => {
     if (value.length < 10) {
@@ -99,7 +100,7 @@ const SignIn = () => {
       email,
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}${nextPath ?? ""}`,
+        emailRedirectTo: `${window.location.origin}${returnPath}`,
         data: { display_name: displayName.trim() || email.split("@")[0] },
       },
     });
@@ -127,7 +128,7 @@ const SignIn = () => {
     // managed there); the direct Supabase provider call fails without a
     // configured client secret.
     const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: `${window.location.origin}${nextPath ?? ""}`,
+      redirect_uri: `${window.location.origin}${returnPath}`,
     });
     if (result.redirected) return;
     setLoading(false);
@@ -145,7 +146,7 @@ const SignIn = () => {
 
     setLoading(true);
     const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-      redirectTo: passwordResetRedirectUrl(),
+      redirectTo: passwordResetRedirectUrl(portal),
     });
     setLoading(false);
 
@@ -163,7 +164,7 @@ const SignIn = () => {
   if (checkingSession) {
     return (
       <Layout>
-        <SEOHead title="Sign In — Loumilab" description="Sign in to your Loumilab account." path="/sign-in" noindex />
+        <SEOHead title={`Sign In — ${info?.name ?? "Loumilab"}`} description={`Sign in to ${info?.name ?? "your Loumilab account"}.`} path={portal ? `/${portal}/sign-in` : "/sign-in"} noindex />
         <section className="section-padding flex min-h-[70vh] items-center pt-16 lg:pt-20">
           <div className="section-container mx-auto w-full max-w-md text-center text-muted-foreground">
             <Loader2 className="mx-auto h-6 w-6 animate-spin" />
@@ -176,13 +177,21 @@ const SignIn = () => {
 
   return (
     <Layout>
-      <SEOHead title="Sign In — Loumilab" description="Sign in to your Loumilab account." path="/sign-in" noindex />
+      <SEOHead title={`Sign In — ${info?.name ?? "Loumilab"}`} description={`Sign in to ${info?.name ?? "your Loumilab account"}.`} path={portal ? `/${portal}/sign-in` : "/sign-in"} noindex />
       <section className="section-padding flex min-h-[70vh] items-center pt-16 lg:pt-20">
         <div className="section-container mx-auto w-full max-w-md">
-          <h1 className="mb-2 text-center text-3xl font-semibold">Loumilab account</h1>
-          <p className="mb-8 text-center text-muted-foreground">
-            Manage your Orders dashboards and preferences.
+          <h1 className="mb-2 text-center text-3xl font-semibold">{info?.name ?? "Loumilab account"}</h1>
+          <p className="mb-2 text-center text-muted-foreground">
+            {info ? `${tab === "signup" ? "Create your account" : "Sign in"} to reach ${info.blurb.toLowerCase()}` : "One account for Loumilab Orders and Loumilab Spaces."}
           </p>
+          <p className="mb-8 text-center text-xs text-muted-foreground">
+            {info ? <>One Loumilab account works across products. <Link className="underline underline-offset-4 hover:text-foreground" to={info.publicPage}>About {info.name}</Link></> : null}
+          </p>
+          {expired && (
+            <p role="status" className="mb-6 rounded-2xl border border-border bg-secondary px-4 py-3 text-center text-sm text-foreground">
+              Your session expired. Sign in again to pick up where you left off.
+            </p>
+          )}
 
           {confirmed ? (
             <div className="rounded-3xl border border-border bg-background p-8 text-center shadow-[var(--shadow-card)]">

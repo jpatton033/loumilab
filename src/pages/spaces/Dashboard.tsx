@@ -41,7 +41,7 @@ function useWorkspaces(uid?: string) {
 export default function SpacesDashboard() {
   const user = useSessionUser();
   const ws = useWorkspaces(user?.id);
-  if (user === null) return <Navigate to="/sign-in?next=/spaces/app" replace />;
+  if (user === null) return <Navigate to="/spaces/sign-in?next=/spaces/app" replace />;
   if (user === undefined || ws.list === null) return <div className="grid min-h-screen place-items-center text-sm text-muted-foreground">Loading…</div>;
   return (
     <div className="min-h-screen bg-background">
@@ -58,6 +58,7 @@ export default function SpacesDashboard() {
             <Link className="rounded-md px-3 py-2 text-muted-foreground hover:text-foreground" to="/spaces/app">Library</Link>
             {ws.current && <Link className="rounded-md px-3 py-2 text-muted-foreground hover:text-foreground" to="/spaces/app/workspace">Members</Link>}
             <Link className="rounded-md px-3 py-2 text-muted-foreground hover:text-foreground" to="/spaces/specification">Docs</Link>
+            <Link className="rounded-md px-3 py-2 text-muted-foreground hover:text-foreground" to="/sign-out?portal=spaces">Sign out</Link>
           </nav>
         </div>
       </header>

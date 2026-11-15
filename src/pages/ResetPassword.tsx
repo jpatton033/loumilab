@@ -167,7 +167,8 @@ const ResetPassword = () => {
     }
 
     // Decide where to send them back before clearing the session.
-    let destination = "/sign-in";
+    const portal = new URLSearchParams(window.location.search).get("portal");
+    let destination = portal === "spaces" || portal === "orders" ? `/${portal}/sign-in` : "/sign-in";
     const { data: userData } = await supabase.auth.getUser();
     if (userData.user) {
       const { data: roles } = await supabase
