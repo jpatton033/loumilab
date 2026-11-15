@@ -33,7 +33,11 @@ const str = (v: unknown, max = 200) => typeof v === "string" && v.trim().length 
 export function validateManifest(input: unknown): Report & { manifest?: SpacesManifest } {
   const errors: string[] = [], warnings: string[] = [];
   if (!isObj(input)) return { ok: false, errors: ["spaces.json must be a JSON object."], warnings };
-  const m = input;
+  const m = { ...input };
+  // Official Loumilab status is decided only by Loumilab staff; manifest claims are dropped.
+  const claims = ["official", "verified", "officialLoumilab", "loumilabOfficial", "designation", "verification"].filter((k) => k in m);
+  for (const k of claims) delete m[k];
+  if (claims.length) warnings.push("Official Loumilab status can't be set from spaces.json and was ignored.");
   if (m.specVersion !== SPEC_VERSION) errors.push(`specVersion must be "${SPEC_VERSION}".`);
   if (!str(m.name, 80)) errors.push("name is required (1–80 characters).");
   if (!str(m.version, 40) || !/^\d+\.\d+\.\d+([-+][\w.-]+)?$/.test(String(m.version))) errors.push("version must be semantic, like 1.0.0.");

@@ -1,0 +1,3 @@
+/** Mirrors the database guard_customer_slug list; the database is the authority. */
+export const RESERVED_NAMES = ["www","app","apps","admin","api","mail","email","smtp","imap","ftp","cdn","static","assets","spaces","orders","local","help","support","status","docs","blog","news","the-dot","thedot","resources","store","shop","auth","login","sign-in","signup","account","dashboard","billing","pay","payments","checkout","dev","staging","preview","test","loumilab","vurtti","id","m","click","notify","send","rsend"];
+export const isReservedName = (slug: string) => RESERVED_NAMES.includes(slug.toLowerCase());
