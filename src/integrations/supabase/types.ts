@@ -5104,6 +5104,7 @@ export type Database = {
         }
         Returns: undefined
       }
+      spaces_is_super: { Args: { _uid: string }; Returns: boolean }
       spaces_list_verifiers: {
         Args: never
         Returns: {

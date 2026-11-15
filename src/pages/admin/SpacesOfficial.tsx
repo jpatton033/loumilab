@@ -32,7 +32,7 @@ export default function SpacesOfficial() {
     const [{ data: p, error }, { data: e }, { data: s }] = await Promise.all([
       supabase.rpc("spaces_admin_projects"),
       supabase.from("spaces_designation_events").select("id,app_id,action,note,created_at").order("created_at", { ascending: false }).limit(100),
-      uid ? supabase.rpc("has_admin_role", { _user_id: uid, _role: "super_admin" }) : Promise.resolve({ data: false }),
+      uid ? supabase.rpc("spaces_is_super", { _uid: uid }) : Promise.resolve({ data: false }),
     ]);
     if (error) toast.error(error.message);
     setRows((p as Row[]) ?? []); setEvents((e as Ev[]) ?? []); setIsSuper(s === true);
