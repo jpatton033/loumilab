@@ -229,6 +229,7 @@ function AppDetail({ ws }: { ws: Ws }) {
           {canManage && live && <Button variant="outline" onClick={exportZip}>Export</Button>}
         </div>
       </div>
+      <EdgePanel app={app} canManage={canManage} onDone={load} />
       <dl className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border bg-border text-sm sm:grid-cols-4">
         {[["Status", live ? "Live" : "Not deployed"], ["Live version", live ? `#${live.number}${(live.manifest as { version?: string } | null)?.version ? ` · ${(live.manifest as { version: string }).version}` : ""}` : "—"], ["Storage", fmtBytes(storage)], ["Last deploy", versions[0] ? new Date(versions[0].created_at).toLocaleString() : "—"]].map(([k, v]) => (
           <div key={k} className="bg-background p-5"><dt className="text-muted-foreground">{k}</dt><dd className="mt-1 font-medium text-foreground">{v}</dd></div>))}
@@ -275,6 +276,30 @@ function AppDetail({ ws }: { ws: Ws }) {
         {canManage && <TabsContent value="settings"><Settings app={app} ws={ws} onSaved={load} onDeleted={() => nav("/spaces/app")} /></TabsContent>}
       </Tabs>
     </>
+  );
+}
+const EDGE: Record<string, string> = { off: "Not on the web", deploying: "Deploying", pending: "Activating address", live: "Live on the web", failed: "Deploy failed" };
+function EdgePanel({ app, canManage, onDone }: { app: App; canManage: boolean; onDone: () => void }) {
+  const [busy, setBusy] = useState(false);
+  const url = `https://${app.slug}.spaces.loumilab.com`;
+  const run = async (action: "edge_sync" | "edge_check") => {
+    setBusy(true);
+    try { const r = await spacesApi<{ edge_status: string; error?: string }>({ action, app_id: app.id }); r.edge_status === "live" ? toast.success("Live on the web.") : r.error ? toast.error(r.error) : toast(EDGE[r.edge_status] ?? r.edge_status); }
+    catch (e) { toast.error((e as Error).message); }
+    setBusy(false); onDone();
+  };
+  const st = app.edge_status ?? "off";
+  const reason = !app.current_version_id ? "Publish a static version to put it on the web." : app.visibility !== "link" ? "Only apps set to \u201cAnyone with the link\u201d go on the public web. Private and workspace apps open inside Spaces." : app.status !== "active" ? "Archived apps are offline." : null;
+  return (
+    <div className="mt-8 flex flex-wrap items-center gap-4 rounded-2xl border border-border p-5 text-sm">
+      <div className="min-w-0 flex-1">
+        <p className="text-muted-foreground">Web address · <span className={st === "failed" ? "text-destructive" : "text-foreground"}>{EDGE[st] ?? st}</span>{app.edge_checked_at ? ` · checked ${new Date(app.edge_checked_at).toLocaleString()}` : ""}</p>
+        {st === "live" || st === "pending" ? <a href={url} target="_blank" rel="noreferrer" className="mt-1 block truncate font-medium text-foreground underline">{url.replace("https://", "")}</a> : <p className="mt-1 text-muted-foreground">{reason ?? app.edge_error ?? "Not published to the web yet."}</p>}
+        {st === "failed" && app.edge_error && <p className="mt-1 text-xs text-destructive">{app.edge_error}</p>}
+      </div>
+      {canManage && st === "pending" && <Button size="sm" variant="outline" disabled={busy} onClick={() => run("edge_check")}>Check again</Button>}
+      {canManage && !reason && st !== "live" && st !== "pending" && <Button size="sm" disabled={busy} onClick={() => run("edge_sync")}>{busy ? "Deploying…" : st === "failed" ? "Retry deploy" : "Put on the web"}</Button>}
+    </div>
   );
 }
 const summary = (d: unknown) => {
@@ -325,7 +350,10 @@ function Settings({ app, ws, onSaved, onDeleted }: { app: App; ws: Ws; onSaved: 
   const [confirm, setConfirm] = useState(""); const [del, setDel] = useState(false);
   const save = async (patch: Partial<App>) => {
     const { error } = await supabase.from("spaces_apps").update(patch).eq("id", app.id);
-    if (error) toast.error(error.message); else { toast.success("Saved."); onSaved(); }
+    if (error) return toast.error(error.message);
+    toast.success("Saved.");
+    if ("visibility" in patch || "status" in patch) { try { await spacesApi({ action: "edge_sync", app_id: app.id }); } catch (e) { toast.error((e as Error).message); } }
+    onSaved();
   };
   return (
     <div className="max-w-2xl space-y-4">
