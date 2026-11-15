@@ -11,7 +11,7 @@ const BUCKET = "spaces-artifacts";
 const store = () => admin.storage.from(BUCKET);
 
 const Body = z.discriminatedUnion("action", [
-  z.object({ action: z.literal("deploy"), app_id: z.string().uuid(), upload_path: z.string().max(300), notes: z.string().max(500).optional() }),
+  z.object({ action: z.literal("deploy"), app_id: z.string().uuid(), upload_path: z.string().max(300), mode: z.enum(["publish", "preserve"]).optional(), notes: z.string().max(500).optional() }),
   z.object({ action: z.literal("rollback"), app_id: z.string().uuid(), version_id: z.string().uuid() }),
   z.object({ action: z.literal("export"), app_id: z.string().uuid() }),
   z.object({ action: z.literal("passport"), app_id: z.string().uuid() }),
@@ -74,59 +74,97 @@ Deno.serve(async (req) => {
     const { data: blob, error } = await store().download(body.upload_path);
     if (error || !blob) return json({ error: "Upload not found" }, 404);
     if (blob.size > LIMITS.maxZipBytes) return json({ error: "ZIP is over 50 MB." }, 400);
+    // Safe unpack: every entry header is checked before inflation (paths, depth, size, ratio, count, duplicates).
+    const unzipErrors: string[] = []; const seen = new Set<string>(); let unpacked = 0, count = 0;
     let files: Record<string, Uint8Array>;
-    try { files = unzipSync(new Uint8Array(await blob.arrayBuffer())); } catch { return json({ error: "That file isn't a readable ZIP." }, 400); }
-
-    // A Spaces export package: app/ holds the build; reuse its manifest.
-    const isExport = "passport.json" in files && Object.keys(files).some((p) => p.startsWith("app/"));
-    let manifestRaw: unknown = null;
-    const manifestKey = isExport ? "spaces.json" : Object.keys(files).find((p) => /(^|\/)spaces\.json$/.test(p) && p.split("/").length <= 2);
-    const errors: string[] = [], warnings: string[] = [];
-    if (manifestKey && files[manifestKey]) {
-      try { manifestRaw = JSON.parse(strFromU8(files[manifestKey])); } catch { errors.push("spaces.json isn't valid JSON."); }
-    }
-    let manifest: Record<string, unknown> | null = null;
-    if (manifestRaw) {
-      const r = validateManifest(manifestRaw); errors.push(...r.errors); warnings.push(...r.warnings);
-      manifest = r.manifest as unknown as Record<string, unknown> ?? null;
-    } else if (!errors.length) warnings.push("No spaces.json found. Spaces used defaults; add one to describe your app.");
-    const entry = (manifest?.entry as string) ?? "index.html";
-    const source = isExport ? Object.fromEntries(Object.entries(files).filter(([p]) => p.startsWith("app/")).map(([p, d]) => [p.slice(4), d])) : files;
-    const fv = validateFiles(Object.entries(source).map(([path, d]) => ({ path, size: d.length })), entry);
-    errors.push(...fv.errors); warnings.push(...fv.warnings);
-    const entryBytes = fv.root !== null ? source[fv.root + entry] : undefined;
-    if (entryBytes) warnings.push(...checkEntryHtml(strFromU8(entryBytes)));
-
+    try {
+      files = unzipSync(new Uint8Array(await blob.arrayBuffer()), { filter: (f) => {
+        if (f.name.endsWith("/")) return false;
+        const e = checkZipEntry(f.name, f.size, f.originalSize);
+        if (e) { unzipErrors.push(e); return false; }
+        if (seen.has(f.name)) { unzipErrors.push(`Duplicate file name: ${f.name}`); return false; }
+        seen.add(f.name); count++; unpacked += f.originalSize;
+        if (count > UNZIP_LIMITS.maxEntries || unpacked > LIMITS.maxUnpackedBytes) { unzipErrors.push("Archive is too large once unpacked (150 MB / 10,000 files)."); return false; }
+        return !/(^|\/)node_modules\//.test(f.name);
+      } });
+    } catch { return json({ error: "That file isn't a readable ZIP." }, 400); }
     const { data: last } = await admin.from("spaces_versions").select("number").eq("app_id", app.id).order("number", { ascending: false }).limit(1).maybeSingle();
     const number = (last?.number ?? 0) + 1;
-    const total = fv.kept.reduce((s, f) => s + f.size, 0);
-    const validation = { errors, warnings, imported: isExport };
-    if (errors.length) {
-      await admin.from("spaces_versions").insert({ app_id: app.id, number, status: "failed", validation, created_by: user.id, notes: body.notes });
+    const fail = async (errors: string[], warnings: string[], extra: Record<string, unknown> = {}) => {
+      await admin.from("spaces_versions").insert({ app_id: app.id, number, status: "failed", validation: { errors, warnings }, created_by: user.id, notes: body.notes, ...extra });
       await event(app, "deploy_failed", { number, errors: errors.slice(0, 5) }, user.id);
       await store().remove([body.upload_path]);
-      return json({ ok: false, errors, warnings }, 422);
+      return json({ ok: false, errors, warnings, ...extra }, 422);
+    };
+    if (unzipErrors.length) return await fail([...new Set(unzipErrors)].slice(0, 50), []);
+
+    const isExport = "passport.json" in files && Object.keys(files).some((p) => p.startsWith("app/"));
+    const text = (p: string) => (files[p] && files[p].length < 512 * 1024 ? strFromU8(files[p]) : null);
+    const cls: Classification = isExport
+      ? { kind: "static", reasons: ["Spaces export package."], compiledRoot: "app/", services: [], framework: null }
+      : classifyArchive(Object.keys(files), text);
+    const publish = body.mode !== "preserve" && cls.kind === "static";
+    const errors: string[] = [], warnings: string[] = [];
+
+    // Preservation copy (source, secrets removed) whenever the upload isn't only compiled output.
+    const preserveSet = Object.fromEntries(Object.entries(files).filter(([p]) => preservable(p)));
+    const hasSource = !isExport && Object.keys(files).some((p) => /(^|\/)package\.json$/.test(p) || !p.startsWith(cls.compiledRoot ?? "\0"));
+
+    let manifest: Record<string, unknown> | null = null;
+    let fv: ReturnType<typeof validateFiles> | null = null;
+    let source: Record<string, Uint8Array> = {};
+    if (publish) {
+      const manifestKey = isExport ? "spaces.json" : Object.keys(files).find((p) => /(^|\/)spaces\.json$/.test(p) && p.split("/").length <= 2);
+      let manifestRaw: unknown = null;
+      if (manifestKey && files[manifestKey]) { try { manifestRaw = JSON.parse(strFromU8(files[manifestKey])); } catch { errors.push("spaces.json isn't valid JSON."); } }
+      if (manifestRaw) { const r = validateManifest(manifestRaw); errors.push(...r.errors); warnings.push(...r.warnings); manifest = r.manifest as unknown as Record<string, unknown> ?? null; }
+      else if (!errors.length) warnings.push("No spaces.json found. Spaces used defaults; add one to describe your app.");
+      const entry = (manifest?.entry as string) ?? "index.html";
+      const root = cls.compiledRoot ?? "";
+      source = Object.fromEntries(Object.entries(files).filter(([p]) => p.startsWith(root)).map(([p, d]) => [p.slice(root.length), d]));
+      fv = validateFiles(Object.entries(source).map(([path, d]) => ({ path, size: d.length })), entry);
+      errors.push(...fv.errors); warnings.push(...fv.warnings.filter((w) => !w.startsWith("This looks like source")));
+      const entryBytes = fv.root !== null ? source[fv.root + entry] : undefined;
+      if (entryBytes) warnings.push(...checkEntryHtml(strFromU8(entryBytes)));
+      if (errors.length) return await fail(errors, warnings, { kind: cls.kind, classification: cls });
     }
+    const status = publish ? "ready" : body.mode === "preserve" && cls.kind === "static" ? "preserved" : statusForKind(cls.kind);
+    const total = fv ? fv.kept.reduce((s, f) => s + f.size, 0) : Object.values(preserveSet).reduce((s, d) => s + d.length, 0);
     const { data: ver, error: vErr } = await admin.from("spaces_versions").insert({
-      app_id: app.id, number, status: "ready", file_count: fv.kept.length, total_bytes: total, manifest, validation, created_by: user.id, notes: body.notes,
+      app_id: app.id, number, status, kind: cls.kind, has_compiled: false, classification: cls,
+      file_count: fv ? fv.kept.length : Object.keys(preserveSet).length, total_bytes: total, manifest,
+      validation: { errors, warnings, imported: isExport, reasons: cls.reasons }, created_by: user.id, notes: body.notes,
     }).select("id").single();
     if (vErr || !ver) return json({ error: "Could not record version" }, 500);
-    const queue = [...fv.kept];
-    const worker = async () => {
-      for (let f = queue.shift(); f; f = queue.shift()) {
-        const { error: uErr } = await store().upload(`sites/${app.id}/${ver.id}/${f.path}`, source[fv.root + f.path], { contentType: contentType(f.path), upsert: true });
-        if (uErr) throw new Error(uErr.message);
-      }
-    };
-    try { await Promise.all(Array.from({ length: 8 }, worker)); }
-    catch (e) {
-      await admin.from("spaces_versions").update({ status: "failed", validation: { ...validation, errors: ["Storing files failed: " + (e as Error).message] } }).eq("id", ver.id);
-      return json({ error: "Storing files failed. Try again." }, 500);
+
+    let source_path: string | null = null;
+    if (hasSource || !publish) {
+      source_path = `source/${app.id}/${ver.id}/source.zip`;
+      const { error: sErr } = await store().upload(source_path, zipSync(preserveSet, { level: 6 }), { contentType: "application/zip", upsert: true });
+      if (sErr) source_path = null;
     }
-    await store().move(body.upload_path, `artifacts/${app.id}/${ver.id}/upload.zip`);
-    await admin.from("spaces_apps").update({ current_version_id: ver.id }).eq("id", app.id);
-    await event(app, isExport ? "imported" : "deployed", { number, files: fv.kept.length, bytes: total, version: manifest?.version ?? null }, user.id);
-    return json({ ok: true, version_id: ver.id, number, warnings });
+    if (publish && fv) {
+      const queue = [...fv.kept];
+      const worker = async () => {
+        for (let f = queue.shift(); f; f = queue.shift()) {
+          const { error: uErr } = await store().upload(`sites/${app.id}/${ver.id}/${f.path}`, source[fv!.root + f.path], { contentType: contentType(f.path), upsert: true });
+          if (uErr) throw new Error(uErr.message);
+        }
+      };
+      try { await Promise.all(Array.from({ length: 8 }, worker)); }
+      catch (e) {
+        await admin.from("spaces_versions").update({ status: "failed", source_path, validation: { errors: ["Storing files failed: " + (e as Error).message], warnings } }).eq("id", ver.id);
+        await store().remove([body.upload_path]);
+        return json({ error: "Storing files failed. Try again." }, 500);
+      }
+    }
+    await admin.from("spaces_versions").update({ has_compiled: publish, source_path }).eq("id", ver.id);
+    await store().remove([body.upload_path]);
+    if (publish) {
+      await admin.from("spaces_apps").update({ current_version_id: ver.id }).eq("id", app.id);
+      await event(app, isExport ? "imported" : "deployed", { number, files: fv!.kept.length, bytes: total, version: manifest?.version ?? null }, user.id);
+    } else await event(app, "preserved", { number, kind: cls.kind, files: Object.keys(preserveSet).length }, user.id);
+    return json({ ok: true, published: publish, status, kind: cls.kind, reasons: cls.reasons, version_id: ver.id, number, warnings });
   }
 
   if (body.action === "rollback") {
@@ -153,6 +191,7 @@ Deno.serve(async (req) => {
   await walk(prefix);
   const passport = await buildPassport(app.id);
   const manifest = ver.manifest ?? { specVersion: SPEC_VERSION, name: app.name, version: `0.0.${ver.number}`, type: "static", entry: "index.html", builtWith: app.built_with };
+  if (ver.source_path) { const { data: src } = await store().download(ver.source_path); if (src) out["source.zip"] = new Uint8Array(await src.arrayBuffer()); }
   out["spaces.json"] = strToU8(JSON.stringify(manifest, null, 2));
   out["passport.json"] = strToU8(JSON.stringify(passport, null, 2));
   out["README.md"] = strToU8(`# ${app.name}\n\nPortable export from Loumilab Spaces (${new Date().toISOString().slice(0, 10)}).\n\n- \`app/\` — the built application. Host it on any static web host (open app/index.html).\n- \`spaces.json\` — Spaces App Specification manifest.\n- \`passport.json\` — identity, versions and history.\n\nTo bring it back into Spaces, create an app and upload this ZIP on the Deploy tab.\n`);
