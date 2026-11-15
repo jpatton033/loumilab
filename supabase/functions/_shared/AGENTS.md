@@ -1,0 +1,1 @@
+- Spaces public web hosting goes only through spacesEdge.ts syncEdge (Worker `loumilab-spaces`, source infra/spaces-worker, R2, one Worker custom domain per app at <slug>.spaces.loumilab.com); only public active apps go live, edge_* columns are server-only, and Live is set only after a fetch confirms the version — keeps hosting real and off loumilab.com.

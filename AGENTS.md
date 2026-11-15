@@ -38,4 +38,3 @@
 - Post sign-in routing goes only through resolvePostAuthDestination in src/lib/portal.ts; Spaces and Orders use /spaces/sign-in and /orders/sign-in on one shared account and session — keeps each product its own portal without duplicate identities.
 - Spaces official status lives only in staff-only spaces_official_designations, changed only via spaces_grant/revoke_official RPCs (super admins or staff in spaces_verifier_grants), never from spaces.json or imports — keeps ownership separate from hosting.
 
-- Spaces public web hosting runs only through _shared/spacesEdge.ts syncEdge: the Cloudflare Worker `loumilab-spaces` (source in infra/spaces-worker) serves R2 objects at <slug>.spaces.loumilab.com, one Worker custom domain per app (free certs; Universal SSL can't cover two-level wildcards); only public (link) active apps are live, edge_* columns are server-only and Live is set only after a fetch confirms the version — keeps hosting real and off loumilab.com.
