@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 import { LogIn, Mail, KeyRound, ArrowRight, Loader2 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { AgreementViewer } from "@/components/legal/AgreementViewer";
-import { CHECKBOX_LABEL, PRIVACY_URL, TERMS_URL, fetchCurrentAgreement, flushPendingAcceptance, rememberPendingAcceptance, type AgreementVersion } from "@/lib/legal/agreements";
+import { PRIVACY_URL, TERMS_URL, fetchCurrentAgreement, flushPendingAcceptance, rememberPendingAcceptance, type AgreementVersion } from "@/lib/legal/agreements";
 
 const SignIn = ({ portal: portalProp }: { portal?: Portal } = {}) => {
   const navigate = useNavigate();
@@ -361,7 +361,6 @@ const SignIn = ({ portal: portalProp }: { portal?: Portal } = {}) => {
                         <button type="button" onClick={(e) => { e.preventDefault(); setViewing(true); }} className="font-medium underline underline-offset-4">Spaces Hosting &amp; Acceptable Use Agreement</button>
                         , and acknowledge the{" "}
                         <a href={PRIVACY_URL} target="_blank" rel="noreferrer" className="font-medium underline underline-offset-4">Privacy Policy</a>.
-                        <span className="sr-only"> ({CHECKBOX_LABEL})</span>
                       </label>
                     </div>
                   )}

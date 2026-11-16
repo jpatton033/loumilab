@@ -10,12 +10,20 @@ type Doc = { title: string; version: string; content: string; effective_date: st
 
 const fmtDate = (d: string | null) => d ? new Date(`${d}T12:00:00`).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) : "Not yet effective (draft)";
 
+const md = {
+  h1: (p: React.HTMLAttributes<HTMLHeadingElement>) => <h1 className="mb-4 font-hero text-2xl font-semibold text-foreground" {...p} />,
+  h2: (p: React.HTMLAttributes<HTMLHeadingElement>) => <h2 className="mb-3 mt-8 font-hero text-lg font-semibold text-foreground" {...p} />,
+  h3: (p: React.HTMLAttributes<HTMLHeadingElement>) => <h3 className="mb-2 mt-5 font-semibold text-foreground" {...p} />,
+  p: (p: React.HTMLAttributes<HTMLParagraphElement>) => <p className="mb-3 text-sm leading-relaxed text-foreground/85" {...p} />,
+  ul: (p: React.HTMLAttributes<HTMLUListElement>) => <ul className="mb-3 list-disc space-y-1 pl-5 text-sm text-foreground/85" {...p} />,
+  ol: (p: React.HTMLAttributes<HTMLOListElement>) => <ol className="mb-3 list-decimal space-y-1 pl-5 text-sm text-foreground/85" {...p} />,
+  a: (p: React.AnchorHTMLAttributes<HTMLAnchorElement>) => <a className="underline underline-offset-4" target="_blank" rel="noreferrer" {...p} />,
+  hr: () => <hr className="my-6 border-border" />,
+  strong: (p: React.HTMLAttributes<HTMLElement>) => <strong className="font-semibold text-foreground" {...p} />,
+};
+
 export function AgreementBody({ doc }: { doc: Doc }) {
-  return (
-    <article className="prose prose-sm max-w-none text-foreground prose-headings:font-hero prose-headings:text-foreground prose-strong:text-foreground prose-a:text-dot">
-      <ReactMarkdown remarkPlugins={[remarkGfm]}>{doc.content}</ReactMarkdown>
-    </article>
-  );
+  return <article><ReactMarkdown remarkPlugins={[remarkGfm]} components={md}>{doc.content}</ReactMarkdown></article>;
 }
 
 export function printAgreement(doc: Doc) {
