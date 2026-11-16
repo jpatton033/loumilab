@@ -13,6 +13,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CHOOSE_PORTAL, getLastPortal, setLastPortal, parsePortal, portalForPath, portalSignInPath, resolvePostAuthDestination, safeNext, PORTALS, type Portal } from "@/lib/portal";
 import { Link } from "react-router-dom";
 import { LogIn, Mail, KeyRound, ArrowRight, Loader2 } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { AgreementViewer } from "@/components/legal/AgreementViewer";
+import { CHECKBOX_LABEL, PRIVACY_URL, TERMS_URL, fetchCurrentAgreement, flushPendingAcceptance, rememberPendingAcceptance, type AgreementVersion } from "@/lib/legal/agreements";
 
 const SignIn = ({ portal: portalProp }: { portal?: Portal } = {}) => {
   const navigate = useNavigate();
@@ -38,6 +41,14 @@ const SignIn = ({ portal: portalProp }: { portal?: Portal } = {}) => {
   const [checkingSession, setCheckingSession] = useState(true);
   const [confirmed, setConfirmed] = useState(false);
   const [choosing, setChoosing] = useState(false);
+  // Spaces sign-up only: the agreement applies once a version is published and effective.
+  const [agreement, setAgreement] = useState<AgreementVersion | null>(null);
+  const [agreed, setAgreed] = useState(false);
+  const [viewing, setViewing] = useState(false);
+  useEffect(() => {
+    if (portal !== "spaces") return;
+    fetchCurrentAgreement().then(setAgreement).catch(() => setAgreement(null));
+  }, [portal]);
 
   useEffect(() => {
     const check = async () => {
@@ -52,6 +63,7 @@ const SignIn = ({ portal: portalProp }: { portal?: Portal } = {}) => {
   }, []);
 
   const routeByRole = async (userId: string) => {
+    await flushPendingAcceptance();
     const [{ data: roles }, { data: merchant }, { data: spaces }] = await Promise.all([
       supabase.from("user_roles").select("role").eq("user_id", userId),
       supabase.from("merchants").select("id").eq("owner_id", userId).maybeSingle(),
@@ -101,6 +113,12 @@ const SignIn = ({ portal: portalProp }: { portal?: Portal } = {}) => {
       toast({ title: "Passwords don't match", description: "Re-enter the same password twice.", variant: "destructive" });
       return;
     }
+
+    if (agreement && !agreed) {
+      toast({ title: "Agreement required", description: "Please review and accept the agreements to create your Spaces account.", variant: "destructive" });
+      return;
+    }
+    if (agreement) rememberPendingAcceptance(agreement);
 
     setLoading(true);
     const { data, error } = await supabase.auth.signUp({
@@ -334,7 +352,21 @@ const SignIn = ({ portal: portalProp }: { portal?: Portal } = {}) => {
                       className="bg-background"
                     />
                   </div>
-                  <Button size="lg" type="submit" className="w-full" disabled={loading}>
+                  {agreement && (
+                    <div className="flex items-start gap-3 rounded-xl border border-border bg-muted/40 p-3">
+                      <Checkbox id="spaces-agree" checked={agreed} onCheckedChange={(v) => setAgreed(v === true)} className="mt-0.5" aria-describedby="spaces-agree-text" />
+                      <label htmlFor="spaces-agree" id="spaces-agree-text" className="text-sm leading-relaxed text-foreground/85">
+                        I agree to the{" "}
+                        <a href={TERMS_URL} target="_blank" rel="noreferrer" className="font-medium underline underline-offset-4">Loumilab Terms of Service</a>{" "}and{" "}
+                        <button type="button" onClick={(e) => { e.preventDefault(); setViewing(true); }} className="font-medium underline underline-offset-4">Spaces Hosting &amp; Acceptable Use Agreement</button>
+                        , and acknowledge the{" "}
+                        <a href={PRIVACY_URL} target="_blank" rel="noreferrer" className="font-medium underline underline-offset-4">Privacy Policy</a>.
+                        <span className="sr-only"> ({CHECKBOX_LABEL})</span>
+                      </label>
+                    </div>
+                  )}
+                  <AgreementViewer doc={agreement} open={viewing} onOpenChange={setViewing} />
+                  <Button size="lg" type="submit" className="w-full" disabled={loading || (!!agreement && !agreed)}>
                     {loading ? "Creating account…" : "Create account"} <KeyRound size={16} />
                   </Button>
                 </form>
