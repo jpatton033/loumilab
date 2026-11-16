@@ -211,6 +211,13 @@
       "when": 1794774994506,
       "tag": "0029_spaces_edge_guard",
       "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "7",
+      "when": 1794798896819,
+      "tag": "0030_spaces_legal_agreements",
+      "breakpoints": true
     }
   ]
 }
