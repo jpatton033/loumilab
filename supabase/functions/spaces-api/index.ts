@@ -3,6 +3,7 @@ import { z } from "npm:zod@3";
 import { unzipSync, zipSync, strToU8, strFromU8 } from "npm:fflate@0.8.2";
 import { admin, requireUser } from "../_shared/auth.ts";
 import { signServe } from "../_shared/spacesToken.ts";
+import { agreementBlocks, AGREEMENT_REQUIRED } from "../_shared/spacesAgreement.ts";
 import { syncEdge, recheckEdge, edgeUrl } from "../_shared/spacesEdge.ts";
 import { validateManifest, validateFiles, checkEntryHtml, contentType, LIMITS, SPEC_VERSION, classifyArchive, checkZipEntry, preservable, statusForKind, UNZIP_LIMITS, type Classification } from "../_shared/spacesSpec.ts";
 
@@ -83,6 +84,10 @@ Deno.serve(async (req) => {
     return json(await buildPassport(app.id));
   }
   if (!await canManage(app.id, user.id)) return json({ error: "You don't have permission to manage this app." }, 403);
+
+  // Governed hosting actions require the current Spaces agreement once one is published and effective.
+  const governed = body.action === "deploy" || body.action === "rollback" || (body.action === "edge_sync" && app.visibility === "link" && app.status === "active");
+  if (governed && await agreementBlocks(user.id)) return json({ error: AGREEMENT_REQUIRED, code: "agreement_required" }, 403);
 
   if (body.action === "deploy") {
     if (!body.upload_path.startsWith(`uploads/${app.id}/`) || body.upload_path.includes("..")) return json({ error: "Invalid upload" }, 400);
