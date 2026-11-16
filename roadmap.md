@@ -1,49 +1,8 @@
-# Roadmap
-
-- [x] Orders mobile: visible step progress, business autofill, accessible fulfilment touch targets and phone-sized action buttons
-- [x] Verify visitor setup steps 1–7 at 320px, 390px and desktop; first-tap selection, back navigation, tall-step access, and no horizontal overflow
-- [ ] Verify signed-in setup steps 8–10 — blocked: no requesting-user auth account could be minted; requires a signed-in preview session
-
-- [x] Conversion tracking foundation (Meta + Google events, regional consent banner, cookie settings, privacy disclosure)
-- [x] Add Meta Pixel ID (1096079062830163)
-- [ ] Confirm Meta receives events on the live site — accepted route change calls PageView, but browser test saw no facebook.com/tr request; requires Meta Test Events confirmation
-- [x] Add Google tracking via Tag Manager (GTM-M69KVPPK)
-- [x] Confirm live GTM data layer receives page_view on Orders → setup; rejecting consent loads neither marketing script
-
-- [x] Store setup: build store first, account at step 7; draft survives sign-in
-- [x] Count Google sign-ups
-
-- [x] Squarespace-style flow: shared hero / three-benefit / closing-button blocks; Orders vs. Square, Shopify, Toast comparison pages linked from Orders, pricing and footer
-- [x] Website refinement: homepage "What do you need?" paths; Services menu grouped (Studio / Managed Business Technology)
-- [x] Redesign: navigation (Solutions/Products/Resources/About), footer, homepage, dark section tokens, 5 new service pages (web, software, AI, security, domains)
-- [x] Redesign: Orders (centered opening, real builder/dashboard screenshots, cleaner pricing cards), Local, Business Email, Products, About, Contact, Resources, The Dot.; Start a Project form service/budget fields
-- [x] Immersive redesign phase 1: palette, serif accent, film grain, video opening, dark pinned scenes on homepage
-- [ ] Immersive phase 1b: scroll-aware header, full-screen search overlay, more homepage clips
-- [ ] Immersive phase 2: Solutions + service pages
-- [ ] Immersive phase 3: Products (Orders, Local) + Companies (Vurtti)
-- [ ] Immersive phase 4: Knowledge Center + The Dot.
-- [ ] Immersive phase 5: About, Contact, legal, tablet/phone + speed pass
-
-## Establish. Run. Improve. refinement (2026-11-08)
-- [x] Satoshi headlines + matching period; italic accents removed; font preview removed
-- [x] Homepage Establish / Run / Improve story with new photos; Vurtti section
-- [x] Solutions menu "Start here" row; search suggestions; deep-black footer
-- [ ] Refine Business Email / Domains pages; tasks motion atop Workflow Optimization
-- [ ] Replace cropped screenshots on Orders pages; new photos per page
-- [ ] Apply hover system and imagery to remaining pages
-
-- [x] Footer logo/hover fix, homepage reading section, photo heroes on all public pages (2026-11-08)
-
-## Cinematic motion (Nov 2026)
-- [x] Shared scroll scenes + every page's opening photo zooms/dims as you scroll
-- [x] Homepage scenes (hero exit, lights-down, rise/drift/expand/overlap)
-- [ ] Homepage Orders: replace screenshots with photo scene + animated reveals
-- [ ] Dedicated homepage Workflow "messy to simple" sequence
-- [ ] Per-page scene tuning beyond shared blocks (Solutions, Email, Products, KC)
-
-## Cinematic Continuity refinement (2026-11-13)
-- [x] Phase 1: shared dark palette + atmosphere pieces, homepage below hero
-- [ ] Phase 2: Studio pages, Workflow, Orders, Business Email/Domains (muralist photo ready)
-- [ ] Phase 3: remaining public pages
-- [ ] Phase 4: The Dot. + Knowledge Center (light reading area)
-- [ ] Phase 5: full consistency check (computer/tablet/phone)
+# Spaces Phase 2 + 3
+- [x] Backend detection + secret-safety rules (tested)
+- [ ] Fly.io build workers (waiting on FLY_API_TOKEN + spending cap)
+- [ ] Settings/connection tables, encrypted storage, spaces-api actions
+- [ ] Application → Configuration tab, readiness, Passport fields
+- [ ] Draft legal changes for approval
+- [ ] Real build/deploy/rollback test
+- [ ] Supabase connection/sign-in/database tests (blocked: no test Supabase project)
