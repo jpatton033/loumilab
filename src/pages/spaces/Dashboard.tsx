@@ -14,6 +14,7 @@ import type { Tables } from "@/integrations/supabase/types";
 import { fmtBytes, ROLE_RANK, slugify, spacesApi, useSessionUser, type Role } from "@/lib/spaces/client";
 import { useDesignation } from "@/lib/spaces/designation";
 import { OfficialBadge } from "@/components/spaces/OfficialBadge";
+import { SpacesAccountLegal, SpacesAgreementPrompt } from "@/components/legal/SpacesLegal";
 import { LIMITS, KIND_LABEL, STATUS_LABEL, type ArchiveKind, type VersionStatus } from "@/lib/spaces/spec";
 
 type App = Tables<"spaces_apps">;
@@ -60,16 +61,19 @@ export default function SpacesDashboard() {
             <Link className="rounded-md px-3 py-2 text-muted-foreground hover:text-foreground" to="/spaces/app">Library</Link>
             {ws.current && <Link className="rounded-md px-3 py-2 text-muted-foreground hover:text-foreground" to="/spaces/app/workspace">Members</Link>}
             <Link className="rounded-md px-3 py-2 text-muted-foreground hover:text-foreground" to="/spaces/specification">Docs</Link>
+            <Link className="rounded-md px-3 py-2 text-muted-foreground hover:text-foreground" to="/spaces/app/account">Account</Link>
             <Link className="rounded-md px-3 py-2 text-muted-foreground hover:text-foreground" to="/sign-out?portal=spaces">Sign out</Link>
           </nav>
         </div>
       </header>
       <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
+        <SpacesAgreementPrompt workspaceId={ws.current?.id} />
         {!ws.current ? <CreateWorkspace onDone={async (id) => { ws.setCurrent(id); await ws.reload(); }} first /> : (
           <Routes>
             <Route index element={<Library ws={ws.current} uid={user.id} />} />
             <Route path="workspace" element={<Members ws={ws.current} uid={user.id} onNew={async (id) => { ws.setCurrent(id); await ws.reload(); }} />} />
             <Route path="apps/:id" element={<AppDetail ws={ws.current} />} />
+            <Route path="account" element={<SpacesAccountLegal />} />
           </Routes>
         )}
       </main>

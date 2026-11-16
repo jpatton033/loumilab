@@ -1500,6 +1500,128 @@ export type Database = {
         }
         Relationships: []
       }
+      legal_acceptances: {
+        Row: {
+          accepted_at: string
+          content_hash: string
+          document_id: string
+          id: string
+          method: string
+          user_id: string
+          version_id: string
+          workspace_id: string | null
+        }
+        Insert: {
+          accepted_at?: string
+          content_hash: string
+          document_id: string
+          id?: string
+          method: string
+          user_id: string
+          version_id: string
+          workspace_id?: string | null
+        }
+        Update: {
+          accepted_at?: string
+          content_hash?: string
+          document_id?: string
+          id?: string
+          method?: string
+          user_id?: string
+          version_id?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "legal_acceptances_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "legal_documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "legal_acceptances_version_id_fkey"
+            columns: ["version_id"]
+            isOneToOne: false
+            referencedRelation: "legal_document_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      legal_document_versions: {
+        Row: {
+          approval_note: string | null
+          approved_by: string | null
+          content: string
+          content_hash: string
+          created_at: string
+          document_id: string
+          effective_date: string | null
+          id: string
+          published_at: string | null
+          requires_reacceptance: boolean
+          status: string
+          version: string
+        }
+        Insert: {
+          approval_note?: string | null
+          approved_by?: string | null
+          content: string
+          content_hash?: string
+          created_at?: string
+          document_id: string
+          effective_date?: string | null
+          id?: string
+          published_at?: string | null
+          requires_reacceptance?: boolean
+          status?: string
+          version: string
+        }
+        Update: {
+          approval_note?: string | null
+          approved_by?: string | null
+          content?: string
+          content_hash?: string
+          created_at?: string
+          document_id?: string
+          effective_date?: string | null
+          id?: string
+          published_at?: string | null
+          requires_reacceptance?: boolean
+          status?: string
+          version?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "legal_document_versions_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "legal_documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      legal_documents: {
+        Row: {
+          created_at: string
+          id: string
+          slug: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          slug: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          slug?: string
+          title?: string
+        }
+        Relationships: []
+      }
       local_candidates: {
         Row: {
           affiliation_note: string | null
@@ -4931,6 +5053,67 @@ export type Database = {
           published_count: number
           section_slug: string
         }[]
+      }
+      legal_accept: {
+        Args: {
+          _hash: string
+          _method: string
+          _version: string
+          _workspace?: string
+        }
+        Returns: string
+      }
+      legal_admin_overview: { Args: { _slug: string }; Returns: Json }
+      legal_create_draft: {
+        Args: {
+          _content: string
+          _reaccept: boolean
+          _slug: string
+          _version: string
+        }
+        Returns: string
+      }
+      legal_current_version: {
+        Args: { _slug: string }
+        Returns: {
+          content: string
+          content_hash: string
+          document_id: string
+          effective_date: string
+          id: string
+          published_at: string
+          title: string
+          version: string
+        }[]
+      }
+      legal_my_acceptances: {
+        Args: { _slug: string }
+        Returns: {
+          accepted_at: string
+          content: string
+          content_hash: string
+          effective_date: string
+          method: string
+          version: string
+          version_id: string
+        }[]
+      }
+      legal_needs_acceptance: {
+        Args: { _slug: string; _uid?: string }
+        Returns: boolean
+      }
+      legal_publish_version: {
+        Args: {
+          _effective: string
+          _hash: string
+          _note: string
+          _version: string
+        }
+        Returns: undefined
+      }
+      legal_update_draft: {
+        Args: { _content: string; _reaccept: boolean; _version: string }
+        Returns: undefined
       }
       local_name_key: {
         Args: { _city: string; _name: string }
