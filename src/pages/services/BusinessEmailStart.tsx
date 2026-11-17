@@ -69,7 +69,8 @@ const BusinessEmailStart = () => {
     try {
       const saved = JSON.parse(localStorage.getItem(DRAFT_KEY) || "null");
       const pkg = params.get("package");
-      return { ...empty, ...(saved ?? {}), ...(pkg === "email" || pkg === "email_domain" ? { package: pkg } : {}) };
+      const dom = (params.get("domain") ?? "").toLowerCase();
+      return { ...empty, ...(saved ?? {}), ...(pkg === "email" || pkg === "email_domain" ? { package: pkg } : {}), ...(dom && /^[a-z0-9.-]{4,253}$/.test(dom) ? { owns_domain: false, desired_domain: dom } : {}) };
     } catch { return empty; }
   });
   const [step, setStep] = useState(0);

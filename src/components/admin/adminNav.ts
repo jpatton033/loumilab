@@ -1,5 +1,5 @@
 import { AtSign,
-  BadgeCheck,
+  BadgeCheck, Globe,
   BadgePercent,
   BookOpen,
   Dot,
@@ -96,6 +96,7 @@ export const adminNav: AdminNavGroup[] = [
       { title: "Local Importer", url: "/admin/local-importer", icon: MapPinned },
       { title: "Spaces · Official projects", url: "/admin/spaces-official", icon: BadgeCheck },
       { title: "Spaces · Legal agreements", url: "/admin/spaces-legal", icon: ScrollText },
+      { title: "Domains", url: "/admin/domains", icon: Globe },
     ],
   },
   {

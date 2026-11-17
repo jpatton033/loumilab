@@ -41,6 +41,7 @@ const AdminMerchantsDirectory = lazy(() => import("./pages/admin/MerchantsDirect
 const AdminPlans = lazy(() => import("./pages/admin/Plans"));
 const AdminPromotions = lazy(() => import("./pages/admin/Promotions"));
 const AdminSpacesOfficial = lazy(() => import("./pages/admin/SpacesOfficial"));
+const AdminDomains = lazy(() => import("./pages/admin/Domains"));
 const AdminSpacesLegal = lazy(() => import("./pages/admin/SpacesLegal"));
 const AdminCustomProjects = lazy(() => import("./pages/admin/CustomProjects"));
 const AdminIndustries = lazy(() => import("./pages/admin/Industries"));
@@ -160,6 +161,7 @@ const routes = (<>
           <Route path="/admin/merchants" element={<ProtectedRoute><AdminMerchantsDirectory /></ProtectedRoute>} />
           <Route path="/admin/plans" element={<ProtectedRoute><AdminPlans /></ProtectedRoute>} />
           <Route path="/admin/spaces-official" element={<ProtectedRoute><AdminSpacesOfficial /></ProtectedRoute>} />
+          <Route path="/admin/domains" element={<ProtectedRoute><AdminDomains /></ProtectedRoute>} />
           <Route path="/admin/spaces-legal" element={<ProtectedRoute><AdminSpacesLegal /></ProtectedRoute>} />
           <Route path="/admin/promotions" element={<ProtectedRoute><AdminPromotions /></ProtectedRoute>} />
           <Route path="/admin/industries" element={<ProtectedRoute><AdminIndustries /></ProtectedRoute>} />

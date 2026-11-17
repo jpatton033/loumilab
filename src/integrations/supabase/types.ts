@@ -414,6 +414,63 @@ export type Database = {
         }
         Relationships: []
       }
+      domain_provider_events: {
+        Row: {
+          created_at: string
+          error: string | null
+          http_status: number | null
+          id: string
+          ok: boolean
+          op: string
+          result_count: number | null
+          surface: string | null
+        }
+        Insert: {
+          created_at?: string
+          error?: string | null
+          http_status?: number | null
+          id?: string
+          ok: boolean
+          op: string
+          result_count?: number | null
+          surface?: string | null
+        }
+        Update: {
+          created_at?: string
+          error?: string | null
+          http_status?: number | null
+          id?: string
+          ok?: boolean
+          op?: string
+          result_count?: number | null
+          surface?: string | null
+        }
+        Relationships: []
+      }
+      domain_settings: {
+        Row: {
+          checks_per_hour: number
+          enabled: boolean
+          id: number
+          searches_per_hour: number
+          updated_at: string
+        }
+        Insert: {
+          checks_per_hour?: number
+          enabled?: boolean
+          id?: number
+          searches_per_hour?: number
+          updated_at?: string
+        }
+        Update: {
+          checks_per_hour?: number
+          enabled?: boolean
+          id?: number
+          searches_per_hour?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       dot_issue_templates: {
         Row: {
           content: Json
@@ -4337,6 +4394,44 @@ export type Database = {
             columns: ["workspace_id"]
             isOneToOne: false
             referencedRelation: "spaces_workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      spaces_custom_domains: {
+        Row: {
+          app_id: string
+          created_at: string
+          created_by: string
+          hostname: string
+          id: string
+          status: string
+          verification_token: string
+        }
+        Insert: {
+          app_id: string
+          created_at?: string
+          created_by?: string
+          hostname: string
+          id?: string
+          status?: string
+          verification_token?: string
+        }
+        Update: {
+          app_id?: string
+          created_at?: string
+          created_by?: string
+          hostname?: string
+          id?: string
+          status?: string
+          verification_token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "spaces_custom_domains_app_id_fkey"
+            columns: ["app_id"]
+            isOneToOne: false
+            referencedRelation: "spaces_apps"
             referencedColumns: ["id"]
           },
         ]

@@ -1,7 +1,8 @@
 import heroEmail from "@/assets/heroes/business-email.jpg";
 import { PageHero } from "@/components/brand/flow/Flow";
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import DomainSearch from "@/components/domains/DomainSearch";
 import { ArrowRight, Check, Mail, Globe, Server, ShieldCheck, Lock, Users, Send, LifeBuoy, ChevronRight } from "lucide-react";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
@@ -142,6 +143,16 @@ const BusinessEmail = () => {
               </li>
             ))}
           </ul>
+        </div>
+      </section>
+
+      {/* Domain search */}
+      <section id="domains" className="scroll-mt-24 section-padding border-t border-border">
+        <div className="section-container max-w-3xl">
+          <Eyebrow>Domain search</Eyebrow>
+          <h2 className="mt-3 font-hero text-4xl font-semibold leading-tight text-foreground lg:text-5xl">Find your domain. Build what's next.</h2>
+          <p className="mt-4 text-lg text-muted-foreground">Search available domain names for your business, website, or application.</p>
+          <div className="mt-8"><DomainSearchBlock /></div>
         </div>
       </section>
 
@@ -296,5 +307,10 @@ const BusinessEmail = () => {
     </Layout>
   );
 };
+
+function DomainSearchBlock() {
+  const nav = useNavigate();
+  return <DomainSearch surface="business" onProceed={(r) => nav(`/services/business-email/start?package=email_domain&domain=${encodeURIComponent(r.name)}`)} />;
+}
 
 export default BusinessEmail;

@@ -6,6 +6,7 @@ import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import SpacesDomains from "@/components/domains/SpacesDomains";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
@@ -239,7 +240,7 @@ function AppDetail({ ws }: { ws: Ws }) {
           <div key={k} className="bg-background p-5"><dt className="text-muted-foreground">{k}</dt><dd className="mt-1 font-medium text-foreground">{v}</dd></div>))}
       </dl>
       <Tabs defaultValue={canManage ? "deploy" : "passport"} className="mt-10">
-        <TabsList>{canManage && <TabsTrigger value="deploy">Deploy</TabsTrigger>}<TabsTrigger value="versions">Versions</TabsTrigger><TabsTrigger value="passport">Passport</TabsTrigger>{canManage && <TabsTrigger value="settings">Settings</TabsTrigger>}</TabsList>
+        <TabsList>{canManage && <TabsTrigger value="deploy">Deploy</TabsTrigger>}<TabsTrigger value="versions">Versions</TabsTrigger><TabsTrigger value="passport">Passport</TabsTrigger><TabsTrigger value="domains">Domains</TabsTrigger>{canManage && <TabsTrigger value="settings">Settings</TabsTrigger>}</TabsList>
         {canManage && <TabsContent value="deploy"><Deploy app={app} onDone={load} /></TabsContent>}
         <TabsContent value="versions">
           <ul className="divide-y divide-border rounded-2xl border border-border">
@@ -277,6 +278,7 @@ function AppDetail({ ws }: { ws: Ws }) {
                 <p className="text-xs text-muted-foreground">{new Date(e.created_at).toLocaleString()} {summary(e.detail)}</p></li>))}
           </ol>
         </TabsContent>
+        <TabsContent value="domains"><SpacesDomains appId={app.id} slug={app.slug} canManage={canManage} /></TabsContent>
         {canManage && <TabsContent value="settings"><Settings app={app} ws={ws} onSaved={load} onDeleted={() => nav("/spaces/app")} /></TabsContent>}
       </Tabs>
     </>
