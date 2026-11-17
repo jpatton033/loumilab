@@ -146,14 +146,14 @@ const BusinessEmail = () => {
         </div>
       </section>
 
-      {/* Domain search */}
-      <section id="domains" className="scroll-mt-24 section-padding border-t border-border">
-        <div className="section-container max-w-3xl">
-          <Eyebrow>Domain search</Eyebrow>
-          <h2 className="mt-3 font-hero text-4xl font-semibold leading-tight text-foreground lg:text-5xl">Find your domain. Build what's next.</h2>
-          <p className="mt-4 text-lg text-muted-foreground">Search available domain names for your business, website, or application.</p>
-          <div className="mt-8"><DomainSearchBlock /></div>
-        </div>
+      {/* Domain search — bold black moment */}
+      <section id="domains" className="scroll-mt-24 bg-atmo-obsidian py-24 text-atmo-ivory lg:py-36" aria-labelledby="domains-title">
+        <Reveal className="section-container max-w-4xl">
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-atmo-ivory/60">Find your domain</p>
+          <h2 id="domains-title" className="mt-4 text-atmo-ivory font-hero text-5xl font-semibold leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl">Your business deserves its own domain.</h2>
+          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-atmo-ivory/65 lg:text-xl">Find the right domain for your business and take the next step toward a professional online presence.</p>
+          <div className="mt-10"><DomainSearchBlock /></div>
+        </Reveal>
       </section>
 
       {/* Packages */}
@@ -310,7 +310,7 @@ const BusinessEmail = () => {
 
 function DomainSearchBlock() {
   const nav = useNavigate();
-  return <DomainSearch surface="business" onProceed={(r) => nav(`/services/business-email/start?package=email_domain&domain=${encodeURIComponent(r.name)}`)} />;
+  return <DomainSearch surface="business" variant="dark" placeholder="Search your business domain..." onProceed={(r) => nav(`/services/business-email/start?package=email_domain&domain=${encodeURIComponent(r.name)}`)} />;
 }
 
 export default BusinessEmail;

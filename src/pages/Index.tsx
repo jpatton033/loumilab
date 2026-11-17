@@ -1,3 +1,4 @@
+import { HomeDomainSearch } from "@/components/domains/DomainPlacements";
 import { Atmosphere, Glow, Kicker, Statement, Lede, EditorialImage, Surface } from "@/components/brand/atmosphere";
 import stairLight from "@/assets/atmosphere/stair-light.jpg";
 import textileOwner from "@/assets/atmosphere/textile-owner.jpg";
@@ -262,6 +263,7 @@ const Index = () => {
                   <Link key={to} to={to} className="group flex items-center justify-between bg-atmo-charcoal/70 px-5 py-4 font-medium text-atmo-ivory transition-colors hover:bg-atmo-charcoal">{l}<ArrowRight size={16} className="transition-transform group-hover:translate-x-1" aria-hidden /></Link>
                 ))}
               </div>
+              <HomeDomainSearch />
             </div>
             <EditorialImage src={shopOffice} alt="Two people reviewing plans at a farm-supply store counter" w={1408} h={1600} className="aspect-[4/5] rounded-3xl lg:col-span-6 lg:col-start-7" fade="none" />
           </div>

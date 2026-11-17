@@ -34,6 +34,7 @@ export default function SpacesDomains({ appId, slug, canManage }: { appId: strin
 
   return (
     <div className="space-y-6">
+      <div><h2 className="font-hero text-2xl font-semibold text-foreground">Connect a domain to your application.</h2><p className="mt-1 text-sm text-muted-foreground">Find a new domain or connect one you already own.</p></div>
       <div className="flex gap-2">
         <Button variant={mode === "connect" ? "default" : "outline"} className="rounded-full" onClick={() => setMode("connect")}>Connect a domain you own</Button>
         <Button variant={mode === "find" ? "default" : "outline"} className="rounded-full" onClick={() => setMode("find")}>Find a new domain</Button>

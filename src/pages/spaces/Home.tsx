@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Scene } from "@/components/brand/story/Scene";
 import { SpacesHeroFilm } from "@/components/spaces/SpacesHeroFilm";
 import { Glow, Chapter, Body, CinemaFrame, Surface } from "@/components/spaces/flow/Flow";
+import { SpacesDomainBlock } from "@/components/domains/DomainPlacements";
 import { downloadStarterKit } from "@/lib/spaces/starterKit";
 import poster from "@/assets/spaces/built_by_people_poster.webp.asset.json";
 import ceramics from "@/assets/spaces/maker-ceramics.jpg";
@@ -32,7 +33,6 @@ const line = "border-[hsl(var(--spaces-ivory)/0.12)]";
 const btnPrimary = "bg-[hsl(var(--spaces-ivory))] text-[hsl(var(--spaces-obsidian))] hover:bg-[hsl(var(--spaces-ivory)/0.9)]";
 const btnGhost = `border-[hsl(var(--spaces-ivory)/0.3)] bg-transparent ${ivory} hover:bg-[hsl(var(--spaces-ivory)/0.08)] hover:text-[hsl(var(--spaces-ivory))]`;
 
-const flow = ["Import", "Validate", "Deploy", "Manage", "Update", "Export"];
 
 export default function SpacesHome() {
   return (
@@ -110,10 +110,8 @@ export default function SpacesHome() {
           <div className="section-container relative grid gap-14 lg:grid-cols-12">
             <div className="lg:col-span-5">
               <Chapter n="03" label="Spaces Deploy" title="From project to published." />
-              <Body>Upload a ZIP of your build. Spaces checks it, publishes it to a Loumilab link, keeps every version and lets you roll back in one click.</Body>
-              <ol className={`mt-10 grid grid-cols-3 gap-x-4 gap-y-6 border-t ${line} pt-6`}>
-                {flow.map((s, i) => <li key={s}><span className={`font-mono text-xs ${muted}`}>0{i + 1}</span><p className={`mt-1 font-hero text-lg font-semibold ${ivory}`}>{s}.</p></li>)}
-              </ol>
+              <Body>Upload a ZIP of your build. Spaces checks it, publishes it, keeps every version and rolls back in one click.</Body>
+              <SpacesDomainBlock ivory={ivory} muted={muted} line={line} />
             </div>
             <Scene variant="rise" className="relative lg:col-span-7">
               <CinemaFrame src={developer} alt="A developer working late, lit by his screens" w={1024} h={1280} className="ml-auto aspect-[4/5] w-3/4 sm:w-2/3" />

@@ -3,6 +3,7 @@ import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import Reveal from "@/components/Reveal";
 import { BenefitTrio, ClosingCta, FlowHero } from "@/components/brand/flow/Flow";
+import { BusinessDomainSearch } from "@/components/domains/DomainPlacements";
 import { getServicePage, servicePages } from "@/data/services";
 
 const ServiceDetail = () => {
@@ -27,6 +28,7 @@ const ServiceDetail = () => {
         image={s.image}
         imageAlt={s.imageAlt}
       />
+      {s.slug === "domains" && <BusinessDomainSearch />}
       <BenefitTrio items={s.delivers} />
 
       <section className="section-container py-16 lg:py-24" aria-labelledby="problems">
