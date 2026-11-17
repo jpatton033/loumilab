@@ -8,6 +8,19 @@ describe("Spaces archive classification", () => {
   it("plain static site is publishable", () => {
     expect(run({ "index.html": "<html></html>", "app.js": "" }).kind).toBe("static");
   });
+  it("built site zipped inside its own folder is publishable", () => {
+    const c = run({ "my-site/index.html": "<html></html>", "my-site/app.js": "" });
+    expect(c.kind).toBe("static");
+    expect(c.compiledRoot).toBe("my-site/");
+  });
+  it("wrapped dist folder without package.json is publishable", () => {
+    const c = run({ "project/dist/index.html": "<html></html>", "project/dist/a.js": "", "project/README.md": "" });
+    expect(c.kind).toBe("static");
+    expect(c.compiledRoot).toBe("project/dist/");
+  });
+  it("wrapped dev index.html without package.json is not publishable", () => {
+    expect(run({ "proj/index.html": '<script src="/src/main.tsx"></script>', "proj/src/main.tsx": "" }).kind).not.toBe("static");
+  });
   it("Vite source without dist is Build Required", () => {
     const c = run({ "package.json": pkg({ vite: "5", react: "18" }), "index.html": '<script type="module" src="/src/main.tsx"></script>', "src/main.tsx": "" });
     expect(c.kind).toBe("vite_source");

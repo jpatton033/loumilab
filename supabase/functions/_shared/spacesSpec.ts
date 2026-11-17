@@ -157,6 +157,13 @@ export function classifyArchive(paths: string[], read: (p: string) => string | n
     const html = rel.includes(d + "index.html") ? read(base + d + "index.html") : null;
     if (html !== null && !/src=["']\/?src\/main\.(t|j)sx?["']/i.test(html)) { compiledRoot = base + d; break; }
   }
+  // No package.json: a built site zipped inside its own folder (my-site/index.html, project/dist/index.html,
+  // custom output names) still publishes from the shallowest index.html, as before classification existed.
+  if (compiledRoot === null && !pkgPath) {
+    const root = findRoot(all);
+    const html = root !== null ? read(root + "index.html") : null;
+    if (root !== null && html !== null && !/src=["']\/?src\/main\.(t|j)sx?["']/i.test(html)) compiledRoot = root;
+  }
 
   const framework = has("next") ? "next" : has("nuxt") ? "nuxt" : has("@remix-run/node") ? "remix" : has("@sveltejs/kit") ? "sveltekit"
     : has("vite") ? (has("react") ? "react-vite" : "vite") : has("react-scripts") ? "create-react-app" : pkg ? "node" : null;
