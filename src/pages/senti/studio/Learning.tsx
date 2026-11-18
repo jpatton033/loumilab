@@ -22,7 +22,7 @@ export default function StudioLearning() {
   useEffect(() => { if (access === "ok") load(); }, [access, load]);
   const addModel = async () => {
     if (f.name.trim().length < 2) return toast.error("Name the training setup");
-    let cfg: unknown; try { cfg = JSON.parse(f.training_config); } catch { return toast.error("Training settings must be valid JSON"); }
+    let cfg: any; try { cfg = JSON.parse(f.training_config); } catch { return toast.error("Training settings must be valid JSON"); }
     const { error } = await supabase.from("senti_models").insert({ name: f.name.trim(), engine_version: f.engine_version, dataset_version_id: f.dataset_version_id || null, training_config: cfg, notes: f.notes, created_by: uid });
     if (error) return toast.error(error.message); setF({ ...f, name: "", notes: "" }); load();
   };

@@ -3,6 +3,7 @@ import { FunctionsHttpError } from "@supabase/supabase-js";
 import { toast } from "sonner";
 import SEOHead from "@/components/SEOHead";
 import { supabase } from "@/integrations/supabase/client";
+import SentiStatus from "@/components/senti/SentiStatus";
 import SentiShell, { Eyebrow } from "@/components/senti/SentiShell";
 import RelationGraph, { type GEdge, type GNode } from "@/components/senti/RelationGraph";
 import { parseObservation, relationWeight, isContradicted } from "../../../supabase/functions/_shared/sentiEngine";
@@ -134,7 +135,9 @@ export default function SentiLab() {
           <button role="tab" aria-selected={mode === "live"} className={mode === "live" ? primary : ghost} onClick={() => setMode("live")}>Live research mode</button>
         </div>
         <div className="mt-10">{mode === "demo" ? <Demo /> : <Live />}</div>
+        <p className="mt-6 text-xs text-atmo-ivory/45">Live mode runs on the same Senti Core v0.1 rules used in Loumilab's private Research Studio, in a separate public space. Your session never mixes with internal research data.</p>
       </section>
+      <div className="section-container pb-24"><SentiStatus /></div>
     </SentiShell>
   );
 }

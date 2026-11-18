@@ -27,7 +27,7 @@ export default function StudioExperiments() {
   useEffect(() => { if (access === "ok") load(); }, [access, load]);
   const save = async () => {
     if (f.name.trim().length < 3) return toast.error("Give the experiment a name");
-    let config: unknown; try { config = JSON.parse(f.config || "{}"); } catch { return toast.error("Settings must be valid JSON"); }
+    let config: any; try { config = JSON.parse(f.config || "{}"); } catch { return toast.error("Settings must be valid JSON"); }
     const row = { ...f, name: f.name.trim(), dataset_version_id: f.dataset_version_id || null, config, updated_at: new Date().toISOString() };
     const { error } = edit ? await supabase.from("senti_experiments").update(row).eq("id", edit) : await supabase.from("senti_experiments").insert({ ...row, created_by: uid });
     if (error) return toast.error(error.message);
