@@ -4293,6 +4293,275 @@ export type Database = {
         }
         Relationships: []
       }
+      senti_audit: {
+        Row: {
+          created_at: string
+          detail: string | null
+          id: string
+          ok: boolean
+          op: string
+        }
+        Insert: {
+          created_at?: string
+          detail?: string | null
+          id?: string
+          ok: boolean
+          op: string
+        }
+        Update: {
+          created_at?: string
+          detail?: string | null
+          id?: string
+          ok?: boolean
+          op?: string
+        }
+        Relationships: []
+      }
+      senti_corrections: {
+        Row: {
+          action: string
+          after: Json | null
+          before: Json | null
+          created_at: string
+          id: string
+          relation_id: string | null
+          session_id: string
+        }
+        Insert: {
+          action: string
+          after?: Json | null
+          before?: Json | null
+          created_at?: string
+          id?: string
+          relation_id?: string | null
+          session_id: string
+        }
+        Update: {
+          action?: string
+          after?: Json | null
+          before?: Json | null
+          created_at?: string
+          id?: string
+          relation_id?: string | null
+          session_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "senti_corrections_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "senti_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      senti_entities: {
+        Row: {
+          id: string
+          key: string
+          kind: string
+          label: string
+          mentions: number
+          session_id: string
+        }
+        Insert: {
+          id?: string
+          key: string
+          kind?: string
+          label: string
+          mentions?: number
+          session_id: string
+        }
+        Update: {
+          id?: string
+          key?: string
+          kind?: string
+          label?: string
+          mentions?: number
+          session_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "senti_entities_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "senti_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      senti_events: {
+        Row: {
+          created_at: string
+          id: string
+          polarity: number
+          seq: number
+          session_id: string
+          text: string
+          time_hint: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          polarity?: number
+          seq: number
+          session_id: string
+          text: string
+          time_hint?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          polarity?: number
+          seq?: number
+          session_id?: string
+          text?: string
+          time_hint?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "senti_events_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "senti_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      senti_relations: {
+        Row: {
+          contradict: number
+          evidence: string[]
+          id: string
+          predicate: string
+          revised_from: string | null
+          session_id: string
+          source_key: string
+          status: string
+          support: number
+          target_key: string
+          updated_at: string
+          weight: number
+        }
+        Insert: {
+          contradict?: number
+          evidence?: string[]
+          id?: string
+          predicate: string
+          revised_from?: string | null
+          session_id: string
+          source_key: string
+          status?: string
+          support?: number
+          target_key: string
+          updated_at?: string
+          weight?: number
+        }
+        Update: {
+          contradict?: number
+          evidence?: string[]
+          id?: string
+          predicate?: string
+          revised_from?: string | null
+          session_id?: string
+          source_key?: string
+          status?: string
+          support?: number
+          target_key?: string
+          updated_at?: string
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "senti_relations_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "senti_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      senti_sessions: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          last_active_at: string
+          token_hash: string
+          training_consent: boolean
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          last_active_at?: string
+          token_hash: string
+          training_consent?: boolean
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          last_active_at?: string
+          token_hash?: string
+          training_consent?: boolean
+        }
+        Relationships: []
+      }
+      senti_settings: {
+        Row: {
+          demo_enabled: boolean
+          id: number
+          live_enabled: boolean
+          updated_at: string
+        }
+        Insert: {
+          demo_enabled?: boolean
+          id?: number
+          live_enabled?: boolean
+          updated_at?: string
+        }
+        Update: {
+          demo_enabled?: boolean
+          id?: number
+          live_enabled?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      senti_updates: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          kind: string
+          published: boolean
+          published_at: string | null
+          title: string
+          version: string | null
+        }
+        Insert: {
+          body?: string
+          created_at?: string
+          id?: string
+          kind?: string
+          published?: boolean
+          published_at?: string | null
+          title: string
+          version?: string | null
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          kind?: string
+          published?: boolean
+          published_at?: string | null
+          title?: string
+          version?: string | null
+        }
+        Relationships: []
+      }
       site_page_views: {
         Row: {
           created_at: string

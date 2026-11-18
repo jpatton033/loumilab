@@ -225,6 +225,13 @@
       "when": 1794957559022,
       "tag": "0031_domain_search",
       "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1794993615748,
+      "tag": "0032_senti_research",
+      "breakpoints": true
     }
   ]
 }

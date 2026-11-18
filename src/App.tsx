@@ -41,6 +41,11 @@ const AdminMerchantsDirectory = lazy(() => import("./pages/admin/MerchantsDirect
 const AdminPlans = lazy(() => import("./pages/admin/Plans"));
 const AdminPromotions = lazy(() => import("./pages/admin/Promotions"));
 const AdminSpacesOfficial = lazy(() => import("./pages/admin/SpacesOfficial"));
+const SentiHome = lazy(() => import("./pages/senti/Home"));
+const SentiLab = lazy(() => import("./pages/senti/Lab"));
+const SentiResearch = lazy(() => import("./pages/senti/Research"));
+const SentiUpdates = lazy(() => import("./pages/senti/Updates"));
+const AdminSenti = lazy(() => import("./pages/admin/Senti"));
 const AdminDomains = lazy(() => import("./pages/admin/Domains"));
 const AdminSpacesLegal = lazy(() => import("./pages/admin/SpacesLegal"));
 const AdminCustomProjects = lazy(() => import("./pages/admin/CustomProjects"));
@@ -161,6 +166,11 @@ const routes = (<>
           <Route path="/admin/merchants" element={<ProtectedRoute><AdminMerchantsDirectory /></ProtectedRoute>} />
           <Route path="/admin/plans" element={<ProtectedRoute><AdminPlans /></ProtectedRoute>} />
           <Route path="/admin/spaces-official" element={<ProtectedRoute><AdminSpacesOfficial /></ProtectedRoute>} />
+          <Route path="/senti" element={<SentiHome />} />
+          <Route path="/senti/lab" element={<SentiLab />} />
+          <Route path="/senti/research" element={<SentiResearch />} />
+          <Route path="/senti/updates" element={<SentiUpdates />} />
+          <Route path="/admin/senti" element={<ProtectedRoute><AdminSenti /></ProtectedRoute>} />
           <Route path="/admin/domains" element={<ProtectedRoute><AdminDomains /></ProtectedRoute>} />
           <Route path="/admin/spaces-legal" element={<ProtectedRoute><AdminSpacesLegal /></ProtectedRoute>} />
           <Route path="/admin/promotions" element={<ProtectedRoute><AdminPromotions /></ProtectedRoute>} />

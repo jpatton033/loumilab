@@ -1,5 +1,5 @@
 import { AtSign,
-  BadgeCheck, Globe,
+  BadgeCheck, Globe, FlaskConical,
   BadgePercent,
   BookOpen,
   Dot,
@@ -97,6 +97,7 @@ export const adminNav: AdminNavGroup[] = [
       { title: "Spaces · Official projects", url: "/admin/spaces-official", icon: BadgeCheck },
       { title: "Spaces · Legal agreements", url: "/admin/spaces-legal", icon: ScrollText },
       { title: "Domains", url: "/admin/domains", icon: Globe },
+      { title: "Senti", url: "/admin/senti", icon: FlaskConical },
     ],
   },
   {

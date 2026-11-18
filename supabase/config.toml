@@ -22,3 +22,6 @@ verify_jwt = false
 
 [functions.domain-search]
 verify_jwt = false
+
+[functions.senti-engine]
+verify_jwt = false
