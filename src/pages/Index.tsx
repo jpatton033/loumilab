@@ -236,7 +236,7 @@ const Index = () => {
           <div className="section-container relative grid items-center gap-12 lg:grid-cols-12">
             <div className="relative lg:col-span-6">
               <EditorialImage src={textileOwner} alt="A textile shop owner folding fabric orders" w={1408} h={1600} className="aspect-[4/5] rounded-3xl" fade="none" />
-              <div className="absolute -bottom-10 right-[-4%] w-[70%] sm:w-[60%]"><Pic src={merchantDash} alt="The Loumilab Orders merchant dashboard" /></div>
+              <OrderGlance />
             </div>
             <div className="lg:col-span-5 lg:col-start-8">
               <Kicker n="03">Loumilab Orders</Kicker>
@@ -343,4 +343,19 @@ const Index = () => {
   );
 };
 
+function OrderGlance() {
+  const rows: [string, string, boolean][] = [["New order · 2 scarves", "Pickup 3:30 PM", true], ["Paid", "$48.00", false], ["Ready for pickup", "Order #1042", false]];
+  return (
+    <div className="relative mx-auto -mt-12 w-[88%] rounded-3xl border border-atmo-ivory/12 bg-atmo-charcoal/95 p-5 text-atmo-ivory shadow-2xl sm:absolute sm:-bottom-10 sm:right-[-4%] sm:mt-0 sm:w-[58%]" aria-label="Example of today's orders in Loumilab Orders">
+      <p className="text-xs uppercase tracking-[0.16em] text-atmo-ivory/55">Today · Orders</p>
+      <ul className="mt-3 divide-y divide-atmo-ivory/10 text-sm">
+        {rows.map(([a, b, isNew]) => (
+          <li key={a} className="flex items-center justify-between gap-3 py-2.5">
+            <span className="flex items-center gap-2">{isNew && <span className="h-2 w-2 rounded-full bg-dot" aria-hidden />}{a}</span>
+            <span className="text-atmo-ivory/60">{b}</span>
+          </li>))}
+      </ul>
+    </div>
+  );
+}
 export default Index;
