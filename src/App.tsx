@@ -46,6 +46,14 @@ const SentiLab = lazy(() => import("./pages/senti/Lab"));
 const SentiResearch = lazy(() => import("./pages/senti/Research"));
 const SentiUpdates = lazy(() => import("./pages/senti/Updates"));
 const AdminSenti = lazy(() => import("./pages/admin/Senti"));
+const StudioDashboard = lazy(() => import("./pages/senti/studio/Dashboard"));
+const StudioExperiments = lazy(() => import("./pages/senti/studio/Experiments"));
+const StudioObservations = lazy(() => import("./pages/senti/studio/Observations"));
+const StudioMemory = lazy(() => import("./pages/senti/studio/Memory"));
+const StudioLearning = lazy(() => import("./pages/senti/studio/Learning"));
+const StudioEvaluations = lazy(() => import("./pages/senti/studio/Evaluations"));
+const StudioDatasets = lazy(() => import("./pages/senti/studio/Datasets"));
+const StudioJournal = lazy(() => import("./pages/senti/studio/Journal"));
 const AdminDomains = lazy(() => import("./pages/admin/Domains"));
 const AdminSpacesLegal = lazy(() => import("./pages/admin/SpacesLegal"));
 const AdminCustomProjects = lazy(() => import("./pages/admin/CustomProjects"));
@@ -170,6 +178,14 @@ const routes = (<>
           <Route path="/senti/lab" element={<SentiLab />} />
           <Route path="/senti/research" element={<SentiResearch />} />
           <Route path="/senti/updates" element={<SentiUpdates />} />
+          <Route path="/senti/studio" element={<StudioDashboard />} />
+          <Route path="/senti/studio/experiments" element={<StudioExperiments />} />
+          <Route path="/senti/studio/observations" element={<StudioObservations />} />
+          <Route path="/senti/studio/memory" element={<StudioMemory />} />
+          <Route path="/senti/studio/learning" element={<StudioLearning />} />
+          <Route path="/senti/studio/evaluations" element={<StudioEvaluations />} />
+          <Route path="/senti/studio/datasets" element={<StudioDatasets />} />
+          <Route path="/senti/studio/journal" element={<StudioJournal />} />
           <Route path="/admin/senti" element={<ProtectedRoute><AdminSenti /></ProtectedRoute>} />
           <Route path="/admin/domains" element={<ProtectedRoute><AdminDomains /></ProtectedRoute>} />
           <Route path="/admin/spaces-legal" element={<ProtectedRoute><AdminSpacesLegal /></ProtectedRoute>} />

@@ -5,6 +5,7 @@ import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
 type U = { id: string; kind: string; title: string; body: string; version: string | null; published: boolean; published_at: string | null };
@@ -26,6 +27,15 @@ export default function AdminSenti() {
     setStats({ sessions: ss.count ?? 0, events: ev.count ?? 0, errors: er.data ?? [] });
   }, []);
   useEffect(() => { load(); }, [load]);
+  const [researchers, setResearchers] = useState<{ user_id: string; email: string; created_at: string }[]>([]);
+  const [email, setEmail] = useState("");
+  const loadR = useCallback(async () => { const { data } = await supabase.rpc("senti_researcher_list"); setResearchers((data as any) ?? []); }, []);
+  useEffect(() => { loadR(); }, [loadR]);
+  const setR = async (em: string, grant: boolean) => {
+    const { data, error } = await supabase.rpc("senti_set_researcher", { _email: em, _grant: grant });
+    if (error) return toast.error(error.message); if (!data) return toast.error("No account with that email");
+    setEmail(""); loadR(); toast.success(grant ? "Researcher access granted" : "Access removed");
+  };
   const saveSettings = async (next: typeof s) => { setS(next); const { error } = await supabase.from("senti_settings").update({ ...next, updated_at: new Date().toISOString() }).eq("id", 1); if (error) toast.error(error.message); };
   const add = async () => {
     if (d.title.trim().length < 3) return toast.error("Add a title");
@@ -45,6 +55,12 @@ export default function AdminSenti() {
         </div>
       </div>
       {stats.errors.length > 0 && <ul className="mt-6 divide-y divide-border rounded-3xl border border-border text-sm">{stats.errors.map((e, i) => <li key={i} className="px-5 py-3">{new Date(e.created_at).toLocaleString()} · {e.op} · {e.detail}</li>)}</ul>}
+      <div className="mt-8 space-y-3 rounded-3xl border border-border p-6">
+        <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="font-display text-lg font-semibold">Research Studio access</h2><Button asChild variant="outline" size="sm"><Link to="/senti/studio">Open Research Studio</Link></Button></div>
+        <p className="text-sm text-muted-foreground">Full admins always have access. Grant other signed-up accounts researcher access here.</p>
+        <div className="flex flex-wrap gap-2"><Input placeholder="account email" value={email} onChange={(e) => setEmail(e.target.value)} className="max-w-sm" /><Button onClick={() => setR(email, true)} disabled={!email.includes("@")}>Grant access</Button></div>
+        {researchers.length > 0 && <ul className="divide-y divide-border text-sm">{researchers.map((r) => <li key={r.user_id} className="flex items-center justify-between py-2"><span>{r.email}</span><Button size="sm" variant="ghost" onClick={() => setR(r.email, false)}>Remove</Button></li>)}</ul>}
+      </div>
       <div className="mt-8 space-y-3 rounded-3xl border border-border p-6">
         <h2 className="font-display text-lg font-semibold">New entry</h2>
         <div className="flex flex-wrap gap-3">

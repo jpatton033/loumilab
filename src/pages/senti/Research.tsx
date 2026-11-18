@@ -2,16 +2,17 @@ import { useEffect, useState } from "react";
 import SEOHead from "@/components/SEOHead";
 import { supabase } from "@/integrations/supabase/client";
 import SentiShell, { Eyebrow } from "@/components/senti/SentiShell";
+import SentiStatus from "@/components/senti/SentiStatus";
 
-const works = ["Recording text observations in private, expiring sessions", "Finding names and things mentioned, and linking them through the verb between them", "Time hints (e.g. “every morning”, “Sunday”) and observation order", "Confidence scores from counts of supporting and contradicting observations", "Contradiction flags, user corrections and a revision history", "Evidence lookup: every link points back to the observations behind it"];
-const experimental = ["Trained or learned models of any kind", "Behavioral prediction", "Images, audio or other sensory input", "Long-range reasoning across many sessions", "Benchmarks against language-model baselines", "A dedicated Python research service"];
+const works = ["Recording text observations in private, expiring sessions", "Finding names and things mentioned, and linking them through the verb between them", "Time hints (e.g. “every morning”, “Sunday”) and observation order", "Confidence scores from counts of supporting and contradicting observations", "Contradiction flags, user corrections and a revision history", "Evidence lookup: every link points back to the observations behind it", "Senti Core v0.1: structured events, stable entities, relationships labelled as recorded fact, inferred or hypothesis", "Versioned relationships: new evidence supports, contradicts or supersedes earlier links without erasing them", "Retrieval by entity, event or time range", "Reproducible rules-only and structured-memory evaluations on synthetic datasets"];
+const experimental = ["Trained or learned models of any kind", "Behavioral prediction", "Images, audio or other sensory input", "Long-range reasoning across many sessions", "Benchmarks against trained-model and language-model baselines", "A dedicated Python research service"];
 const layers = [
   ["1 · Input", "Text only today, validated and length-limited."],
   ["2 · Context & relationships", "Entity extraction, relationship representation, event sequencing, temporal hints, evidence links, contradiction detection."],
   ["3 · Persistent memory", "Observations, entities, relationships, corrections and session history in a relational database."],
   ["4 · Learning & adaptation", "Today: smoothed counting scores updated by new evidence and feedback. Trained models will be described only once they exist and are evaluated."],
   ["5 · Inference", "Deterministic evidence retrieval and relationship queries. Generative AI is not called."],
-  ["6 · Evaluation", "Versioned engine (senti-rules-0.1), automated rule tests, recorded engine errors for failure review."],
+  ["6 · Evaluation", "Versioned engines (senti-rules-0.1, senti-core-0.1), automated tests, reproducible evaluation runs tied to engine and dataset versions, and recorded engine errors for failure review."],
 ];
 
 export default function SentiResearch() {
@@ -23,7 +24,9 @@ export default function SentiResearch() {
       <section className="section-container max-w-4xl py-16 lg:py-24">
         <Eyebrow>Research</Eyebrow>
         <h1 className="mt-4 font-hero text-4xl font-semibold lg:text-6xl">Methodology, in plain terms.</h1>
-        <p className="mt-6 text-lg leading-relaxed text-atmo-ivory/70">Senti is built in layers, each independently testable. We state what works, what is experimental and how each claim will be checked. Capabilities are described only after they have been implemented and tested.</p>
+        <p className="mt-6 text-lg leading-relaxed text-atmo-ivory/70">Senti explores how software learns from language, observation, behavior, and experience. It is built in layers, each independently testable. We state what works, what is experimental and how each claim will be checked. Capabilities are described only after they have been implemented and tested.</p>
+
+        <div className="mt-12"><SentiStatus /></div>
 
         <h2 className="mt-16 font-hero text-3xl font-semibold">Architecture.</h2>
         <dl className="mt-6 divide-y divide-atmo-ivory/10 border-y border-atmo-ivory/10">{layers.map(([t, d]) => <div key={t} className="grid gap-2 py-5 sm:grid-cols-3"><dt className="font-semibold">{t}</dt><dd className="text-atmo-ivory/65 sm:col-span-2">{d}</dd></div>)}</dl>

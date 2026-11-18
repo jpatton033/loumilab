@@ -232,6 +232,13 @@
       "when": 1794993615748,
       "tag": "0032_senti_research",
       "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "7",
+      "when": 1794996316806,
+      "tag": "0033_senti_research_studio",
+      "breakpoints": true
     }
   ]
 }

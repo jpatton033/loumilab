@@ -4355,8 +4355,119 @@ export type Database = {
           },
         ]
       }
+      senti_dataset_versions: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          dataset_id: string
+          id: string
+          notes: string
+          record_count: number
+          records: Json
+          schema: Json
+          splits: Json
+          version: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          dataset_id: string
+          id?: string
+          notes?: string
+          record_count?: number
+          records?: Json
+          schema?: Json
+          splits?: Json
+          version: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          dataset_id?: string
+          id?: string
+          notes?: string
+          record_count?: number
+          records?: Json
+          schema?: Json
+          splits?: Json
+          version?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "senti_dataset_versions_dataset_id_fkey"
+            columns: ["dataset_id"]
+            isOneToOne: false
+            referencedRelation: "senti_datasets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      senti_datasets: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string
+          id: string
+          name: string
+          origin: string
+          permissions: string
+          synthetic: boolean
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          id?: string
+          name: string
+          origin?: string
+          permissions?: string
+          synthetic?: boolean
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          id?: string
+          name?: string
+          origin?: string
+          permissions?: string
+          synthetic?: boolean
+        }
+        Relationships: []
+      }
+      senti_engine_versions: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          kind: string
+          public: boolean
+          released_at: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          id: string
+          kind: string
+          public?: boolean
+          released_at?: string | null
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          kind?: string
+          public?: boolean
+          released_at?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
       senti_entities: {
         Row: {
+          attributes: Json
           id: string
           key: string
           kind: string
@@ -4365,6 +4476,7 @@ export type Database = {
           session_id: string
         }
         Insert: {
+          attributes?: Json
           id?: string
           key: string
           kind?: string
@@ -4373,6 +4485,7 @@ export type Database = {
           session_id: string
         }
         Update: {
+          attributes?: Json
           id?: string
           key?: string
           kind?: string
@@ -4390,31 +4503,108 @@ export type Database = {
           },
         ]
       }
+      senti_eval_results: {
+        Row: {
+          baseline: string
+          category: string
+          created_at: string
+          dataset_version_id: string | null
+          engine_version: string
+          id: string
+          metric: string
+          n: number
+          published: boolean
+          run_id: string
+          status: string
+          value: number | null
+        }
+        Insert: {
+          baseline: string
+          category: string
+          created_at?: string
+          dataset_version_id?: string | null
+          engine_version: string
+          id?: string
+          metric: string
+          n?: number
+          published?: boolean
+          run_id: string
+          status?: string
+          value?: number | null
+        }
+        Update: {
+          baseline?: string
+          category?: string
+          created_at?: string
+          dataset_version_id?: string | null
+          engine_version?: string
+          id?: string
+          metric?: string
+          n?: number
+          published?: boolean
+          run_id?: string
+          status?: string
+          value?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "senti_eval_results_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "senti_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       senti_events: {
         Row: {
+          action: string | null
+          actor_key: string | null
+          attributes: Json
           created_at: string
+          event_type: string
           id: string
+          occurred_at: string | null
+          outcome: string | null
           polarity: number
           seq: number
           session_id: string
+          source: string
+          target_key: string | null
           text: string
           time_hint: string | null
         }
         Insert: {
+          action?: string | null
+          actor_key?: string | null
+          attributes?: Json
           created_at?: string
+          event_type?: string
           id?: string
+          occurred_at?: string | null
+          outcome?: string | null
           polarity?: number
           seq: number
           session_id: string
+          source?: string
+          target_key?: string | null
           text: string
           time_hint?: string | null
         }
         Update: {
+          action?: string | null
+          actor_key?: string | null
+          attributes?: Json
           created_at?: string
+          event_type?: string
           id?: string
+          occurred_at?: string | null
+          outcome?: string | null
           polarity?: number
           seq?: number
           session_id?: string
+          source?: string
+          target_key?: string | null
           text?: string
           time_hint?: string | null
         }
@@ -4428,47 +4618,335 @@ export type Database = {
           },
         ]
       }
+      senti_experiments: {
+        Row: {
+          category: string
+          config: Json
+          created_at: string
+          created_by: string | null
+          criteria: string
+          dataset_version_id: string | null
+          description: string
+          engine_version: string | null
+          hypothesis: string
+          id: string
+          name: string
+          notes: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          config?: Json
+          created_at?: string
+          created_by?: string | null
+          criteria?: string
+          dataset_version_id?: string | null
+          description?: string
+          engine_version?: string | null
+          hypothesis?: string
+          id?: string
+          name: string
+          notes?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          config?: Json
+          created_at?: string
+          created_by?: string | null
+          criteria?: string
+          dataset_version_id?: string | null
+          description?: string
+          engine_version?: string | null
+          hypothesis?: string
+          id?: string
+          name?: string
+          notes?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "senti_experiments_dataset_version_id_fkey"
+            columns: ["dataset_version_id"]
+            isOneToOne: false
+            referencedRelation: "senti_dataset_versions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "senti_experiments_engine_version_fkey"
+            columns: ["engine_version"]
+            isOneToOne: false
+            referencedRelation: "senti_engine_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      senti_journal: {
+        Row: {
+          author_id: string | null
+          body: string
+          created_at: string
+          experiment_id: string | null
+          id: string
+          kind: string
+          published_update_id: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author_id?: string | null
+          body?: string
+          created_at?: string
+          experiment_id?: string | null
+          id?: string
+          kind?: string
+          published_update_id?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string | null
+          body?: string
+          created_at?: string
+          experiment_id?: string | null
+          id?: string
+          kind?: string
+          published_update_id?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "senti_journal_experiment_id_fkey"
+            columns: ["experiment_id"]
+            isOneToOne: false
+            referencedRelation: "senti_experiments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "senti_journal_published_update_id_fkey"
+            columns: ["published_update_id"]
+            isOneToOne: false
+            referencedRelation: "senti_updates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      senti_journal_revisions: {
+        Row: {
+          body: string
+          created_at: string
+          edited_by: string | null
+          entry_id: string
+          id: string
+          title: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          edited_by?: string | null
+          entry_id: string
+          id?: string
+          title: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          edited_by?: string | null
+          entry_id?: string
+          id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "senti_journal_revisions_entry_id_fkey"
+            columns: ["entry_id"]
+            isOneToOne: false
+            referencedRelation: "senti_journal"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      senti_milestones: {
+        Row: {
+          created_at: string
+          description: string
+          done_at: string | null
+          id: string
+          public: boolean
+          sort: number
+          status: string
+          target: string | null
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          done_at?: string | null
+          id?: string
+          public?: boolean
+          sort?: number
+          status?: string
+          target?: string | null
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          done_at?: string | null
+          id?: string
+          public?: boolean
+          sort?: number
+          status?: string
+          target?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
+      senti_models: {
+        Row: {
+          checkpoint: string | null
+          created_at: string
+          created_by: string | null
+          dataset_version_id: string | null
+          engine_version: string | null
+          id: string
+          name: string
+          notes: string
+          status: string
+          training_config: Json
+          updated_at: string
+        }
+        Insert: {
+          checkpoint?: string | null
+          created_at?: string
+          created_by?: string | null
+          dataset_version_id?: string | null
+          engine_version?: string | null
+          id?: string
+          name: string
+          notes?: string
+          status?: string
+          training_config?: Json
+          updated_at?: string
+        }
+        Update: {
+          checkpoint?: string | null
+          created_at?: string
+          created_by?: string | null
+          dataset_version_id?: string | null
+          engine_version?: string | null
+          id?: string
+          name?: string
+          notes?: string
+          status?: string
+          training_config?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "senti_models_engine_version_fkey"
+            columns: ["engine_version"]
+            isOneToOne: false
+            referencedRelation: "senti_engine_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      senti_relation_versions: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          reason: string
+          relation_id: string
+          snapshot: Json
+          version: number
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          reason: string
+          relation_id: string
+          snapshot: Json
+          version: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          reason?: string
+          relation_id?: string
+          snapshot?: Json
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "senti_relation_versions_relation_id_fkey"
+            columns: ["relation_id"]
+            isOneToOne: false
+            referencedRelation: "senti_relations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       senti_relations: {
         Row: {
           contradict: number
           evidence: string[]
           id: string
+          kind: string
           predicate: string
           revised_from: string | null
           session_id: string
           source_key: string
           status: string
+          superseded_by: string | null
           support: number
           target_key: string
           updated_at: string
+          valid_at: string | null
+          version: number
           weight: number
         }
         Insert: {
           contradict?: number
           evidence?: string[]
           id?: string
+          kind?: string
           predicate: string
           revised_from?: string | null
           session_id: string
           source_key: string
           status?: string
+          superseded_by?: string | null
           support?: number
           target_key: string
           updated_at?: string
+          valid_at?: string | null
+          version?: number
           weight?: number
         }
         Update: {
           contradict?: number
           evidence?: string[]
           id?: string
+          kind?: string
           predicate?: string
           revised_from?: string | null
           session_id?: string
           source_key?: string
           status?: string
+          superseded_by?: string | null
           support?: number
           target_key?: string
           updated_at?: string
+          valid_at?: string | null
+          version?: number
           weight?: number
         }
         Relationships: [
@@ -4481,13 +4959,84 @@ export type Database = {
           },
         ]
       }
+      senti_researchers: {
+        Row: {
+          created_at: string
+          granted_by: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          granted_by?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          granted_by?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      senti_runs: {
+        Row: {
+          config: Json
+          created_by: string | null
+          dataset_version_id: string | null
+          engine_version: string
+          error: string | null
+          experiment_id: string
+          finished_at: string | null
+          id: string
+          metrics: Json
+          started_at: string
+          status: string
+        }
+        Insert: {
+          config?: Json
+          created_by?: string | null
+          dataset_version_id?: string | null
+          engine_version: string
+          error?: string | null
+          experiment_id: string
+          finished_at?: string | null
+          id?: string
+          metrics?: Json
+          started_at?: string
+          status?: string
+        }
+        Update: {
+          config?: Json
+          created_by?: string | null
+          dataset_version_id?: string | null
+          engine_version?: string
+          error?: string | null
+          experiment_id?: string
+          finished_at?: string | null
+          id?: string
+          metrics?: Json
+          started_at?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "senti_runs_experiment_id_fkey"
+            columns: ["experiment_id"]
+            isOneToOne: false
+            referencedRelation: "senti_experiments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       senti_sessions: {
         Row: {
           created_at: string
           expires_at: string
           id: string
           last_active_at: string
-          token_hash: string
+          owner_id: string | null
+          scope: string
+          title: string | null
+          token_hash: string | null
           training_consent: boolean
         }
         Insert: {
@@ -4495,7 +5044,10 @@ export type Database = {
           expires_at?: string
           id?: string
           last_active_at?: string
-          token_hash: string
+          owner_id?: string | null
+          scope?: string
+          title?: string | null
+          token_hash?: string | null
           training_consent?: boolean
         }
         Update: {
@@ -4503,7 +5055,10 @@ export type Database = {
           expires_at?: string
           id?: string
           last_active_at?: string
-          token_hash?: string
+          owner_id?: string | null
+          scope?: string
+          title?: string | null
+          token_hash?: string | null
           training_consent?: boolean
         }
         Relationships: []
@@ -5607,6 +6162,20 @@ export type Database = {
       send_order_message: {
         Args: { _body: string; _token: string }
         Returns: Json
+      }
+      senti_is_researcher: { Args: { _uid: string }; Returns: boolean }
+      senti_public_status: { Args: never; Returns: Json }
+      senti_researcher_list: {
+        Args: never
+        Returns: {
+          created_at: string
+          email: string
+          user_id: string
+        }[]
+      }
+      senti_set_researcher: {
+        Args: { _email: string; _grant: boolean }
+        Returns: boolean
       }
       spaces_accept_invite: { Args: { _token: string }; Returns: string }
       spaces_admin_projects: {
