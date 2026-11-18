@@ -61,13 +61,13 @@ export default function SentiHome() {
       <SEOHead title="Senti by Loumilab | Experimental Research Initiative" description="Senti is a Loumilab research initiative exploring how computational systems learn relationships among language, observations, behavior, and experience." path="/senti" />
       <section data-page-hero className="relative isolate -mt-16 overflow-hidden lg:-mt-20" aria-label="Introduction">
         <SentiHeroFilm />
-        <div className="section-container flex min-h-[100svh] flex-col items-center justify-center pb-20 pt-32 text-center">
+        <div className="section-container flex min-h-[100svh] flex-col justify-end pb-16 pt-32 text-center items-center sm:pb-20 [@media(min-aspect-ratio:4/5)]:items-start [@media(min-aspect-ratio:4/5)]:justify-center [@media(min-aspect-ratio:4/5)]:text-left">
           <Eyebrow>Experimental Research Initiative — Loumilab</Eyebrow>
-          <h1 className="mt-6 max-w-4xl font-hero text-5xl font-semibold leading-[1.0] tracking-tight text-atmo-ivory sm:text-7xl lg:text-8xl">Intelligence begins with understanding.</h1>
-          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-atmo-ivory/75 sm:text-xl">Senti is a Loumilab research initiative exploring how computational systems learn relationships among language, observations, behavior, and experience.</p>
+          <h1 className="mt-6 max-w-2xl animate-fade-in font-hero text-5xl font-semibold leading-[1.0] tracking-tight text-atmo-ivory sm:text-6xl lg:text-7xl">Intelligence begins with understanding.</h1>
+          <p className="mt-6 max-w-xl text-lg leading-relaxed text-atmo-ivory/75 sm:text-xl">Exploring how computational systems learn from language, observation, behavior, and experience.</p>
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
             <Link to="/senti/lab" className={`${btn} bg-atmo-ivory text-atmo-obsidian hover:bg-atmo-ivory/85`}>Explore Senti Lab</Link>
-            <Link to="/senti/research" className={`${btn} border border-atmo-ivory/30 text-atmo-ivory hover:bg-atmo-ivory/10`}>Read the Research</Link>
+            <Link to="/senti/research" className={`${btn} border border-atmo-ivory/30 text-atmo-ivory hover:bg-atmo-ivory/10`}>Discover the Research</Link>
           </div>
         </div>
       </section>
