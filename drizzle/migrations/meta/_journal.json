@@ -246,6 +246,13 @@
       "when": 1795214925407,
       "tag": "0034_restrict_senti_settings_reads",
       "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "7",
+      "when": 1795215116118,
+      "tag": "0035_revoke_anon_merchant_send_order_message",
+      "breakpoints": true
     }
   ]
 }
