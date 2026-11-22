@@ -21,7 +21,7 @@ import { Button } from "@/components/ui/button";
 import LivePreviewPicker from "@/components/orders/LivePreviewPicker";
 import OrderStatusBadge from "@/components/orders/OrderStatusBadge";
 import PricingTable from "@/components/orders/PricingTable";
-import { FeeAnnouncement, FeeKeepLine } from "@/components/orders/ProgressiveFees";
+import { FeeAnnouncement } from "@/components/orders/ProgressiveFees";
 import OrdersShowcase from "@/components/orders/OrdersShowcase";
 import OrdersHeroSlideshow from "@/components/orders/OrdersHeroSlideshow";
 import { ORDER_STATUSES } from "@/data/orders/dashboard";
@@ -130,7 +130,6 @@ const Orders = () => {
           Your business.<br />Your website.<br />Your orders.<br />One place.
         </h1>
         <p className="mt-6 max-w-lg text-lg leading-relaxed text-inverse/85">Build a website that reflects your brand, sell what you offer, accept payments, and manage your business—all in one place.</p>
-        <p className="mt-3 text-base font-semibold text-inverse"><FeeKeepLine /></p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
           <Button size="lg" asChild className="bg-background text-foreground hover:bg-background/90"><Link to={ORDERS_CTA.href} onClick={() => trackCtaClick("hero", ORDERS_CTA.variant)}>{ORDERS_CTA.label}</Link></Button>
           <a href="#how-it-works" className="inline-flex min-h-11 items-center gap-1.5 px-3 text-sm font-medium text-inverse/85 underline-offset-4 hover:text-inverse hover:underline">See How It Works <ArrowRight className="h-4 w-4" aria-hidden /></a>
