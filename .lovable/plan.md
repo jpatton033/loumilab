@@ -6,7 +6,7 @@ Replace the current photo hero at the top of /orders with a full-screen cinemati
 **Foreground (shows immediately)**
 - Headline: "Your business. Your website. Your orders. One place."
 - Supporting line from the brief.
-- Primary button (wording pending your answer) opens store setup.
+- Primary button "Get Started" opens store setup.
 - "See How It Works" scrolls smoothly to the website-builder section.
 - Pause/play control.
 
