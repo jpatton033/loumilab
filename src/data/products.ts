@@ -6,6 +6,8 @@ export interface ProductEntry {
   category: string;
   /** One-line positioning statement */
   tagline: string;
+  /** Very short label for tight spaces such as menus. */
+  short?: string;
   /** Longer description used on cards and the ecosystem page */
   description: string;
   /** Internal route or absolute external URL */
@@ -35,9 +37,10 @@ export const productGroups: ProductGroup[] = [
         id: "orders",
         name: "Loumilab Orders",
         category: "Commerce Platform",
-        tagline: "Sell anywhere. Take orders in one place.",
+        tagline: "Build a customizable business website with integrated online ordering and payments.",
+        short: "Custom websites + online selling.",
         description:
-          "A modern ordering platform for businesses that sell across multiple channels — one clean place to receive, manage, and fulfill every order.",
+          "Create a website that reflects your brand with professional templates, flexible design options, secure payments, and built-in order management.",
         href: "/orders",
         badge: "Built by Loumilab",
         cta: "Explore Orders",

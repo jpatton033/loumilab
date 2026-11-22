@@ -293,7 +293,7 @@ const WorkflowOptimization = () => {
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-inverse-muted">Zero-Token Workflows</p>
           <h2 className="mt-4 max-w-3xl text-3xl font-bold tracking-tight md:text-4xl text-inverse">Some workflows shouldn't need a single AI token.</h2>
           <div className="mt-6 max-w-3xl space-y-4 leading-relaxed text-inverse-muted">
-            <p>Many everyday business activities can be completed without relying on generative AI. Publishing content, updating records, generating routine reports, processing forms, managing orders, and coordinating internal tasks can often be handled more efficiently through purpose-built software.</p>
+            <p>Many everyday business activities can be completed without relying on generative AI. Publishing content, updating records, generating routine reports, processing forms, managing orders, and coordinating internal tasks can often be handled more efficiently through purpose-built software. For sellers, Loumilab Orders already pairs a customer-facing website with practical order workflows.</p>
             <p>Loumilab develops workflows designed to perform these operations without requiring recurring AI model calls. We call these Zero-Token Workflows.</p>
           </div>
           <div role="tablist" aria-label="Example scenarios" className="mt-10 flex flex-wrap gap-2">

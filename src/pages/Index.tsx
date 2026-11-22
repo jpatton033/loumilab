@@ -1,7 +1,6 @@
 import { HomeDomainSearch } from "@/components/domains/DomainPlacements";
 import { Atmosphere, Glow, Kicker, Statement, Lede, EditorialImage, Surface } from "@/components/brand/atmosphere";
 import stairLight from "@/assets/atmosphere/stair-light.jpg";
-import textileOwner from "@/assets/atmosphere/textile-owner.jpg";
 import shopOffice from "@/assets/atmosphere/shop-office.jpg";
 import runBakery from "@/assets/story/run/bakery-packing.jpg";
 import runRetail from "@/assets/story/run/retail-counter.jpg";
@@ -16,6 +15,7 @@ import { Scene as CineScene, useSceneProgress } from "@/components/brand/story/S
 import { usePublishedArticles } from "@/lib/kc/queries";
 import { usePublishedIssues } from "@/lib/thedot/queries";
 import { ORDERS_CTA } from "@/data/orders/cta";
+import CustomizeDemo from "@/components/orders/showcase/CustomizeDemo";
 import { AutoMarquee, LayeredStack, LoopVideo, TimedCrossfade, type Frame } from "@/components/brand/story/Horizontal";
 import { FloatingGallery, PreviewScenes, VideoSequence, type FloatItem, type Scene } from "@/components/brand/story/Cinematic";
 import { MockDashboard, MockSchedule, MockSecurity, MockWorkflow } from "@/components/brand/story/mocks";
@@ -103,7 +103,7 @@ const statement = [
 ];
 
 const productStack: Frame[] = [
-  { src: storeBuilder, alt: "The Loumilab Orders store builder", caption: "Store builder — live in minutes.", fit: "contain" },
+  { src: storeBuilder, alt: "The Loumilab Orders store builder", caption: "Website builder — templates, colors, sections.", fit: "contain" },
   { src: scLocal, alt: "Loumilab Local business discovery", caption: "Local — free discovery for neighborhood businesses.", fit: "contain" },
   { src: merchantDash, alt: "The Loumilab Orders merchant dashboard", caption: "One dashboard for every order and payout.", fit: "contain" },
   { src: market, alt: "Neighbors shopping at an outdoor market", caption: "Built for the businesses on your street." },
@@ -129,7 +129,7 @@ const studio = [
 ];
 
 const family: { name: string; kind: string; line: string; tone: string; to?: string; href?: string }[] = [
-  { name: "Orders", kind: "Product", line: "Storefront, orders and payouts.", tone: "burgundy", to: "/orders" },
+  { name: "Orders", kind: "Product", line: "Custom websites + online selling.", tone: "burgundy", to: "/orders" },
   { name: "Local", kind: "Product", line: "Free discovery for neighborhood businesses.", tone: "forest", to: "/orders/local" },
   { name: "Spaces", kind: "Product · Beta", line: "Publish and share the apps you create.", tone: "teal", to: "/spaces" },
   { name: "Vurtti", kind: "Company", line: "Compliance, documented and under control.", tone: "copper", href: "https://www.vurttidocs.com" },
@@ -235,13 +235,12 @@ const Index = () => {
           <Glow tone="burgundy" className="right-[-8%] top-0 h-[36rem] w-[36rem] opacity-50" />
           <div className="section-container relative grid items-center gap-12 lg:grid-cols-12">
             <div className="relative lg:col-span-6">
-              <EditorialImage src={textileOwner} alt="A textile shop owner folding fabric orders" w={1408} h={1600} className="aspect-[4/5] rounded-3xl" fade="none" />
-              <OrderGlance />
+              <CustomizeDemo />
             </div>
             <div className="lg:col-span-5 lg:col-start-8">
               <Kicker n="03">Loumilab Orders</Kicker>
-              <Statement>Less managing. More business.</Statement>
-              <Lede>Your own storefront, orders, pickup and payouts in one place, with no upfront fees. You get back to the work you love.</Lede>
+              <Statement id="products-title">Your business deserves a website that's yours.</Statement>
+              <Lede>Build and customize a professional website, sell what you offer, and manage orders, all with Loumilab Orders. Start designing free, before you sign up.</Lede>
               <div className="mt-10 flex flex-wrap items-center gap-6">
                 <Button size="lg" asChild className="bg-atmo-ivory text-atmo-obsidian hover:bg-atmo-ivory/90"><Link to={ORDERS_CTA.href}>{ORDERS_CTA.label}</Link></Button>
                 <Link to="/orders" className="text-sm font-semibold text-atmo-ivory underline-offset-4 hover:underline">Explore Orders</Link>
@@ -343,19 +342,4 @@ const Index = () => {
   );
 };
 
-function OrderGlance() {
-  const rows: [string, string, boolean][] = [["New order · 2 scarves", "Pickup 3:30 PM", true], ["Paid", "$48.00", false], ["Ready for pickup", "Order #1042", false]];
-  return (
-    <div className="relative mx-auto -mt-12 w-[88%] rounded-3xl border border-atmo-ivory/12 bg-atmo-charcoal/95 p-5 text-atmo-ivory shadow-2xl sm:absolute sm:-bottom-10 sm:right-[-4%] sm:mt-0 sm:w-[58%]" aria-label="Example of today's orders in Loumilab Orders">
-      <p className="text-xs uppercase tracking-[0.16em] text-atmo-ivory/55">Today · Orders</p>
-      <ul className="mt-3 divide-y divide-atmo-ivory/10 text-sm">
-        {rows.map(([a, b, isNew]) => (
-          <li key={a} className="flex items-center justify-between gap-3 py-2.5">
-            <span className="flex items-center gap-2">{isNew && <span className="h-2 w-2 rounded-full bg-dot" aria-hidden />}{a}</span>
-            <span className="text-atmo-ivory/60">{b}</span>
-          </li>))}
-      </ul>
-    </div>
-  );
-}
 export default Index;

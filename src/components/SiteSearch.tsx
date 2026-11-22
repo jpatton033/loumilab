@@ -38,7 +38,7 @@ const SiteSearch = ({ className = "", shortcut = true }: { className?: string; s
   const groups = useMemo(() => {
     const byMenu = navMenus.map((m) => ({ heading: m.label, items: m.groups.flatMap((g) => g.items) as Hit[] }));
     const suggested: Hit[] = [
-      { label: "Loumilab Orders", to: "/orders", desc: "Your storefront, orders and payouts." },
+      { label: "Loumilab Orders", to: "/orders", desc: "Custom websites + online selling." },
       { label: "Business Email", to: "/services/business-email", desc: "Professional email on your own domain." },
       { label: "Domains", to: "/services/domains", desc: "Domains and DNS, set up properly." },
       { label: "Workflow Optimization", to: "/services/workflow-optimization", desc: "AI when valuable. Software when sufficient." },

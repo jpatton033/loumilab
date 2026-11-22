@@ -26,6 +26,7 @@ export function BusinessDomainSearch() {
         <h2 id="domain-search-title" className="font-hero text-4xl font-semibold tracking-tight lg:text-6xl">Find the right domain. We'll handle the rest.</h2>
         <p className="mt-4 max-w-2xl text-lg text-muted-foreground">Search available domains and explore professional registration, setup, and management with Loumilab.</p>
       </div>
+      <p className="mt-6 text-sm text-muted-foreground">Connecting a domain to your Loumilab Orders website is coming soon.</p>
       <div className="mt-10"><DomainSearch surface="business" variant="full" placeholder="Search a domain or business name..." onProceed={(r) => nav(toRequest(r.name))} /></div>
     </section>
   );

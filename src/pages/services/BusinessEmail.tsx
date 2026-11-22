@@ -76,6 +76,7 @@ const mgmt = [
   },
 ];
 const faqs = [
+  ["Does this work with a Loumilab Orders website?", "Yes. A branded email address pairs naturally with your Orders website, so customers see the same business name on your site and in your inbox. Connecting a domain directly to your Orders website is coming soon."],
   ["Do I need to own a domain before getting started?", "No. If you already own one, choose Business Email Setup ($99). If you don't, choose Business Email + Domain Setup ($149) and we'll help you choose and register one."],
   ["Can Loumilab purchase my domain and email hosting for me?", "Yes. Choose “Loumilab buys it for me” in the questionnaire. We confirm the real provider prices, show you an itemized quote, and only purchase after you authorize and pay. You can also pay the providers yourself."],
   ["Are domain and email hosting costs included in the setup fee?", "No. Loumilab's setup fee covers our work. Domain registration and email hosting are charged by the providers and are itemized separately for your approval before anything is purchased."],

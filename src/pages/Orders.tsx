@@ -76,7 +76,7 @@ const ordersJsonLd = [
     applicationCategory: "BusinessApplication",
     operatingSystem: "Web",
     description:
-      "Loumilab Orders lets small businesses create a simple storefront, share one link, take orders from social media, accept payments, and manage every order in one dashboard.",
+      "Loumilab Orders lets small businesses build and customize a professional website, sell products or services, accept payments, and manage every order in one dashboard.",
     url: "https://loumilab.com/orders",
     publisher: { "@type": "Organization", name: "Loumilab", url: "https://loumilab.com" },
     offers: pricingPlans
@@ -100,13 +100,24 @@ const ordersJsonLd = [
   },
 ];
 
+const BUILD_FEATURES: { t: string; d: string; soon?: boolean }[] = [
+  { t: "Industry templates", d: "Start from a professional design for bakeries, food, retail, salons and services." },
+  { t: "Visual builder", d: "Edit text and photos and see the result live on phone, tablet and desktop." },
+  { t: "Rearrange sections", d: "Add, remove and reorder sections, then publish when you're ready." },
+  { t: "Colors, fonts & imagery", d: "Match your brand with your own colors, type and photos." },
+  { t: "Sell products or services", d: "Menus, products, bookings and quotes, with secure online payments." },
+  { t: "Built-in order management", d: "Every order, payment and pickup in one dashboard." },
+  { t: "Version history", d: "Every publish is saved, so you can restore an earlier design." },
+  { t: "Custom domains", d: "Connect your own domain to your Orders website.", soon: true },
+];
+
 const Orders = () => {
 
   return (
     <Layout>
       <SEOHead
-        title="Loumilab Orders | Online Ordering for Small Food Businesses"
-        description="Create a free storefront, share one link, take orders and payments, and manage everything in one dashboard. Built for home chefs, bakers, pop-ups and small sellers."
+        title="Loumilab Orders | Custom Business Websites with Online Ordering"
+        description="Create a professional website that reflects your business. Customize your design, showcase products or services, accept payments, and manage orders from one platform. Start free."
         breadcrumbs={[{ name: "Home", path: "/" }, { name: "Products", path: "/products" }, { name: "Loumilab Orders", path: "/orders" }]}
         path="/orders"
         jsonLd={ordersJsonLd}
@@ -127,10 +138,27 @@ const Orders = () => {
       </CinematicOrdersHero>
       <section aria-label="How it works in three steps" className="border-b border-border">
         <ol className="section-container grid gap-6 py-8 sm:grid-cols-3">
-          {["Build your menu", "Share your link", "Get paid orders"].map((t, i) => (
+          {["Create your website", "Customize your look", "Sell and manage orders"].map((t, i) => (
             <li key={t} className="flex items-center gap-3 font-display text-base font-semibold"><span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border text-sm">{i + 1}</span>{t}</li>
           ))}
         </ol>
+      </section>
+      <section aria-labelledby="build-what" className="section-padding">
+        <div className="section-container">
+          <Reveal className="max-w-2xl">
+            <Eyebrow>What you can build</Eyebrow>
+            <h2 id="build-what" className="mt-5 font-hero text-4xl font-semibold leading-tight lg:text-5xl">A website that's yours, not a menu link.</h2>
+            <p className="mt-6 text-lg leading-relaxed text-muted-foreground">Create, customize, sell and manage from one connected platform. No coding.</p>
+          </Reveal>
+          <ul className="mt-12 grid gap-px overflow-hidden rounded-3xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
+            {BUILD_FEATURES.map((f) => (
+              <li key={f.t} className="bg-background p-6">
+                <p className="flex items-center gap-2 font-display text-base font-semibold">{f.t}{f.soon && <span className="rounded-full border border-border px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">Coming soon</span>}</p>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.d}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
       </section>
       <section className="relative overflow-hidden pb-20 pt-16 lg:pb-28 lg:pt-24">
         <div className="section-container relative">

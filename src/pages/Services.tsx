@@ -131,6 +131,9 @@ const Services = () => (
             </span>
           </Link>
         </Reveal>
+        <Reveal>
+          <p className="mt-8 max-w-2xl text-sm leading-relaxed text-muted-foreground">Don't need a fully custom build? <Link to="/orders" className="font-semibold text-foreground underline-offset-4 hover:underline">Loumilab Orders</Link> is our ready-to-use way to create a customizable business website and sell online.</p>
+        </Reveal>
       </div>
     </section>
 
