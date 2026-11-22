@@ -6,7 +6,7 @@
 - Human photography sections use the shared brand PhotoSplit component and .photo-frame utility; card hover uses .glow-hover — keeps imagery and interaction consistent across Loumilab products.
 
 - Visual breaks (immersive image, statement, sequence, transition, editorial) use the shared components in src/components/brand/story — keeps the storytelling language consistent site-wide.
-- Homepage product/grid tiles use the shared components in src/components/brand/apple/Tiles.tsx — keeps the Apple-style homepage consistent.
+- Homepage tiles use src/components/brand/apple/Tiles.tsx — consistent homepage.
 - Per-page SEO (title, description, canonical, og/twitter, WebPage + BreadcrumbList JSON-LD) goes only through SEOHead props; article overrides live on kc_articles SEO columns with automatic fallbacks — one place for head tags.
 - Raw-HTML SEO for public routes comes from scripts/prerender-heads.ts (postbuild), which writes dist/<route>/index.html with per-route head tags and an sr-only H1; add new public routes to its staticMeta and to generate-sitemap — crawlers that skip JS otherwise see only the homepage head.
 - Header logo motion: optional `Wordmark` state, once per page load, respects reduced motion — no loading-screen dependency.
