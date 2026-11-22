@@ -1,5 +1,4 @@
-import heroOrders from "@/assets/heroes/orders.jpg";
-import { PageHero } from "@/components/brand/flow/Flow";
+import CinematicOrdersHero from "@/components/orders/hero/CinematicOrdersHero";
 import PromoBanner from "@/components/orders/PromoBanner";
 import { Link } from "react-router-dom";
 import { ORDERS_CTA } from "@/data/orders/cta";
@@ -114,10 +113,18 @@ const Orders = () => {
       />
 
       {/* Hero */}
-      <PageHero image={heroOrders} imageAlt="A bakery owner handing a wrapped order to a customer at the counter" eyebrow="Loumilab Orders" title="Your business. Your website. Your orders. One place." lede={<>Design a website that looks like your brand, sell your menu, products or services, and get paid — all from one dashboard.<span className="mt-3 block text-base font-semibold text-inverse sm:text-lg"><FeeKeepLine /></span></>} actions={<>
-        <Button size="lg" asChild className="bg-background text-foreground hover:bg-background/90"><Link to={ORDERS_CTA.href} onClick={() => trackCtaClick("hero", ORDERS_CTA.variant)}>{ORDERS_CTA.label}</Link></Button>
-        <Link to="/orders/pricing" className="inline-flex min-h-11 items-center gap-1.5 px-3 text-sm font-medium text-inverse/85 underline-offset-4 hover:text-inverse hover:underline">See how pricing works <ArrowRight className="h-4 w-4" aria-hidden /></Link>
-      </>} />
+      <CinematicOrdersHero>
+        <p className="mb-6 text-xs font-semibold uppercase tracking-[0.16em] text-inverse/75">Loumilab Orders</p>
+        <h1 className="font-hero text-5xl font-semibold leading-[1.02] tracking-tight text-inverse sm:text-6xl lg:text-7xl">
+          Your business.<br />Your website.<br />Your orders.<br />One place.
+        </h1>
+        <p className="mt-6 max-w-lg text-lg leading-relaxed text-inverse/85">Build a website that reflects your brand, sell what you offer, accept payments, and manage your business—all in one place.</p>
+        <p className="mt-3 text-base font-semibold text-inverse"><FeeKeepLine /></p>
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <Button size="lg" asChild className="bg-background text-foreground hover:bg-background/90"><Link to={ORDERS_CTA.href} onClick={() => trackCtaClick("hero", ORDERS_CTA.variant)}>{ORDERS_CTA.label}</Link></Button>
+          <a href="#how-it-works" className="inline-flex min-h-11 items-center gap-1.5 px-3 text-sm font-medium text-inverse/85 underline-offset-4 hover:text-inverse hover:underline">See How It Works <ArrowRight className="h-4 w-4" aria-hidden /></a>
+        </div>
+      </CinematicOrdersHero>
       <section aria-label="How it works in three steps" className="border-b border-border">
         <ol className="section-container grid gap-6 py-8 sm:grid-cols-3">
           {["Build your menu", "Share your link", "Get paid orders"].map((t, i) => (

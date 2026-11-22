@@ -777,3 +777,14 @@
 .site-mobile .sm\:flex-row { flex-direction: column; }
 .site-mobile .md\:py-20, .site-tablet .md\:py-20 { padding-block: 3.5rem; }
 .site-mobile .md\:py-32, .site-tablet .md\:py-32 { padding-block: 5rem; }
+
+/* Orders cinematic hero — transform/opacity only */
+.cine-hero { --hp: 0; --mx: 0; --my: 0; }
+.cine-stage { transform: scale(calc(1 - var(--hp) * 0.06)); opacity: calc(1 - var(--hp) * 0.55); transform-origin: 50% 30%; will-change: transform, opacity; }
+.cine-depth { transform: translate3d(calc(var(--mx) * -8px), calc(var(--my) * -6px), 0); transition: transform 600ms ease-out; }
+.cine-ui { transform: translate3d(calc(var(--mx) * 6px), calc(var(--hp) * -40px + var(--my) * 4px), 0); transition: transform 600ms ease-out; }
+.cine-copy { animation: cine-in 320ms ease-out both; }
+.cine-drift { animation: cine-drift 6s ease-out both; }
+@keyframes cine-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes cine-drift { from { transform: scale(1.06) translateX(1%); } to { transform: scale(1.0) translateX(0); } }
+@media (prefers-reduced-motion: reduce) { .cine-stage, .cine-depth, .cine-ui { transform: none; transition: none; } .cine-copy, .cine-drift { animation: none; } }
