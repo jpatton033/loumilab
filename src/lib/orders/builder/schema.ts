@@ -29,6 +29,9 @@ export const FONTS = [
   "Syne", "Space Grotesk", "Manrope", "DM Sans", "Work Sans", "Outfit",
 ] as const;
 
+export const HERO_LAYOUTS = ["split", "full", "centered"] as const;
+export type HeroLayout = (typeof HERO_LAYOUTS)[number];
+
 const HEX = /^#[0-9a-fA-F]{6}$/;
 const UNSAFE = /(<\s*script|javascript:|data:text\/html|[\s"'\/<]on[a-z]+\s*=)/i;
 
@@ -73,6 +76,8 @@ export const sectionSchema = z.object({
     email: text(120).optional(),
     phone: text(40).optional(),
     count: z.number().int().min(1).max(12).optional(),
+    /** Hero only: split image and text, full-width image, or centered editorial. */
+    layout: z.enum(HERO_LAYOUTS).optional(),
   }).strict(),
   style: sectionStyleSchema,
 });
@@ -88,6 +93,9 @@ export const themeSchema = z.object({
   bodyFont: z.enum(FONTS),
   radius: z.enum(["none", "soft", "round"]),
   headingScale: z.enum(["sm", "md", "lg"]),
+  /** Added later; optional so older saved designs still load (renderer applies defaults). */
+  buttonStyle: z.enum(["solid", "outline", "pill"]).optional(),
+  contentWidth: z.enum(["narrow", "normal", "wide"]).optional(),
 });
 
 export const designSchema = z.object({

@@ -42,6 +42,17 @@ const useFonts = (theme: Theme) => {
 
 const RADIUS = { none: "0px", soft: "14px", round: "28px" };
 const HSCALE = { sm: 0.85, md: 1, lg: 1.18 };
+const WIDTH = { narrow: "max-w-4xl", normal: "max-w-6xl", wide: "max-w-7xl" };
+/** Product/item card look from the site theme. Used by every products block (live, editor, previews). */
+export const siteCardStyle: CSSProperties = {
+  background: "var(--site-surface)", borderRadius: "var(--site-radius)",
+};
+
+/** Primary button look from the site theme. */
+export const siteButtonStyle: CSSProperties = {
+  background: "var(--site-btn-bg)", color: "var(--site-btn-text)", border: "1.5px solid var(--site-accent)", borderRadius: "var(--site-btn-radius)",
+};
+
 const PAD = { compact: "py-8", normal: "py-14 md:py-20", airy: "py-20 md:py-32" };
 
 const bgStyle = (s: Section): CSSProperties => {
@@ -54,7 +65,7 @@ const bgStyle = (s: Section): CSSProperties => {
 };
 
 const H = ({ children, size = 1 }: { children: ReactNode; size?: number }) => (
-  <h2 className="font-semibold leading-[1.05] tracking-tight" style={{ fontFamily: "var(--site-heading)", fontSize: `calc(clamp(1.8rem, 4vw, 2.8rem) * var(--site-hscale) * ${size})` }}>
+  <h2 className="font-semibold leading-[1.05] tracking-tight" style={{ color: "inherit", fontFamily: "var(--site-heading)", fontSize: `calc(clamp(1.8rem, 4vw, 2.8rem) * var(--site-hscale) * ${size})` }}>
     {children}
   </h2>
 );
@@ -82,17 +93,44 @@ const SectionBody = ({ s, store, renderProducts }: { s: Section; store: SiteStor
           <span className="text-lg font-semibold" style={{ fontFamily: "var(--site-heading)" }}>{store.name}</span>
         </div>
       );
-    case "hero":
+    case "hero": {
+      const layout = p.layout ?? (center && !p.image ? "centered" : "split");
+      const btn = p.cta && <a href="#order" className="mt-8 inline-block px-6 py-3 text-sm font-semibold" style={siteButtonStyle}>{p.cta}</a>;
+      const h1 = <h1 className="font-semibold leading-[1.02] tracking-tight" style={{ color: "inherit", fontFamily: "var(--site-heading)", fontSize: "calc(clamp(2.4rem, 6vw, 4.2rem) * var(--site-hscale))" }}>{p.heading || store.name}</h1>;
+      if (layout === "full") {
+        return (
+          <div className="relative -mx-5 overflow-hidden md:-mx-8" style={{ borderRadius: "var(--site-radius)" }}>
+            {p.image && <img src={p.image} alt="" className="absolute inset-0 h-full w-full object-cover" />}
+            <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.6))" }} />
+            <div className={`relative flex min-h-[26rem] flex-col justify-end p-8 md:p-12 ${center ? "items-center text-center" : ""}`} style={{ color: "#ffffff" }}>
+              {h1}
+              {p.body && <p className="mt-5 max-w-xl text-lg leading-relaxed opacity-90">{p.body}</p>}
+              {btn}
+            </div>
+          </div>
+        );
+      }
+      if (layout === "centered") {
+        return (
+          <div className="mx-auto max-w-3xl text-center">
+            {h1}
+            {p.body && <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed opacity-80">{p.body}</p>}
+            {btn}
+            {p.image && <img src={p.image} alt="" className="mt-12 aspect-[16/9] w-full object-cover" style={{ borderRadius: "var(--site-radius)" }} />}
+          </div>
+        );
+      }
       return (
         <div className={`grid items-center gap-10 ${p.image ? "md:grid-cols-2" : ""} ${center ? "text-center" : ""}`}>
           <div className={center && !p.image ? "mx-auto max-w-2xl" : ""}>
-            <h1 className="font-semibold leading-[1.02] tracking-tight" style={{ fontFamily: "var(--site-heading)", fontSize: "calc(clamp(2.4rem, 6vw, 4.2rem) * var(--site-hscale))" }}>{p.heading || store.name}</h1>
+            {h1}
             {p.body && <p className="mt-5 max-w-xl text-lg leading-relaxed opacity-80" style={center ? { marginInline: "auto" } : undefined}>{p.body}</p>}
-            {p.cta && <a href="#order" className="mt-8 inline-block px-6 py-3 text-sm font-semibold" style={{ background: "var(--site-accent)", color: "var(--site-accent-text)", borderRadius: "var(--site-radius)" }}>{p.cta}</a>}
+            {btn}
           </div>
           {p.image && <img src={p.image} alt="" className="aspect-[4/3] w-full object-cover" style={{ borderRadius: "var(--site-radius)" }} />}
         </div>
       );
+    }
     case "about":
       return (
         <div className={`grid gap-10 ${p.image ? "md:grid-cols-2" : ""} ${center ? "text-center" : ""}`}>
@@ -172,13 +210,15 @@ const SiteRenderer = ({ design, store, renderProducts, selectedId, onSelect, vie
     "--site-accent": t.accent, "--site-accent-text": t.accentText,
     "--site-heading": `"${t.headingFont}", serif`, "--site-body": `"${t.bodyFont}", sans-serif`,
     "--site-radius": RADIUS[t.radius], "--site-hscale": HSCALE[t.headingScale],
+    "--site-btn-bg": t.buttonStyle === "outline" ? "transparent" : t.accent, "--site-btn-text": t.buttonStyle === "outline" ? t.text : t.accentText,
+    "--site-btn-radius": t.buttonStyle === "pill" ? "999px" : RADIUS[t.radius],
     background: t.background, color: t.text, fontFamily: `"${t.bodyFont}", sans-serif`,
   } as CSSProperties;
   const narrow = viewport !== "desktop";
   const vpClass = viewport === "mobile" ? "site-mobile" : viewport === "tablet" ? "site-tablet" : "";
 
   return (
-    <div style={vars} className={vpClass}>
+    <div style={vars} className={`transition-colors duration-500 ${vpClass}`}>
       {design.sections.filter((s) => !s.hidden || onSelect).map((s) => {
         const editing = !!onSelect;
         return (
@@ -188,7 +228,7 @@ const SiteRenderer = ({ design, store, renderProducts, selectedId, onSelect, vie
             className={`${s.type === "header" || s.type === "footer" ? "py-6" : PAD[s.style.spacing]} ${editing ? "relative cursor-pointer outline-offset-[-3px] hover:outline hover:outline-2 hover:outline-[var(--site-accent)]" : ""} ${selectedId === s.id ? "outline outline-[3px] outline-[var(--site-accent)]" : ""}`}
             onClick={editing ? (e) => { e.preventDefault(); onSelect!(s.id); } : undefined}
           >
-            <div className={`mx-auto px-5 ${narrow ? "max-w-full" : "max-w-6xl md:px-8"}`}>
+            <div className={`mx-auto px-5 ${narrow ? "max-w-full" : `${WIDTH[t.contentWidth ?? "normal"]} md:px-8`}`}>
               <SectionBody s={s} store={store} renderProducts={renderProducts} />
             </div>
           </section>

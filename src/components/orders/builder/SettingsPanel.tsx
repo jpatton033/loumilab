@@ -6,7 +6,8 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { uploadMerchantImage } from "@/lib/orders/media";
-import { FONTS, SECTION_LABELS, type Design, type Section, type Theme } from "@/lib/orders/builder/schema";
+import { FONTS, HERO_LAYOUTS, SECTION_LABELS, type Design, type Section, type Theme } from "@/lib/orders/builder/schema";
+import { FONT_PAIRS, HERO_LAYOUT_LABELS, PALETTES, STYLE_PRESETS, applyFontPair, applyPalette, applyStyle } from "@/lib/orders/builder/presets";
 import { TEMPLATES } from "@/lib/orders/builder/templates";
 import type { BuilderCaps } from "@/lib/orders/builder/gating";
 
@@ -52,6 +53,8 @@ const HAS: Record<string, (keyof Section["props"])[]> = {
   hours: ["heading", "body"], footer: ["body"], header: [],
 };
 
+export { Seg, Field };
+
 export const SectionSettings = ({ section, merchantId, caps, onChange }: { section: Section; merchantId: string; caps: BuilderCaps; onChange: (s: Section) => void }) => {
   const p = section.props;
   const set = (patch: Partial<Section["props"]>) => onChange({ ...section, props: { ...p, ...patch } });
@@ -64,6 +67,7 @@ export const SectionSettings = ({ section, merchantId, caps, onChange }: { secti
       <p className="font-hero text-lg font-semibold">{SECTION_LABELS[section.type]}.</p>
       {fields.includes("heading") && <Field label="Heading"><Input aria-label="Heading" value={p.heading ?? ""} maxLength={140} onChange={(e) => set({ heading: e.target.value })} /></Field>}
       {fields.includes("body") && <Field label={section.type === "hours" ? "Hours" : section.type === "promo" ? "Message" : "Text"}><Textarea aria-label="Text" rows={4} value={p.body ?? ""} maxLength={2000} onChange={(e) => set({ body: e.target.value })} /></Field>}
+      {section.type === "hero" && <Field label="Hero layout"><Seg value={p.layout ?? "split"} onChange={(v) => set({ layout: v })} options={HERO_LAYOUTS.map((l) => [l, HERO_LAYOUT_LABELS[l].split(" ")[0]] as [typeof l, string])} /></Field>}
       {fields.includes("cta") && <Field label="Button text"><Input aria-label="Button text" value={p.cta ?? ""} maxLength={40} onChange={(e) => set({ cta: e.target.value })} /></Field>}
       {fields.includes("email") && <Field label="Email"><Input aria-label="Email" type="email" value={p.email ?? ""} maxLength={120} onChange={(e) => set({ email: e.target.value })} /></Field>}
       {fields.includes("phone") && <Field label="Phone"><Input aria-label="Phone" value={p.phone ?? ""} maxLength={40} onChange={(e) => set({ phone: e.target.value })} /></Field>}
@@ -115,7 +119,7 @@ const Color = ({ label, value, onChange }: { label: string; value: string; onCha
   </label>
 );
 
-export const ThemeSettings = ({ design, caps, onTheme, onTemplate }: { design: Design; caps: BuilderCaps; onTheme: (t: Theme) => void; onTemplate: (key: string) => void }) => {
+export const ThemeSettings = ({ design, caps, onTheme, onTemplate, onDesign }: { design: Design; caps: BuilderCaps; onTheme: (t: Theme) => void; onTemplate: (key: string) => void; onDesign?: (d: Design) => void }) => {
   const t = design.theme;
   const set = (patch: Partial<Theme>) => onTheme({ ...t, ...patch });
   return (
@@ -132,6 +136,38 @@ export const ThemeSettings = ({ design, caps, onTheme, onTemplate }: { design: D
           ))}
         </div>
       </Field>
+      {onDesign && (
+        <Field label="Style">
+          <div className="grid grid-cols-3 gap-2">
+            {STYLE_PRESETS.map((sp) => (
+              <button key={sp.key} type="button" onClick={() => onDesign(applyStyle(design, sp))} title={sp.summary}
+                className="min-h-11 rounded-xl border border-border px-2 text-xs font-medium hover:border-foreground/40">{sp.name}</button>
+            ))}
+          </div>
+        </Field>
+      )}
+      {onDesign && (
+        <Field label="Palettes">
+          <div className="flex flex-wrap gap-2">
+            {PALETTES.map((pl) => (
+              <button key={pl.key} type="button" aria-label={pl.name} title={pl.name} onClick={() => onDesign(applyPalette(design, pl))}
+                className={`flex h-9 overflow-hidden rounded-full border ${t.accent === pl.colors.accent && t.background === pl.colors.background ? "border-foreground" : "border-border"}`}>
+                {[pl.colors.background, pl.colors.surface, pl.colors.accent].map((c) => <span key={c} className="h-full w-4" style={{ background: c }} />)}
+              </button>
+            ))}
+          </div>
+        </Field>
+      )}
+      {onDesign && (
+        <Field label="Font pairing">
+          <div className="grid grid-cols-2 gap-2">
+            {FONT_PAIRS.map((f) => (
+              <button key={f.key} type="button" onClick={() => onDesign(applyFontPair(design, f))}
+                className={`min-h-11 rounded-xl border px-2 text-xs font-medium ${t.headingFont === f.heading && t.bodyFont === f.body ? "border-foreground" : "border-border hover:border-foreground/40"}`}>{f.name}</button>
+            ))}
+          </div>
+        </Field>
+      )}
       <Field label="Colors">
         <div className="space-y-2">
           <Color label="Background" value={t.background} onChange={(v) => set({ background: v })} />
@@ -149,6 +185,8 @@ export const ThemeSettings = ({ design, caps, onTheme, onTemplate }: { design: D
         </Field>
       ))}
       <Field label={caps.advancedStyle ? "Corners" : "Corners · Business plan"}><Seg disabled={!caps.advancedStyle} value={t.radius} onChange={(v) => set({ radius: v })} options={[["none", "Square"], ["soft", "Soft"], ["round", "Round"]]} /></Field>
+      <Field label="Buttons"><Seg value={t.buttonStyle ?? "solid"} onChange={(v) => set({ buttonStyle: v })} options={[["solid", "Solid"], ["outline", "Outline"], ["pill", "Pill"]]} /></Field>
+      <Field label="Content width"><Seg value={t.contentWidth ?? "normal"} onChange={(v) => set({ contentWidth: v })} options={[["narrow", "Narrow"], ["normal", "Normal"], ["wide", "Wide"]]} /></Field>
       <Field label={caps.advancedStyle ? "Heading size" : "Heading size · Business plan"}><Seg disabled={!caps.advancedStyle} value={t.headingScale} onChange={(v) => set({ headingScale: v })} options={[["sm", "Small"], ["md", "Medium"], ["lg", "Large"]]} /></Field>
     </div>
   );

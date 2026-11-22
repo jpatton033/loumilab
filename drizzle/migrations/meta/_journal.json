@@ -267,6 +267,13 @@
       "when": 1795384255621,
       "tag": "0037_storefront_design_validation_tweak",
       "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "7",
+      "when": 1795387728093,
+      "tag": "0038_storefront_design_style_fields",
+      "breakpoints": true
     }
   ]
 }

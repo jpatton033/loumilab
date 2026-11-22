@@ -15,7 +15,9 @@ import { Scene as CineScene, useSceneProgress } from "@/components/brand/story/S
 import { usePublishedArticles } from "@/lib/kc/queries";
 import { usePublishedIssues } from "@/lib/thedot/queries";
 import { ORDERS_CTA } from "@/data/orders/cta";
-import CustomizeDemo from "@/components/orders/showcase/CustomizeDemo";
+import { lazy, Suspense } from "react";
+import { MountWhenNear } from "@/components/orders/showcase/SitePreview";
+const SiteShowcase = lazy(() => import("@/components/orders/showcase/SiteShowcase"));
 import { AutoMarquee, LayeredStack, LoopVideo, TimedCrossfade, type Frame } from "@/components/brand/story/Horizontal";
 import { FloatingGallery, PreviewScenes, VideoSequence, type FloatItem, type Scene } from "@/components/brand/story/Cinematic";
 import { MockDashboard, MockSchedule, MockSecurity, MockWorkflow } from "@/components/brand/story/mocks";
@@ -235,7 +237,7 @@ const Index = () => {
           <Glow tone="burgundy" className="right-[-8%] top-0 h-[36rem] w-[36rem] opacity-50" />
           <div className="section-container relative grid items-center gap-12 lg:grid-cols-12">
             <div className="relative lg:col-span-6">
-              <CustomizeDemo />
+              <MountWhenNear minHeight={560}><Suspense fallback={null}><SiteShowcase tone="dark" /></Suspense></MountWhenNear>
             </div>
             <div className="lg:col-span-5 lg:col-start-8">
               <Kicker n="03">Loumilab Orders</Kicker>

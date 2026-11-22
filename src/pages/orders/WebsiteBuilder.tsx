@@ -18,8 +18,9 @@ import { customerHref } from "@/lib/siteAddress";
 import { builderCaps } from "@/lib/orders/builder/gating";
 import { LOCKED_SECTIONS, SECTION_LABELS, SECTION_TYPES, validateDesign, type Design, type Section, type SectionType } from "@/lib/orders/builder/schema";
 import { defaultSection, legacyToDesign } from "@/lib/orders/builder/templates";
+import { applyStoreDetails, takePendingDesign } from "@/lib/orders/builder/presets";
 import { clearPendingTemplate, getPendingTemplate, saveDraft, useDesignVersions, usePublishDesign, useRestoreDesign, useStorefrontDesign } from "@/lib/orders/builder/queries";
-import SiteRenderer from "@/components/orders/builder/SiteRenderer";
+import SiteRenderer, { siteCardStyle } from "@/components/orders/builder/SiteRenderer";
 import { SectionSettings, ThemeSettings } from "@/components/orders/builder/SettingsPanel";
 
 /** Key-order-independent JSON, since the database reorders object keys. */
@@ -98,7 +99,10 @@ const WebsiteBuilder = () => {
     const parsed = row ? validateDesign(row.draft) : null;
     if (parsed?.success) { setDesign(parsed.data); return; }
     const pending = getPendingTemplate();
-    setDesign(legacyToDesign({ ...store, industry_slug: merchant?.industry_slug }, pending));
+    const base = legacyToDesign({ ...store, industry_slug: merchant?.industry_slug }, pending);
+    // A look built on the public preview carries over; the store's own name, text and photo fill in.
+    const fromPreview = takePendingDesign();
+    setDesign(fromPreview ? applyStoreDetails(fromPreview, base) : base);
     clearPendingTemplate();
     setSaveState("unsaved");
   }, [store, row, rowLoading, design, merchant?.industry_slug]);
@@ -186,7 +190,7 @@ const WebsiteBuilder = () => {
     return (
       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
         {list.map((p) => (
-          <div key={p.id} className="overflow-hidden" style={{ background: "var(--site-surface)", borderRadius: "var(--site-radius)" }}>
+          <div key={p.id} className="overflow-hidden" style={siteCardStyle}>
             {p.image_url && <img src={p.image_url} alt="" className="aspect-[4/3] w-full object-cover" loading="lazy" />}
             <div className="p-4"><p className="font-semibold">{p.name}</p><p className="mt-1 text-sm opacity-70">{formatCents(p.price_cents)}</p></div>
           </div>
@@ -257,7 +261,7 @@ const WebsiteBuilder = () => {
   const settings = selectedSection
     ? <div className="space-y-4"><button type="button" onClick={() => setSelected(null)} className="text-xs font-medium text-muted-foreground hover:text-foreground">← Site style</button>
         <SectionSettings section={selectedSection} merchantId={store.merchant_id} caps={caps} onChange={updateSection} /></div>
-    : <ThemeSettings design={design} caps={caps} onTheme={(theme) => commit({ ...design, theme })}
+    : <ThemeSettings design={design} caps={caps} onTheme={(theme) => commit({ ...design, theme })} onDesign={commit}
         onTemplate={(key) => { if (key === design.template) return; if (window.confirm("Switch starting design? Your section text resets to the new design. You can undo this.")) { commit(legacyToDesign({ ...store, industry_slug: merchant.industry_slug }, key)); setSelected(null); } }} />;
 
   const canvas = (

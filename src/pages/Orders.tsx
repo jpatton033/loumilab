@@ -1,3 +1,7 @@
+import { lazy, Suspense } from "react";
+import { MountWhenNear } from "@/components/orders/showcase/SitePreview";
+const SiteShowcase = lazy(() => import("@/components/orders/showcase/SiteShowcase"));
+const MakeItYours = lazy(() => import("@/components/orders/showcase/MakeItYours"));
 import CinematicOrdersHero from "@/components/orders/hero/CinematicOrdersHero";
 import PromoBanner from "@/components/orders/PromoBanner";
 import { Link } from "react-router-dom";
@@ -159,6 +163,31 @@ const Orders = () => {
           </ul>
         </div>
       </section>
+      <section id="site-showcase" aria-labelledby="showcase-title" className="scroll-mt-24 bg-surface-inverse py-20 text-inverse lg:py-28">
+        <div className="section-container">
+          <Reveal className="max-w-2xl">
+            <h2 id="showcase-title" className="text-inverse font-hero text-4xl font-semibold leading-tight lg:text-5xl">One platform. Endless possibilities for your brand.</h2>
+            <p className="mt-6 text-lg leading-relaxed opacity-75">From bold storefronts to elegant business websites, customize the colors, layouts, imagery, and details that make your business yours.</p>
+          </Reveal>
+          <div className="mt-12">
+            <MountWhenNear minHeight={620}><Suspense fallback={null}><SiteShowcase tone="dark" /></Suspense></MountWhenNear>
+          </div>
+          <Button size="lg" asChild className="mt-10 rounded-full bg-atmo-ivory text-atmo-obsidian hover:bg-atmo-ivory/90"><Link to={ORDERS_CTA.href}>{ORDERS_CTA.label}</Link></Button>
+        </div>
+      </section>
+
+      <section id="make-it-yours" aria-labelledby="miy-title" className="scroll-mt-24 section-padding">
+        <div className="section-container">
+          <Reveal className="max-w-2xl">
+            <h2 id="miy-title" className="font-hero text-4xl font-semibold leading-tight lg:text-5xl">Start with a design. Make it yours.</h2>
+            <p className="mt-6 text-lg leading-relaxed text-muted-foreground">Explore different styles, customize the details, and see how your business website could look, all before signing up.</p>
+          </Reveal>
+          <div className="mt-12">
+            <MountWhenNear minHeight={720}><Suspense fallback={null}><MakeItYours onExplore={() => document.getElementById("site-showcase")?.scrollIntoView({ behavior: "smooth" })} /></Suspense></MountWhenNear>
+          </div>
+        </div>
+      </section>
+
       <section className="relative overflow-hidden pb-20 pt-16 lg:pb-28 lg:pt-24">
         <div className="section-container relative">
           <p className="mx-auto max-w-md text-center text-sm text-muted-foreground">{ORDERS_CTA.support}</p>
