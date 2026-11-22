@@ -5596,6 +5596,95 @@ export type Database = {
         }
         Relationships: []
       }
+      storefront_design_versions: {
+        Row: {
+          created_at: string
+          design: Json
+          id: string
+          published_by: string | null
+          storefront_id: string
+          version: number
+        }
+        Insert: {
+          created_at?: string
+          design: Json
+          id?: string
+          published_by?: string | null
+          storefront_id: string
+          version: number
+        }
+        Update: {
+          created_at?: string
+          design?: Json
+          id?: string
+          published_by?: string | null
+          storefront_id?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "storefront_design_versions_storefront_id_fkey"
+            columns: ["storefront_id"]
+            isOneToOne: false
+            referencedRelation: "storefront_designs"
+            referencedColumns: ["storefront_id"]
+          },
+        ]
+      }
+      storefront_designs: {
+        Row: {
+          created_at: string
+          draft: Json
+          merchant_id: string
+          published: Json | null
+          published_at: string | null
+          published_version: number
+          schema_version: number
+          storefront_id: string
+          template_key: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          draft?: Json
+          merchant_id: string
+          published?: Json | null
+          published_at?: string | null
+          published_version?: number
+          schema_version?: number
+          storefront_id: string
+          template_key?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          draft?: Json
+          merchant_id?: string
+          published?: Json | null
+          published_at?: string | null
+          published_version?: number
+          schema_version?: number
+          storefront_id?: string
+          template_key?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "storefront_designs_merchant_id_fkey"
+            columns: ["merchant_id"]
+            isOneToOne: false
+            referencedRelation: "merchants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "storefront_designs_storefront_id_fkey"
+            columns: ["storefront_id"]
+            isOneToOne: true
+            referencedRelation: "merchant_storefronts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       stripe_webhook_events: {
         Row: {
           account_id: string | null
@@ -5941,6 +6030,7 @@ export type Database = {
         Args: { _storefront_id: string }
         Returns: Json
       }
+      get_public_storefront_design: { Args: { _slug: string }; Returns: Json }
       get_quote_by_token: { Args: { _token: string }; Returns: Json }
       has_admin_role: {
         Args: {
@@ -6102,6 +6192,7 @@ export type Database = {
         Args: { object_name: string }
         Returns: boolean
       }
+      owns_storefront: { Args: { _storefront: string }; Returns: boolean }
       promo_qualify: {
         Args: { _event: string; _merchant_id: string }
         Returns: undefined
@@ -6109,6 +6200,10 @@ export type Database = {
       publish_local_candidate: {
         Args: { _id: string; _notes?: string }
         Returns: string
+      }
+      publish_storefront_design: {
+        Args: { _storefront: string }
+        Returns: number
       }
       record_page_view: {
         Args: {
@@ -6127,6 +6222,10 @@ export type Database = {
       respond_to_quote: {
         Args: { _approve: boolean; _token: string }
         Returns: Json
+      }
+      restore_storefront_design: {
+        Args: { _storefront: string; _version: number }
+        Returns: number
       }
       revoke_support_access: { Args: { _grant: string }; Returns: undefined }
       search_local_businesses: {
@@ -6344,6 +6443,7 @@ export type Database = {
         Args: { _profile_id: string; _reason?: string }
         Returns: undefined
       }
+      validate_storefront_design: { Args: { _d: Json }; Returns: undefined }
     }
     Enums: {
       admin_role:

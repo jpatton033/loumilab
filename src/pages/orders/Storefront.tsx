@@ -17,6 +17,8 @@ import { getStorefront } from "@/data/orders/storefronts";
 import { usePublicStorefront, toStoreProduct } from "@/lib/orders/storefront";
 import { useIndustryExperience } from "@/lib/orders/industries";
 import { toast } from "sonner";
+import SiteRenderer from "@/components/orders/builder/SiteRenderer";
+import { usePublishedDesign } from "@/lib/orders/builder/queries";
 
 const jsonLdCache = new Map<string, Record<string, unknown>[]>();
 
@@ -81,6 +83,8 @@ const Storefront = () => {
   const { slug } = useParams<{ slug: string }>();
   const [params] = useSearchParams();
   const { data: live, isLoading, isError } = usePublicStorefront(slug);
+  /** Published builder design; stores without one keep the classic template. */
+  const { data: design } = usePublishedDesign(slug);
   const demo = getStorefront(slug);
   const cart = useCart();
   const [checkoutOpen, setCheckoutOpen] = useState(false);
@@ -189,7 +193,7 @@ const Storefront = () => {
         jsonLd={isLive && isPublic ? storeJsonLd(store, !!industry?.is_food) : undefined}
       />
 
-      <section className="pb-32 pt-14 lg:pt-16">
+      <section className={isLive && design ? "pt-6" : "pb-32 pt-14 lg:pt-16"}>
         <div className="section-container max-w-3xl">
           {params.get("from") === "local" && (
             <Link to="/orders/local" className="mb-6 inline-block text-sm font-medium text-muted-foreground hover:text-foreground">
@@ -235,6 +239,7 @@ const Storefront = () => {
             </div>
           )}
 
+          {!(isLive && design) && (<>
           <div className="mt-8">
 
             <StorefrontHeader store={store} />
@@ -272,8 +277,36 @@ const Storefront = () => {
           <p className="mt-10 text-sm text-muted-foreground">
             {store.pickupInfo} · {store.hours}
           </p>
+          </>)}
         </div>
       </section>
+
+      {isLive && design && (
+        <div className="pb-32">
+          <SiteRenderer
+            design={design}
+            store={{ name: store.name, logoUrl: "logoUrl" in store ? store.logoUrl : null, monogram: store.monogram, hours: store.hours, pickupInfo: store.pickupInfo, location: store.location }}
+            renderProducts={({ featured }) => {
+              const list = featured ? store.products.slice(0, featured) : store.products;
+              if (!list.length) return <p className="text-sm opacity-70">This store hasn't published anything yet.</p>;
+              return (
+                <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                  {list.map((p) => (
+                    <StoreProductCard key={p.id} product={p}
+                      quantity={cart.lines.find((l) => l.product.id === p.id)?.quantity ?? 0}
+                      onAdd={cart.add} priceIsStarting={requestLed} actionLabel={requestLed ? "Request" : undefined} />
+                  ))}
+                </div>
+              );
+            }}
+          />
+          {requestLed && (
+            <div className="section-container mt-12 max-w-3xl">
+              <ServiceRequestForm terms={terms} merchantId={live.store.merchant_id} />
+            </div>
+          )}
+        </div>
+      )}
 
       {!requestLed && (
         <CartBar count={cart.count} subtotalCents={cart.subtotalCents} ctaLabel="Place order" onCheckout={checkout} />

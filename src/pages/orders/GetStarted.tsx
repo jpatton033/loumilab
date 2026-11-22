@@ -35,6 +35,7 @@ import {
   PURCHASE_MODELS,
 } from "@/lib/orders/industries";
 import { toast } from "sonner";
+import TemplatePicker from "@/components/orders/builder/TemplatePicker";
 import { subscribeToPlan } from "@/lib/orders/billing";
 
 const DRAFT_KEY = "loumilab-orders-onboarding-draft-v2";
@@ -646,6 +647,7 @@ const GetStarted = () => {
                       value={logoUrl}
                       onChange={setLogoUrl}
                     />
+                    <TemplatePicker industrySlug={industrySlug} />
                     <div className="rounded-2xl border border-border bg-secondary p-4 text-sm">
                       <p className="text-muted-foreground">Your store link will be</p>
                       <p className="mt-1 font-display font-semibold">

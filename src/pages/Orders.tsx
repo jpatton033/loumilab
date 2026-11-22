@@ -114,7 +114,7 @@ const Orders = () => {
       />
 
       {/* Hero */}
-      <PageHero image={heroOrders} imageAlt="A bakery owner handing a wrapped order to a customer at the counter" eyebrow="Loumilab Orders" title="Your business. Your storefront. Your orders." lede={<>Build your menu, share your link, get paid orders — no more DMs and Venmo notes.<span className="mt-3 block text-base font-semibold text-inverse sm:text-lg"><FeeKeepLine /></span></>} actions={<>
+      <PageHero image={heroOrders} imageAlt="A bakery owner handing a wrapped order to a customer at the counter" eyebrow="Loumilab Orders" title="Your business. Your website. Your orders. One place." lede={<>Design a website that looks like your brand, sell your menu, products or services, and get paid — all from one dashboard.<span className="mt-3 block text-base font-semibold text-inverse sm:text-lg"><FeeKeepLine /></span></>} actions={<>
         <Button size="lg" asChild className="bg-background text-foreground hover:bg-background/90"><Link to={ORDERS_CTA.href} onClick={() => trackCtaClick("hero", ORDERS_CTA.variant)}>{ORDERS_CTA.label}</Link></Button>
         <Link to="/orders/pricing" className="inline-flex min-h-11 items-center gap-1.5 px-3 text-sm font-medium text-inverse/85 underline-offset-4 hover:text-inverse hover:underline">See how pricing works <ArrowRight className="h-4 w-4" aria-hidden /></Link>
       </>} />

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, ExternalLink, RefreshCw } from "lucide-react";
+import { ArrowLeft, ExternalLink, Palette, RefreshCw } from "lucide-react";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import Eyebrow from "@/components/brand/Eyebrow";
@@ -280,6 +280,11 @@ const Dashboard = () => {
               )}
               {merchant && setup?.slug && (
                 <StoreLink slug={setup.slug} isPublic={setup.isPublic} variant="inline" />
+              )}
+              {merchant && setup?.slug && (
+                <Button asChild size="lg" className="rounded-full">
+                  <Link to="/orders/dashboard/website"><Palette size={15} /> Website builder</Link>
+                </Button>
               )}
               {merchant && <HelpDrawer merchantId={merchant.id} />}
               <Button asChild variant="ghost" size="lg" className="rounded-full">

@@ -768,3 +768,12 @@
 .spaces-grain { position: absolute; inset: 0; pointer-events: none; opacity: .06; background-image: radial-gradient(hsl(var(--spaces-ivory)) 1px, transparent 1px); background-size: 3px 3px; mix-blend-mode: overlay; }
 @media (prefers-reduced-motion: reduce) { .spaces-glow { animation: none; } .spaces-img-drift { transition: none; } }
 @media (max-width: 640px) { .spaces-glow { filter: blur(60px); animation-duration: 34s; } }
+
+/* Orders website builder: device previews inside the editor canvas, where
+   viewport media queries can't apply. */
+.site-tablet .md\:grid-cols-2, .site-mobile .md\:grid-cols-2,
+.site-mobile .sm\:grid-cols-2, .site-mobile .sm\:grid-cols-3 { grid-template-columns: minmax(0, 1fr); }
+.site-tablet .md\:grid-cols-3, .site-mobile .md\:grid-cols-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.site-mobile .sm\:flex-row { flex-direction: column; }
+.site-mobile .md\:py-20, .site-tablet .md\:py-20 { padding-block: 3.5rem; }
+.site-mobile .md\:py-32, .site-tablet .md\:py-32 { padding-block: 5rem; }
