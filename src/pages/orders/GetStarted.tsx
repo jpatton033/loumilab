@@ -12,8 +12,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import PhoneFrame from "@/components/orders/PhoneFrame";
-import StorefrontHeader from "@/components/orders/StorefrontHeader";
 import ImageUpload from "@/components/orders/ImageUpload";
 import StoreStatusBadge from "@/components/orders/StoreStatusBadge";
 import StoreLink from "@/components/orders/StoreLink";
@@ -35,7 +33,13 @@ import {
   PURCHASE_MODELS,
 } from "@/lib/orders/industries";
 import { toast } from "sonner";
-import TemplatePicker from "@/components/orders/builder/TemplatePicker";
+import SetupDesigner from "@/components/orders/builder/SetupDesigner";
+import { SitePreview } from "@/components/orders/showcase/SitePreview";
+import { initialSetupDesign, setPendingDesign, setupProducts, withSetupDetails } from "@/lib/orders/builder/presets";
+import { getPendingTemplate } from "@/lib/orders/builder/queries";
+import type { Design } from "@/lib/orders/builder/schema";
+import { Monitor, Smartphone, Eye } from "lucide-react";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { subscribeToPlan } from "@/lib/orders/billing";
 
 const DRAFT_KEY = "loumilab-orders-onboarding-draft-v2";
@@ -285,6 +289,17 @@ const GetStarted = () => {
   const selectedPlan = plans?.find((p) => p.slug === planSlug) ?? null;
   const [subscribing, setSubscribing] = useState(false);
   const namedItems = items.filter((i) => i.name.trim());
+  // Live preview: the real website renderer, with the merchant's own look and details.
+  const [design, setDesignState] = useState<Design>(() => initialSetupDesign(getPendingTemplate(), industrySlug));
+  const setDesign = (d: Design) => { setDesignState(d); setPendingDesign(d); };
+  const [previewViewport, setPreviewViewport] = useState<"mobile" | "desktop">("mobile");
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const previewDesign = useMemo(() => withSetupDetails(design, { name, description }), [design, name, description]);
+  const livePreview = (vp: "mobile" | "desktop") => (
+    <SitePreview design={previewDesign} storeName={previewStore.name} products={setupProducts(items)} viewport={vp}
+      store={{ logoUrl, location: previewStore.location, hours, pickupInfo, monogram }}
+      emptyText={`Your ${terms.catalog.toLowerCase()} will appear here.`} />
+  );
 
   const stepCardRef = useRef<HTMLDivElement>(null);
   const didMountRef = useRef(false);
@@ -647,7 +662,7 @@ const GetStarted = () => {
                       value={logoUrl}
                       onChange={setLogoUrl}
                     />
-                    <TemplatePicker industrySlug={industrySlug} />
+                    <SetupDesigner design={design} onChange={setDesign} />
                     <div className="rounded-2xl border border-border bg-secondary p-4 text-sm">
                       <p className="text-muted-foreground">Your store link will be</p>
                       <p className="mt-1 font-display font-semibold">
@@ -1004,31 +1019,28 @@ const GetStarted = () => {
 
             </div>
 
+            {/* Small screens: open the live preview without scrolling past the form */}
+            <Button type="button" onClick={() => setPreviewOpen(true)} className="fixed bottom-5 right-5 z-40 rounded-full shadow-lg lg:hidden"><Eye size={16} /> Preview</Button>
+            <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
+              <DialogContent className="max-h-[92vh] max-w-[430px] overflow-y-auto p-3 pt-10">
+                <DialogTitle className="sr-only">Live preview of your storefront</DialogTitle>
+                {livePreview("mobile")}
+              </DialogContent>
+            </Dialog>
             {/* Live preview */}
             <div className="lg:sticky lg:top-28 lg:self-start">
               <p className="font-display text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
                 Live preview
               </p>
-              <PhoneFrame className="mt-5" label="Storefront preview">
-                <div className="px-5 pb-6 pt-3">
-                  <StorefrontHeader store={previewStore} compact demo />
-                  <div className="mt-5 space-y-2.5">
-                    {namedItems.map((i, idx) => (
-                      <div key={idx} className="flex items-center justify-between rounded-2xl border border-border p-3">
-                        <span className="truncate font-display text-sm font-semibold">{i.name}</span>
-                        <span className="text-xs text-muted-foreground">
-                          {Number(i.price) > 0 ? formatMoney(Math.round(Number(i.price) * 100)) : "Quote"}
-                        </span>
-                      </div>
-                    ))}
-                    {namedItems.length === 0 && (
-                      <div className="rounded-2xl border border-dashed border-border p-5 text-center text-xs text-muted-foreground">
-                        Your {terms.catalog.toLowerCase()} will appear here.
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </PhoneFrame>
+              <div className="mt-3 flex justify-end gap-1">
+                <Button type="button" size="icon" variant={previewViewport === "mobile" ? "default" : "outline"} className="h-9 w-9 rounded-full" aria-label="Phone preview" aria-pressed={previewViewport === "mobile"} onClick={() => setPreviewViewport("mobile")}><Smartphone size={15} /></Button>
+                <Button type="button" size="icon" variant={previewViewport === "desktop" ? "default" : "outline"} className="h-9 w-9 rounded-full" aria-label="Desktop preview" aria-pressed={previewViewport === "desktop"} onClick={() => setPreviewViewport("desktop")}><Monitor size={15} /></Button>
+              </div>
+              <div className="mt-3 max-h-[70vh] overflow-y-auto rounded-2xl" aria-label="Storefront preview">
+                {previewViewport === "desktop"
+                  ? <div className="overflow-hidden"><div style={{ width: "1100px", zoom: 0.4 }}>{livePreview("desktop")}</div></div>
+                  : livePreview("mobile")}
+              </div>
               <p className="mt-5 text-sm text-muted-foreground">
                 Already set up?{" "}
                 <Link to="/orders/dashboard" className="font-semibold text-accent hover:underline">

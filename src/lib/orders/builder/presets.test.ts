@@ -53,3 +53,17 @@ describe("preview design hand-off", () => {
     expect(setPendingDesign(d)).toBe(false);
   });
 });
+
+import { PALETTES as _P, applyPalette as _ap, withSetupDetails, setupProducts } from "./presets";
+describe("store setup preview", () => {
+  it("keeps the chosen palette and shows the merchant's name and items", () => {
+    const forest = _P.find((p) => p.key === "forest")!;
+    const d = withSetupDetails(_ap(PREVIEW_START(), forest), { name: "Rosa's Tamales", description: "Fresh tamales every Friday." });
+    expect(d.theme.accent).toBe("#2f6b3a");
+    const hero = d.sections.find((s) => s.type === "hero")!;
+    expect(hero.props.heading).toBe("Rosa's Tamales");
+    expect(hero.props.body).toBe("Fresh tamales every Friday.");
+    expect(setupProducts([{ name: "Pork tamales, dozen", price: "24" }, { name: "", price: "5" }, { name: "Catering", price: "" }]))
+      .toEqual([{ id: "0-Pork tamales, dozen", name: "Pork tamales, dozen", price: "$24" }, { id: "1-Catering", name: "Catering", price: "Quote" }]);
+  });
+});

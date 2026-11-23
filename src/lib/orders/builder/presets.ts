@@ -1,5 +1,5 @@
 import { SCHEMA_VERSION, validateDesign, newSectionId, type Design, type HeroLayout, type Section, type SectionStyle, type SectionType, type Theme } from "./schema";
-import { findTemplate } from "./templates";
+import { findTemplate, templateForIndustry } from "./templates";
 import cake from "@/assets/orders/bake-cake.jpg";
 import cupcakes from "@/assets/orders/bake-cupcakes.jpg";
 import cookies from "@/assets/orders/bake-cookies.jpg";
@@ -194,3 +194,19 @@ export const applyStoreDetails = (look: Design, base: Design): Design => {
     }),
   };
 };
+
+/** Starting look for store setup: a saved preview design, else the chosen or best-fit template. */
+export const initialSetupDesign = (pendingTemplate: string | null, industrySlug?: string | null): Design =>
+  readPendingDesign() ?? (pendingTemplate ? findTemplate(pendingTemplate) : templateForIndustry(industrySlug)).build();
+
+/** Setup preview: the merchant's own name and description fill the hero; the look is untouched. */
+export const withSetupDetails = (d: Design, details: { name: string; description: string }): Design => ({
+  ...d,
+  sections: d.sections.map((s) => (s.type === "hero"
+    ? { ...s, props: { ...s.props, heading: details.name.trim() || s.props.heading, body: details.description.trim() || s.props.body } }
+    : s)),
+});
+
+/** Merchant items as preview product cards. */
+export const setupProducts = (items: { name: string; price: string }[]): SampleProduct[] =>
+  items.filter((i) => i.name.trim()).map((i, idx) => ({ id: `${idx}-${i.name}`, name: i.name.trim(), price: Number(i.price) > 0 ? `$${Number(i.price).toFixed(2).replace(/\.00$/, "")}` : "Quote" }));

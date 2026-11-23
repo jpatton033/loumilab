@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import SiteRenderer, { siteCardStyle } from "@/components/orders/builder/SiteRenderer";
+import SiteRenderer, { siteCardStyle, type SiteStoreInfo } from "@/components/orders/builder/SiteRenderer";
 import type { Design } from "@/lib/orders/builder/schema";
 import type { SampleProduct } from "@/lib/orders/builder/presets";
 import { cn } from "@/lib/utils";
 
 /** A sample website drawn by the same renderer live stores use. Sample products, no cart. */
-export const SitePreview = ({ design, storeName, products, viewport, className }: {
+export const SitePreview = ({ design, storeName, products, viewport, className, store, emptyText }: {
   design: Design; storeName: string; products: SampleProduct[]; viewport: "desktop" | "mobile"; className?: string;
+  /** Extra store details (logo, location, hours) for setup previews. */ store?: Partial<SiteStoreInfo>; emptyText?: string;
 }) => (
   <div className={cn("mx-auto overflow-hidden rounded-2xl border border-border bg-background shadow-2xl transition-[max-width] duration-500", viewport === "mobile" ? "max-w-[390px]" : "max-w-full", className)}>
     <div className="flex items-center gap-1.5 border-b border-border bg-secondary px-4 py-2.5" aria-hidden>
@@ -14,9 +15,10 @@ export const SitePreview = ({ design, storeName, products, viewport, className }
       <span className="ml-3 truncate text-xs text-muted-foreground">{storeName.toLowerCase().replace(/[^a-z0-9]+/g, "")}.loumilab.com</span>
     </div>
     <div className="pointer-events-none select-none" aria-hidden>
-      <SiteRenderer design={design} store={{ name: storeName }} viewport={viewport}
+      <SiteRenderer design={design} store={{ ...store, name: storeName }} viewport={viewport}
         renderProducts={({ featured }) => {
           const list = featured ? products.slice(0, featured) : products;
+          if (!list.length && emptyText) return <p className="rounded-xl border border-dashed p-6 text-center text-sm opacity-60" style={{ borderColor: "currentColor" }}>{emptyText}</p>;
           return (
             <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
               {list.map((p) => (
