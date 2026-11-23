@@ -22,6 +22,7 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { Loader2, Pencil } from "lucide-react";
 import { toast } from "sonner";
+import { pct as feePct, useFeeSchedule } from "@/lib/orders/feeSchedule";
 import {
   PLAN_LINK_LABELS,
   useLinkPlanToStripe,
@@ -125,6 +126,7 @@ const AdminPlans = () => {
   const [linkingId, setLinkingId] = useState<string | null>(null);
   const queryClient = useQueryClient();
   const [editing, setEditing] = useState<OrdersPlan | null>(null);
+  const liveTiers = useFeeSchedule().data?.active?.tiers;
   const [draft, setDraft] = useState<Draft | null>(null);
   const [saving, setSaving] = useState(false);
 
@@ -285,7 +287,7 @@ const AdminPlans = () => {
                   <TableCell>
                     {plan.annual_billing_active ? formatMoneyCents(plan.annual_price_cents) : "Off"}
                   </TableCell>
-                  <TableCell className="font-medium">{formatFeeBps(plan.platform_fee_bps)}</TableCell>
+                  <TableCell className="font-medium">{liveTiers?.rates?.[plan.slug] ? <span>from {feePct(liveTiers.rates[plan.slug][0])} <span className="block text-xs font-normal text-muted-foreground">Progressive Fees</span></span> : formatFeeBps(plan.platform_fee_bps)}</TableCell>
                   <TableCell>
                     <div className="flex flex-wrap gap-1.5">
                       <Badge variant={plan.is_active ? "default" : "outline"}>
@@ -372,7 +374,7 @@ const AdminPlans = () => {
         checkout is unavailable rather than simulated.
       </p>
 
-      <ProgressiveFeesPanel />
+      <div id="progressive-fees" className="scroll-mt-24"><ProgressiveFeesPanel /></div>
 
       <Dialog open={Boolean(editing)} onOpenChange={(open) => !open && setEditing(null)}>
         <DialogContent className="max-h-[85vh] max-w-2xl overflow-y-auto">
@@ -409,7 +411,14 @@ const AdminPlans = () => {
                 </div>
                 <div>
                   <Label>Platform fee (%)</Label>
-                  <Input className="mt-2" inputMode="decimal" {...field("platform_fee_pct")} />
+                  {editing && liveTiers?.rates?.[editing.slug] ? (
+                    <p className="mt-2 rounded-xl border border-border px-3 py-2 text-xs text-muted-foreground">
+                      Fees are set in Progressive Fees. Live starting rate: <span className="font-medium text-foreground">{feePct(liveTiers.rates[editing.slug][0])}</span>.{" "}
+                      <a href="#progressive-fees" onClick={() => setEditing(null)} className="font-medium text-foreground underline">Change fees</a>
+                    </p>
+                  ) : (
+                    <Input className="mt-2" inputMode="decimal" {...field("platform_fee_pct")} />
+                  )}
                 </div>
               </div>
 

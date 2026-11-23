@@ -38,7 +38,7 @@ export interface PublicSchedule {
 export function useFeeSchedule() {
   return useQuery({
     queryKey: ["fee-schedule-public"],
-    staleTime: 5 * 60_000,
+    staleTime: 60_000,
     queryFn: async () => {
       const { data, error } = await supabase.rpc("get_fee_schedule");
       if (error) throw error;

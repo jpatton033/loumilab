@@ -42,6 +42,20 @@ export default function CustomizeShowcase() {
   const design = designs[i];
   const t = design.theme;
 
+  // Gentle auto-pan through the sample page; page scrolling is never captured.
+  const frame = useRef<HTMLDivElement>(null);
+  const inner = useRef<HTMLDivElement>(null);
+  const [pan, setPan] = useState(0);
+  useEffect(() => {
+    setPan(0);
+    if (reduced || paused) return;
+    const id = window.setTimeout(() => {
+      const max = (inner.current?.scrollHeight ?? 0) - (frame.current?.clientHeight ?? 0);
+      if (max > 0) setPan(max);
+    }, 800);
+    return () => window.clearTimeout(id);
+  }, [i, viewport, paused, reduced]);
+
   const go = useCallback((d: number) => setI((v) => (v + d + SHOWCASE.length) % SHOWCASE.length), []);
   useEffect(() => {
     if (paused || reduced) return;
@@ -60,10 +74,10 @@ export default function CustomizeShowcase() {
       onKeyDown={(e) => { if (e.target instanceof HTMLElement && e.target.closest("[data-preview]")) { if (e.key === "ArrowRight") go(1); if (e.key === "ArrowLeft") go(-1); } }}
       onTouchStart={(e) => { touch.current = e.touches[0].clientX; }}
       onTouchEnd={(e) => { if (touch.current == null) return; const dx = e.changedTouches[0].clientX - touch.current; if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1); touch.current = null; }}>
-      <div data-preview tabIndex={0} aria-label={`${i + 1} of ${SHOWCASE.length}: ${site.label}. Scroll to see the whole page.`}
-        className="h-[480px] overflow-y-auto overscroll-contain rounded-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-atmo-ivory sm:h-[580px]"
-        onWheel={() => setPaused(true)}>
-        <div key={`${site.key}-${viewport}`} className={cn(!reduced && "animate-in fade-in duration-700")}>
+      <div data-preview tabIndex={0} aria-label={`${i + 1} of ${SHOWCASE.length}: ${site.label}`} ref={frame}
+        className="h-[480px] overflow-hidden rounded-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-atmo-ivory sm:h-[580px]">
+        <div key={`${site.key}-${viewport}`} ref={inner} className={cn(!reduced && "animate-in fade-in duration-700")}
+          style={{ transform: `translateY(-${pan}px)`, transition: pan ? "transform 4s cubic-bezier(0.4,0,0.2,1)" : "none" }}>
           <SitePreview design={design} storeName={site.storeName} products={site.products} viewport={viewport} />
         </div>
       </div>
