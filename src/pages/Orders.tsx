@@ -1,76 +1,61 @@
 import { lazy, Suspense } from "react";
 import { MountWhenNear } from "@/components/orders/showcase/SitePreview";
-const SiteShowcase = lazy(() => import("@/components/orders/showcase/SiteShowcase"));
-const MakeItYours = lazy(() => import("@/components/orders/showcase/MakeItYours"));
+const CustomizeShowcase = lazy(() => import("@/components/orders/showcase/CustomizeShowcase"));
 import CinematicOrdersHero from "@/components/orders/hero/CinematicOrdersHero";
 import PromoBanner from "@/components/orders/PromoBanner";
 import { Link } from "react-router-dom";
+import { ArrowRight, Check } from "lucide-react";
 import { ORDERS_CTA } from "@/data/orders/cta";
 import { trackCtaClick } from "@/lib/tracking";
-import {
-  ArrowRight,
-  BarChart3,
-  Clock,
-  CreditCard,
-  Instagram,
-  MonitorSmartphone,
-  Smartphone,
-  Store,
-} from "lucide-react";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import Reveal from "@/components/Reveal";
-import Eyebrow from "@/components/brand/Eyebrow";
 import { Button } from "@/components/ui/button";
-import LivePreviewPicker from "@/components/orders/LivePreviewPicker";
-import OrderStatusBadge from "@/components/orders/OrderStatusBadge";
 import PricingTable from "@/components/orders/PricingTable";
 import { FeeAnnouncement } from "@/components/orders/ProgressiveFees";
-import OrdersShowcase from "@/components/orders/OrdersShowcase";
-import OrdersHeroSlideshow from "@/components/orders/OrdersHeroSlideshow";
-import { ORDER_STATUSES } from "@/data/orders/dashboard";
-import { audiences } from "@/data/orders/audiences";
 import { pricingHeading, pricingPlans } from "@/data/orders/pricing";
-import { ordersHeroSlides } from "@/data/orders/hero-slides";
-import { DotMarker } from "@/components/brand/dot";
 import { COMPETITORS } from "@/data/orders/competitors";
-import { ScreenFrame } from "@/components/brand/flow/Flow";
-import builderShot from "@/assets/orders/screens/store-builder.jpg";
+import { Glow } from "@/components/brand/atmosphere";
+import buildShot from "@/assets/builder/tpl-bakery.jpg";
 import dashboardShot from "@/assets/orders/screens/merchant-dashboard.jpg";
+import cakeShot from "@/assets/orders/bake-cake.jpg";
 
 const steps = [
-  {
-    num: "01",
-    title: "Create your storefront",
-    desc: "Add your business name, logo, description, pickup information, and basic settings.",
-  },
-  {
-    num: "02",
-    title: "Add what you sell",
-    desc: "Create menu items, products, services, pricing, photos, quantities, and availability.",
-  },
-  {
-    num: "03",
-    title: "Share your link",
-    desc: "Place your Loumilab Orders link in your Instagram bio, Facebook page, TikTok profile, website, text messages, or anywhere else customers find you.",
-  },
-  {
-    num: "04",
-    title: "Get paid & manage orders",
-    desc: "Customers place their orders online while you receive everything through a centralized dashboard.",
-  },
+  { title: "Choose a design", desc: "Start with a professional template." },
+  { title: "Make it yours", desc: "Customize your branding, layout and content." },
+  { title: "Set up your business", desc: "Add products or services, payments, pickup and delivery." },
+  { title: "Publish and share", desc: "Launch your website and give customers a place to order." },
 ];
 
-const features = [
-  { icon: Store, title: "Custom Storefront", desc: "Every business gets its own shareable Loumilab Orders page." },
-  { icon: CreditCard, title: "Online Payments", desc: "Architected for secure, provider-handled card payments." },
-  { icon: MonitorSmartphone, title: "Order Dashboard", desc: "View and manage every order from one place." },
-  { icon: Smartphone, title: "Mobile Management", desc: "Run the whole operation from your phone behind the counter." },
-  { icon: Clock, title: "Pickup Options", desc: "Configure pickup instructions and pickup windows." },
-  { icon: BarChart3, title: "Sales Analytics", desc: "Simple revenue and order insights, no spreadsheet required." },
+const BSM = [
+  { t: "Build", d: "Create and customize a professional business website, no code.",
+    visual: <img src={buildShot} alt="A sample bakery website made with Loumilab Orders" loading="lazy" decoding="async" className="aspect-[4/3] w-full object-cover" /> },
+  { t: "Sell", d: "Show products or services and accept secure online payments.",
+    visual: (
+      <div className="flex aspect-[4/3] items-center justify-center p-6">
+        <div className="w-full max-w-[15rem] overflow-hidden rounded-2xl bg-atmo-ivory text-atmo-obsidian shadow-2xl">
+          <img src={cakeShot} alt="" loading="lazy" decoding="async" className="aspect-[16/10] w-full object-cover" />
+          <div className="p-4"><p className="text-sm font-semibold">Celebration cake</p><p className="text-xs opacity-70">$48 · Pickup Saturday</p>
+            <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-atmo-obsidian px-3 py-1 text-xs font-semibold text-atmo-ivory"><Check size={12} aria-hidden /> Paid</p></div>
+        </div>
+      </div>
+    ) },
+  { t: "Manage", d: "Track every order, coordinate fulfillment and see what needs attention today.",
+    visual: <div className="flex aspect-[4/3] items-center bg-atmo-ivory/5 p-3"><img src={dashboardShot} alt="The Loumilab Orders dashboard with today's revenue and a queue of orders" loading="lazy" decoding="async" className="h-auto max-h-full w-full rounded-lg object-contain" /></div> },
 ];
 
+const MORE: { t: string; soon?: boolean }[] = [
+  { t: "Pickup and delivery options" }, { t: "Order and payment email notifications" }, { t: "Order messages with customers (paid plans)" },
+  { t: "Calendar sync for pickups and jobs" }, { t: "Estimates, deposits and invoices" }, { t: "Version history and one-click restore" },
+  { t: "Sales analytics" }, { t: "Mobile-ready dashboard" }, { t: "Connect your own domain", soon: true },
+];
 
+const FAQ = [
+  { q: "Do I need a website already?", a: "No. Orders gives you a complete website with its own address, ready to share on social media, texts or business cards." },
+  { q: "Do I need to sign up to try it?", a: "No. You can design your website first. You only create an account when you're ready to save and publish." },
+  { q: "How do I get paid?", a: "Payments go through Stripe directly to your bank account. You finish payout setup before your website goes live." },
+  { q: "Does it work for services, not just products?", a: "Yes. Cleaners, electricians, salons, photographers and more can list services, take requests and send estimates." },
+];
 
 const ordersJsonLd = [
   {
@@ -104,17 +89,6 @@ const ordersJsonLd = [
   },
 ];
 
-const BUILD_FEATURES: { t: string; d: string; soon?: boolean }[] = [
-  { t: "Industry templates", d: "Start from a professional design for bakeries, food, retail, salons and services." },
-  { t: "Visual builder", d: "Edit text and photos and see the result live on phone, tablet and desktop." },
-  { t: "Rearrange sections", d: "Add, remove and reorder sections, then publish when you're ready." },
-  { t: "Colors, fonts & imagery", d: "Match your brand with your own colors, type and photos." },
-  { t: "Sell products or services", d: "Menus, products, bookings and quotes, with secure online payments." },
-  { t: "Built-in order management", d: "Every order, payment and pickup in one dashboard." },
-  { t: "Version history", d: "Every publish is saved, so you can restore an earlier design." },
-  { t: "Custom domains", d: "Connect your own domain to your Orders website.", soon: true },
-];
-
 const Orders = () => {
 
   return (
@@ -139,257 +113,108 @@ const Orders = () => {
           <a href="#how-it-works" className="inline-flex min-h-11 items-center gap-1.5 px-3 text-sm font-medium text-inverse/85 underline-offset-4 hover:text-inverse hover:underline">See How It Works <ArrowRight className="h-4 w-4" aria-hidden /></a>
         </div>
       </CinematicOrdersHero>
-      <section aria-label="How it works in three steps" className="border-b border-border">
-        <ol className="section-container grid gap-6 py-8 sm:grid-cols-3">
-          {["Create your website", "Customize your look", "Sell and manage orders"].map((t, i) => (
-            <li key={t} className="flex items-center gap-3 font-display text-base font-semibold"><span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border text-sm">{i + 1}</span>{t}</li>
-          ))}
-        </ol>
-      </section>
-      <section aria-labelledby="build-what" className="section-padding">
-        <div className="section-container">
+
+      {/* 2 · See what you can create — one showcase, real builder designs */}
+      <section id="site-showcase" aria-labelledby="showcase-title" className="relative scroll-mt-24 overflow-hidden bg-atmo-obsidian py-20 text-atmo-ivory lg:py-28">
+        <Glow tone="midnight" className="left-[-10%] top-[-10%] h-[34rem] w-[34rem] opacity-60" />
+        <div className="section-container relative">
           <Reveal className="max-w-2xl">
-            <Eyebrow>What you can build</Eyebrow>
-            <h2 id="build-what" className="mt-5 font-hero text-4xl font-semibold leading-tight lg:text-5xl">A website that's yours, not a menu link.</h2>
-            <p className="mt-6 text-lg leading-relaxed text-muted-foreground">Create, customize, sell and manage from one connected platform. No coding.</p>
+            <h2 id="showcase-title" className="font-hero text-4xl font-semibold leading-tight text-atmo-ivory lg:text-5xl">See what you can create.</h2>
+            <p className="mt-5 text-lg leading-relaxed text-atmo-ivory/75">Six businesses, six different websites. Change the style, colors, fonts and layout to see how yours could look.</p>
           </Reveal>
-          <ul className="mt-12 grid gap-px overflow-hidden rounded-3xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
-            {BUILD_FEATURES.map((f) => (
-              <li key={f.t} className="bg-background p-6">
-                <p className="flex items-center gap-2 font-display text-base font-semibold">{f.t}{f.soon && <span className="rounded-full border border-border px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">Coming soon</span>}</p>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.d}</p>
+          <div className="mt-10">
+            <MountWhenNear minHeight={760}><Suspense fallback={null}><CustomizeShowcase /></Suspense></MountWhenNear>
+          </div>
+        </div>
+      </section>
+
+      {/* 3 · Build, sell, manage */}
+      <section aria-labelledby="bsm-title" className="relative overflow-hidden bg-atmo-obsidian pb-20 text-atmo-ivory lg:pb-28">
+        <Glow tone="copper" className="right-[-12%] top-[20%] h-[30rem] w-[30rem] opacity-40" />
+        <div className="section-container relative border-t border-atmo-ivory/10 pt-20 lg:pt-28">
+          <Reveal className="max-w-2xl">
+            <h2 id="bsm-title" className="font-hero text-4xl font-semibold leading-tight text-atmo-ivory lg:text-5xl">Build it. Sell from it. Run it.</h2>
+          </Reveal>
+          <div className="mt-12 grid gap-10 md:grid-cols-3 md:gap-6">
+            {BSM.map((c, i) => (
+              <Reveal key={c.t} delay={i * 90}>
+                <div className="overflow-hidden rounded-2xl border border-atmo-ivory/10 bg-atmo-ivory/5">{c.visual}</div>
+                <h3 className="mt-6 font-display text-xl font-semibold text-atmo-ivory">{c.t}</h3>
+                <p className="mt-2 leading-relaxed text-atmo-ivory/70">{c.d}</p>
+              </Reveal>
+            ))}
+          </div>
+          <details className="group mt-12 rounded-2xl border border-atmo-ivory/15 px-5 py-4">
+            <summary className="flex min-h-8 cursor-pointer list-none items-center justify-between text-sm font-semibold text-atmo-ivory">More features <span className="transition group-open:rotate-45" aria-hidden>+</span></summary>
+            <ul className="mt-4 grid gap-x-6 gap-y-2 text-sm text-atmo-ivory/75 sm:grid-cols-2 lg:grid-cols-3">
+              {MORE.map((m) => <li key={m.t}>{m.t}{m.soon && <span className="ml-2 rounded-full border border-atmo-ivory/25 px-2 py-0.5 text-[10px] uppercase tracking-wide">Coming soon</span>}</li>)}
+            </ul>
+          </details>
+        </div>
+      </section>
+
+      {/* 4 · How it works — the one light shift */}
+      <section id="how-it-works" aria-labelledby="hiw-title" className="relative scroll-mt-24 bg-background">
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-atmo-obsidian to-transparent" />
+        <div className="section-container relative pb-16 pt-28 lg:pb-20 lg:pt-36">
+          <Reveal className="max-w-2xl">
+            <h2 id="hiw-title" className="font-hero text-4xl font-semibold leading-tight lg:text-5xl">Live in four steps.</h2>
+            <p className="mt-4 text-muted-foreground">No sign-up needed to start designing.</p>
+          </Reveal>
+          <ol className="mt-12 grid gap-8 border-t border-border pt-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+            {steps.map((s, i) => (
+              <li key={s.title}>
+                <p className="font-hero text-sm font-semibold text-muted-foreground">0{i + 1}</p>
+                <h3 className="mt-2 font-display text-lg font-semibold">{s.title}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{s.desc}</p>
               </li>
             ))}
-          </ul>
-        </div>
-      </section>
-      <section id="site-showcase" aria-labelledby="showcase-title" className="scroll-mt-24 bg-surface-inverse py-20 text-inverse lg:py-28">
-        <div className="section-container">
-          <Reveal className="max-w-2xl">
-            <h2 id="showcase-title" className="text-inverse font-hero text-4xl font-semibold leading-tight lg:text-5xl">One platform. Endless possibilities for your brand.</h2>
-            <p className="mt-6 text-lg leading-relaxed opacity-75">From bold storefronts to elegant business websites, customize the colors, layouts, imagery, and details that make your business yours.</p>
-          </Reveal>
-          <div className="mt-12">
-            <MountWhenNear minHeight={620}><Suspense fallback={null}><SiteShowcase tone="dark" /></Suspense></MountWhenNear>
-          </div>
-          <Button size="lg" asChild className="mt-10 rounded-full bg-atmo-ivory text-atmo-obsidian hover:bg-atmo-ivory/90"><Link to={ORDERS_CTA.href}>{ORDERS_CTA.label}</Link></Button>
-        </div>
-      </section>
-
-      <section id="make-it-yours" aria-labelledby="miy-title" className="scroll-mt-24 section-padding">
-        <div className="section-container">
-          <Reveal className="max-w-2xl">
-            <h2 id="miy-title" className="font-hero text-4xl font-semibold leading-tight lg:text-5xl">Start with a design. Make it yours.</h2>
-            <p className="mt-6 text-lg leading-relaxed text-muted-foreground">Explore different styles, customize the details, and see how your business website could look, all before signing up.</p>
-          </Reveal>
-          <div className="mt-12">
-            <MountWhenNear minHeight={720}><Suspense fallback={null}><MakeItYours onExplore={() => document.getElementById("site-showcase")?.scrollIntoView({ behavior: "smooth" })} /></Suspense></MountWhenNear>
-          </div>
-        </div>
-      </section>
-
-      <section className="relative overflow-hidden pb-20 pt-16 lg:pb-28 lg:pt-24">
-        <div className="section-container relative">
-          <p className="mx-auto max-w-md text-center text-sm text-muted-foreground">{ORDERS_CTA.support}</p>
-          <Reveal className="mx-auto mt-10 hidden max-w-6xl md:block">
-            <ScreenFrame
-              src={builderShot}
-              label="Loumilab Orders — Store builder"
-              alt="The Loumilab Orders store builder: step 1 asks for your industry, with a live phone preview of the storefront beside it."
-            />
-          </Reveal>
-        </div>
-      </section>
-
-      {/* Storefront showcase */}
-      <section className="bg-surface-inverse py-20 text-inverse lg:py-28" aria-label="Loumilab Orders storefront">
-        <div className="section-container">
-          <OrdersShowcase ctaLabel={ORDERS_CTA.label} secondary={{ label: "See how it works", to: "#how-it-works" }} onCtaClick={() => trackCtaClick("showcase", ORDERS_CTA.variant)} />
-        </div>
-      </section>
-
-
-      <OrdersHeroSlideshow slides={ordersHeroSlides} />
-
-      <PromoBanner surface="homepage" wrapperClassName="section-container pt-8" />
-
-      {/* Pricing */}
-      <section id="pricing" className="scroll-mt-24 section-padding surface-subtle border-y border-border">
-        <div className="section-container">
-          <Reveal className="max-w-2xl">
-            <Eyebrow>{pricingHeading.eyebrow}</Eyebrow>
-            <h2 className="mt-5 text-4xl font-semibold leading-tight lg:text-5xl">{pricingHeading.title}</h2>
-            <p className="mt-6 text-lg leading-relaxed text-muted-foreground">{pricingHeading.subtitle}</p>
-          </Reveal>
-
-          <div className="mt-10">
-            <FeeAnnouncement />
-          </div>
-          <div className="mt-14">
-            <PricingTable />
-          </div>
-          <p className="mt-6 text-sm text-muted-foreground">{pricingHeading.footnote}</p>
-          <Link to="/orders/pricing" className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-accent hover:underline">See how pricing works <ArrowRight size={15} /></Link>
-          <ol className="mt-10 flex flex-col gap-3 font-display text-sm sm:flex-row sm:items-center sm:gap-6" aria-label="How a store goes live">
-            <li><span className="font-semibold text-foreground">Build</span> <span className="text-muted-foreground">— free, no account</span></li>
-            <li aria-hidden="true" className="hidden text-muted-foreground sm:block">→</li>
-            <li><span className="font-semibold text-foreground">Save</span> <span className="text-muted-foreground">— create an account</span></li>
-            <li aria-hidden="true" className="hidden text-muted-foreground sm:block">→</li>
-            <li><span className="font-semibold text-foreground">Publish</span> <span className="text-muted-foreground">— finish payout setup</span></li>
           </ol>
-          <Button size="lg" asChild className="mt-8 rounded-full">
-            <Link to={ORDERS_CTA.href} className="dot-action" onClick={() => trackCtaClick("pricing", ORDERS_CTA.variant)}>{ORDERS_CTA.label} <ArrowRight size={18} /></Link>
-          </Button>
         </div>
       </section>
 
-      {/* How it works */}
-      <section id="how-it-works" className="section-padding scroll-mt-24">
-        <div className="section-container">
+      {/* 5 · Pricing */}
+      <section id="pricing" aria-labelledby="pricing-title" className="scroll-mt-24 bg-background pb-20 lg:pb-28">
+        <div className="section-container border-t border-border pt-16 lg:pt-20">
           <Reveal className="max-w-2xl">
-            <Eyebrow>How it works</Eyebrow>
-            <h2 className="mt-5 text-4xl font-semibold leading-tight lg:text-5xl">
-              Four steps from follower to paid order.
-            </h2>
+            <h2 id="pricing-title" className="font-hero text-4xl font-semibold leading-tight lg:text-5xl">{pricingHeading.title}</h2>
+            <p className="mt-5 text-lg leading-relaxed text-muted-foreground">{pricingHeading.subtitle}</p>
           </Reveal>
+          <PromoBanner surface="homepage" wrapperClassName="mt-8" />
+          <div className="mt-8"><FeeAnnouncement /></div>
+          <div className="mt-12"><PricingTable /></div>
+          <p className="mt-6 text-sm text-muted-foreground">The Loumilab fee is separate from card processing, which Stripe charges on each payment. {pricingHeading.footnote}</p>
+          <div className="mt-8 flex flex-wrap items-center gap-6">
+            <Button size="lg" asChild className="rounded-full">
+              <Link to={ORDERS_CTA.href} className="dot-action" onClick={() => trackCtaClick("pricing", ORDERS_CTA.variant)}>{ORDERS_CTA.label} <ArrowRight size={18} /></Link>
+            </Button>
+            <Link to="/orders/pricing" className="inline-flex items-center gap-1 text-sm font-semibold text-accent hover:underline">See how pricing works <ArrowRight size={15} /></Link>
+          </div>
+        </div>
+      </section>
 
-          <div className="mt-14 grid gap-6 md:grid-cols-2">
-            {steps.map((s, i) => (
-              <Reveal
-                key={s.num}
-                delay={i * 90}
-                className="rounded-3xl border border-border bg-card p-8 shadow-[var(--shadow-soft)]"
-              >
-                <p className="font-hero text-sm font-semibold tracking-[0.2em] text-accent">{s.num}</p>
-                <h3 className="mt-4 font-display text-xl font-semibold">{s.title}</h3>
-                <p className="mt-3 leading-relaxed text-muted-foreground">{s.desc}</p>
-              </Reveal>
+      {/* FAQ — only what isn't answered above */}
+      <section aria-labelledby="faq-title" className="bg-background pb-24">
+        <div className="section-container max-w-3xl border-t border-border pt-16">
+          <h2 id="faq-title" className="font-hero text-3xl font-semibold">Questions.</h2>
+          <div className="mt-6 divide-y divide-border">
+            {FAQ.map((f) => (
+              <details key={f.q} className="group py-4">
+                <summary className="flex min-h-8 cursor-pointer list-none items-center justify-between gap-4 font-semibold">{f.q}<span className="text-muted-foreground transition group-open:rotate-45" aria-hidden>+</span></summary>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.a}</p>
+              </details>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Interactive storefront demo */}
-      <section className="section-padding surface-subtle border-y border-border">
-        <div className="section-container">
-          <Reveal className="max-w-2xl">
-            <Eyebrow>Live preview</Eyebrow>
-            <h2 className="mt-5 text-4xl font-semibold leading-tight lg:text-5xl">
-              This is what your customers see.
-            </h2>
-            <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-              Pick a business — food, flowers or services. Each is a real storefront layout, running right here.
-            </p>
-          </Reveal>
-
-          <LivePreviewPicker />
-        </div>
-      </section>
-
-      {/* Dashboard showcase */}
-      <section className="section-padding">
-        <div className="section-container">
-          <Reveal className="mx-auto max-w-2xl text-center">
-            <Eyebrow>Merchant dashboard</Eyebrow>
-            <h2 className="mt-5 font-hero text-4xl font-semibold leading-tight tracking-tight lg:text-6xl">
-              Everything in one place.
-            </h2>
-            <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-              Today&apos;s orders, revenue, and what needs attention — on one screen simple enough to run during a
-              rush.
-            </p>
-            <Link to="/orders/dashboard" className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-accent hover:underline">
-              Open the demo dashboard <ArrowRight size={15} />
-            </Link>
-          </Reveal>
-          <div className="mx-auto mt-8 flex max-w-3xl flex-wrap justify-center gap-2" aria-label="Order stages">
-            {ORDER_STATUSES.map((status) => <OrderStatusBadge key={status} status={status} />)}
-          </div>
-
-          <Reveal className="mx-auto mt-12 max-w-6xl">
-            <ScreenFrame
-              src={dashboardShot}
-              label="Loumilab Orders — Merchant dashboard"
-              alt="The Loumilab Orders merchant dashboard showing today's revenue, order count, average order, and a queue of orders marked New, Confirmed, Preparing, Ready and Completed."
-            />
-          </Reveal>
-        </div>
-      </section>
-
-      {/* Built for social sellers */}
-      <section className="section-padding">
-        <div className="section-container">
-          <Reveal className="max-w-2xl">
-            <Eyebrow>Who it&apos;s for</Eyebrow>
-            <h2 className="mt-5 text-4xl font-semibold leading-tight lg:text-5xl">Built for social sellers.</h2>
-            <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
-              Food is where Loumilab Orders started and where it shines. Service businesses — electricians, cleaners,
-              landscapers, beauty pros, photographers — get the same storefront tuned to quotes, visits and appointments.
-            </p>
-          </Reveal>
-
-          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {audiences.map((a, i) => (
-              <Reveal key={a.id} delay={i * 80}>
-                <article className="group h-full overflow-hidden rounded-3xl border border-border bg-card shadow-[var(--shadow-soft)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]">
-                  <div className="aspect-[4/3] overflow-hidden bg-secondary">
-                    <img
-                      src={a.image}
-                      alt={a.title}
-                      loading="lazy"
-                      width={1024}
-                      height={1024}
-                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.05]"
-                    />
-                  </div>
-                  <div className="p-7">
-                    <h3 className="font-display text-lg font-semibold">{a.title}</h3>
-                    <p className="mt-2 leading-relaxed text-muted-foreground">{a.desc}</p>
-                  </div>
-                </article>
-              </Reveal>
-            ))}
-          </div>
-
-        </div>
-      </section>
-
-      {/* Features */}
-      <section className="section-padding surface-subtle border-y border-border">
-        <div className="section-container">
-          <Reveal className="max-w-2xl">
-            <Eyebrow>Features</Eyebrow>
-            <h2 className="mt-5 text-4xl font-semibold leading-tight lg:text-5xl">
-              Simple on the surface. Serious underneath.
-            </h2>
-          </Reveal>
-
-          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {features.map((f, i) => {
-              const Icon = f.icon;
-              return (
-                <Reveal
-                  key={f.title}
-                  delay={i * 60}
-                  className="h-full rounded-3xl border border-border bg-card p-7 shadow-[var(--shadow-soft)]"
-                >
-                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-accent-soft text-accent">
-                    <Icon size={19} />
-                  </span>
-                  <h3 className="mt-5 font-display text-lg font-semibold">{f.title}</h3>
-                  <p className="mt-2 leading-relaxed text-muted-foreground">{f.desc}</p>
-                </Reveal>
-              );
-            })}
           </div>
         </div>
       </section>
 
       {/* Final CTA */}
-      <section className="section-container py-20 lg:py-28">
-        <div className="section-dark rounded-[2rem] px-6 py-16 text-center sm:px-12 lg:py-20">
+      <section className="relative overflow-hidden bg-atmo-obsidian text-atmo-ivory">
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-background to-transparent" />
+        <Glow tone="midnight" className="left-1/2 top-1/3 h-[30rem] w-[30rem] -translate-x-1/2 opacity-50" />
+        <div className="section-container relative px-6 pb-20 pt-32 text-center sm:px-12 lg:pb-28 lg:pt-40">
           <Reveal>
-            <h2 className="font-hero text-[clamp(2.25rem,7vw,5rem)] font-semibold leading-[1] tracking-[-0.03em]">
+            <h2 className="font-hero text-[clamp(2.25rem,7vw,5rem)] font-semibold leading-[1] tracking-[-0.03em] text-atmo-ivory">
               Stop taking orders through DMs.
             </h2>
           </Reveal>
@@ -400,11 +225,11 @@ const Orders = () => {
           </Reveal>
           <Reveal delay={260}>
             <p className="mx-auto mt-8 max-w-md text-lg text-inverse-muted">
-              Your storefront is only a few minutes away. No sign-up needed to start.
+              Your website is only a few minutes away. No sign-up needed to start.
             </p>
           </Reveal>
           <Reveal delay={340} className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
-            <Button size="lg" asChild className="rounded-full bg-foreground text-background hover:bg-foreground/90">
+            <Button size="lg" asChild className="rounded-full bg-atmo-ivory text-atmo-obsidian hover:bg-atmo-ivory/90">
               <Link to={ORDERS_CTA.href} className="dot-action" onClick={() => trackCtaClick("closing", ORDERS_CTA.variant)}>
                 {ORDERS_CTA.label} <ArrowRight size={18} />
               </Link>

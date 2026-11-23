@@ -92,7 +92,7 @@ export default function CinematicOrdersHero({ children, controlsLabel = "backgro
     <section
       ref={ref}
       aria-label="Loumilab Orders"
-      data-page-hero className="cine-hero relative isolate -mt-16 flex min-h-[100svh] items-end overflow-hidden bg-ink text-inverse lg:-mt-20 lg:items-center"
+      data-page-hero className="cine-hero relative isolate -mt-16 flex min-h-[86svh] items-end sm:min-h-[100svh] overflow-hidden bg-ink text-inverse lg:-mt-20 lg:items-center"
     >
       {/* Layer B — cinematic environment */}
       <div aria-hidden className="cine-stage absolute inset-0 -z-10">
