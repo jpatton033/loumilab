@@ -20,6 +20,7 @@ const SpacesPricing = lazy(() => import("./pages/spaces/Pricing"));
 const SpacesDashboard = lazy(() => import("./pages/spaces/Dashboard"));
 const SpacesRun = lazy(() => import("./pages/spaces/Run"));
 const SpacesInvite = lazy(() => import("./pages/spaces/Invite"));
+import RequireMerchant from "./components/orders/RequireMerchant";
 const OrdersDashboard = lazy(() => import("./pages/orders/Dashboard"));
 const OrdersWebsiteBuilder = lazy(() => import("./pages/orders/WebsiteBuilder"));
 import OrdersStorefront from "./pages/orders/Storefront";
@@ -127,8 +128,8 @@ const routes = (<>
           <Route path="/spaces/a/:slug" element={<SpacesRun />} />
           <Route path="/spaces/invite/:token" element={<SpacesInvite />} />
           <Route path="/orders/get-started" element={<OrdersGetStarted />} />
-          <Route path="/orders/dashboard" element={<OrdersDashboard />} />
-          <Route path="/orders/dashboard/website" element={<OrdersWebsiteBuilder />} />
+          <Route path="/orders/dashboard" element={<RequireMerchant><OrdersDashboard /></RequireMerchant>} />
+          <Route path="/orders/dashboard/website" element={<RequireMerchant><OrdersWebsiteBuilder /></RequireMerchant>} />
           <Route path="/orders/store/:slug" element={<OrdersStorefront />} />
           <Route path="/orders/receipt/:token" element={<OrdersReceipt />} />
           <Route path="/orders/quote/:token" element={<OrdersQuoteView />} />

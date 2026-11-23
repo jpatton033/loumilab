@@ -98,7 +98,7 @@ const FULFILMENT_LABELS = { all: "All", pickup: "Pickup", delivery: "Delivery" }
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [orders, setOrders] = useState<MerchantOrder[]>(demoOrders);
+  const [orders, setOrders] = useState<MerchantOrder[]>([]);
   const [filter, setFilter] = useState<Filter>("All");
   const [accepting, setAccepting] = useState(true);
   const [activeModule, setActiveModule] = useState<ModuleKey | "messages">("orders");
@@ -246,7 +246,7 @@ const Dashboard = () => {
             <div>
               <Eyebrow>Merchant dashboard</Eyebrow>
               <h1 className="mt-5 font-hero text-4xl font-semibold leading-tight tracking-tight lg:text-5xl">
-                {merchant?.business_name ?? demoStorefront.name}
+                {merchant?.business_name ?? ""}
               </h1>
               <p className="mt-3 text-muted-foreground">
                 {openCount} open {transactionsLabel.toLowerCase().replace(/s$/, "")}
