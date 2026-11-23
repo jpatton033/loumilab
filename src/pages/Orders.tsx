@@ -155,7 +155,6 @@ const Orders = () => {
 
       {/* 4 · How it works — the one light shift */}
       <section id="how-it-works" aria-labelledby="hiw-title" className="relative scroll-mt-24 bg-background">
-        <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-atmo-obsidian to-transparent" />
         <div className="section-container relative pb-16 pt-28 lg:pb-20 lg:pt-36">
           <Reveal className="max-w-2xl">
             <h2 id="hiw-title" className="font-hero text-4xl font-semibold leading-tight lg:text-5xl">Live in four steps.</h2>
@@ -210,7 +209,6 @@ const Orders = () => {
 
       {/* Final CTA */}
       <section className="relative overflow-hidden bg-atmo-obsidian text-atmo-ivory">
-        <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-background to-transparent" />
         <Glow tone="midnight" className="left-1/2 top-1/3 h-[30rem] w-[30rem] -translate-x-1/2 opacity-50" />
         <div className="section-container relative px-6 pb-20 pt-32 text-center sm:px-12 lg:pb-28 lg:pt-40">
           <Reveal>
