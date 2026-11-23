@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import Services from "./pages/Services";
@@ -105,6 +106,17 @@ import BackToTop from "./components/BackToTop";
 
 const customerSlug = typeof window !== "undefined" ? slugFromHost(window.location.hostname) : null;
 const queryClient = new QueryClient();
+
+// When the signed-in account changes, drop cached Orders data so a "no store"
+// result from before sign-in (or another account's data) is never reused.
+let lastAuthUserId: string | null | undefined;
+supabase.auth.onAuthStateChange((_event, session) => {
+  const userId = session?.user?.id ?? null;
+  if (lastAuthUserId !== undefined && userId !== lastAuthUserId) {
+    void queryClient.resetQueries({ queryKey: ["orders"] });
+  }
+  lastAuthUserId = userId;
+});
 
 const routes = (<>
           <Route path="/" element={<Index />} />
