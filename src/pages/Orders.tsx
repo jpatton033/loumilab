@@ -18,7 +18,7 @@ import { COMPETITORS } from "@/data/orders/competitors";
 import { Glow } from "@/components/brand/atmosphere";
 import buildShot from "@/assets/builder/tpl-bakery.jpg";
 import dashboardShot from "@/assets/orders/screens/merchant-dashboard.jpg";
-import cakeShot from "@/assets/orders/bake-cake.jpg";
+import cakeShot from "@/assets/orders/showcase/build-baker-hands.jpg";
 
 const steps = [
   { title: "Choose a design", desc: "Start with a professional template." },

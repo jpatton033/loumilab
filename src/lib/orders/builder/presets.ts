@@ -1,16 +1,29 @@
 import { SCHEMA_VERSION, validateDesign, newSectionId, type Design, type HeroLayout, type Section, type SectionStyle, type SectionType, type Theme } from "./schema";
 import { findTemplate } from "./templates";
-import boutique from "@/assets/orders/cinema/boutique.jpg";
-import designer from "@/assets/orders/cinema/designer.jpg";
 import cake from "@/assets/orders/bake-cake.jpg";
 import cupcakes from "@/assets/orders/bake-cupcakes.jpg";
 import cookies from "@/assets/orders/bake-cookies.jpg";
-import caterer from "@/assets/orders/cinema/caterer.jpg";
+import bakeryCounter from "@/assets/orders/showcase/bakery-counter.jpg";
+import streetHero from "@/assets/orders/showcase/streetwear-hoodie-model.jpg";
+import tee from "@/assets/orders/showcase/streetwear-tee.jpg";
+import printHoodie from "@/assets/orders/showcase/streetwear-print-hoodie.jpg";
+import cap from "@/assets/orders/showcase/streetwear-cap.jpg";
+import buffet from "@/assets/orders/showcase/catering-buffet.jpg";
+import wings from "@/assets/orders/dish-wings.jpg";
+import mac from "@/assets/orders/dish-mac.jpg";
+import alfredo from "@/assets/orders/dish-alfredo.jpg";
+import salonHero from "@/assets/orders/showcase/salon-stylist.jpg";
 import braids from "@/assets/orders/svc-salon-braids.jpg";
 import silk from "@/assets/orders/svc-salon-silk.jpg";
 import cut from "@/assets/orders/svc-salon-cut.jpg";
-import clean from "@/assets/orders/svc-clean-deep.jpg";
+import cleanHero from "@/assets/orders/showcase/cleaning-living-room.jpg";
+import cleanStandard from "@/assets/orders/svc-clean-standard.jpg";
+import cleanDeep from "@/assets/orders/svc-clean-deep.jpg";
+import cleanMove from "@/assets/orders/svc-clean-move.jpg";
+import installation from "@/assets/orders/showcase/studio-installation.jpg";
 import flower from "@/assets/orders/flower-arrangement.jpg";
+import bouquet from "@/assets/orders/flower-bouquet.jpg";
+import flowerGift from "@/assets/orders/flower-gift.jpg";
 
 /**
  * One design system for the public preview, the showcase and the merchant builder.
@@ -93,37 +106,37 @@ export const SHOWCASE: ShowcaseSite[] = [
     products: [p("Celebration cake", "$48", cake), p("Cupcakes, dozen", "$30", cupcakes), p("Cookie box", "$18", cookies)],
     design: () => ({ version: SCHEMA_VERSION, template: "bakery",
       theme: { background: "#f7f1e8", surface: "#ede2d2", text: "#2c241c", muted: "#7d6e5e", accent: "#8a4b2a", accentText: "#ffffff", headingFont: "Cormorant Garamond", bodyFont: "DM Sans", radius: "soft", headingScale: "lg", buttonStyle: "solid", contentWidth: "normal" },
-      sections: [sec("header", {}, { align: "center" }), sec("hero", { heading: "Baked this morning, for you", body: "Custom cakes and small-batch treats for pickup.", cta: "Start your order", image: cake, layout: "split" }, { spacing: "airy" }),
+      sections: [sec("header", {}, { align: "center" }), sec("hero", { heading: "Baked this morning, for you", body: "Custom cakes and small-batch treats for pickup.", cta: "Start your order", image: bakeryCounter, layout: "split" }, { spacing: "airy" }),
         sec("featured", { heading: "This week", count: 3 }, { background: "surface" }), sec("products", { heading: "Order online" }), sec("footer", {}, { background: "inverse" })] }) },
   { key: "streetwear", label: "Streetwear & apparel", storeName: "NORTHLINE", template: "retail",
-    products: [p("Heavyweight tee", "$38", boutique), p("Custom print hoodie", "$72", designer), p("Logo cap", "$28", boutique)],
+    products: [p("Heavyweight tee", "$38", tee), p("Custom print hoodie", "$72", printHoodie), p("Logo cap", "$28", cap)],
     design: () => ({ version: SCHEMA_VERSION, template: "retail",
       theme: { background: "#0b0b0b", surface: "#191919", text: "#f4f4f0", muted: "#9d9d98", accent: "#f4f4f0", accentText: "#0b0b0b", headingFont: "Syne", bodyFont: "Space Grotesk", radius: "none", headingScale: "lg", buttonStyle: "solid", contentWidth: "wide" },
-      sections: [sec("header"), sec("hero", { heading: "DROP 04 IS LIVE", body: "Custom prints, heavyweight blanks, made locally.", cta: "Shop the drop", image: boutique, layout: "full" }),
+      sections: [sec("header"), sec("hero", { heading: "DROP 04 IS LIVE", body: "Custom prints, heavyweight blanks, made locally.", cta: "Shop the drop", image: streetHero, layout: "full" }),
         sec("promo", { body: "Free local pickup on every order." }, { background: "accent", align: "center", spacing: "compact" }), sec("products", { heading: "New arrivals" }), sec("footer", {}, { background: "surface" })] }) },
   { key: "catering", label: "Catering & food", storeName: "Ember Kitchen", template: "food",
-    products: [p("Party tray", "$95", caterer), p("Weekly meal prep", "$64", caterer), p("Family dinner", "$48", caterer)],
+    products: [p("Wings party tray", "$95", wings), p("Baked mac & cheese pan", "$64", mac), p("Chicken alfredo tray", "$78", alfredo)],
     design: () => ({ ...findTemplate("food").build(), sections: [sec("header"),
-      sec("hero", { heading: "Catering that feeds a crowd", body: "Trays, meal prep and pop-up specials. Pickup or delivery.", cta: "See the menu", image: caterer, layout: "split" }, { spacing: "airy" }),
+      sec("hero", { heading: "Catering that feeds a crowd", body: "Trays, meal prep and pop-up specials. Pickup or delivery.", cta: "See the menu", image: buffet, layout: "split" }, { spacing: "airy" }),
       sec("products", { heading: "Menu" }), sec("hours", { heading: "Pickup & delivery", body: "Order by Thursday for weekend events.\nDelivery within 15 miles." }, { background: "surface" }), sec("footer", {}, { background: "inverse" })] }) },
   { key: "beauty", label: "Beauty & personal care", storeName: "Crown Studio", template: "beauty",
     products: [p("Knotless braids", "$180", braids), p("Silk press", "$85", silk), p("Cut & style", "$55", cut)],
     design: () => ({ version: SCHEMA_VERSION, template: "beauty",
       theme: { background: "#f6f1ec", surface: "#ebe1d8", text: "#2f2622", muted: "#857468", accent: "#5c3d34", accentText: "#ffffff", headingFont: "Playfair Display", bodyFont: "Outfit", radius: "round", headingScale: "md", buttonStyle: "pill", contentWidth: "normal" },
-      sections: [sec("header", {}, { align: "center" }), sec("hero", { heading: "Care that feels like you", body: "Braids, silk presses and styling by appointment.", cta: "Book a service", image: braids, layout: "centered" }, { align: "center", spacing: "airy" }),
-        sec("products", { heading: "Services" }, { align: "center" }), sec("gallery", { heading: "Recent work", images: [braids, silk, cut] }, { background: "surface" }), sec("footer", {}, { background: "inverse", align: "center" })] }) },
+      sections: [sec("header", {}, { align: "center" }), sec("hero", { heading: "Care that feels like you", body: "Braids, silk presses and styling by appointment.", cta: "Book a service", image: salonHero, layout: "centered" }, { align: "center", spacing: "airy" }),
+        sec("products", { heading: "Services" }, { align: "center" }), sec("footer", {}, { background: "inverse", align: "center" })] }) },
   { key: "home", label: "Home services", storeName: "Brightside Cleaning", template: "home",
-    products: [p("Standard clean", "from $120", clean), p("Deep clean", "from $220", clean), p("Move-out clean", "from $260", clean)],
+    products: [p("Standard clean", "from $120", cleanStandard), p("Deep clean", "from $220", cleanDeep), p("Move-out clean", "from $260", cleanMove)],
     design: () => ({ ...findTemplate("home").build(), sections: [sec("header"),
-      sec("hero", { heading: "A cleaner home, on your schedule", body: "Insured, background-checked teams. Book in minutes.", cta: "Request a quote", image: clean, layout: "split" }),
+      sec("hero", { heading: "A cleaner home, on your schedule", body: "Insured, background-checked teams. Book in minutes.", cta: "Request a quote", image: cleanHero, layout: "split" }),
       sec("services", { heading: "Why neighbors choose us", items: [{ title: "Insured", text: "Fully insured and bonded." }, { title: "On time", text: "Two-hour arrival windows." }, { title: "Guaranteed", text: "We come back if it isn't right." }] }, { background: "surface" }),
       sec("products", { heading: "Services & pricing" }), sec("footer", {}, { background: "inverse" })] }) },
   { key: "creative", label: "Creative professional", storeName: "Ines Duarte Studio", template: "minimal",
-    products: [p("Floral installation", "from $400", flower), p("Studio session", "$150", designer), p("Print, signed", "$65", flower)],
+    products: [p("Event centerpiece", "from $120", flower), p("Seasonal bouquet", "$85", bouquet), p("Gift arrangement", "$65", flowerGift)],
     design: () => ({ version: SCHEMA_VERSION, template: "minimal",
       theme: { background: "#f4f3f0", surface: "#e7e5e0", text: "#0f0f0f", muted: "#666560", accent: "#0f0f0f", accentText: "#f4f3f0", headingFont: "DM Serif Display", bodyFont: "Work Sans", radius: "none", headingScale: "lg", buttonStyle: "outline", contentWidth: "wide" },
-      sections: [sec("header"), sec("hero", { heading: "Objects, flowers and quiet spaces", body: "Design studio taking commissions for 2027.", cta: "View work", image: flower, layout: "full" }),
-        sec("gallery", { heading: "Selected work", images: [flower, designer, boutique] }), sec("products", { heading: "Commissions" }, { background: "surface" }), sec("footer", {}, { background: "inverse" })] }) },
+      sections: [sec("header"), sec("hero", { heading: "Objects, flowers and quiet spaces", body: "Design studio taking commissions for 2027.", cta: "View work", image: installation, layout: "full" }),
+        sec("products", { heading: "Commissions" }, { background: "surface" }), sec("footer", {}, { background: "inverse" })] }) },
 ];
 
 /** Starting point for the public "Make it yours" preview. */
