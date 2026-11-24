@@ -11,12 +11,12 @@ import SentiStatus from "@/components/senti/SentiStatus";
 
 const btn = "inline-flex h-12 items-center justify-center rounded-full px-7 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
 const foundations = [
-  ["Language and meaning", "How systems identify and represent relationships within language."],
-  ["Observational learning", "Learning from recorded events, their order and their context."],
-  ["Behavioral intelligence", "Relationships among actions, reactions and outcomes."],
-  ["Relational memory", "Retaining, retrieving and revising contextual knowledge over time."],
-  ["Learning and adaptation", "Updating what is known as new evidence and corrections arrive."],
-  ["Computational efficiency", "Reusing structured knowledge instead of repeating costly inference."],
+  ["Meaning beyond the words", "What a poem, letter or speech says, and the themes, perspectives and ideas that may sit underneath it."],
+  ["Sentiment in context", "How emotions, attitudes and motivations show up in language, and how their meaning shifts with circumstance. More than positive, negative or neutral."],
+  ["History and circumstance", "Who created something, when and where, what surrounded it, and why certain ideas may have been expressed."],
+  ["Contextual relationships", "How people, events, works and experiences connect, including the evidence that supports or conflicts."],
+  ["Relational memory", "Keeping what has been learned, so each new source builds on the last instead of starting over."],
+  ["Adaptive computational learning", "Revising interpretations as evidence arrives, and reusing structured knowledge instead of repeating costly computation."],
 ];
 const uses: [string, string, string][] = [
   ["Adaptive software", "Applications that improve interactions based on recorded behavior and changing context.", "Conceptual"],
@@ -26,14 +26,14 @@ const uses: [string, string, string][] = [
   ["Observational systems", "Applications that identify patterns in recorded events or operational activities.", "Experimental"],
   ["Efficient AI infrastructure", "Reducing repeated inference by reusing structured knowledge.", "Demonstrated in the Lab"],
 ];
-const method = [["Observe", "Record what happened, when and who was involved."], ["Represent", "Turn it into entities, events and attributes."], ["Connect", "Link them as relationships with evidence."], ["Retrieve", "Find what is known about an entity or time range."], ["Infer", "Propose relationships, labelled as inferred or hypothesis."], ["Evaluate", "Measure against baselines on fixed datasets."], ["Revise", "Update with new evidence, keeping every earlier version."]];
+const method = [["Introduce", "Add a poem, a letter, an essay, a conversation or an observation."], ["Explore", "See the key passages, people, things and ideas, and the wording behind them."], ["Connect", "See how items relate, with the sentences that support or challenge each link."], ["Expand", "Add more material, such as a letter from the same writer or notes about the period."], ["Revise", "Watch interpretations change as evidence accumulates. Earlier versions are kept, not erased."]];
 const layers = [
-  ["Input", "Text observations today. Other inputs are future research."],
-  ["Context & relationships", "Entities, links, time order, evidence, contradictions."],
-  ["Persistent memory", "Observations, relationships, corrections and history."],
-  ["Learning & adaptation", "Counting-based scores today; trained models are future work."],
-  ["Inference", "Evidence lookup and relationship queries."],
-  ["Evaluation", "Versioned engine, recorded tests and failure review."],
+  ["Input", "Working today: text and written observations. Images, audio and other information are a research goal."],
+  ["Context & relationships", "Working today: people and things, links, time order, evidence and conflicts. Deeper interpretation is a research goal."],
+  ["Persistent memory", "Working today: observations, relationships, corrections and full history are kept."],
+  ["Learning & adaptation", "Working today: evidence-counting scores. Trained learning algorithms are a research goal."],
+  ["Inference", "Working today: evidence lookup and relationship questions. Independent pattern discovery is a research goal."],
+  ["Evaluation", "Working today: versioned engines, recorded tests and review of failures."],
 ];
 
 const Inquiry = z.object({ name: z.string().trim().min(2).max(100), email: z.string().trim().email().max(255), company: z.string().trim().max(120).optional(), message: z.string().trim().min(10).max(2000) });
@@ -70,13 +70,13 @@ function InquiryForm() {
 export default function SentiHome() {
   return (
     <SentiShell nav={false}>
-      <SEOHead title="Senti by Loumilab | Experimental Research Initiative" description="Senti is a Loumilab research initiative exploring how computational systems learn relationships among language, observations, behavior, and experience." path="/senti" />
+      <SEOHead title="Senti by Loumilab | Experimental Research Initiative" description="Senti is a Loumilab research initiative investigating meaning, sentiment, contextual relationships, relational memory and adaptive computational learning." path="/senti" />
       <section data-page-hero className="relative isolate -mt-16 overflow-hidden lg:-mt-20" aria-label="Introduction">
         <SentiHeroFilm />
         <div className="section-container flex min-h-[100svh] flex-col justify-end pb-16 pt-32 text-center items-center sm:pb-20 [@media(min-aspect-ratio:4/5)]:items-start [@media(min-aspect-ratio:4/5)]:justify-center [@media(min-aspect-ratio:4/5)]:text-left">
           <Eyebrow>Experimental Research Initiative — Loumilab</Eyebrow>
           <h1 className="mt-6 max-w-2xl animate-fade-in font-hero text-5xl font-semibold leading-[1.0] tracking-tight text-atmo-ivory sm:text-6xl lg:text-7xl">Intelligence begins with understanding.</h1>
-          <p className="mt-6 max-w-xl text-lg leading-relaxed text-atmo-ivory/75 sm:text-xl">Exploring how computational systems learn from language, observation, behavior, and experience.</p>
+          <p className="mt-6 max-w-xl text-lg leading-relaxed text-atmo-ivory/75 sm:text-xl">A Loumilab research initiative studying how software can connect meaning, sentiment, history and human experience.</p>
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
             <Link to="/senti/lab" className={`${btn} bg-atmo-ivory text-atmo-obsidian hover:bg-atmo-ivory/85`}>Explore Senti Lab</Link>
             <Link to="/senti/research" className={`${btn} border border-atmo-ivory/30 text-atmo-ivory hover:bg-atmo-ivory/10`}>Discover the Research</Link>
@@ -88,9 +88,9 @@ export default function SentiHome() {
         <Reveal className="grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-5"><Eyebrow>Introducing Senti</Eyebrow><h2 className="mt-4 font-hero text-4xl font-semibold leading-tight lg:text-5xl">Not another chatbot.</h2></div>
           <div className="space-y-5 text-lg leading-relaxed text-atmo-ivory/70 lg:col-span-6 lg:col-start-7">
-            <p>Senti is a computational learning research initiative by Loumilab, exploring how intelligent systems can develop and refine relationships among language, observations, behavior, and experience. Through persistent memory, contextual reasoning, and experimental learning architectures, Senti investigates how software can become more adaptive, efficient, and capable of using accumulated knowledge.</p>
-            <p>Most AI products send every question to a large language model and pay for each answer. Senti explores a different direction: keeping structured memory of what was observed, how things relate, and how those relationships change.</p>
-            <p>Senti is an active research and development initiative. Today it runs Senti Core v0.1, a relational memory and event engine, and a rule-based sentence reader. Neither is a trained model, and Senti does not claim general intelligence, consciousness or human-like understanding.</p>
+            <p>Most software treats every request as a separate event: a question goes in, an answer comes out, and nothing is learned about how ideas, people and events relate.</p>
+            <p>Senti is a computational learning research initiative by Loumilab. It investigates how software can identify, interpret, connect and retain relationships among language, sentiment, history, behavior and experience, and refine those interpretations as new evidence arrives.</p>
+            <p>The long-term goal is technology with deeper contextual understanding, built on relational learning, persistent memory and evidence-based adaptation. It is not a chatbot, a document summarizer or a conventional sentiment tool.</p>
           </div>
         </Reveal>
       </section>
@@ -98,12 +98,12 @@ export default function SentiHome() {
       <section className="border-y border-atmo-ivory/10 py-24 lg:py-32">
         <Reveal className="section-container max-w-4xl text-center">
           <Eyebrow>The research question</Eyebrow>
-          <p className="mt-6 font-hero text-3xl font-semibold leading-snug text-atmo-ivory sm:text-4xl lg:text-5xl">Can computational systems develop, retain, and revise useful relationships among language, observed events, and behavior while substantially reducing dependence on repeated generative AI inference?</p>
+          <p className="mt-6 font-hero text-3xl font-semibold leading-snug text-atmo-ivory sm:text-4xl lg:text-5xl">Can software build a connected, lasting understanding of meaning and context, and revise it honestly as new evidence arrives, instead of starting from nothing each time?</p>
         </Reveal>
       </section>
 
       <section className="section-container py-24 lg:py-32" aria-labelledby="foundations">
-        <Eyebrow>Six research disciplines</Eyebrow>
+        <Eyebrow>Six areas of research</Eyebrow>
         <h2 id="foundations" className="mt-4 font-hero text-4xl font-semibold lg:text-5xl">What Senti studies.</h2>
         <ol className="mt-12 grid gap-px overflow-hidden rounded-3xl border border-atmo-ivory/10 bg-atmo-ivory/10 sm:grid-cols-2 lg:grid-cols-3">
           {foundations.map(([t, d], i) => (
@@ -116,16 +116,18 @@ export default function SentiHome() {
       </section>
 
       <section className="section-container pb-24 lg:pb-32" aria-labelledby="method">
-        <Eyebrow>How Senti research works</Eyebrow>
+        <Eyebrow>How exploring works</Eyebrow>
         <h2 id="method" className="mt-4 font-hero text-4xl font-semibold lg:text-5xl">Observe. Connect. Revise.</h2>
-        <ol className="mt-12 grid gap-px overflow-hidden rounded-3xl border border-atmo-ivory/10 bg-atmo-ivory/10 sm:grid-cols-2 lg:grid-cols-7">
+        <p className="mt-4 max-w-2xl text-atmo-ivory/65">Start with a poem, then add a letter by the same writer, then notes about the period. Senti is designed to link the three, mark what the sources document separately from what is only interpretation, and say plainly when the evidence isn't there.</p>
+        <ol className="mt-12 grid gap-px overflow-hidden rounded-3xl border border-atmo-ivory/10 bg-atmo-ivory/10 sm:grid-cols-2 lg:grid-cols-5">
           {method.map(([t, d], i) => <li key={t} className="bg-atmo-obsidian p-6"><span className="font-mono text-xs text-atmo-ivory/45">0{i + 1}</span><p className="mt-2 font-semibold">{t}</p><p className="mt-1 text-sm text-atmo-ivory/60">{d}</p></li>)}
         </ol>
       </section>
 
       <section className="section-container pb-24 lg:pb-32" aria-labelledby="how">
-        <Eyebrow>How Senti works</Eyebrow>
+        <Eyebrow>How Senti is built</Eyebrow>
         <h2 id="how" className="mt-4 font-hero text-4xl font-semibold lg:text-5xl">Six layers, built in order.</h2>
+        <p className="mt-4 max-w-2xl text-atmo-ivory/65">Each layer says what works today and what remains a research goal.</p>
         <div className="mt-12 space-y-2">
           {layers.map(([t, d], i) => (
             <div key={t} className="grid items-center gap-2 rounded-2xl border border-atmo-ivory/10 px-6 py-5 sm:grid-cols-12" style={{ marginLeft: `${i * 2}%` }}>
@@ -139,7 +141,7 @@ export default function SentiHome() {
       <section className="section-container pb-24 lg:pb-32" aria-labelledby="uses">
         <Eyebrow>Potential uses</Eyebrow>
         <h2 id="uses" className="mt-4 font-hero text-4xl font-semibold lg:text-5xl">What could understanding make possible?</h2>
-        <p className="mt-4 max-w-2xl text-atmo-ivory/65">Possible future directions, not products available today. Each is labelled with how far it has actually been taken.</p>
+        <p className="mt-4 max-w-2xl text-atmo-ivory/65">Poetry and documents are practical starting points. The broader vision covers patterns across observations, behavior, events and experience: software that builds useful context over time. These are possible directions, not products available today, and each is labeled with how far it has been taken.</p>
         <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {uses.map(([t, d, st]) => <li key={t} className="rounded-3xl border border-atmo-ivory/10 p-6"><span className="rounded-full border border-atmo-ivory/20 px-2.5 py-0.5 text-[11px] text-atmo-ivory/60">{st}</span><p className="mt-4 font-semibold">{t}</p><p className="mt-2 text-sm text-atmo-ivory/60">{d}</p></li>)}
         </ul>
@@ -150,7 +152,7 @@ export default function SentiHome() {
       <section className="border-t border-atmo-ivory/10 py-24 lg:py-32">
         <div className="section-container grid items-center gap-10 lg:grid-cols-2">
           <div><Eyebrow>Interactive research lab</Eyebrow><h2 className="mt-4 font-hero text-4xl font-semibold lg:text-5xl">Watch relationships form.</h2>
-            <p className="mt-5 text-lg text-atmo-ivory/70">Type a few observations. See what Senti links, what it remembers, and how a correction changes it, with every step backed by recorded evidence.</p></div>
+            <p className="mt-5 text-lg text-atmo-ivory/70">Today the Lab reads short pasted text with transparent rules. You can see the people and things it finds, how it links them, and how a correction changes the result. Every step points back to the sentences behind it.</p></div>
           <div className="flex flex-wrap gap-3 lg:justify-end">
             <Link to="/senti/lab" className={`${btn} bg-atmo-ivory text-atmo-obsidian hover:bg-atmo-ivory/85`}>Open the Lab</Link>
             <Link to="/senti/research" className={`${btn} border border-atmo-ivory/30 hover:bg-atmo-ivory/10`}>Methodology</Link>
@@ -161,7 +163,7 @@ export default function SentiHome() {
 
       <section id="inquiries" className="section-container scroll-mt-24 border-t border-atmo-ivory/10 py-24 lg:py-32" aria-labelledby="inq">
         <div className="grid gap-12 lg:grid-cols-12">
-          <div className="lg:col-span-4"><Eyebrow>Research & investment</Eyebrow><h2 id="inq" className="mt-4 font-hero text-4xl font-semibold">Talk with us.</h2><p className="mt-4 text-atmo-ivory/65">For investors, technical collaborators and research partners.</p></div>
+          <div className="lg:col-span-4"><Eyebrow>Research & investment</Eyebrow><h2 id="inq" className="mt-4 font-hero text-4xl font-semibold">Talk with us.</h2><p className="mt-4 text-atmo-ivory/65">For investors, technical collaborators and research partners.</p><p className="mt-4 text-sm text-atmo-ivory/45">Senti studies how emotion is expressed. It does not feel emotions and is not conscious, and it makes no claim of human-level understanding or general intelligence.</p></div>
           <div className="lg:col-span-7 lg:col-start-6"><InquiryForm /></div>
         </div>
       </section>

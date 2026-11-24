@@ -126,12 +126,15 @@ export default function SentiLab() {
   const [mode, setMode] = useState<"demo" | "live">("demo");
   return (
     <SentiShell>
-      <SEOHead title="Senti Lab | Senti by Loumilab" description="Explore Senti's research engine: record observations, watch relationships form, and correct them, with evidence for every step." path="/senti/lab" />
+      <SEOHead title="Senti Lab | Senti by Loumilab" description="Try Senti's research engine: paste short text, see the people, things and links it finds, and correct them, with evidence for every step." path="/senti/lab" />
       <section className="section-container py-16 lg:py-24">
         <Eyebrow>Senti Lab</Eyebrow>
         <h1 className="mt-4 font-hero text-4xl font-semibold lg:text-6xl">What would you like to explore?</h1>
         <p className="mt-4 max-w-2xl text-lg text-atmo-ivory/70">Explore language, ideas, history, and human expression. Discover relationships, examine context, and see how understanding evolves.</p>
-        <p className="mt-2 max-w-2xl text-sm text-atmo-ivory/50">The public Lab reads short pasted sentences in a temporary session you can delete. Uploads and a saved Library are part of the private Research Studio.</p>
+        <ol className="mt-8 grid max-w-4xl gap-px overflow-hidden rounded-3xl border border-atmo-ivory/10 bg-atmo-ivory/10 sm:grid-cols-4">
+          {[["Paste", "Type or paste a few short sentences."], ["Explore", "See the people, things and time words Senti finds."], ["Connect", "Open any link to read the sentences behind it."], ["Correct", "Fix a link and watch the result update. Nothing is erased."]].map(([t, d], i) => <li key={t} className="bg-atmo-obsidian p-5"><span className="font-mono text-xs text-atmo-ivory/45">0{i + 1}</span><p className="mt-2 font-semibold">{t}</p><p className="mt-1 text-sm text-atmo-ivory/60">{d}</p></li>)}
+        </ol>
+        <p className="mt-4 max-w-2xl text-sm text-atmo-ivory/50">Today the public Lab reads short pasted text with transparent rules, in a temporary session you can delete. It does not accept uploads, read web links, or interpret themes, tone or symbolism; those remain private research or future work.</p>
         <div className="mt-8 flex gap-2" role="tablist">
           <button role="tab" aria-selected={mode === "demo"} className={mode === "demo" ? primary : ghost} onClick={() => setMode("demo")}>Guided demonstration</button>
           <button role="tab" aria-selected={mode === "live"} className={mode === "live" ? primary : ghost} onClick={() => setMode("live")}>Live research mode</button>
