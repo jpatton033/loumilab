@@ -21,6 +21,20 @@ export default function SiteShowcase({ tone = "dark" }: { tone?: "dark" | "light
   const site = SHOWCASE[i];
   const go = useCallback((d: number) => setI((v) => (v + d + SHOWCASE.length) % SHOWCASE.length), []);
 
+  // Gentle auto-pan through the sample page; page scrolling is never captured.
+  const frame = useRef<HTMLDivElement>(null);
+  const inner = useRef<HTMLDivElement>(null);
+  const [pan, setPan] = useState(0);
+  useEffect(() => {
+    setPan(0);
+    if (reduced || paused) return;
+    const id = window.setTimeout(() => {
+      const max = (inner.current?.scrollHeight ?? 0) - (frame.current?.clientHeight ?? 0);
+      if (max > 0) setPan(max);
+    }, 800);
+    return () => window.clearTimeout(id);
+  }, [i, viewport, paused, reduced]);
+
   useEffect(() => {
     if (paused || reduced) return;
     const id = window.setTimeout(() => go(1), INTERVAL);
@@ -35,10 +49,11 @@ export default function SiteShowcase({ tone = "dark" }: { tone?: "dark" | "light
       onKeyDown={(e) => { if (e.key === "ArrowRight") go(1); if (e.key === "ArrowLeft") go(-1); }}
       onTouchStart={(e) => { touch.current = e.touches[0].clientX; }}
       onTouchEnd={(e) => { if (touch.current == null) return; const dx = e.changedTouches[0].clientX - touch.current; if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1); touch.current = null; }}>
-      <div className="relative h-[460px] overflow-hidden sm:h-[560px]" aria-live={paused ? "polite" : "off"}>
-        <div key={`${site.key}-${viewport}`} className={cn("absolute inset-0", !reduced && "animate-in fade-in zoom-in-[0.98] duration-700")}
+      <div ref={frame} className="relative h-[460px] overflow-hidden sm:h-[560px]" aria-live={paused ? "polite" : "off"}>
+        <div key={`${site.key}-${viewport}`} ref={inner} className={cn("absolute inset-x-0 top-0", !reduced && "animate-in fade-in duration-700")}
+          style={{ transform: `translateY(-${pan}px)`, transition: pan ? "transform 4s cubic-bezier(0.4,0,0.2,1)" : "none" }}
           role="group" aria-roledescription="slide" aria-label={`${i + 1} of ${SHOWCASE.length}: ${site.label}`}>
-          <SitePreview design={designs.current[i]} storeName={site.storeName} products={site.products} viewport={viewport} className="h-full" />
+          <SitePreview design={designs.current[i]} storeName={site.storeName} products={site.products} viewport={viewport} />
         </div>
       </div>
 
