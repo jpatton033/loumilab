@@ -9,7 +9,7 @@ const toRequest = (name: string) => `/services/business-email/start?package=emai
 export function HomeDomainSearch() {
   const nav = useNavigate();
   return (
-    <div className="mt-12 border-t border-atmo-ivory/12 pt-10">
+    <div className="mt-12 border-b border-atmo-ivory/12 pb-10">
       <h3 className="font-hero text-2xl font-semibold text-atmo-ivory sm:text-3xl">Your next idea starts with a name.</h3>
       <p className="mt-2 text-atmo-ivory/65">Find a domain for your business, brand, or next big idea.</p>
       <div className="mt-6"><DomainSearch surface="business" variant="editorial" limit={5} placeholder="Search a name or domain..." onProceed={(r) => nav(toRequest(r.name))} /></div>
