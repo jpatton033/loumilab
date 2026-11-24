@@ -236,10 +236,10 @@ const Index = () => {
         <section className="relative py-24 lg:py-36" aria-labelledby="products-title">
           <Glow tone="burgundy" className="right-[-8%] top-0 h-[36rem] w-[36rem] opacity-50" />
           <div className="section-container relative grid items-center gap-12 lg:grid-cols-12">
-            <div className="relative lg:col-span-6">
+            <div className="relative order-2 lg:order-none lg:col-span-6">
               <MountWhenNear minHeight={560}><Suspense fallback={null}><SiteShowcase tone="dark" /></Suspense></MountWhenNear>
             </div>
-            <div className="lg:col-span-5 lg:col-start-8">
+            <div className="order-1 lg:order-none lg:col-span-5 lg:col-start-8">
               <Kicker n="03">Loumilab Orders</Kicker>
               <Statement id="products-title">Your business deserves a website that's yours.</Statement>
               <Lede>Build and customize a professional website, sell what you offer, and manage orders, all with Loumilab Orders. Start designing free, before you sign up.</Lede>
