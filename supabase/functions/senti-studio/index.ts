@@ -33,8 +33,11 @@ Deno.serve(async (req) => {
   const b = p.data;
 
   const studioSession = async (sid: string) => {
-    const { data } = await admin.from("senti_sessions").select("id").eq("id", sid).eq("scope", "studio").maybeSingle();
-    return !!data;
+    const { data } = await admin.from("senti_sessions").select("id, owner_id").eq("id", sid).eq("scope", "studio").maybeSingle();
+    if (!data) return false;
+    if (data.owner_id === user.id) return true;
+    const { data: staff } = await admin.rpc("is_staff", { _user_id: user.id });
+    return !!staff;
   };
   const touchEntity = async (sid: string, label: string, kind = "thing") => {
     const key = entityKey(label) || label.toLowerCase().trim();

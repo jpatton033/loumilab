@@ -14,6 +14,9 @@ Deno.serve(async (req) => {
     try {
       origin = new URL(String(body.origin));
       if (!/^https?:$/.test(origin.protocol)) throw new Error();
+      const h = origin.hostname;
+      const allowed = (origin.protocol === "https:" && (h === "loumilab.com" || h === "www.loumilab.com" || h.endsWith(".lovable.app") || h.endsWith(".lovableproject.com"))) || h === "localhost";
+      if (!allowed) throw new Error();
     } catch {
       return json({ error: "Invalid origin" }, 400);
     }
