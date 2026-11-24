@@ -3,12 +3,18 @@ import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { z } from "npm:zod@3";
 import { admin, requireUser } from "../_shared/auth.ts";
 import { entityKey, isContradicted, parseObservation, relationWeight } from "../_shared/sentiEngine.ts";
+import { MAX_PASSAGES, MAX_SOURCE_CHARS, splitPassages } from "../_shared/sentiExplore.ts";
 import { CATEGORIES, CORE_VERSION, RULES_VERSION, SYNTHETIC, assignSplits, evaluate, type Category, type EvalRecord, type RelKind } from "../_shared/sentiCore.ts";
 
 const json = (b: unknown, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { ...corsHeaders, "Content-Type": "application/json" } });
 const id = z.string().uuid();
 const Body = z.discriminatedUnion("op", [
   z.object({ op: z.literal("health") }),
+  z.object({ op: z.literal("create_exploration"), title: z.string().trim().min(1).max(120), collection_id: id.nullable().optional() }),
+  z.object({ op: z.literal("ingest_source"), exploration_id: id, title: z.string().trim().min(1).max(160), kind: z.enum(["text", "pdf", "docx", "txt", "markdown"]),
+    original_text: z.string().max(MAX_SOURCE_CHARS * 2), text: z.string().trim().min(3).max(MAX_SOURCE_CHARS), file_path: z.string().max(300).nullable().optional(), sha256: z.string().max(64).nullable().optional(),
+    metadata: z.object({ author: z.string().max(120).optional(), date: z.string().max(60).optional(), place: z.string().max(120).optional(), note: z.string().max(300).optional() }).optional(), research_consent: z.boolean().optional() }),
+  z.object({ op: z.literal("workspace"), exploration_id: id }),
   z.object({ op: z.literal("create_session"), title: z.string().min(1).max(120) }),
   z.object({ op: z.literal("ingest"), session_id: id, text: z.string().min(3).max(400).optional(),
     actor: z.string().min(1).max(60).optional(), action: z.string().min(1).max(60).optional(), target: z.string().max(60).optional(), outcome: z.string().max(120).optional(),
@@ -77,6 +83,58 @@ Deno.serve(async (req) => {
     if (b.op === "create_session") {
       const { data, error } = await admin.from("senti_sessions").insert({ scope: "studio", owner_id: user.id, title: b.title, expires_at: "2999-01-01T00:00:00Z" }).select("id").single();
       if (error) throw error; return json({ id: data.id });
+    }
+    const exploration = async (eid: string) => {
+      const { data } = await admin.from("senti_explorations").select("*").eq("id", eid).maybeSingle();
+      if (!data) return null;
+      if (data.owner_id === user.id) return data;
+      const { data: staff } = await admin.rpc("is_staff", { _user_id: user.id });
+      return staff ? data : null;
+    };
+    if (b.op === "create_exploration") {
+      const { data: s, error } = await admin.from("senti_sessions").insert({ scope: "studio", owner_id: user.id, title: b.title, expires_at: "2999-01-01T00:00:00Z" }).select("id").single();
+      if (error) throw error;
+      const { data: x, error: e2 } = await admin.from("senti_explorations").insert({ owner_id: user.id, session_id: s.id, title: b.title, collection_id: b.collection_id ?? null }).select("*").single();
+      if (e2) throw e2;
+      return json({ exploration: x });
+    }
+    if (b.op === "ingest_source") {
+      const x = await exploration(b.exploration_id);
+      if (!x) return json({ error: "Exploration not found" }, 404);
+      if (b.file_path && !b.file_path.startsWith(`${x.owner_id}/`)) return json({ error: "File not found" }, 400);
+      const passages = splitPassages(b.text);
+      if (!passages.length) return json({ error: "Senti couldn't find readable sentences in this source." }, 400);
+      if (passages.length > MAX_PASSAGES) return json({ error: `This source has ${passages.length} passages. Senti can read up to ${MAX_PASSAGES} at a time, so please split it.` }, 400);
+      const { data: src, error } = await admin.from("senti_sources").insert({ exploration_id: x.id, owner_id: x.owner_id, title: b.title, kind: b.kind, original_text: b.original_text || b.text, text: b.text, metadata: b.metadata ?? {}, file_path: b.file_path ?? null, sha256: b.sha256 ?? null, passages: passages.length, engine_version: `${RULES_VERSION}+${CORE_VERSION}`, research_consent: !!b.research_consent }).select("*").single();
+      if (error) throw error;
+      const sid = x.session_id;
+      const { count } = await admin.from("senti_events").select("id", { count: "exact", head: true }).eq("session_id", sid);
+      let seq = count ?? 0, rels = 0;
+      for (let i = 0; i < passages.length; i++) {
+        const parsed = parseObservation(passages[i]);
+        const { data: ev, error: e3 } = await admin.from("senti_events").insert({ session_id: sid, seq: ++seq, text: passages[i], time_hint: parsed.timeHint, polarity: parsed.polarity, source: "explore", event_type: "passage", source_id: src.id, passage_index: i, attributes: {} }).select("id").single();
+        if (e3) throw e3;
+        for (const e of parsed.entities) await touchEntity(sid, e.label, e.kind);
+        for (const r of parsed.relations) { await link(sid, r.source, r.predicate, r.target, r.polarity, ev.id, "inferred"); rels++; }
+      }
+      await admin.from("senti_explorations").update({ updated_at: new Date().toISOString() }).eq("id", x.id);
+      return json({ source: src, passages: passages.length, relations: rels, reader: RULES_VERSION });
+    }
+    if (b.op === "workspace") {
+      const x = await exploration(b.exploration_id);
+      if (!x) return json({ error: "Exploration not found" }, 404);
+      const sid = x.session_id;
+      const [src, ev, en, rel, ver, cor] = await Promise.all([
+        admin.from("senti_sources").select("id, title, kind, text, metadata, passages, engine_version, created_at").eq("exploration_id", x.id).order("created_at"),
+        admin.from("senti_events").select("id, seq, text, time_hint, polarity, source_id, passage_index, created_at").eq("session_id", sid).order("seq"),
+        admin.from("senti_entities").select("key, label, kind, mentions").eq("session_id", sid).order("mentions", { ascending: false }),
+        admin.from("senti_relations").select("*").eq("session_id", sid),
+        Promise.resolve({ data: [] as Record<string, unknown>[] }),
+        admin.from("senti_corrections").select("action, before, after, created_at").eq("session_id", sid).order("created_at"),
+      ]);
+      const relIds = (rel.data ?? []).map((r) => r.id);
+      const versions = relIds.length ? (await admin.from("senti_relation_versions").select("relation_id, version, reason, created_at, snapshot").in("relation_id", relIds.slice(0, 500)).order("created_at")).data ?? [] : ver.data;
+      return json({ exploration: x, sources: src.data ?? [], events: ev.data ?? [], entities: en.data ?? [], relations: rel.data ?? [], versions, corrections: cor.data ?? [], reader: RULES_VERSION, core: CORE_VERSION });
     }
     if (b.op === "ingest") {
       if (!(await studioSession(b.session_id))) return json({ error: "Research session not found" }, 404);

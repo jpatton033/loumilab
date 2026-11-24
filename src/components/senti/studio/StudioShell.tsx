@@ -1,13 +1,14 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import { cn } from "@/lib/utils";
 import { useResearcher } from "@/lib/senti/studio";
 
-const tabs = [
-  ["/senti/studio", "Dashboard"], ["/senti/studio/experiments", "Experiments"], ["/senti/studio/observations", "Observations"],
-  ["/senti/studio/memory", "Memory"], ["/senti/studio/learning", "Learning"], ["/senti/studio/evaluations", "Evaluations"],
-  ["/senti/studio/datasets", "Datasets"], ["/senti/studio/journal", "Journal"],
+const tabs = [["/senti/studio", "Explore"], ["/senti/studio/library", "Library"], ["/senti/studio/research", "Research"]] as const;
+export const researchTabs = [
+  ["/senti/studio/research", "Overview"], ["/senti/studio/research/experiments", "Experiments"], ["/senti/studio/research/models", "Models"],
+  ["/senti/studio/research/evaluations", "Evaluations"], ["/senti/studio/research/diagnostics/observations", "Observations"],
+  ["/senti/studio/research/diagnostics/memory", "Memory"], ["/senti/studio/research/journal", "Journal"],
 ] as const;
 
 export const inp = "w-full rounded-xl border border-atmo-ivory/15 bg-atmo-charcoal/60 px-3 py-2 text-sm text-atmo-ivory placeholder:text-atmo-ivory/35 focus:outline-none focus:ring-2 focus:ring-atmo-ivory/30";
@@ -33,8 +34,11 @@ export const Pill = ({ s, label }: { s: string; label?: string }) => (
 );
 export const Empty = ({ children }: { children: React.ReactNode }) => <p className="text-sm text-atmo-ivory/45">{children}</p>;
 
-export default function StudioShell({ title, children }: { title: string; children: React.ReactNode }) {
+export default function StudioShell({ title, children, hideTitle }: { title: string; children: React.ReactNode; hideTitle?: boolean }) {
   const { access } = useResearcher();
+  const { pathname } = useLocation();
+  const inResearch = pathname.startsWith("/senti/studio/research");
+  const isActive = (to: string) => to === "/senti/studio" ? pathname === to || pathname.startsWith("/senti/studio/x/") : pathname.startsWith(to);
   return (
     <Layout>
       <SEOHead title={`${title} | Senti Research Studio`} description="Private Senti research workspace." path="/senti/studio" noindex />
@@ -42,14 +46,18 @@ export default function StudioShell({ title, children }: { title: string; childr
         <nav aria-label="Research Studio" className="border-b border-atmo-ivory/10">
           <div className="section-container flex gap-5 overflow-x-auto py-4 text-sm">
             <Link to="/senti/studio" className="whitespace-nowrap font-hero font-semibold">Senti<span className="text-atmo-ivory/50"> Research Studio</span></Link>
-            {access === "ok" && tabs.map(([to, l]) => <NavLink key={to} to={to} end className={({ isActive }) => cn("whitespace-nowrap", isActive ? "text-atmo-ivory" : "text-atmo-ivory/55 hover:text-atmo-ivory")}>{l}</NavLink>)}
+            {access === "ok" && tabs.map(([to, l]) => <Link key={to} to={to} aria-current={isActive(to) ? "page" : undefined} className={cn("whitespace-nowrap border-b pb-0.5", isActive(to) ? "border-atmo-copper text-atmo-ivory" : "border-transparent text-atmo-ivory/55 hover:text-atmo-ivory")}>{l}</Link>)}
           </div>
+          {access === "ok" && inResearch && <div className="section-container flex gap-4 overflow-x-auto pb-3 text-xs">
+            <span className="whitespace-nowrap text-atmo-copper/80">Advanced research</span>
+            {researchTabs.map(([to, l]) => <NavLink key={to} to={to} end className={({ isActive: a }) => cn("whitespace-nowrap", a ? "text-atmo-ivory" : "text-atmo-ivory/50 hover:text-atmo-ivory")}>{l}</NavLink>)}
+          </div>}
         </nav>
         <div className="section-container py-10">
           {access === "loading" && <Empty>Checking access…</Empty>}
           {access === "signed_out" && <Gate msg="Sign in with a Loumilab researcher account to open the Studio." link />}
           {access === "denied" && <Gate msg="This account doesn't have Senti researcher access. A Loumilab admin can grant it in Admin → Senti." />}
-          {access === "ok" && <><h1 className="mb-8 font-hero text-3xl font-semibold sm:text-4xl">{title}.</h1>{children}</>}
+          {access === "ok" && <>{!hideTitle && <h1 className="mb-8 font-hero text-3xl font-semibold sm:text-4xl">{title}.</h1>}{children}</>}
         </div>
       </div>
     </Layout>

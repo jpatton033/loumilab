@@ -45,7 +45,7 @@ export default function StudioDatasets() {
   const inspect = async (id: string) => { const { data } = await supabase.from("senti_dataset_versions").select("*").eq("id", id).single(); setView(data); };
   const seed = async () => { try { const r = await studio("seed_synthetic"); toast.success(r.created ? `Added ${r.created} synthetic dataset(s)` : "Starter datasets already exist"); load(); } catch (e) { toast.error((e as Error).message); } };
   return (
-    <StudioShell title="Dataset management">
+    <StudioShell title="Research datasets">
       <p className="mb-6 max-w-3xl text-sm text-atmo-ivory/65">Synthetic datasets first. Public Lab visitor input is never used here unless the visitor opted in to research use.</p>
       <div className="grid gap-6 lg:grid-cols-5">
         <div className="space-y-4 lg:col-span-2">

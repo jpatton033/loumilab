@@ -62,7 +62,7 @@ export default function StudioObservations() {
             {last && <Card title="Just produced">{last.length ? <ul className="space-y-1 text-sm">{last.map((r) => <li key={r.id}>{r.source_key} <b>{r.predicate}</b> {r.target_key} · <Pill s={r.kind} /> v{r.version} · weight {r.weight}</li>)}</ul> : <Empty>No relationships found in that observation.</Empty>}</Card>}
           </div>
           <div className="space-y-4">
-            <Card title="Relationships" action={<Link to="/senti/studio/memory" className="text-xs text-atmo-ivory/60 hover:text-atmo-ivory">Inspect & correct →</Link>}>
+            <Card title="Relationships" action={<Link to="/senti/studio/research/diagnostics/memory" className="text-xs text-atmo-ivory/60 hover:text-atmo-ivory">Inspect & correct →</Link>}>
               {!rels.length ? <Empty>None yet.</Empty> : <ul className="space-y-1.5 text-sm">{rels.map((r) => <li key={r.id} className="flex flex-wrap items-center gap-2"><span>{r.source_key} <b>{r.predicate}</b> {r.target_key}</span><Pill s={r.kind} />{r.status !== "active" && <Pill s={r.status} />}{r.support > 0 && r.contradict > 0 && <Pill s="contradicted" />}<span className="text-xs text-atmo-ivory/45">v{r.version} · +{r.support}/−{r.contradict}</span></li>)}</ul>}
             </Card>
             <Card title="Event log">

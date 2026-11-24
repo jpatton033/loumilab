@@ -34,7 +34,7 @@ export default function StudioLearning() {
   const setEngineStatus = async (id: string, status: string) => { await supabase.from("senti_engine_versions").update({ status, released_at: status === "operational" ? new Date().toISOString() : null }).eq("id", id); load(); };
   const anyTrained = models.some((m) => m.status === "evaluated" || m.status === "operational");
   return (
-    <StudioShell title="Learning engine">
+    <StudioShell title="Models">
       <div className="mb-6 rounded-3xl border border-atmo-ivory/15 p-5 text-sm text-atmo-ivory/75">
         {anyTrained ? "At least one model has been evaluated." : "No trained model. Training runs need a training service (planned for the Python research service); until then this area manages versions, setups and notes only."}
       </div>

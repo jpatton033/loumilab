@@ -281,6 +281,20 @@
       "when": 1795502277314,
       "tag": "0039_migration",
       "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "7",
+      "when": 1795530835469,
+      "tag": "0040_senti_explore_library",
+      "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "7",
+      "when": 1795531008501,
+      "tag": "0041_senti_exploration_delete_cleanup",
+      "breakpoints": true
     }
   ]
 }

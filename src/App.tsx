@@ -9,6 +9,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { LEGACY_STUDIO_ROUTES } from "./lib/senti/routes";
 import Index from "./pages/Index";
 import Services from "./pages/Services";
 import HowWeWork from "./pages/HowWeWork";
@@ -57,6 +58,9 @@ const StudioLearning = lazy(() => import("./pages/senti/studio/Learning"));
 const StudioEvaluations = lazy(() => import("./pages/senti/studio/Evaluations"));
 const StudioDatasets = lazy(() => import("./pages/senti/studio/Datasets"));
 const StudioJournal = lazy(() => import("./pages/senti/studio/Journal"));
+const StudioExplore = lazy(() => import("./pages/senti/studio/Explore"));
+const StudioWorkspace = lazy(() => import("./pages/senti/studio/Workspace"));
+const StudioLibrary = lazy(() => import("./pages/senti/studio/Library"));
 const AdminDomains = lazy(() => import("./pages/admin/Domains"));
 const AdminSpacesLegal = lazy(() => import("./pages/admin/SpacesLegal"));
 const AdminCustomProjects = lazy(() => import("./pages/admin/CustomProjects"));
@@ -193,14 +197,18 @@ const routes = (<>
           <Route path="/senti/lab" element={<SentiLab />} />
           <Route path="/senti/research" element={<SentiResearch />} />
           <Route path="/senti/updates" element={<SentiUpdates />} />
-          <Route path="/senti/studio" element={<StudioDashboard />} />
-          <Route path="/senti/studio/experiments" element={<StudioExperiments />} />
-          <Route path="/senti/studio/observations" element={<StudioObservations />} />
-          <Route path="/senti/studio/memory" element={<StudioMemory />} />
-          <Route path="/senti/studio/learning" element={<StudioLearning />} />
-          <Route path="/senti/studio/evaluations" element={<StudioEvaluations />} />
-          <Route path="/senti/studio/datasets" element={<StudioDatasets />} />
-          <Route path="/senti/studio/journal" element={<StudioJournal />} />
+          <Route path="/senti/studio" element={<StudioExplore />} />
+          <Route path="/senti/studio/x/:id" element={<StudioWorkspace />} />
+          <Route path="/senti/studio/library" element={<StudioLibrary />} />
+          <Route path="/senti/studio/library/datasets" element={<StudioDatasets />} />
+          <Route path="/senti/studio/research" element={<StudioDashboard />} />
+          <Route path="/senti/studio/research/experiments" element={<StudioExperiments />} />
+          <Route path="/senti/studio/research/models" element={<StudioLearning />} />
+          <Route path="/senti/studio/research/evaluations" element={<StudioEvaluations />} />
+          <Route path="/senti/studio/research/diagnostics/observations" element={<StudioObservations />} />
+          <Route path="/senti/studio/research/diagnostics/memory" element={<StudioMemory />} />
+          <Route path="/senti/studio/research/journal" element={<StudioJournal />} />
+          {Object.entries(LEGACY_STUDIO_ROUTES).map(([k, to]) => <Route key={k} path={`/senti/studio/${k}`} element={<Navigate replace to={to} />} />)}
           <Route path="/admin/senti" element={<ProtectedRoute><AdminSenti /></ProtectedRoute>} />
           <Route path="/admin/domains" element={<ProtectedRoute><AdminDomains /></ProtectedRoute>} />
           <Route path="/admin/spaces-legal" element={<ProtectedRoute><AdminSpacesLegal /></ProtectedRoute>} />

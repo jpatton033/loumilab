@@ -4,7 +4,7 @@ export interface GNode { key: string; label: string; mentions?: number }
 export interface GEdge { id: string; source_key: string; target_key: string; predicate: string; weight: number; contradicted?: boolean; status?: string }
 
 /** Circular relationship graph: hover or focus a node to highlight its links. */
-export default function RelationGraph({ nodes, edges, onSelect, selected }: { nodes: GNode[]; edges: GEdge[]; onSelect?: (id: string) => void; selected?: string | null }) {
+export default function RelationGraph({ nodes, edges, onSelect, selected, plain }: { nodes: GNode[]; edges: GEdge[]; onSelect?: (id: string) => void; selected?: string | null; plain?: boolean }) {
   const [hover, setHover] = useState<string | null>(null);
   const pos = useMemo(() => {
     const m = new Map<string, { x: number; y: number }>();
@@ -21,7 +21,7 @@ export default function RelationGraph({ nodes, edges, onSelect, selected }: { no
         return (
           <g key={e.id} className="cursor-pointer" onClick={() => onSelect?.(e.id)} opacity={lit ? 1 : 0.15} style={{ transition: "opacity 200ms" }}>
             <line x1={a.x} y1={a.y} x2={b.x} y2={b.y} className={e.contradicted ? "stroke-destructive" : selected === e.id ? "stroke-dot" : "stroke-atmo-ivory"} strokeOpacity={0.25 + e.weight * 0.6} strokeWidth={1 + e.weight * 3} strokeDasharray={e.contradicted ? "5 5" : undefined} />
-            <text x={mx} y={my - 6} textAnchor="middle" className="fill-atmo-ivory/70 text-[11px]">{e.predicate} · {e.weight.toFixed(2)}</text>
+            <text x={mx} y={my - 6} textAnchor="middle" className="fill-atmo-ivory/70 text-[11px]">{plain ? e.predicate : `${e.predicate} · ${e.weight.toFixed(2)}`}</text>
           </g>);
       })}
       {nodes.map((n) => { const p = pos.get(n.key)!; return (

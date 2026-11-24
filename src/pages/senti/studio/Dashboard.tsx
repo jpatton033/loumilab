@@ -27,7 +27,7 @@ export default function StudioDashboard() {
     studio("health").then(setHealth).catch((e) => setHealth({ ok: false, error: e.message }));
   }, [access]);
   return (
-    <StudioShell title="Research dashboard">
+    <StudioShell title="Research overview">
       {!d ? <Empty>Loading…</Empty> : (
         <div className="grid gap-4 lg:grid-cols-3">
           <Card title="Engine versions">
@@ -43,13 +43,13 @@ export default function StudioDashboard() {
           <Card title="Model registry">
             {d.models.length ? <ul className="space-y-2 text-sm">{d.models.map((m: any) => <li key={m.id} className="flex justify-between"><span>{m.name}</span><Pill s={m.status} /></li>)}</ul> : <Empty>No trained model. Not yet available.</Empty>}
           </Card>
-          <Card title="Active experiments" action={<Link to="/senti/studio/experiments" className="text-xs text-atmo-ivory/60 hover:text-atmo-ivory">All →</Link>}>
+          <Card title="Active experiments" action={<Link to="/senti/studio/research/experiments" className="text-xs text-atmo-ivory/60 hover:text-atmo-ivory">All →</Link>}>
             {d.ex.length ? <ul className="space-y-2 text-sm">{d.ex.map((e: any) => <li key={e.id} className="flex justify-between gap-2"><span className="truncate">{e.name}</span><Pill s={e.status} /></li>)}</ul> : <Empty>No active experiments.</Empty>}
           </Card>
           <Card title="Recent runs">
             {d.runs.length ? <ul className="space-y-2 text-sm">{d.runs.map((r: any) => <li key={r.id} className="flex justify-between gap-2"><span className="truncate">{r.senti_experiments?.name ?? "Experiment"} <span className="text-atmo-ivory/40">· {fmtDate(r.started_at)}</span></span><Pill s={r.status} /></li>)}</ul> : <Empty>No runs yet.</Empty>}
           </Card>
-          <Card title="Latest measured results" action={<Link to="/senti/studio/evaluations" className="text-xs text-atmo-ivory/60 hover:text-atmo-ivory">All →</Link>}>
+          <Card title="Latest measured results" action={<Link to="/senti/studio/research/evaluations" className="text-xs text-atmo-ivory/60 hover:text-atmo-ivory">All →</Link>}>
             {d.ev.length ? <ul className="space-y-1.5 text-sm">{d.ev.map((r: any, i: number) => <li key={i} className="flex justify-between gap-2"><span className="truncate">{r.category} · {r.baseline}</span><span className="font-mono text-xs">{r.metric} {r.value}</span></li>)}</ul> : <Empty>No evaluations have run yet.</Empty>}
           </Card>
           <Card title="Datasets">

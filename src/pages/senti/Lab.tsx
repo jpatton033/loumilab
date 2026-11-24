@@ -129,7 +129,9 @@ export default function SentiLab() {
       <SEOHead title="Senti Lab | Senti by Loumilab" description="Explore Senti's research engine: record observations, watch relationships form, and correct them, with evidence for every step." path="/senti/lab" />
       <section className="section-container py-16 lg:py-24">
         <Eyebrow>Senti Lab</Eyebrow>
-        <h1 className="mt-4 font-hero text-4xl font-semibold lg:text-6xl">Watch relationships form.</h1>
+        <h1 className="mt-4 font-hero text-4xl font-semibold lg:text-6xl">What would you like to explore?</h1>
+        <p className="mt-4 max-w-2xl text-lg text-atmo-ivory/70">Explore language, ideas, history, and human expression. Discover relationships, examine context, and see how understanding evolves.</p>
+        <p className="mt-2 max-w-2xl text-sm text-atmo-ivory/50">The public Lab reads short pasted sentences in a temporary session you can delete. Uploads and a saved Library are part of the private Research Studio.</p>
         <div className="mt-8 flex gap-2" role="tablist">
           <button role="tab" aria-selected={mode === "demo"} className={mode === "demo" ? primary : ghost} onClick={() => setMode("demo")}>Guided demonstration</button>
           <button role="tab" aria-selected={mode === "live"} className={mode === "live" ? primary : ghost} onClick={() => setMode("live")}>Live research mode</button>
