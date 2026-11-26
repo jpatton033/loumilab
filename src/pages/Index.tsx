@@ -10,7 +10,7 @@ import Layout from "@/components/Layout";
 import { Link } from "react-router-dom";
 import { ArrowRight, Pause, Play } from "lucide-react";
 import { useState } from "react";
-import { HERO_SCENES, HERO_POSTER } from "@/data/homeHero";
+import { HERO_SCENES, HERO_POSTER, HERO_POSTER_TALL } from "@/data/homeHero";
 import scOrders from "@/assets/story/screens/orders.jpg";
 import scWorkflow from "@/assets/story/screens/workflow.jpg";
 import scEmail from "@/assets/story/screens/email.jpg";
@@ -152,7 +152,7 @@ const Index = () => {
       {/* 1 Full-bleed film hero */}
       <section ref={heroRef} data-page-hero className="scene-hero relative isolate -mt-16 overflow-hidden bg-[hsl(var(--atmo-obsidian))] text-inverse lg:-mt-20" aria-labelledby="hero-title">
         <div className="scene-hero-media absolute inset-0">
-          <VideoSequence clips={HERO_SCENES.map((c) => c.wide)} tallClips={HERO_SCENES.map((c) => c.tall)} poster={HERO_POSTER} paused={heroPaused} />
+          <VideoSequence clips={HERO_SCENES.map((c) => c.wide)} tallClips={HERO_SCENES.map((c) => c.tall)} poster={HERO_POSTER} tallPoster={HERO_POSTER_TALL} paused={heroPaused} />
         </div>
         <div className="absolute inset-0 bg-ink/25" aria-hidden />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(var(--ink)/0.55)_0%,hsl(var(--ink)/0.15)_55%,transparent_80%)]" aria-hidden />

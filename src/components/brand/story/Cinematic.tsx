@@ -4,11 +4,12 @@ import { Pause, Play } from "lucide-react";
 import { useAutoMotion } from "./Horizontal";
 
 /* ───────── Background video: clips play one after another, crossfading, looping ───────── */
-export function VideoSequence({ clips, tallClips, poster, paused = false }: { clips: string[]; tallClips?: (string | undefined)[]; poster?: string; paused?: boolean }) {
+export function VideoSequence({ clips, tallClips, poster: widePoster, tallPoster, paused = false }: { clips: string[]; tallClips?: (string | undefined)[]; poster?: string; tallPoster?: string; paused?: boolean }) {
   const [cur, setCur] = useState(0);
   const refs = useRef<(HTMLVideoElement | null)[]>([]);
   const [motionOk] = useState(() => !window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   const [tall] = useState(() => window.matchMedia("(max-aspect-ratio: 4/5)").matches);
+  const poster = (tall && tallPoster) || widePoster;
   const srcs = clips.map((c, i) => (tall && tallClips?.[i]) || c);
   const seen = useRef(new Set<number>([0]));
   useEffect(() => {
