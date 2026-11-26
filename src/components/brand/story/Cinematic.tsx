@@ -4,23 +4,38 @@ import { Pause, Play } from "lucide-react";
 import { useAutoMotion } from "./Horizontal";
 
 /* ───────── Background video: clips play one after another, crossfading, looping ───────── */
-export function VideoSequence({ clips, poster }: { clips: string[]; poster?: string }) {
+export function VideoSequence({ clips, tallClips, poster, paused = false }: { clips: string[]; tallClips?: (string | undefined)[]; poster?: string; paused?: boolean }) {
   const [cur, setCur] = useState(0);
   const refs = useRef<(HTMLVideoElement | null)[]>([]);
   const [motionOk] = useState(() => !window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  const [tall] = useState(() => window.matchMedia("(max-aspect-ratio: 4/5)").matches);
+  const srcs = clips.map((c, i) => (tall && tallClips?.[i]) || c);
+  const seen = useRef(new Set<number>([0]));
   useEffect(() => {
     if (!motionOk) return;
     const v = refs.current[cur]; if (!v) return;
-    v.currentTime = 0; v.play().catch(() => {});
-  }, [cur, motionOk]);
+    if (paused) { v.pause(); return; }
+    v.play().catch(() => {});
+  }, [cur, motionOk, paused]);
+  useEffect(() => {
+    const onVis = () => { const v = refs.current[cur]; if (!v) return; document.hidden || paused ? v.pause() : v.play().catch(() => {}); };
+    document.addEventListener("visibilitychange", onVis);
+    return () => document.removeEventListener("visibilitychange", onVis);
+  }, [cur, paused]);
+  const next = () => setCur((c) => { const n = (c + 1) % srcs.length; const v = refs.current[n]; if (v) v.currentTime = 0; return n; });
   if (!motionOk) return poster ? <img src={poster} alt="" className="absolute inset-0 h-full w-full object-cover" /> : null;
   return (
     <>
-      {clips.map((src, i) => (
-        <video key={src} ref={(el) => (refs.current[i] = el)} src={src} poster={i === 0 ? poster : undefined} muted playsInline preload={i === 0 ? "auto" : "metadata"}
-          onEnded={() => setCur((c) => (c + 1) % clips.length)} aria-hidden
-          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-[1400ms] ease-out ${i === cur ? "opacity-100" : "opacity-0"}`} />
-      ))}
+      {poster && <img src={poster} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover" />}
+      {srcs.map((src, i) => {
+        const near = i === cur || i === (cur + 1) % srcs.length;
+        if (near) seen.current.add(i);
+        return (
+          <video key={src + i} ref={(el) => (refs.current[i] = el)} src={seen.current.has(i) ? src : undefined} muted playsInline preload={i === cur ? "auto" : near ? "auto" : "none"}
+            onEnded={next} aria-hidden
+            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-[1200ms] ease-out ${i === cur ? "opacity-100" : "opacity-0"}`} />
+        );
+      })}
     </>
   );
 }

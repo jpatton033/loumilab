@@ -8,7 +8,14 @@ import runService from "@/assets/story/run/service-work.jpg";
 import runPickup from "@/assets/story/run/customer-pickup.jpg";
 import Layout from "@/components/Layout";
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Pause, Play } from "lucide-react";
+import { useState } from "react";
+import { HERO_SCENES, HERO_POSTER } from "@/data/homeHero";
+import scOrders from "@/assets/story/screens/orders.jpg";
+import scWorkflow from "@/assets/story/screens/workflow.jpg";
+import scEmail from "@/assets/story/screens/email.jpg";
+import spacesLibrary from "@/assets/spaces/library-projects.jpg";
+import sentiPoster from "@/assets/senti/senti-hero-poster.jpg";
 import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Scene as CineScene, useSceneProgress } from "@/components/brand/story/Scene";
@@ -19,11 +26,8 @@ import { lazy, Suspense } from "react";
 import { MountWhenNear } from "@/components/orders/showcase/SitePreview";
 const SiteShowcase = lazy(() => import("@/components/orders/showcase/SiteShowcase"));
 import { AutoMarquee, LayeredStack, LoopVideo, TimedCrossfade, type Frame } from "@/components/brand/story/Horizontal";
-import { FloatingGallery, PreviewScenes, VideoSequence, type FloatItem, type Scene } from "@/components/brand/story/Cinematic";
+import { FloatingGallery, VideoSequence, type FloatItem } from "@/components/brand/story/Cinematic";
 import { MockDashboard, MockSchedule, MockSecurity, MockWorkflow } from "@/components/brand/story/mocks";
-import heroCeramic from "@/assets/video/home/hero-ceramic.mp4.asset.json";
-import heroArchitect from "@/assets/video/home/hero-architect.mp4.asset.json";
-import heroFlorist from "@/assets/video/home/hero-florist.mp4.asset.json";
 import siteHotel from "@/assets/story/sites/hotel.jpg";
 import siteArch from "@/assets/story/sites/architecture.jpg";
 import siteFlorist from "@/assets/story/sites/florist.jpg";
@@ -31,6 +35,7 @@ import siteLaw from "@/assets/story/sites/law.jpg";
 import siteFashion from "@/assets/story/sites/fashion.jpg";
 import siteMagazine from "@/assets/story/sites/magazine.jpg";
 import archVideo from "@/assets/video/home/arch-light.mp4.asset.json";
+import heroArchitect from "@/assets/video/home/hero-architect.mp4.asset.json";
 import sketchVideo from "@/assets/video/home/sketch-layout.mp4.asset.json";
 import archLight from "@/assets/story/home/arch-light.jpg";
 import layoutsHands from "@/assets/story/home/layouts-hands.jpg";
@@ -59,29 +64,6 @@ const Pic = ({ src, alt, aspect = "aspect-[16/10]" }: { src: string; alt: string
     <img src={src} alt={alt} loading="lazy" className={`w-full object-cover object-top ${aspect}`} />
   </div>
 );
-
-const heroScenes: Scene[] = [
-  { name: "sites-a", panels: [
-    { label: "Hospitality website", pos: "left-0 top-[8%] w-[74%]", tilt: -1, node: <Pic src={siteHotel} alt="A boutique hotel website design" /> },
-    { label: "Architecture studio", pos: "right-0 top-[46%] w-[50%]", tilt: 1.5, node: <Pic src={siteArch} alt="An architecture studio website design" /> },
-    { label: "Florist shop", pos: "right-[4%] top-0 w-[24%]", tilt: 2, node: <Pic src={siteFlorist} alt="A florist online shop design" aspect="aspect-[4/5]" /> },
-  ] },
-  { name: "sites-b", panels: [
-    { label: "Editorial magazine", pos: "right-0 top-[4%] w-[70%]", tilt: 1, node: <Pic src={siteMagazine} alt="An editorial magazine website design" /> },
-    { label: "Fashion retail", pos: "left-[2%] top-[22%] w-[28%]", tilt: -2, node: <Pic src={siteFashion} alt="A fashion retail website design" aspect="aspect-[4/5]" /> },
-    { label: "Law firm", pos: "right-[10%] top-[52%] w-[48%]", tilt: -1, node: <Pic src={siteLaw} alt="A law firm website design" /> },
-  ] },
-  { name: "software", panels: [
-    { label: "Operations dashboard", pos: "left-0 top-[6%] w-[64%]", tilt: -1, node: <MockDashboard /> },
-    { label: "Scheduling", pos: "right-0 top-0 w-[42%]", tilt: 1.5, node: <MockSchedule /> },
-    { label: "Workflow automation", pos: "right-[6%] top-[60%] w-[70%]", tilt: 0.5, node: <MockWorkflow /> },
-  ] },
-  { name: "products", panels: [
-    { label: "Loumilab Orders — dashboard", pos: "left-0 top-[4%] w-[70%]", tilt: -1, node: <Pic src={merchantDash} alt="The Loumilab Orders merchant dashboard" /> },
-    { label: "Loumilab Orders — store builder", pos: "right-0 top-[40%] w-[52%]", tilt: 1.5, node: <Pic src={storeBuilder} alt="The Loumilab Orders store builder" /> },
-    { label: "Loumilab Local", pos: "right-[6%] top-0 w-[26%]", tilt: 2, node: <Pic src={scLocal} alt="A Loumilab Local listing" aspect="aspect-[4/5]" /> },
-  ] },
-];
 
 const floatItems: FloatItem[] = [
   { src: siteArch, label: "Architecture studio", to: "/services/website-development", pos: "left-[4%] top-[4%]", w: "w-[46%] sm:w-[30%]", depth: 0 },
@@ -137,7 +119,17 @@ const family: { name: string; kind: string; line: string; tone: string; to?: str
   { name: "Vurtti", kind: "Company", line: "Compliance, documented and under control.", tone: "copper", href: "https://www.vurttidocs.com" },
 ];
 
+const impact: { name: string; status: "Available" | "Beta" | "In research"; line: string; to: string; img: string; alt: string; wide?: boolean }[] = [
+  { name: "Custom websites", status: "Available", line: "Distinctive digital experiences, designed and built in your name.", to: "/services/website-development", img: siteHotel, alt: "A boutique hotel website designed by Loumilab", wide: true },
+  { name: "Loumilab Orders", status: "Available", line: "A customizable website with online ordering and payouts.", to: "/orders", img: scOrders, alt: "The Loumilab Orders page" },
+  { name: "Spaces", status: "Beta", line: "Publish and share the apps you create.", to: "/spaces", img: spacesLibrary, alt: "A sample app in the Spaces library" },
+  { name: "Senti", status: "In research", line: "Research into technology that connects ideas, context and evidence.", to: "/senti", img: sentiPoster, alt: "Artwork from the Senti research project" },
+  { name: "Workflow Optimization", status: "Available", line: "Simpler processes. AI when valuable, software when sufficient.", to: "/services/workflow-optimization", img: scWorkflow, alt: "The Workflow Optimization page" },
+  { name: "Managed services", status: "Available", line: "Business email, domains and the systems you rely on, handled.", to: "/services/business-email", img: scEmail, alt: "The Business Email service page", wide: true },
+];
+
 const Index = () => {
+  const [heroPaused, setHeroPaused] = useState(false);
   const heroRef = useSceneProgress<HTMLElement>("exit");
   const { data: articles = [] } = usePublishedArticles({ limit: 6 });
   const { data: issues = [] } = usePublishedIssues(4);
@@ -158,23 +150,57 @@ const Index = () => {
 
 
       {/* 1 Full-bleed film hero */}
-      <section ref={heroRef} data-page-hero className="scene-hero relative isolate -mt-16 overflow-hidden bg-ink text-inverse lg:-mt-20" aria-labelledby="hero-title">
-        <div className="scene-hero-media absolute inset-0"><VideoSequence clips={[heroCeramic.url, heroArchitect.url, heroFlorist.url]} poster={archLight} /></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-ink/55 via-ink/35 to-[hsl(var(--atmo-obsidian))]" aria-hidden />
+      <section ref={heroRef} data-page-hero className="scene-hero relative isolate -mt-16 overflow-hidden bg-[hsl(var(--atmo-obsidian))] text-inverse lg:-mt-20" aria-labelledby="hero-title">
+        <div className="scene-hero-media absolute inset-0">
+          <VideoSequence clips={HERO_SCENES.map((c) => c.wide)} tallClips={HERO_SCENES.map((c) => c.tall)} poster={HERO_POSTER} paused={heroPaused} />
+        </div>
+        <div className="absolute inset-0 bg-ink/25" aria-hidden />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(var(--ink)/0.55)_0%,hsl(var(--ink)/0.15)_55%,transparent_80%)]" aria-hidden />
+        <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-b from-transparent to-[hsl(var(--atmo-obsidian))]" aria-hidden />
         <div className="scene-hero-dim pointer-events-none absolute inset-0 bg-ink" aria-hidden />
-        <div className="scene-hero-copy section-container relative flex min-h-[88svh] flex-col items-center justify-center pb-16 pt-32 text-center lg:pt-40">
+        <div className="scene-hero-copy section-container relative flex min-h-[92svh] flex-col items-center justify-center pb-[max(4rem,env(safe-area-inset-bottom))] pt-32 text-center lg:pt-40">
           <h1 id="hero-title" className="mx-auto max-w-5xl font-hero text-[3.2rem] font-bold leading-[0.95] tracking-[-0.04em] text-inverse sm:text-[5rem] lg:text-[7rem]">
             We build what's next.
           </h1>
-          <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-inverse/85 lg:text-xl">
-            Thoughtful technology, distinctive digital experiences, and software built for what's next.
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-inverse/90 lg:text-xl">
+            Software, digital infrastructure, and intelligent technologies built to move people and businesses forward.
           </p>
           <Button size="lg" asChild className="mt-10 bg-background text-foreground hover:bg-background/90"><Link to="/services">Explore Our Solutions</Link></Button>
-          <nav aria-label="On this page" className="mt-14 flex flex-wrap justify-center gap-1 rounded-full bg-ink/70 p-1.5">
-            {[["What we build", "#build-title"], ["Work", "#work-gallery"], ["Products", "#products-title"], ["Reading", "#reading-title"]].map(([l, h]) => (
-              <a key={h} href={h} className="inline-flex min-h-11 items-center rounded-full px-4 text-sm font-medium text-inverse/85 transition-colors hover:bg-inverse/10 hover:text-inverse">{l}</a>
+          <nav aria-label="Ways in" className="mt-10 flex flex-wrap justify-center gap-x-8 gap-y-2">
+            {[["Studio", "/services"], ["Products", "/products"], ["Managed Services", "/services/business-email"]].map(([l, h]) => (
+              <Link key={h + l} to={h} className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-inverse/80 underline-offset-4 transition-colors hover:text-inverse hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{l}</Link>
             ))}
           </nav>
+        </div>
+        <button type="button" onClick={() => setHeroPaused((p) => !p)} aria-pressed={heroPaused} aria-label={heroPaused ? "Play background film" : "Pause background film"}
+          className="absolute bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-5 z-10 inline-flex h-11 w-11 items-center justify-center rounded-full border border-inverse/25 text-inverse/80 transition-colors hover:bg-inverse/10 hover:text-inverse focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+          {heroPaused ? <Play size={16} aria-hidden /> : <Pause size={16} aria-hidden />}
+        </button>
+      </section>
+
+      {/* Ideas into impact — curated portfolio right after the film */}
+      <section className="bg-[hsl(var(--atmo-obsidian))] py-24 text-inverse lg:py-32" aria-labelledby="impact-title">
+        <div className="section-container">
+          <div className="max-w-3xl">
+            <Statement id="impact-title">Ideas into impact.</Statement>
+            <Lede>From custom digital experiences to scalable software and intelligent systems, we build solutions designed around how people and businesses work.</Lede>
+          </div>
+          <ul className="mt-14 grid gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
+            {impact.map((p) => (
+              <li key={p.name} className={p.wide ? "lg:col-span-2" : ""}>
+                <Link to={p.to} className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                  <div className="overflow-hidden rounded-3xl border border-inverse/12 bg-ink">
+                    <img src={p.img} alt={p.alt} loading="lazy" decoding="async" className={`w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.02] ${p.wide ? "aspect-[16/9] lg:aspect-[21/9]" : "aspect-[4/3] lg:aspect-[16/14]"}`} />
+                  </div>
+                  <div className="mt-5 flex items-baseline justify-between gap-4 border-t border-inverse/12 pt-4">
+                    <h3 className="font-hero text-xl font-bold tracking-tight text-inverse">{p.name}</h3>
+                    <span className="shrink-0 font-mono text-[11px] uppercase tracking-wider text-inverse-muted">{p.status}</span>
+                  </div>
+                  <p className="mt-2 max-w-md text-inverse-muted">{p.line}</p>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
