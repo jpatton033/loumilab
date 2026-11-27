@@ -1,7 +1,5 @@
-import { HomeDomainSearch } from "@/components/domains/DomainPlacements";
-import { Atmosphere, Glow, Kicker, Statement, Lede, EditorialImage, Surface } from "@/components/brand/atmosphere";
+import { Atmosphere, Glow, Kicker, Statement, Lede, EditorialImage } from "@/components/brand/atmosphere";
 import stairLight from "@/assets/atmosphere/stair-light.jpg";
-import shopOffice from "@/assets/atmosphere/shop-office.jpg";
 import runBakery from "@/assets/story/run/bakery-packing.jpg";
 import runRetail from "@/assets/story/run/retail-counter.jpg";
 import runService from "@/assets/story/run/service-work.jpg";
@@ -21,10 +19,6 @@ import { Button } from "@/components/ui/button";
 import { Scene as CineScene, useSceneProgress } from "@/components/brand/story/Scene";
 import { usePublishedArticles } from "@/lib/kc/queries";
 import { usePublishedIssues } from "@/lib/thedot/queries";
-import { ORDERS_CTA } from "@/data/orders/cta";
-import { lazy, Suspense } from "react";
-import { MountWhenNear } from "@/components/orders/showcase/SitePreview";
-const SiteShowcase = lazy(() => import("@/components/orders/showcase/SiteShowcase"));
 import { AutoMarquee, LayeredStack, LoopVideo, TimedCrossfade, type Frame } from "@/components/brand/story/Horizontal";
 import { FloatingGallery, VideoSequence, type FloatItem } from "@/components/brand/story/Cinematic";
 import { MockDashboard, MockSchedule, MockSecurity, MockWorkflow } from "@/components/brand/story/mocks";
@@ -234,72 +228,10 @@ const Index = () => {
             </ol>
           </div>
         </section>
-
-        {/* 02 Workflow Optimization — complexity becoming clarity */}
-        <section className="relative py-24 lg:py-36" aria-labelledby="workflow-title">
-          <Glow tone="forest" className="left-[20%] top-10 h-[32rem] w-[44rem] opacity-45" />
-          <div className="section-container relative grid items-center gap-14 lg:grid-cols-12">
-            <div className="lg:col-span-5">
-              <Kicker n="02">Workflow Optimization</Kicker>
-              <Statement id="workflow-title">Fewer steps. Clearer work.</Statement>
-              <Lede>We simplify processes, improve the systems you already use, build custom tools where they help, and use AI only when it adds real value.</Lede>
-              <Button size="lg" asChild className="mt-10 bg-atmo-ivory text-atmo-obsidian hover:bg-atmo-ivory/90"><Link to="/services/workflow-optimization">See how it works</Link></Button>
-            </div>
-            <CineScene variant="expand" className="lg:col-span-7">
-              <div className="grid gap-4 sm:grid-cols-2" aria-hidden>
-                <Surface title="Before">
-                  <ul className="space-y-2">{["Order arrives by text", "Copied to a spreadsheet", "Re-typed into invoices", "Reminder written by hand", "Payment checked manually", "Status sent by email"].map((t) => <li key={t} className="flex items-center gap-2 text-atmo-ivory/60"><span className="h-1.5 w-1.5 rounded-full bg-atmo-copper" />{t}</li>)}</ul>
-                </Surface>
-                <Surface title="After" className="sm:mt-12">
-                  <ul className="space-y-3">{["Order recorded once", "Invoice and reminder sent", "Paid — customer notified"].map((t) => <li key={t} className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-atmo-ivory" />{t}</li>)}</ul>
-                </Surface>
-              </div>
-            </CineScene>
-          </div>
-        </section>
-
-        {/* 03 Orders — human side + one product view */}
-        <section className="relative py-24 lg:py-36" aria-labelledby="products-title">
-          <Glow tone="burgundy" className="right-[-8%] top-0 h-[36rem] w-[36rem] opacity-50" />
-          <div className="section-container relative grid items-center gap-12 lg:grid-cols-12">
-            <div className="relative order-2 lg:order-none lg:col-span-6">
-              <MountWhenNear minHeight={560}><Suspense fallback={null}><SiteShowcase tone="dark" /></Suspense></MountWhenNear>
-            </div>
-            <div className="order-1 lg:order-none lg:col-span-5 lg:col-start-8">
-              <Kicker n="03">Loumilab Orders</Kicker>
-              <Statement id="products-title">Your business deserves a website that's yours.</Statement>
-              <Lede>Build and customize a professional website, sell what you offer, and manage orders, all with Loumilab Orders. Start designing free, before you sign up.</Lede>
-              <div className="mt-10 flex flex-wrap items-center gap-6">
-                <Button size="lg" asChild className="bg-atmo-ivory text-atmo-obsidian hover:bg-atmo-ivory/90"><Link to={ORDERS_CTA.href}>{ORDERS_CTA.label}</Link></Button>
-                <Link to="/orders" className="text-sm font-semibold text-atmo-ivory underline-offset-4 hover:underline">Explore Orders</Link>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* 04 Managed Business Technology */}
-        <section className="relative py-24 lg:py-36" aria-labelledby="managed-title">
-          <Glow tone="copper" className="left-[-10%] top-20 h-[30rem] w-[30rem] opacity-35" />
-          <div className="section-container relative grid items-center gap-12 lg:grid-cols-12">
-            <div className="lg:col-span-5">
-              <Kicker n="04">Managed Business Technology</Kicker>
-              <Statement id="managed-title">Email and domains, handled.</Statement>
-              <Lede>We set up professional business email and your domain, connect it properly, and can keep it maintained, so your name looks right everywhere.</Lede>
-              <div className="mt-10 grid max-w-md gap-px overflow-hidden rounded-2xl border border-atmo-ivory/12">
-                {[["Business Email Setup", "/services/business-email"], ["All solutions", "/services"]].map(([l, to]) => (
-                  <Link key={to} to={to} className="group flex items-center justify-between bg-atmo-charcoal/70 px-5 py-4 font-medium text-atmo-ivory transition-colors hover:bg-atmo-charcoal">{l}<ArrowRight size={16} className="transition-transform group-hover:translate-x-1" aria-hidden /></Link>
-                ))}
-              </div>
-              <HomeDomainSearch />
-            </div>
-            <EditorialImage src={shopOffice} alt="Two people reviewing plans at a farm-supply store counter" w={1408} h={1600} className="aspect-[4/5] rounded-3xl lg:col-span-6 lg:col-start-7" fade="none" />
-          </div>
-        </section>
-
-        {/* 05 Products & companies */}
+        {/* 02 Products & companies */}
         <section className="relative py-24 lg:py-32" aria-labelledby="family-title">
           <div className="section-container relative">
-            <Kicker n="05">Products & Companies</Kicker>
+            <Kicker n="02">Products & Companies</Kicker>
             <Statement id="family-title">Built by Loumilab.</Statement>
             <div className="mt-14 grid gap-px overflow-hidden rounded-3xl border border-atmo-ivory/12 sm:grid-cols-2 lg:grid-cols-4">
               {family.map((f) => {
