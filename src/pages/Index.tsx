@@ -9,11 +9,6 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Pause, Play } from "lucide-react";
 import { useState } from "react";
 import { HERO_SCENES, HERO_POSTER, HERO_POSTER_TALL } from "@/data/homeHero";
-import scOrders from "@/assets/story/screens/orders.jpg";
-import scWorkflow from "@/assets/story/screens/workflow.jpg";
-import scEmail from "@/assets/story/screens/email.jpg";
-import spacesLibrary from "@/assets/spaces/library-projects.jpg";
-import sentiPoster from "@/assets/senti/senti-hero-poster.jpg";
 import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Scene as CineScene, useSceneProgress } from "@/components/brand/story/Scene";
@@ -113,14 +108,6 @@ const family: { name: string; kind: string; line: string; tone: string; to?: str
   { name: "Vurtti", kind: "Company", line: "Compliance, documented and under control.", tone: "copper", href: "https://www.vurttidocs.com" },
 ];
 
-const impact: { name: string; status: "Available" | "Beta" | "In research"; line: string; to: string; img: string; alt: string; wide?: boolean }[] = [
-  { name: "Custom websites", status: "Available", line: "Distinctive digital experiences, designed and built in your name.", to: "/services/website-development", img: siteHotel, alt: "A boutique hotel website designed by Loumilab", wide: true },
-  { name: "Loumilab Orders", status: "Available", line: "A customizable website with online ordering and payouts.", to: "/orders", img: scOrders, alt: "The Loumilab Orders page" },
-  { name: "Spaces", status: "Beta", line: "Publish and share the apps you create.", to: "/spaces", img: spacesLibrary, alt: "A sample app in the Spaces library" },
-  { name: "Senti", status: "In research", line: "Research into technology that connects ideas, context and evidence.", to: "/senti", img: sentiPoster, alt: "Artwork from the Senti research project" },
-  { name: "Workflow Optimization", status: "Available", line: "Simpler processes. AI when valuable, software when sufficient.", to: "/services/workflow-optimization", img: scWorkflow, alt: "The Workflow Optimization page" },
-  { name: "Managed services", status: "Available", line: "Business email, domains and the systems you rely on, handled.", to: "/services/business-email", img: scEmail, alt: "The Business Email service page", wide: true },
-];
 
 const Index = () => {
   const [heroPaused, setHeroPaused] = useState(false);
@@ -172,31 +159,6 @@ const Index = () => {
         </button>
       </section>
 
-      {/* Ideas into impact — curated portfolio right after the film */}
-      <section className="bg-[hsl(var(--atmo-obsidian))] py-24 text-inverse lg:py-32" aria-labelledby="impact-title">
-        <div className="section-container">
-          <div className="max-w-3xl">
-            <Statement id="impact-title">Ideas into impact.</Statement>
-            <Lede>From custom digital experiences to scalable software and intelligent systems, we build solutions designed around how people and businesses work.</Lede>
-          </div>
-          <ul className="mt-14 grid gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
-            {impact.map((p) => (
-              <li key={p.name} className={p.wide ? "lg:col-span-2" : ""}>
-                <Link to={p.to} className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                  <div className="overflow-hidden rounded-3xl border border-inverse/12 bg-ink">
-                    <img src={p.img} alt={p.alt} loading="lazy" decoding="async" className={`w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.02] ${p.wide ? "aspect-[16/9] lg:aspect-[21/9]" : "aspect-[4/3] lg:aspect-[16/14]"}`} />
-                  </div>
-                  <div className="mt-5 flex items-baseline justify-between gap-4 border-t border-inverse/12 pt-4">
-                    <h3 className="font-hero text-xl font-bold tracking-tight text-inverse">{p.name}</h3>
-                    <span className="shrink-0 font-mono text-[11px] uppercase tracking-wider text-inverse-muted">{p.status}</span>
-                  </div>
-                  <p className="mt-2 max-w-md text-inverse-muted">{p.line}</p>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
 
       <Atmosphere>
         {/* Hero light carries straight into the studio chapter */}
