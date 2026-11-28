@@ -17,7 +17,7 @@ import { pricingHeading, pricingPlans } from "@/data/orders/pricing";
 import { COMPETITORS } from "@/data/orders/competitors";
 import { Glow } from "@/components/brand/atmosphere";
 import buildShot from "@/assets/builder/tpl-bakery.jpg";
-import dashboardShot from "@/assets/orders/screens/merchant-dashboard.jpg";
+import dashboardShot from "@/assets/orders/screens/merchant-dashboard-4x3.jpg";
 import cakeShot from "@/assets/orders/showcase/build-baker-hands.jpg";
 
 const steps = [
@@ -41,7 +41,7 @@ const CAPS = [
       </div>
     ) },
   { t: "Your Orders", d: "Know what needs to be prepared, what's ready, and what's completed — without searching through scattered customer messages.",
-    visual: <img src={dashboardShot} alt="The Loumilab Orders dashboard with today's revenue and a queue of orders" loading="lazy" decoding="async" className="aspect-[4/3] w-full object-cover object-top" /> },
+    visual: <img src={dashboardShot} alt="The Loumilab Orders dashboard with today's revenue and a queue of orders" loading="lazy" decoding="async" className="aspect-[4/3] w-full object-cover" /> },
 ];
 
 const MORE: { t: string; soon?: boolean }[] = [
