@@ -41,7 +41,7 @@ const CAPS = [
       </div>
     ) },
   { t: "Your Orders", d: "Know what needs to be prepared, what's ready, and what's completed — without searching through scattered customer messages.",
-    visual: <div className="flex aspect-[4/3] items-center bg-atmo-ivory/5 p-3"><img src={dashboardShot} alt="The Loumilab Orders dashboard with today's revenue and a queue of orders" loading="lazy" decoding="async" className="h-auto max-h-full w-full rounded-lg object-contain" /></div> },
+    visual: <img src={dashboardShot} alt="The Loumilab Orders dashboard with today's revenue and a queue of orders" loading="lazy" decoding="async" className="aspect-[4/3] w-full object-cover object-top" /> },
 ];
 
 const MORE: { t: string; soon?: boolean }[] = [
