@@ -1,204 +1,112 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { Pause, Play, Check, ShoppingBag, CreditCard, Package } from "lucide-react";
+import { Pause, Play, ShoppingBag } from "lucide-react";
 import { cn } from "@/lib/utils";
-import baker from "@/assets/orders/cinema/baker.jpg";
-import boutique from "@/assets/orders/cinema/boutique.jpg";
-import caterer from "@/assets/orders/cinema/caterer.jpg";
-import designer from "@/assets/orders/cinema/designer.jpg";
 import cake from "@/assets/orders/bake-cake.jpg";
 import cupcakes from "@/assets/orders/bake-cupcakes.jpg";
 import cookies from "@/assets/orders/bake-cookies.jpg";
+import { ORDERS_HERO_SCENES as SCENES, ORDERS_SCENE_SECONDS as SEC, DEMO_ORDER as O } from "@/data/ordersHero";
 
 /**
- * Orders cinematic hero. Layer A (text + buttons) renders immediately and never moves.
- * Layer B is a 24s, six-scene loop: photos (scenes 1, 2, 6) and coded demo product
- * screens (scenes 3–5). Transform/opacity only; reduced motion shows one still.
+ * Orders hero "The Business Behind the Business". Text (children) renders immediately and never moves.
+ * Six ~5s scenes from src/data/ordersHero.ts: footage scenes plus two coded demo screens (sample data only).
+ * Opacity/translate only; reduced motion shows one still; pauses off-screen and when the tab is hidden.
  */
-const LOOP = 24;
-const photos = [
-  { src: baker, from: 0, to: 4.6, pos: "70% 40%" },
-  { src: boutique, from: 4, to: 5.9, pos: "72% 50%" },
-  { src: caterer, from: 5.4, to: 7.2, pos: "60% 40%" },
-  { src: designer, from: 6.7, to: 9, pos: "65% 40%" },
-  { src: baker, from: 19.6, to: 24.5, pos: "70% 40%", dim: true },
-];
-// Sample merchant brand themes (demo data shown inside the storefront mock).
-const themes = [
-  { brand: "hsl(28 60% 42%)", bg: "hsl(36 40% 96%)", font: "font-hero" },
-  { brand: "hsl(160 35% 28%)", bg: "hsl(40 30% 94%)", font: "font-display" },
-  { brand: "hsl(345 45% 35%)", bg: "hsl(30 25% 95%)", font: "font-hero" },
-];
-
-const on = (t: number, a: number, b: number) => t >= a && t < b;
-
 export default function CinematicOrdersHero({ children, controlsLabel = "background film" }: { children: ReactNode; controlsLabel?: string }) {
   const ref = useRef<HTMLElement>(null);
-  const [t, setT] = useState(0.4);
+  const [i, setI] = useState(0);
+  const [step, setStep] = useState(0); // sub-step inside the storefront scene
   const [paused, setPaused] = useState(false);
-  const [reduced, setReduced] = useState(false);
+  const [visible, setVisible] = useState(true);
+  const [reduced] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  const [tall] = useState(() => window.matchMedia("(max-aspect-ratio: 4/5)").matches);
+  const seen = useRef(new Set<number>([0, 1]));
 
   useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const set = () => setReduced(mq.matches);
-    set();
-    mq.addEventListener("change", set);
-    return () => mq.removeEventListener("change", set);
+    const el = ref.current; if (!el) return;
+    const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), { threshold: 0.05 });
+    io.observe(el); return () => io.disconnect();
   }, []);
 
+  const running = !reduced && !paused && visible;
   useEffect(() => {
-    if (paused || reduced) return;
-    let last = performance.now();
+    if (!running) return;
+    let ms = 0;
     const id = window.setInterval(() => {
-      const now = performance.now();
-      if (document.hidden) { last = now; return; }
-      setT((v) => (v + (now - last) / 1000) % LOOP);
-      last = now;
-    }, 200);
+      if (document.hidden) return;
+      ms += 250;
+      setStep(Math.floor(ms / 1100));
+      if (ms >= SEC * 1000) { ms = 0; setStep(0); setI((v) => { const n = (v + 1) % SCENES.length; seen.current.add((n + 1) % SCENES.length); return n; }); }
+    }, 250);
     return () => window.clearInterval(id);
-  }, [paused, reduced]);
+  }, [running, i]);
 
-  // Scroll recede + pointer depth (CSS vars only).
-  useEffect(() => {
-    const el = ref.current;
-    if (!el || reduced) return;
-    let raf = 0;
-    const onScroll = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        const h = el.offsetHeight || 1;
-        el.style.setProperty("--hp", Math.min(1, Math.max(0, window.scrollY / h)).toFixed(3));
-      });
-    };
-    const fine = window.matchMedia("(pointer: fine)").matches;
-    const onMove = (e: PointerEvent) => {
-      el.style.setProperty("--mx", ((e.clientX / window.innerWidth - 0.5) * 2).toFixed(3));
-      el.style.setProperty("--my", ((e.clientY / window.innerHeight - 0.5) * 2).toFixed(3));
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    if (fine) el.addEventListener("pointermove", onMove);
-    return () => { cancelAnimationFrame(raf); window.removeEventListener("scroll", onScroll); el.removeEventListener("pointermove", onMove); };
-  }, [reduced]);
-
-  const time = reduced ? 1 : t;
-  const theme = themes[time < 9.6 ? 0 : time < 10.8 ? 1 : time < 12 ? 2 : 0];
-  const showStore = on(time, 8.2, 16.4);
-  const showOrder = on(time, 12, 20);
-  const showConnected = on(time, 16, 20.4);
-  const added = on(time, 13, 20);
-  const placed = on(time, 14.2, 20);
+  const scene = SCENES[i];
+  const st = (s: (typeof SCENES)[number]) => (tall ? s.stillTall : s.still);
 
   return (
-    <section
-      ref={ref}
-      aria-label="Loumilab Orders"
-      data-page-hero className="cine-hero relative isolate -mt-16 flex min-h-[86svh] items-end sm:min-h-[100svh] overflow-hidden bg-ink text-inverse lg:-mt-20 lg:items-center"
-    >
-      {/* Layer B — cinematic environment */}
-      <div aria-hidden className="cine-stage absolute inset-0 -z-10">
-        <div className="cine-depth absolute inset-[-3%]">
-          {photos.map((p, i) => {
-            const visible = reduced ? i === 0 : on(time, p.from, p.to);
-            return (
-              <img
-                key={i}
-                src={p.src}
-                alt=""
-                width={1920}
-                height={1088}
-                loading={i === 0 ? "eager" : "lazy"}
-                decoding="async"
-                fetchPriority={i === 0 ? "high" : "auto"}
-                style={{ objectPosition: p.pos }}
-                className={cn(
-                  "absolute inset-0 h-full w-full object-cover transition-opacity duration-[1400ms] ease-out",
-                  visible ? (p.dim ? "opacity-50" : "opacity-100") : "opacity-0",
-                  visible && !reduced && !paused && "cine-drift",
-                )}
-              />
-            );
-          })}
-        </div>
+    <section ref={ref} aria-label="Loumilab Orders" data-page-hero
+      className="relative isolate -mt-16 flex min-h-[88svh] items-end overflow-hidden bg-ink text-inverse sm:min-h-[100svh] lg:-mt-20 lg:items-center">
+      <div aria-hidden className="absolute inset-0 -z-10">
+        {SCENES.map((s, k) => {
+          const on = reduced ? k === 0 : k === i;
+          if (!seen.current.has(k) && !on) return null;
+          const dim = s.kind !== "film";
+          const cls = cn("absolute inset-0 h-full w-full object-cover transition-opacity duration-[1200ms] ease-out", on ? (dim ? "opacity-40" : "opacity-100") : "opacity-0");
+          const clip = tall ? s.clipTall ?? s.clip : s.clip;
+          return clip && !reduced
+            ? <video key={s.id} src={on || seen.current.has(k) ? clip : undefined} poster={st(s)} muted playsInline loop preload={on ? "auto" : "metadata"} autoPlay={on} className={cls} ref={(v) => { if (v) { if (on && running) v.play().catch(() => {}); else v.pause(); } }} />
+            : <img key={s.id} src={st(s)} alt="" decoding="async" fetchPriority={k === 0 ? "high" : "auto"} className={cls} />;
+        })}
 
-        {/* Scenes 3–5: demo product screens */}
-        <div className="cine-ui pointer-events-none absolute inset-0 hidden items-center justify-end pr-[6vw] md:flex">
-          <div className="relative h-[min(560px,70vh)] w-[min(520px,42vw)]">
-            {/* Storefront */}
-            <div
-              className={cn(
-                "absolute left-0 top-0 w-[80%] overflow-hidden rounded-3xl border border-inverse/10 shadow-2xl transition-all duration-1000 ease-out",
-                showStore ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0",
-                showConnected && "scale-[0.92] opacity-80",
-              )}
-              style={{ background: theme.bg, transformOrigin: "top left" }}
-            >
-              <div className="flex items-center justify-between px-5 py-3 transition-colors duration-700" style={{ background: theme.brand }}>
-                <span className={cn("text-sm font-semibold text-inverse", theme.font)}>Mae's Bakehouse</span>
-                <ShoppingBag className="h-4 w-4 text-inverse" />
+        {/* Scenes 4–5: demo screens (desktop/tablet). Sample data only — no orders, payments or emails are created. */}
+        <div className="pointer-events-none absolute inset-0 hidden items-center justify-end pr-[6vw] md:flex">
+          <div className="relative w-[min(420px,38vw)]">
+            <div className={cn("overflow-hidden rounded-3xl border border-inverse/10 bg-atmo-ivory text-atmo-obsidian shadow-2xl transition-all duration-1000 ease-out",
+              scene.kind === "storefront" ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0")}>
+              <div className="flex items-center justify-between bg-atmo-obsidian px-5 py-3 text-atmo-ivory">
+                <span className="font-hero text-sm font-semibold">Mae's Bakehouse</span><ShoppingBag className="h-4 w-4" />
               </div>
-              <div className="relative h-36 overflow-hidden">
-                <img src={cake} alt="" className="h-full w-full object-cover" />
-              </div>
+              <img src={cake} alt="" className="h-36 w-full object-cover" />
               <div className="p-4">
-                <p className={cn("text-lg font-semibold text-ink transition-all duration-700", theme.font)}>Order fresh this week.</p>
+                <p className="font-hero text-lg font-semibold">Order fresh this week.</p>
                 <div className="mt-3 grid grid-cols-3 gap-2">
-                  {[{ i: cake, n: "Celebration cake", p: "$48" }, { i: cupcakes, n: "Cupcakes (12)", p: "$30" }, { i: cookies, n: "Cookie box", p: "$18" }].map((x, k) => (
-                    <div key={x.n} className={cn("rounded-xl bg-background p-1.5 transition-shadow duration-500", added && k === 0 && "ring-2")} style={added && k === 0 ? { ["--tw-ring-color" as string]: theme.brand } : undefined}>
-                      <img src={x.i} alt="" className="aspect-square w-full rounded-lg object-cover" />
-                      <p className="mt-1 truncate text-[10px] font-medium text-foreground">{x.n}</p>
-                      <p className="text-[10px] text-muted-foreground">{x.p}</p>
+                  {[{ s: cake, n: "Celebration Cake", p: "$48" }, { s: cupcakes, n: "Cupcakes (12)", p: "$30" }, { s: cookies, n: "Cookie box", p: "$18" }].map((x, k) => (
+                    <div key={x.n} className={cn("rounded-xl p-1.5 transition-colors duration-500", k === 0 && step >= 1 ? "bg-atmo-obsidian/10" : "bg-atmo-obsidian/[0.03]")}>
+                      <img src={x.s} alt="" className="aspect-square w-full rounded-lg object-cover" />
+                      <p className="mt-1 truncate text-[10px] font-medium">{x.n}</p><p className="text-[10px] opacity-60">{x.p}</p>
                     </div>
                   ))}
                 </div>
-                <div className="mt-3 rounded-full py-2 text-center text-xs font-semibold text-inverse transition-colors duration-700" style={{ background: theme.brand }}>
-                  {placed ? "Order placed ✓" : added ? "Checkout · $48.00" : "Add to order"}
+                <div className="mt-3 rounded-full bg-atmo-obsidian py-2 text-center text-xs font-semibold text-atmo-ivory">
+                  {step >= 3 ? "Order placed · Paid" : step >= 2 ? "Checkout · $48.00" : step >= 1 ? "Added to order · 1 item" : "Add to order"}
                 </div>
               </div>
             </div>
-
-            {/* Merchant order card */}
-            <div className={cn(
-              "absolute -bottom-10 -right-4 w-[60%] rounded-3xl border border-inverse/15 bg-ink p-4 shadow-2xl transition-all duration-1000 ease-out",
-              showOrder && placed ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0",
-            )}>
-              <p className="text-[10px] uppercase tracking-[0.18em] text-inverse/60">Today · Orders</p>
-              <div className="mt-3 flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-semibold">#1042 · Celebration cake</p>
-                  <p className="text-xs text-inverse/60">Pickup Sat 10:00 AM</p>
-                </div>
-                <span className="rounded-full bg-inverse/10 px-2 py-1 text-[10px] font-medium">New</span>
-              </div>
-              <div className={cn("mt-4 grid grid-cols-3 gap-2 transition-opacity duration-1000", showConnected ? "opacity-100" : "opacity-0")}>
-                {[{ I: Check, l: "Website" }, { I: CreditCard, l: "Paid" }, { I: Package, l: "Pickup" }].map(({ I, l }) => (
-                  <div key={l} className="flex flex-col items-center gap-1 rounded-2xl border border-inverse/10 py-2">
-                    <I className="h-3.5 w-3.5 text-inverse/80" />
-                    <span className="text-[10px] text-inverse/70">{l}</span>
-                  </div>
+            <div className={cn("absolute inset-x-0 top-1/2 -translate-y-1/2 rounded-3xl border border-inverse/15 bg-ink/90 p-6 shadow-2xl transition-all duration-1000 ease-out",
+              scene.kind === "order" ? "opacity-100" : "pointer-events-none opacity-0")}>
+              <p className="text-[11px] uppercase tracking-[0.18em] text-inverse/60">Orders · Today</p>
+              <p className="mt-3 font-hero text-xl font-semibold">New Order #{O.number}</p>
+              <dl className="mt-4 space-y-2 text-sm">
+                {[["Item", O.item], ["Total", `${O.total} — ${O.payment}`], ["Pickup", O.pickup], ["Status", O.status]].map(([k, v]) => (
+                  <div key={k} className="flex justify-between gap-4 border-t border-inverse/10 pt-2"><dt className="text-inverse/60">{k}</dt><dd className="font-medium">{v}</dd></div>
                 ))}
-              </div>
+              </dl>
             </div>
           </div>
         </div>
 
-        {/* Legibility: left/bottom fade to black */}
-        <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/60 to-ink/10 lg:bg-gradient-to-r lg:from-ink lg:via-ink/70 lg:to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-ink to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/50 to-ink/10 lg:bg-gradient-to-r lg:from-ink/90 lg:via-ink/45 lg:to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-ink to-transparent" />
       </div>
 
-      {/* Layer A — functional content (renders immediately) */}
       <div className="section-container relative w-full pb-20 pt-32 lg:py-32">
-        <div className="cine-copy max-w-xl">{children}</div>
+        <div className="max-w-xl">{children}</div>
       </div>
 
       {!reduced && (
-        <button
-          type="button"
-          onClick={() => setPaused((p) => !p)}
-          aria-pressed={paused}
+        <button type="button" onClick={() => setPaused((p) => !p)} aria-pressed={paused}
           aria-label={paused ? `Play ${controlsLabel}` : `Pause ${controlsLabel}`}
-          className="absolute bottom-5 right-5 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-inverse/25 bg-ink/60 text-inverse transition-colors hover:bg-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inverse"
-        >
+          className="absolute bottom-5 right-5 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-inverse/25 bg-ink/60 text-inverse transition-colors hover:bg-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inverse">
           {paused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
         </button>
       )}

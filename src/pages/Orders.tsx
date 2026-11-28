@@ -27,10 +27,10 @@ const steps = [
   { title: "Publish and share", desc: "Launch your website and give customers a place to order." },
 ];
 
-const BSM = [
-  { t: "Build", d: "Create and customize a professional business website, no code.",
+const CAPS = [
+  { t: "Your Storefront", d: "Give customers a place to discover your business, explore what you offer, and place an order directly.",
     visual: <img src={buildShot} alt="A sample bakery website made with Loumilab Orders" loading="lazy" decoding="async" className="aspect-[4/3] w-full object-cover" /> },
-  { t: "Sell", d: "Show products or services and accept secure online payments.",
+  { t: "Your Payments", d: "Accept online payments through a secure checkout without building or maintaining your own payment infrastructure.",
     visual: (
       <div className="flex aspect-[4/3] items-center justify-center p-6">
         <div className="w-full max-w-[15rem] overflow-hidden rounded-2xl bg-atmo-ivory text-atmo-obsidian shadow-2xl">
@@ -40,7 +40,7 @@ const BSM = [
         </div>
       </div>
     ) },
-  { t: "Manage", d: "Track every order, coordinate fulfillment and see what needs attention today.",
+  { t: "Your Orders", d: "Know what needs to be prepared, what's ready, and what's completed — without searching through scattered customer messages.",
     visual: <div className="flex aspect-[4/3] items-center bg-atmo-ivory/5 p-3"><img src={dashboardShot} alt="The Loumilab Orders dashboard with today's revenue and a queue of orders" loading="lazy" decoding="async" className="h-auto max-h-full w-full rounded-lg object-contain" /></div> },
 ];
 
@@ -105,38 +105,25 @@ const Orders = () => {
       <CinematicOrdersHero>
         <p className="mb-6 text-xs font-semibold uppercase tracking-[0.16em] text-inverse/75">Loumilab Orders</p>
         <h1 className="font-hero text-5xl font-semibold leading-[1.02] tracking-tight text-inverse sm:text-6xl lg:text-7xl">
-          Your business.<br />Your website.<br />Your orders.<br />One place.
+          You built the business.<br />We'll handle the technology.
         </h1>
-        <p className="mt-6 max-w-lg text-lg leading-relaxed text-inverse/85">Build a website that reflects your brand, sell what you offer, accept payments, and manage your business—all in one place.</p>
+        <p className="mt-6 max-w-lg text-lg leading-relaxed text-inverse/85">Create your storefront, accept payments, and manage your orders. All in one place, built for independent businesses.</p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-          <Button size="lg" asChild className="bg-background text-foreground hover:bg-background/90"><Link to={ORDERS_CTA.href} onClick={() => trackCtaClick("hero", ORDERS_CTA.variant)}>{ORDERS_CTA.label}</Link></Button>
-          <a href="#how-it-works" className="inline-flex min-h-11 items-center gap-1.5 px-3 text-sm font-medium text-inverse/85 underline-offset-4 hover:text-inverse hover:underline">See How It Works <ArrowRight className="h-4 w-4" aria-hidden /></a>
+          <Button size="lg" asChild className="bg-background text-foreground hover:bg-background/90"><Link to={ORDERS_CTA.href} onClick={() => trackCtaClick("hero", "get-started-free-v1")}>Get Started Free</Link></Button>
+          <a href="#capabilities" onClick={() => trackCtaClick("hero-secondary", "see-how-it-works")} className="inline-flex min-h-11 items-center gap-1.5 px-3 text-sm font-medium text-inverse/85 underline-offset-4 hover:text-inverse hover:underline">See How It Works <ArrowRight className="h-4 w-4" aria-hidden /></a>
         </div>
+        <p className="mt-4 text-sm text-inverse/65">No monthly subscription required to get started.</p>
       </CinematicOrdersHero>
 
-      {/* 2 · See what you can create — one showcase, real builder designs */}
-      <section id="site-showcase" aria-labelledby="showcase-title" className="relative scroll-mt-24 overflow-hidden bg-atmo-obsidian py-20 text-atmo-ivory lg:py-28">
-        <Glow tone="midnight" className="left-[-10%] top-[-10%] h-[34rem] w-[34rem] opacity-60" />
+      {/* 2 · Everything you need */}
+      <section id="capabilities" aria-labelledby="cap-title" className="relative scroll-mt-24 overflow-hidden bg-atmo-obsidian py-20 text-atmo-ivory lg:py-28">
         <div className="section-container relative">
           <Reveal className="max-w-2xl">
-            <h2 id="showcase-title" className="font-hero text-4xl font-semibold leading-tight text-atmo-ivory lg:text-5xl">See what you can create.</h2>
-            <p className="mt-5 text-lg leading-relaxed text-atmo-ivory/75">Six businesses, six different websites. Change the style, colors, fonts and layout to see how yours could look.</p>
-          </Reveal>
-          <div className="mt-10">
-            <MountWhenNear minHeight={760}><Suspense fallback={null}><CustomizeShowcase /></Suspense></MountWhenNear>
-          </div>
-        </div>
-      </section>
-
-      {/* 3 · Build, sell, manage */}
-      <section aria-labelledby="bsm-title" className="relative overflow-hidden bg-atmo-obsidian pb-20 text-atmo-ivory lg:pb-28">
-        <Glow tone="copper" className="right-[-12%] top-[20%] h-[30rem] w-[30rem] opacity-40" />
-        <div className="section-container relative border-t border-atmo-ivory/10 pt-20 lg:pt-28">
-          <Reveal className="max-w-2xl">
-            <h2 id="bsm-title" className="font-hero text-4xl font-semibold leading-tight text-atmo-ivory lg:text-5xl">Build it. Sell from it. Run it.</h2>
+            <h2 id="cap-title" className="font-hero text-4xl font-semibold leading-tight text-atmo-ivory lg:text-5xl">Everything you need to run your business.</h2>
+            <p className="mt-5 text-lg leading-relaxed text-atmo-ivory/75">From your first storefront to your next hundred orders, Loumilab Orders brings your business together in one place.</p>
           </Reveal>
           <div className="mt-12 grid gap-10 md:grid-cols-3 md:gap-6">
-            {BSM.map((c, i) => (
+            {CAPS.map((c, i) => (
               <Reveal key={c.t} delay={i * 90}>
                 <div className="overflow-hidden rounded-2xl border border-atmo-ivory/10 bg-atmo-ivory/5">{c.visual}</div>
                 <h3 className="mt-6 font-display text-xl font-semibold text-atmo-ivory">{c.t}</h3>
@@ -150,6 +137,24 @@ const Orders = () => {
               {MORE.map((m) => <li key={m.t}>{m.t}{m.soon && <span className="ml-2 rounded-full border border-atmo-ivory/25 px-2 py-0.5 text-[10px] uppercase tracking-wide">Coming soon</span>}</li>)}
             </ul>
           </details>
+        </div>
+      </section>
+
+      {/* 3 · Make it yours — live builder showcase */}
+      <section id="site-showcase" aria-labelledby="showcase-title" className="relative scroll-mt-24 overflow-hidden bg-atmo-obsidian pb-20 text-atmo-ivory lg:pb-28">
+        <Glow tone="midnight" className="left-[-10%] top-[-10%] h-[34rem] w-[34rem] opacity-60" />
+        <div className="section-container relative border-t border-atmo-ivory/10 pt-20 lg:pt-28">
+          <Reveal className="max-w-2xl">
+            <h2 id="showcase-title" className="font-hero text-4xl font-semibold leading-tight text-atmo-ivory lg:text-5xl">Make it yours.</h2>
+            <p className="mt-5 text-lg leading-relaxed text-atmo-ivory/75">See what your business could look like online. Create a storefront, explore your options, and get started when you're ready.</p>
+          </Reveal>
+          <div className="mt-10">
+            <MountWhenNear minHeight={760}><Suspense fallback={null}><CustomizeShowcase /></Suspense></MountWhenNear>
+          </div>
+          <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <Button size="lg" asChild className="bg-atmo-ivory text-atmo-obsidian hover:bg-atmo-ivory/90"><Link to={ORDERS_CTA.href} onClick={() => trackCtaClick("make-it-yours", "build-your-storefront")}>Build Your Storefront</Link></Button>
+            <p className="text-sm text-atmo-ivory/65">Explore the storefront builder before creating an account.</p>
+          </div>
         </div>
       </section>
 
